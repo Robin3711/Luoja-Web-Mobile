@@ -28,3 +28,5 @@ docker:
   script:
     - cd docker
     - docker build -t baldur .
+    - docker tag baldur docker.luoja.fr/baldur
+    - docker push docker.luoja.fr/baldur
