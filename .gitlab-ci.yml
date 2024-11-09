@@ -14,7 +14,7 @@ build:
     - cp -r dist ../docker/web-server
 
   artifacts:
-    expire_in: 3 days
+    expire_in: 1 hour
     paths:
       - docker/
 
