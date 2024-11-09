@@ -1,0 +1,30 @@
+stages:
+  - build
+  - docker
+
+build:
+  image: node:latest
+  stage: build
+  script:
+    - cp -r web-server ./docker
+    - cd app
+    - npm install
+    - npx expo install react-dom react-native-web @expo/metro-runtime
+    - npx expo export --platform web
+    - cp -r dist ../docker/web-server
+
+  artifacts:
+    expire_in: 3 days
+    paths:
+      - docker/
+
+docker:
+  image: docker:latest
+  stage: docker
+  services:
+    - docker:dind
+  needs:
+    - build
+  script:
+    - cd docker
+    - docker build -t baldur .
