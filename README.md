@@ -3,7 +3,7 @@
 ## Commande de lancement de l'image WEB en dev
 
 ```bash
-sudo docker run -d  --name baldur docker.luoja.fr/baldur
+sudo docker run -it -p 4000:4000 --name baldur docker.luoja.fr/baldur
 ```
 
 ## Commande de lancement de l'image WEB en production
@@ -11,7 +11,7 @@ sudo docker run -d  --name baldur docker.luoja.fr/baldur
 ```bash
 sudo docker run -d --restart always --name baldur --network internal_network \
 -e PROTOCOL=HTTPS \
--e DOMAIN_NAME=luoja.fr \
+-e URL=luoja.fr \
 -v /etc/letsencrypt:/etc/letsencrypt:ro \
 docker.luoja.fr/baldur    
 ```
