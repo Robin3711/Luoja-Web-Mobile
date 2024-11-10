@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import { getPlatformStyle } from '../utils/utils';
 
-import DrawerButton from '../components/DrawerButton';
 import HomeScreenButtons from '../components/HomeScreenButtons';
 
 const styles = getPlatformStyle();
