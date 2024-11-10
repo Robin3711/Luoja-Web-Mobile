@@ -1,6 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { Drawer } from 'react-native-drawer-layout';
 import { useNavigation } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from './components/Home';
@@ -12,10 +11,10 @@ const Drawer = createDrawerNavigator();
 
 const DrawerScreen = () => {
   return (
-    <DrawerScreen.Navigator screenOptions={{ drawerPosition: 'left', headerShown: false  }}>
-      <DrawerScreen.Screen name="Home" component={Home} />
-      <DrawerScreen.Screen name="Créer un nouveau quiz" component={Parameters} />
-    </DrawerScreen.Navigator>
+    <Drawer.Navigator initialRouteName='Home' screenOptions={{ drawerPosition: 'left' }}>
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="Créer un nouveau quiz" component={Parameters} />
+    </Drawer.Navigator>
   );
 };
 
