@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import RangeCursor from './Cursor';
+import RangeCursor from '../components/RangeCursor';
 import { useEffect, useState } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 

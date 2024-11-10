@@ -1,29 +1,34 @@
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import Home from './components/Home';
-import Parameters from './components/Parameters';
-import { NavigationContainer } from '@react-navigation/native';
-import React from 'react';
+import HomeScreen from './src/screens/HomeScreen';
+import { getPlatformStyle } from './src/utils/utils';
+
+const styles = getPlatformStyle();
 
 const Drawer = createDrawerNavigator();
 
-const DrawerScreen = () => {
+const MenuDrawer = () => {
   return (
     <Drawer.Navigator initialRouteName='Accueil' screenOptions={{ drawerPosition: 'left' }}>
       <Drawer.Screen name="Accueil" component={Home} />
       <Drawer.Screen name="Créer un nouveau quiz" component={Parameters} />
     </Drawer.Navigator>
   );
-};
-
+}
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <DrawerScreen />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeAreaView}>
+        <NavigationContainer>
+          <MenuDrawer />
+        </NavigationContainer>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
-
