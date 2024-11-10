@@ -8,41 +8,23 @@ import Parameters from './components/Parameters';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 
-const LeftDrawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator();
 
-const LeftDrawerScreen = () => {
+const DrawerScreen = () => {
   return (
-    <LeftDrawer.Navigator screenOptions={{ drawerPosition: 'left', headerShown: false  }}>
-      <LeftDrawer.Screen name="Home" component={Home} />
-    </LeftDrawer.Navigator>
+    <DrawerScreen.Navigator screenOptions={{ drawerPosition: 'left', headerShown: false  }}>
+      <DrawerScreen.Screen name="Home" component={Home} />
+      <DrawerScreen.Screen name="Créer un nouveau quiz" component={Parameters} />
+    </DrawerScreen.Navigator>
   );
 };
 
-const RightDrawer = createDrawerNavigator();
-
-const RightDrawerScreen = () => {
-  return (
-    <RightDrawer.Navigator
-      screenOptions={{ drawerPosition: 'right', headerShown: false }}
-    >
-      <RightDrawer.Screen name="HomeDrawer" component={LeftDrawerScreen} />
-    </RightDrawer.Navigator>
-  );
-};
 
 export default function App() {
   return (
     <NavigationContainer>
-      <RightDrawerScreen />
+      <DrawerScreen />
     </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
