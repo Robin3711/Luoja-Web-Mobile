@@ -11,7 +11,7 @@ sudo docker run -it -p 4000:4000 --name baldur docker.luoja.fr/baldur
 ```bash
 sudo docker run -d --restart always --name baldur --network internal_network \
 -e PROTOCOL=HTTPS \
--e URL=luoja.fr \
+-e DOMAIN=luoja.fr \
 -v /etc/letsencrypt:/etc/letsencrypt:ro \
 docker.luoja.fr/baldur    
 ```

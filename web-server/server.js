@@ -6,7 +6,7 @@ const https = require('https');
 const app = express();
 const PORT = 4000;
 const PROTOCOL = process.env.PROTOCOL || 'HTTP'; // 'http' par défaut
-const URL = process.env.URL || 'localhost'; // 'localhost' par défaut
+const DOMAIN = process.env.DOMAIN || 'localhost'; // 'localhost' par défaut
 
 // Servir les fichiers statiques à partir du dossier `dist`
 app.use(express.static(path.resolve(__dirname, 'dist')));
@@ -19,17 +19,17 @@ app.get('*', (req, res) => {
 if (PROTOCOL === 'HTTPS') {
   // Configuration du serveur HTTPS
   const sslOptions = {
-    key: fs.readFileSync(`/etc/letsencrypt/live/${URL}/privkey.pem`, 'utf8'),
-    cert: fs.readFileSync(`/etc/letsencrypt/live/${URL}/fullchain.pem`, 'utf8'),
+    key: fs.readFileSync(`/etc/letsencrypt/live/${DOMAIN}/privkey.pem`, 'utf8'),
+    cert: fs.readFileSync(`/etc/letsencrypt/live/${DOMAIN}/fullchain.pem`, 'utf8'),
   };
 
   // Créer un serveur HTTPS
   https.createServer(sslOptions, app).listen(PORT, () => {
-    console.log(`🚀 Serveur HTTPS lancé sur https://${URL}:${PORT}`);
+    console.log(`🚀 Serveur HTTPS lancé sur https://${DOMAIN}:${PORT}`);
   });
 } else {
   // Créer un serveur HTTP
   app.listen(PORT, () => {
-    console.log(`🚀 Serveur HTTP lancé sur http://${URL}:${PORT}`);
+    console.log(`🚀 Serveur HTTP lancé sur http://${DOMAIN}:${PORT}`);
   });
 }
