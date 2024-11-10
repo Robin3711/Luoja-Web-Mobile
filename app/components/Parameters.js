@@ -7,7 +7,7 @@ import RNPickerSelect from 'react-native-picker-select';
 export default function Parameters() {
     const [difficulty, setDifficulty] = useState('none');
     const [theme, setTheme] = useState('none');
-    
+    const [questionCount, setQuestionCount] = useState(25);
 
     const difficultyOptions = [
         { label: 'Facile', value: 'easy' },
@@ -41,10 +41,18 @@ export default function Parameters() {
       { label : 'Entertainment: Japanese Anime & Manga', value: 31 },
       { label : 'Entertainment: Cartoon & Animations', value : 32 },
     ]
+
+    const createQuiz = () => {
+      //  https://api.luoja.fr/quiz?amount=5&category=9&difficulty=easy
+      fetch(`https://api.luoja.fr/quiz?amount=${questionCount}&category=${theme}&difficulty=${difficulty}`)
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
+    }
     return (
         <View>
           <Text>Choisissez le nombre de question</Text>
-          <RangeCursor />
+          <RangeCursor value={questionCount} onValueChange={setQuestionCount} />
           <Text>Choisissez un thème</Text>
           <RNPickerSelect
                 onValueChange={(value) => setTheme(value)}
@@ -57,7 +65,7 @@ export default function Parameters() {
                 items={difficultyOptions}
                 value={difficulty}
             />
-          <Button title="Créer le quiz" onPress={() => console.log('Créer le quiz')} />
+          <Button title="Créer le quiz" onPress={() => console.log({questionCount})} />
           <StatusBar style="auto" />
         </View>
     );
