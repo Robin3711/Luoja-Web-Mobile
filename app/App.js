@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import Parameters from './src/screens/Parameters';
 import HomeScreen from './src/screens/HomeScreen';
-import QuizzScreen from './src/screens/QuizzScreen';
+import QuizScreen from './src/screens/QuizScreen';
 
 const drawerNavigator = createDrawerNavigator();
 const stack = createStackNavigator()
@@ -25,7 +25,7 @@ export default function App() {
       <stack.Navigator>
         <stack.Screen name="MenuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
         <stack.Group screenOptions={{ presentation: 'modal' }}>
-          <stack.Screen name="QuizzStack" component={QuizzScreen} options={{ title: "Le quizz", headerLeft: () => null }} />
+          <stack.Screen name="QuizStack" component={QuizScreen} options={{ title: "Le quiz", headerLeft: () => null }} />
         </stack.Group>
       </stack.Navigator>
     </NavigationContainer>
