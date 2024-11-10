@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 
 const RangeCursor = () => {
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(25);
 
   return (
     <View style={styles.container}>
