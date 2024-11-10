@@ -43,7 +43,6 @@ export default function Parameters() {
     ]
 
     const createQuiz = () => {
-      //  https://api.luoja.fr/quiz?amount=5&category=9&difficulty=easy
       fetch(`https://api.luoja.fr/quiz?amount=${questionCount}&category=${theme}&difficulty=${difficulty}`)
       .then(response => response.json())
       .then(data => console.log(data))
@@ -65,7 +64,7 @@ export default function Parameters() {
                 items={difficultyOptions}
                 value={difficulty}
             />
-          <Button title="Créer le quiz" onPress={() => console.log({questionCount})} />
+          <Button title="Créer le quiz" onPress={() => createQuiz()} />
           <StatusBar style="auto" />
         </View>
     );
