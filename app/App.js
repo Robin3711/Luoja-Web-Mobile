@@ -3,12 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { getPlatformStyle } from './src/utils/utils';
+
 import Parameters from './src/screens/Parameters';
-
-const styles = getPlatformStyle();
-
 import HomeScreen from './src/screens/HomeScreen';
-import Parameters from './src/screens/Parameters';
 
 const styles = getPlatformStyle();
 
