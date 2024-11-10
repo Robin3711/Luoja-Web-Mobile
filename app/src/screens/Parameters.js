@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import RangeCursor from './Cursor';
-import { useEffect, useState } from 'react';
+import { Text, View, Button } from 'react-native';
+import { useState } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
+
+import RangeCursor from '../components/Cursor';
 
 export default function Parameters() {
     const [difficulty, setDifficulty] = useState('none');

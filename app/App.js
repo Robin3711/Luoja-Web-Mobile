@@ -1,29 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import Home from './components/Home';
-import Parameters from './components/Parameters';
-import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { getPlatformStyle } from './src/utils/utils';
 
-const Drawer = createDrawerNavigator();
+import HomeScreen from './src/screens/HomeScreen';
+import Parameters from './src/screens/Parameters';
 
-const DrawerScreen = () => {
+const styles = getPlatformStyle();
+
+const drawerNavigator = createDrawerNavigator();
+
+const MenuDrawer = () => {
   return (
-    <Drawer.Navigator initialRouteName='Accueil' screenOptions={{ drawerPosition: 'left' }}>
-      <Drawer.Screen name="Accueil" component={Home} />
-      <Drawer.Screen name="Créer un nouveau quiz" component={Parameters} />
-    </Drawer.Navigator>
+    <drawerNavigator.Navigator screenOptions={{ drawerPosition: 'left'}}>
+      <drawerNavigator.Screen name="Accueil" component={HomeScreen} />
+      <drawerNavigator.Screen name="Créer un nouveau quiz" component={Parameters} />
+    </drawerNavigator.Navigator>
   );
 };
 
-
 export default function App() {
   return (
-    <NavigationContainer>
-      <DrawerScreen />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeAreaView}>
+        <NavigationContainer>
+          <MenuDrawer />
+        </NavigationContainer>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
-
