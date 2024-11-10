@@ -4,10 +4,9 @@ import Slider from '@react-native-community/slider';
 
 const RangeCursor = ({ value, onValueChange }) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Sélection : {value}</Text>
+    <View >
+      <Text>Sélection : {value}</Text>
       <Slider
-        style={styles.slider}
         minimumValue={1}
         maximumValue={50}
         step={1}
@@ -21,20 +20,6 @@ const RangeCursor = ({ value, onValueChange }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  slider: {
-    width: 300,
-    height: 40,
-  },
-});
+
 
 export default RangeCursor;
