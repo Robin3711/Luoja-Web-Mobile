@@ -1,48 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { Drawer } from 'react-native-drawer-layout';
-import { useNavigation } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import Home from './components/Home';
-import Parameters from './components/Parameters';
-import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import HomeScreen from './src/screens/HomeScreen';
+import { getPlatformStyle } from './src/utils/utils';
 
-const LeftDrawer = createDrawerNavigator();
+const styles = getPlatformStyle();
 
-const LeftDrawerScreen = () => {
+const drawerNavigator = createDrawerNavigator();
+
+const MenuDrawer = () => {
   return (
-    <LeftDrawer.Navigator screenOptions={{ drawerPosition: 'left', headerShown: false  }}>
-      <LeftDrawer.Screen name="Home" component={Home} />
-    </LeftDrawer.Navigator>
-  );
-};
-
-const RightDrawer = createDrawerNavigator();
-
-const RightDrawerScreen = () => {
-  return (
-    <RightDrawer.Navigator
-      screenOptions={{ drawerPosition: 'right', headerShown: false }}
-    >
-      <RightDrawer.Screen name="HomeDrawer" component={LeftDrawerScreen} />
-    </RightDrawer.Navigator>
+    <drawerNavigator.Navigator screenOptions={{ drawerPosition: 'left', headerShown: false }}>
+      <drawerNavigator.Screen name="HomeScreen" component={HomeScreen} />
+    </drawerNavigator.Navigator>
   );
 };
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RightDrawerScreen />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeAreaView}>
+        <NavigationContainer>
+          <MenuDrawer />
+        </NavigationContainer>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
