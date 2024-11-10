@@ -19,7 +19,7 @@ export default function Parameters() {
         navigation.navigate('home');
 
         setTimeout(() => {
-          navigation.navigate('QuizzStack', { quizData: data });
+          navigation.navigate('QuizStack', { quizData: data });
         }, 500);
       })
       .catch(error => {

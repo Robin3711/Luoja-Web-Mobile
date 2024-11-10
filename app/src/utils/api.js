@@ -9,9 +9,9 @@ export async function createQuiz(questionCount, theme, difficulty) {
     }
 }
 
-export async function getCurrentQuestion(quizzId) {
+export async function getCurrentQuestion(quizId) {
     try {
-        const response = await fetch(`https://api.luoja.fr/quiz/${quizzId}/question`);
+        const response = await fetch(`https://api.luoja.fr/quiz/${quizId}/question`);
         const data = await response.json();
         return data;
     } catch (error) {
