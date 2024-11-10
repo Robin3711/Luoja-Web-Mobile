@@ -12,7 +12,30 @@ export default styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: 'white',
     },
-    menuIcon: {
+    homeScreenButtonsView: {
+        display: 'flex',
+        backgroundColor: 'lightgrey',
+        minWidth: '75%',
+        minHeight: '25%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 40,
+    },
+    homeScreenButton: {
+        backgroundColor: 'white',
+        minWidth: '50%',
+        minHeight: '5%',
+        margin: '5%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 40,
+    },
+    drawerButtonView: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+    },
+    drawerButton: {
         width: 50,
         height: 50,
         backgroundColor: 'white',
