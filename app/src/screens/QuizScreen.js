@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
-export default function QuizzScreen() {
+export default function QuizScreen() {
     const route = useRoute();
     const { quizData } = route.params;
     const quizId = quizData.quizId;
