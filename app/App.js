@@ -11,7 +11,7 @@ const Drawer = createDrawerNavigator();
 
 const DrawerScreen = () => {
   return (
-    <Drawer.Navigator initialRouteName='Home' screenOptions={{ drawerPosition: 'left' }}>
+    <Drawer.Navigator initialRouteName='Accueil' screenOptions={{ drawerPosition: 'left' }}>
       <Drawer.Screen name="Accueil" component={Home} />
       <Drawer.Screen name="Créer un nouveau quiz" component={Parameters} />
     </Drawer.Navigator>
