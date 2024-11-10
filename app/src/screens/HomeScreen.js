@@ -9,7 +9,6 @@ const styles = getPlatformStyle();
 export default function HomeScreen() {
     return (
         <View style={styles.homeScreen}>
-            <DrawerButton/>
             <HomeScreenButtons/>
         </View>
     );
