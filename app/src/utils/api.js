@@ -7,7 +7,7 @@ export async function createQuiz(questionCount, theme, difficulty) {
             url += `&category=${theme}`;
         }
 
-        if (difficulty !== 'none'){
+        if (difficulty !== 'none') {
             url += `&difficulty=${difficulty}`;
         }
 
@@ -53,3 +53,20 @@ export async function getCurrentAnswer(answer, quizId) {
         console.error('Erreur réseau', error);
     }
 }
+
+export async function getCurrentInfos(quizId) {
+    try {
+
+        let url = `https://api.luoja.fr/quiz/${quizId}/infos`;
+
+        const response = await fetch(url);
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+

@@ -64,6 +64,10 @@ export const quizStyle = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 30,
     },
+    questionNumberContainer: {
+        marginVertical: 10,
+        alignItems: 'center',
+    },
     questionNumber: {
         fontSize: 36,
         color: '#4b4f60',

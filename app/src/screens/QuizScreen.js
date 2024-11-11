@@ -1,7 +1,7 @@
 import { View, Text, Button, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
-import { getCurrentQuestion, getCurrentAnswer } from '../utils/api';
+import { getCurrentQuestion, getCurrentAnswer, getCurrentInfos } from '../utils/api';
 import { quizStyle } from '../utils/utils';
 
 export default function QuizScreen() {
@@ -14,9 +14,16 @@ export default function QuizScreen() {
     const [newQuestionNow, setNewQuestionNow] = useState(false);
     const [answerFeedback, setAnswerFeedback] = useState(null);
     const [correctAnswer, setCorrectAnswer] = useState(null);
+    const [currentQuestionNumber, setCurrentQuestionNumber] = useState(null);
+    const [totalQuestion, setTotalQuestion] = useState(null);
 
     useEffect(() => {
-        handleNewQuestion();
+        (async () => {
+            handleNewQuestion();
+            const infos = await getCurrentInfos(quizId);
+            setCurrentQuestionNumber(infos.questionCursor);
+            setTotalQuestion(infos.numberOfQuestions);
+        })()
     }, [quizId]);
 
     const handleNewQuestion = async () => {
@@ -77,6 +84,9 @@ export default function QuizScreen() {
             <Text style={quizStyle.quizId}>ID: {quizId}</Text>
             {currentQuestion ? (
                 <>
+                    <View style={quizStyle.questionNumberContainer}>
+                        <Text style={quizStyle.questionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
+                    </View>
                     <View style={quizStyle.questionContainer}>
                         <Text style={quizStyle.questionText}>Question :</Text>
                         <Text style={quizStyle.questionText}>{currentQuestion.question}</Text>
@@ -106,6 +116,7 @@ export default function QuizScreen() {
                                 setSelectedAnswer(null);
                                 setAnswerFeedback(null);
                                 setCorrectAnswer(null);
+                                setCurrentQuestionNumber(currentQuestionNumber + 1);
                                 handleNewQuestion();
                             }
                         }}

@@ -56,17 +56,21 @@ export const quizStyle = StyleSheet.create({
         fontWeight: 'bold',
         color: '#7c8ca3',
         fontSize: 14,
-        marginBottom: 20,
+        marginBottom: 15,
     },
     questionContainer: {
         marginVertical: 10,
+        alignItems: 'center',
+    },
+    questionNumberContainer: {
+        marginVertical: 1,
         alignItems: 'center',
     },
     questionText: {
         fontSize: 18,
         color: '#4b4f60',
         textAlign: 'center',
-        marginBottom: 10,
+        marginBottom: 5,
     },
     answersContainer: {
         flexDirection: 'row',
