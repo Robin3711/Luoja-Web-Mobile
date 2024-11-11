@@ -29,6 +29,7 @@ docker:
     - build
   script:
     - cd docker
+    - docker login -u gitlab-ci -p $DOCKER_REGISTRY_PASSWORD docker.luoja.fr
     - docker build -t baldur .
     - docker tag baldur docker.luoja.fr/baldur
     - docker push docker.luoja.fr/baldur
