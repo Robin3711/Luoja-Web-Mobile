@@ -1,7 +1,8 @@
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import { getCurrentQuestion, getCurrentAnswer } from '../utils/api';
+import { quizStyle } from '../utils/utils';
 
 export default function QuizScreen() {
     const route = useRoute();
@@ -21,7 +22,6 @@ export default function QuizScreen() {
     const handleNewQuestion = async () => {
         try {
             const data = await getCurrentQuestion(quizId);
-            console.log(data);
             setCurrentQuestion(data);
         } catch (error) {
             console.error('Erreur lors de la récupération de la question:', error);
@@ -73,23 +73,30 @@ export default function QuizScreen() {
     };
 
     return (
-        <View>
-            <Text>Résultats du Quiz</Text>
-            <Text>Quiz ID: {quizId}</Text>
+        <View style={quizStyle.container}>
+            <Text style={quizStyle.quizId}>ID: {quizId}</Text>
             {currentQuestion ? (
                 <>
-                    <Text>Question : </Text>
-                    <Text>{currentQuestion.question}</Text>
-                    {currentQuestion.answers.map((answer, index) => (
-                        <Button
-                            key={index}
-                            title={answer}
-                            onPress={() => handleAnswerSelection(answer)}
-                            color={getAnswerColor(answer)}
-                        />
-                    ))}
-                    <Button
-                        title={newQuestionNow === false ? "Envoyer" : "Question suivante"}
+                    <View style={quizStyle.questionContainer}>
+                        <Text style={quizStyle.questionText}>Question :</Text>
+                        <Text style={quizStyle.questionText}>{currentQuestion.question}</Text>
+                    </View>
+                    <View style={quizStyle.answersContainer}>
+                        {currentQuestion.answers.map((answer, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={[
+                                    quizStyle.answerButton,
+                                    { backgroundColor: getAnswerColor(answer) },
+                                ]}
+                                onPress={() => handleAnswerSelection(answer)}
+                            >
+                                <Text style={quizStyle.answerText}>{answer}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                    <TouchableOpacity
+                        style={quizStyle.nextButton}
                         onPress={() => {
                             if (!newQuestionNow) {
                                 handleGetAnswer();
@@ -102,12 +109,14 @@ export default function QuizScreen() {
                                 handleNewQuestion();
                             }
                         }}
-                        color="firebrick"
-                    />
-
+                    >
+                        <Text style={quizStyle.nextButtonText}>
+                            {newQuestionNow === false ? "Envoyer" : "Question suivante"}
+                        </Text>
+                    </TouchableOpacity>
                 </>
             ) : (
-                <Text>Chargement de la question...</Text>
+                <Text style={quizStyle.questionText}>Chargement de la question...</Text>
             )}
         </View>
     );
