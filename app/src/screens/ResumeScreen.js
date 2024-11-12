@@ -2,17 +2,18 @@ import { Text, View, TextInput, Button } from 'react-native';
 import { getPlatformStyle } from "../utils/utils";
 import { getCurrentInfos } from "../utils/api";
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = getPlatformStyle();
 
 export default function ResumeScreen() {
     const [gameId, setGameId] = useState('');
+    const navigation = useNavigation();
 
     const handleResumeGame = () => {
         try
         {
-            const infos = getCurrentInfos(gameId);
-            //navigation.navigate('QuizStack', { quizData: { quizId: gameId, questionCursor: infos.questionCursor } });
+            navigation.navigate('QuizStack', { quizData: { quizId: gameId } });
 
         }
         catch (error)
