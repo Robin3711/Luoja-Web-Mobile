@@ -1,9 +1,3 @@
-workflow:
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
-      when: always
-    - when: never
-
 stages:
   - build
   - docker
@@ -18,11 +12,13 @@ build:
     - npx expo install react-dom react-native-web @expo/metro-runtime
     - npx expo export --platform web
     - cp -r dist ../docker/web-server
-
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
   artifacts:
     expire_in: 1 hour
     paths:
       - docker/
+
 
 docker:
   image: docker:latest
@@ -33,6 +29,9 @@ docker:
     - build
   script:
     - cd docker
+    - docker login -u gitlab-ci -p $DOCKER_REGISTRY_PASSWORD docker.luoja.fr
     - docker build -t baldur .
     - docker tag baldur docker.luoja.fr/baldur
     - docker push docker.luoja.fr/baldur
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
