@@ -44,7 +44,7 @@ export default styles = StyleSheet.create({
         flex: 1,
     },
     textInput: {
-        width: '80%',
+        width: '40%',
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
