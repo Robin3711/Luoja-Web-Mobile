@@ -1,6 +1,5 @@
 import { Text, View, TextInput, Button } from 'react-native';
 import { getPlatformStyle } from "../utils/utils";
-import { getCurrentInfos } from "../utils/api";
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
