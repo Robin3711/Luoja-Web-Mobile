@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
+import Parameters from './src/screens/Parameters';
+import HomeScreen from './src/screens/HomeScreen';
+
+const drawerNavigator = createDrawerNavigator();
+
+const MenuDrawer = () => {
+  return (
+    <drawerNavigator.Navigator screenOptions={{ drawerPosition: 'left'}}>
+      <drawerNavigator.Screen name="home" component={HomeScreen} options={{title: "Accueil"}}/>
+      <drawerNavigator.Screen name="newQUIZ" component={Parameters} options={{title: "Créer un nouveau QUIZ"}}/>
+    </drawerNavigator.Navigator>
+  );
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <MenuDrawer />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
