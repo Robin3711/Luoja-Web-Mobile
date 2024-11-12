@@ -12,6 +12,11 @@ export default function ResumeScreen() {
     const handleResumeGame = () => {
         try
         {
+            if (!gameId)
+            {
+                alert('Veuillez saisir un identifiant de partie');
+                return;
+            }
             navigation.navigate('QuizStack', { quizData: { quizId: gameId } });
 
         }
