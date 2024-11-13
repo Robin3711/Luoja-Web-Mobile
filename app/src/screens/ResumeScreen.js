@@ -18,7 +18,6 @@ export default function ResumeScreen() {
                 return;
             }
             navigation.navigate('QuizStack', { quizData: { quizId: gameId } });
-
         }
         catch (error)
         {
