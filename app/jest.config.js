@@ -198,11 +198,11 @@ const config = {
 module.exports = {
   preset: 'react-native',
   transform: {
-    '^.+\\.[tj]sx?$': 'babel-jest',  // Assurez-vous que Babel est utilisé pour les fichiers JS/TSX
+    '^.+\\.[tj]sx?$': 'babel-jest', // Utiliser Babel pour les fichiers JS/TSX
   },
-  testEnvironment: 'node',  // Utilisez jsdom si vous testez des composants UI
-  testMatch: ['<rootDir>/src/**/*.(test|spec).js']
+  testEnvironment: 'node', // Spécifie le module jsdom pour Jest
+  testMatch: ['<rootDir>/src/**/*.(test|spec).js'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(react-native|@react-native|@react-navigation|expo-status-bar|react-native-picker-select)/)'
+  ],
 };
-
-
-
