@@ -12,8 +12,3 @@ export function getPlatformStyle() {
 
     return styles;
 }
-
-export const quizStyle = Platform.select({
-    web: require('./style.web').quizStyle,
-    default: require('./style.mobile').quizStyle,
-});

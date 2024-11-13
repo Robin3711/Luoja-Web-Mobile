@@ -1,11 +1,15 @@
 import { View, Text, Button, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import { getCurrentQuestion, getCurrentAnswer, getCurrentInfos } from '../utils/api';
-import { quizStyle } from '../utils/utils';
+import { getPlatformStyle } from '../utils/utils';
+
+const styles = getPlatformStyle();
 
 export default function QuizScreen() {
     const route = useRoute();
+    const navigation = useNavigation();
     const { quizData } = route.params;
     const quizId = quizData.quizId;
     const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -19,16 +23,15 @@ export default function QuizScreen() {
 
     useEffect(() => {
         (async () => {
-            handleNewQuestion();
             const infos = await getCurrentInfos(quizId);
             setCurrentQuestionNumber(infos.questionCursor + 1);
             setTotalQuestion(infos.numberOfQuestions);
-            for( let i = 0; i < infos.questionCursor; i++) {
-                if(infos.results[i])
-                {
+            for (let i = 0; i < infos.questionCursor; i++) {
+                if (infos.results[i]) {
                     setScore(score + 1);
                 }
             }
+            handleNewQuestion();
         })()
     }, [quizId]);
 
@@ -48,11 +51,6 @@ export default function QuizScreen() {
     };
 
     const handleGetAnswer = async () => {
-        if (!selectedAnswer) {
-            alert('Veuillez sélectionner une réponse !');
-            return;
-        }
-
         const responseData = {
             answer: selectedAnswer,
         };
@@ -88,37 +86,44 @@ export default function QuizScreen() {
         return 'gray';
     };
 
+    const handleEnd = () => {
+        const data = { score: score, gameId: quizId }
+        navigation.navigate('ResumeQuiz', { resumeData: data });
+    }
+
     return (
-        <View style={quizStyle.container}>
+        <View style={styles.quizContainer}>
             {currentQuestion ? (
                 <>
-                    <View style={quizStyle.questionNumberContainer}>
-                        <Text style={quizStyle.quizId}>ID: {quizId}</Text>
-                        <Text style={quizStyle.questionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
+                    <View style={styles.quizQuestionNumberContainer}>
+                        <Text style={styles.quizId}>ID: {quizId}</Text>
+                        <Text style={styles.quizQuestionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
                         <Text>Score: {score}</Text>
                     </View>
-                    <View style={quizStyle.questionContainer}>
-                        <Text style={quizStyle.questionText}>{currentQuestion.question}</Text>
+                    <View style={styles.quizQuestionContainer}>
+                        <Text style={styles.quizQuestionText}>{currentQuestion.question}</Text>
                     </View>
-                    <View style={quizStyle.answersContainer}>
+                    <View style={styles.quizAnswersContainer}>
                         {currentQuestion.answers.map((answer, index) => (
                             <TouchableOpacity
                                 key={index}
                                 style={[
-                                    quizStyle.answerButton,
+                                    styles.quizAnswerButton,
                                     { backgroundColor: getAnswerColor(answer) },
                                 ]}
                                 onPress={() => handleAnswerSelection(answer)}
                             >
-                                <Text style={quizStyle.answerText}>{answer}</Text>
+                                <Text style={styles.quizAnswerText}>{answer}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
                     <TouchableOpacity
-                        style={quizStyle.nextButton}
+                        style={styles.quizNextButton}
                         onPress={() => {
                             if (!newQuestionNow) {
                                 handleGetAnswer();
+                            } else if (totalQuestion === currentQuestionNumber) {
+                                handleEnd();
                             } else {
                                 setNewQuestionNow(false);
                                 setIsAnswered(false);
@@ -128,15 +133,17 @@ export default function QuizScreen() {
                                 handleNewQuestion();
                             }
                         }}
+                        disabled={!selectedAnswer}
                     >
-                        <Text style={quizStyle.nextButtonText}>
-                            {newQuestionNow === false ? "Envoyer" : "Question suivante"}
+                        <Text style={styles.quizNextButtonText}>
+                            {newQuestionNow === false && currentQuestionNumber !== totalQuestion ? "Envoyer" : "Question suivante"}
                         </Text>
                     </TouchableOpacity>
                 </>
             ) : (
-                <Text style={quizStyle.questionText}>Chargement de la question...</Text>
-            )}
-        </View>
+                <Text style={styles.quizQuestionText}>Chargement de la question...</Text>
+            )
+            }
+        </View >
     );
 }

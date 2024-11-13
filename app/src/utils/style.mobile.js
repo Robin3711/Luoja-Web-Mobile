@@ -50,10 +50,7 @@ export default styles = StyleSheet.create({
         borderWidth: 1,
         margin: 10,
     },
-});
-
-export const quizStyle = StyleSheet.create({
-    container: {
+    quizContainer: {
         flex: 1,
         backgroundColor: '#e1f0ff',
         padding: 20,
@@ -65,27 +62,27 @@ export const quizStyle = StyleSheet.create({
         fontSize: 14,
         marginBottom: 15,
     },
-    questionContainer: {
+    quizQuestionContainer: {
         marginVertical: 10,
         alignItems: 'center',
     },
-    questionNumberContainer: {
+    quizQuestionNumberContainer: {
         marginVertical: 1,
         alignItems: 'center',
     },
-    questionText: {
+    quizQuestionText: {
         fontSize: 18,
         color: '#4b4f60',
         textAlign: 'center',
         marginBottom: 5,
     },
-    answersContainer: {
+    quizAnswersContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
         marginVertical: 20,
     },
-    answerButton: {
+    quizAnswerButton: {
         width: 150,
         height: 110,
         borderRadius: 8,
@@ -94,31 +91,31 @@ export const quizStyle = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#7c8ca3',
     },
-    answerText: {
+    quizAnswerText: {
         fontSize: 16,
         color: '#ffffff',
         textAlign: 'center',
     },
-    feedbackContainer: {
+    quizFeedbackContainer: {
         backgroundColor: '#7c8ca3',
         padding: 15,
         borderRadius: 10,
         marginVertical: 15,
         alignItems: 'center',
     },
-    feedbackText: {
+    quizFeedbackText: {
         fontSize: 16,
         color: '#ffffff',
         textAlign: 'center',
     },
-    nextButton: {
+    quizNextButton: {
         backgroundColor: '#b8cce0',
         paddingVertical: 12,
         paddingHorizontal: 30,
         borderRadius: 20,
         marginTop: 20,
     },
-    nextButtonText: {
+    quizNextButtonText: {
         fontSize: 16,
         color: '#4b4f60',
         fontWeight: 'bold',

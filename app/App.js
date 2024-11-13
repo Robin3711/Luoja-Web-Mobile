@@ -7,6 +7,7 @@ import Parameters from './src/screens/Parameters';
 import HomeScreen from './src/screens/HomeScreen';
 import QuizScreen from './src/screens/QuizScreen';
 import ResumeScreen from './src/screens/ResumeScreen';
+import EndScreen from './src/screens/EndScreen';
 
 const drawerNavigator = createDrawerNavigator();
 const stack = createStackNavigator()
@@ -21,15 +22,22 @@ const MenuDrawer = () => {
   );
 };
 
+const MenuStack = () => {
+  return (
+    <stack.Navigator>
+      <stack.Screen name="MenuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
+      <stack.Group screenOptions={{ presentation: 'modal' }}>
+        <stack.Screen name="QuizStack" component={QuizScreen} options={{ title: "Le quiz", headerLeft: () => null }} />
+        <stack.Screen name="ResumeQuiz" component={EndScreen} options={{ title: "Résultat", headerLeft: () => null }} />
+      </stack.Group>
+    </stack.Navigator>
+  );
+};
+
 export default function App() {
   return (
     <NavigationContainer>
-      <stack.Navigator>
-        <stack.Screen name="MenuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
-        <stack.Group screenOptions={{ presentation: 'modal' }}>
-          <stack.Screen name="QuizStack" component={QuizScreen} options={{ title: "Le quiz", headerLeft: () => null }} />
-        </stack.Group>
-      </stack.Navigator>
+      <MenuStack />
     </NavigationContainer>
   );
 }
