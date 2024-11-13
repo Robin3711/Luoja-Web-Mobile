@@ -1,5 +1,6 @@
 import { View, Text, Button, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import { getCurrentQuestion, getCurrentAnswer, getCurrentInfos } from '../utils/api';
 import { getPlatformStyle } from '../utils/utils';
@@ -8,6 +9,7 @@ const styles = getPlatformStyle();
 
 export default function QuizScreen() {
     const route = useRoute();
+    const navigation = useNavigation();
     const { quizData } = route.params;
     const quizId = quizData.quizId;
     const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -21,7 +23,6 @@ export default function QuizScreen() {
 
     useEffect(() => {
         (async () => {
-            handleNewQuestion();
             const infos = await getCurrentInfos(quizId);
             setCurrentQuestionNumber(infos.questionCursor + 1);
             setTotalQuestion(infos.numberOfQuestions);
@@ -30,6 +31,7 @@ export default function QuizScreen() {
                     setScore(score + 1);
                 }
             }
+            handleNewQuestion();
         })()
     }, [quizId]);
 
@@ -49,11 +51,6 @@ export default function QuizScreen() {
     };
 
     const handleGetAnswer = async () => {
-        if (!selectedAnswer) {
-            alert('Veuillez sélectionner une réponse !');
-            return;
-        }
-
         const responseData = {
             answer: selectedAnswer,
         };
@@ -89,19 +86,18 @@ export default function QuizScreen() {
         return 'gray';
     };
 
-    const handleCreateQuiz = () => {
-        const data = {}
-        // navigation.navigate('ResumeQuiz', { resumeData:  });
-    };
-
+    const handleEnd = () => {
+        const data = { score: score, gameId: quizId }
+        navigation.navigate('ResumeQuiz', { resumeData: data });
+    }
 
     return (
-        <View style={quizStyle.container}>
+        <View style={styles.quizContainer}>
             {currentQuestion ? (
                 <>
-                    <View style={quizStyle.questionNumberContainer}>
-                        <Text style={quizStyle.quizId}>ID: {quizId}</Text>
-                        <Text style={quizStyle.questionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
+                    <View style={styles.quizQuestionNumberContainer}>
+                        <Text style={styles.quizId}>ID: {quizId}</Text>
+                        <Text style={styles.quizQuestionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
                         <Text>Score: {score}</Text>
                     </View>
                     <View style={styles.quizQuestionContainer}>
@@ -126,6 +122,8 @@ export default function QuizScreen() {
                         onPress={() => {
                             if (!newQuestionNow) {
                                 handleGetAnswer();
+                            } else if (totalQuestion === currentQuestionNumber) {
+                                handleEnd();
                             } else {
                                 setNewQuestionNow(false);
                                 setIsAnswered(false);
@@ -135,15 +133,17 @@ export default function QuizScreen() {
                                 handleNewQuestion();
                             }
                         }}
+                        disabled={!selectedAnswer}
                     >
                         <Text style={styles.quizNextButtonText}>
-                            {newQuestionNow === false ? "Envoyer" : "Question suivante"}
+                            {newQuestionNow === false && currentQuestionNumber !== totalQuestion ? "Envoyer" : "Question suivante"}
                         </Text>
                     </TouchableOpacity>
                 </>
             ) : (
                 <Text style={styles.quizQuestionText}>Chargement de la question...</Text>
-            )}
-        </View>
+            )
+            }
+        </View >
     );
 }
