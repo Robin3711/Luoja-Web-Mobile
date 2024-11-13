@@ -49,11 +49,8 @@ export default styles = StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 1,
         margin: 10,
-    }
-});
-
-export const quizStyle = StyleSheet.create({
-    container: {
+    },
+    quizContainer: {
         flex: 1,
         backgroundColor: '#e1f0ff',
         paddingHorizontal: 20,
@@ -67,20 +64,20 @@ export const quizStyle = StyleSheet.create({
         marginTop: 10,
         marginBottom: 20,
     },
-    questionContainer: {
+    quizQuestionContainer: {
         alignItems: 'center',
         marginBottom: 30,
     },
-    questionNumberContainer: {
+    quizQuestionNumberContainer: {
         marginVertical: 10,
         alignItems: 'center',
     },
-    questionNumber: {
+    quizQuestionNumber: {
         fontSize: 36,
         color: '#4b4f60',
         marginBottom: 5,
     },
-    questionText: {
+    quizQuestionText: {
         fontSize: 18,
         color: '#4b4f60',
         textAlign: 'center',
@@ -88,11 +85,11 @@ export const quizStyle = StyleSheet.create({
         fontStyle: 'italic',
         marginBottom: 20,
     },
-    answersContainer: {
+    quizAnswersContainer: {
         width: '100%',
         alignItems: 'center',
     },
-    answerButton: {
+    quizAnswerButton: {
         width: '90%',
         minHeight: 70,
         borderRadius: 15,
@@ -102,33 +99,33 @@ export const quizStyle = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: 15,
     },
-    answerButtonDefault: {
+    quizAnswerButtonDefault: {
         backgroundColor: '#4b7ed6',
     },
-    answerButtonCorrect: {
+    quizAnswerButtonCorrect: {
         backgroundColor: '#87c34b',
     },
-    answerButtonIncorrect: {
+    quizAnswerButtonIncorrect: {
         backgroundColor: '#d65a4b',
     },
-    answerText: {
+    quizAnswerText: {
         fontSize: 16,
         color: '#ffffff',
         textAlign: 'center',
     },
-    nextButton: {
+    quizNextButton: {
         backgroundColor: '#a3d0ff',
         paddingVertical: 12,
         paddingHorizontal: 30,
         borderRadius: 10,
         marginTop: 30,
     },
-    nextButtonText: {
+    quizNextButtonText: {
         fontSize: 18,
         color: '#4b4f60',
         fontWeight: 'bold',
     },
-    iconContainer: {
+    quizIconContainer: {
         width: 50,
         height: 50,
         borderRadius: 10,
@@ -137,25 +134,25 @@ export const quizStyle = StyleSheet.create({
         marginRight: 15,
         backgroundColor: '#87caff',
     },
-    feedbackContainer: {
+    quizFeedbackContainer: {
         backgroundColor: '#4b4f60',
         padding: 15,
         borderRadius: 10,
         marginVertical: 15,
         alignItems: 'center',
     },
-    feedbackText: {
+    quizFeedbackText: {
         fontSize: 16,
         color: '#ffffff',
         textAlign: 'center',
     },
-    progressContainer: {
+    quizProgressContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 20,
     },
-    progressCircle: {
+    quizProgressCircle: {
         width: 30,
         height: 30,
         borderRadius: 15,
@@ -163,10 +160,10 @@ export const quizStyle = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    progressCircleFilled: {
+    quizProgressCircleFilled: {
         backgroundColor: '#4b7ed6',
     },
-    progressCircleEmpty: {
+    quizProgressCircleEmpty: {
         backgroundColor: '#b8cce0',
     },
 });

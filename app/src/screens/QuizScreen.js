@@ -2,7 +2,9 @@ import { View, Text, Button, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import { getCurrentQuestion, getCurrentAnswer, getCurrentInfos } from '../utils/api';
-import { quizStyle } from '../utils/utils';
+import { getPlatformStyle } from '../utils/utils';
+
+const styles = getPlatformStyle();
 
 export default function QuizScreen() {
     const route = useRoute();
@@ -75,32 +77,32 @@ export default function QuizScreen() {
     };
 
     return (
-        <View style={quizStyle.container}>
-            <Text style={quizStyle.quizId}>ID: {quizId}</Text>
+        <View style={styles.quizContainer}>
+            <Text style={styles.quizId}>ID: {quizId}</Text>
             {currentQuestion ? (
                 <>
-                    <View style={quizStyle.questionNumberContainer}>
-                        <Text style={quizStyle.questionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
+                    <View style={styles.quizQuestionNumberContainer}>
+                        <Text style={styles.quizQuestionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
                     </View>
-                    <View style={quizStyle.questionContainer}>
-                        <Text style={quizStyle.questionText}>{currentQuestion.question}</Text>
+                    <View style={styles.quizQuestionContainer}>
+                        <Text style={styles.quizQuestionText}>{currentQuestion.question}</Text>
                     </View>
-                    <View style={quizStyle.answersContainer}>
+                    <View style={styles.quizAnswersContainer}>
                         {currentQuestion.answers.map((answer, index) => (
                             <TouchableOpacity
                                 key={index}
                                 style={[
-                                    quizStyle.answerButton,
+                                    styles.quizAnswerButton,
                                     { backgroundColor: getAnswerColor(answer) },
                                 ]}
                                 onPress={() => handleAnswerSelection(answer)}
                             >
-                                <Text style={quizStyle.answerText}>{answer}</Text>
+                                <Text style={styles.quizAnswerText}>{answer}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
                     <TouchableOpacity
-                        style={quizStyle.nextButton}
+                        style={styles.quizNextButton}
                         onPress={() => {
                             if (!newQuestionNow) {
                                 handleGetAnswer();
@@ -114,13 +116,13 @@ export default function QuizScreen() {
                             }
                         }}
                     >
-                        <Text style={quizStyle.nextButtonText}>
+                        <Text style={styles.quizNextButtonText}>
                             {newQuestionNow === false ? "Envoyer" : "Question suivante"}
                         </Text>
                     </TouchableOpacity>
                 </>
             ) : (
-                <Text style={quizStyle.questionText}>Chargement de la question...</Text>
+                <Text style={styles.quizQuestionText}>Chargement de la question...</Text>
             )}
         </View>
     );
