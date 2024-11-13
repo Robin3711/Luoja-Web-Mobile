@@ -7,9 +7,19 @@ const app = express();
 const PORT = 4000;
 const PROTOCOL = process.env.PROTOCOL || 'HTTP'; // 'http' par défaut
 const DOMAIN = process.env.DOMAIN || 'localhost'; // 'localhost' par défaut
+const API = process.env.API || 'localhost:3000'; // 'http://localhost:3000' par défaut
 
 // Servir les fichiers statiques à partir du dossier `dist`
 app.use(express.static(path.resolve(__dirname, 'dist')));
+
+app.get('/get-api-url', (req, res) => {
+
+  // Normaliser l'URL de l'API
+  const apiUrl = `${PROTOCOL.toLowerCase()}://${API}`;
+
+  // Envoyer l'URL normalisée comme réponse JSON
+  res.json({ apiUrl });
+});
 
 // Route pour renvoyer `index.html` pour toutes les autres requêtes
 app.get('*', (req, res) => {
