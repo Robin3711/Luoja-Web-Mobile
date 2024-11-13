@@ -20,7 +20,7 @@ export default function Parameters() {
 
         setTimeout(() => {
           navigation.navigate('QuizStack', { quizData: data });
-        }, 500);
+        }, 0);
       })
       .catch(error => {
         console.error(error);
