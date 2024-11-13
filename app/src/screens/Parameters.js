@@ -20,7 +20,7 @@ export default function Parameters() {
 
         setTimeout(() => {
           navigation.navigate('QuizStack', { quizData: data });
-        }, 500);
+        }, 0);
       })
       .catch(error => {
         console.error(error);
@@ -64,18 +64,22 @@ export default function Parameters() {
   return (
     <View>
       <Text>Choisissez le nombre de question</Text>
-      <RangeCursor value={questionCount} onValueChange={setQuestionCount} />
+      <RangeCursor testID="range-cursor" value={questionCount} onValueChange={setQuestionCount} />
       <Text>Choisissez un thème</Text>
       <RNPickerSelect
         onValueChange={(value) => setTheme(value)}
         items={themeOptions}
         value={theme}
+        placeholder={{ label: 'Sélectionner un thème', value: null }}
+        accessibilityLabel="Sélecteur de thème"
       />
       <Text>Choisissez le difficulté</Text>
       <RNPickerSelect
         onValueChange={(value) => setDifficulty(value)}
         items={difficultyOptions}
         value={difficulty}
+        placeholder={{ label: 'Sélectionner une difficulté', value: null }}
+        accessibilityLabel="Sélecteur de difficulté"
       />
       <Button title="Créer le quiz" onPress={handleCreateQuiz} />
       <StatusBar style="auto" />
