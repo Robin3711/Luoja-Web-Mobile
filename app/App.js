@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import Parameters from './src/screens/Parameters';
 import HomeScreen from './src/screens/HomeScreen';
 import QuizScreen from './src/screens/QuizScreen';
+import ResumeScreen from './src/screens/ResumeScreen';
 
 const drawerNavigator = createDrawerNavigator();
 const stack = createStackNavigator()
@@ -15,6 +16,7 @@ const MenuDrawer = () => {
     <drawerNavigator.Navigator screenOptions={{ drawerPosition: 'left' }}>
       <drawerNavigator.Screen name="home" component={HomeScreen} options={{ title: "Accueil" }} />
       <drawerNavigator.Screen name="newQUIZ" component={Parameters} options={{ title: "Créer un nouveau QUIZ" }} />
+      <drawerNavigator.Screen name="resumeQUIZ" component={ResumeScreen} options={{ title: "Reprendre un QUIZ" }} />
     </drawerNavigator.Navigator>
   );
 };
