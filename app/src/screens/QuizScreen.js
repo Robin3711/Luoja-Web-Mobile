@@ -26,11 +26,13 @@ export default function QuizScreen() {
             const infos = await getCurrentInfos(quizId);
             setCurrentQuestionNumber(infos.questionCursor + 1);
             setTotalQuestion(infos.numberOfQuestions);
+            let scoreTemp = 0;
             for (let i = 0; i < infos.questionCursor; i++) {
                 if (infos.results[i]) {
-                    setScore(score + 1);
+                    scoreTemp++;
                 }
             }
+            setScore(scoreTemp);
             handleNewQuestion();
         })()
     }, [quizId]);
