@@ -1,8 +1,8 @@
 import { Platform } from 'react-native';
 
-export function getPlatformStyle() {
+let apiUrl = null;
 
-    console.log('Platform.OS: ', Platform.OS);
+export function getPlatformStyle() {
 
     if (Platform.OS === 'web') {
         const styles = require('./style.web.js');
@@ -11,4 +11,20 @@ export function getPlatformStyle() {
     }
 
     return styles;
+}
+
+export async function getPlatformAPI() {
+
+    if(apiUrl == null){
+        if (Platform.OS === 'web') {
+            const response = await fetch('/get-api-url');
+            const data = await response.json();
+            apiUrl = data.apiUrl;
+        }
+        else {
+            apiUrl = 'https://api.luoja.fr';
+        }
+    }
+    
+    return apiUrl;
 }
