@@ -62,9 +62,16 @@ export default function QuizScreen() {
             setNewQuestionNow(true);
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
+            if (correctAnswerFromApi) {
+                updateScore();
+            }
         } catch (error) {
             console.error('Erreur lors de la soumission de la réponse:', error);
         }
+    };
+
+    const updateScore = () => {
+        setScore(score + 1);
     };
 
     const getAnswerColor = (answer) => {
@@ -73,7 +80,6 @@ export default function QuizScreen() {
         }
         if (answer === selectedAnswer) {
             if (correct) {
-                setScore(score + 1);
                 return 'green';
             } else {
                 return 'red';
@@ -89,7 +95,7 @@ export default function QuizScreen() {
                     <View style={quizStyle.questionNumberContainer}>
                         <Text style={quizStyle.quizId}>ID: {quizId}</Text>
                         <Text style={quizStyle.questionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
-                        <Text style={quizStyle.score}>Score: {score}</Text>
+                        <Text>Score: {score}</Text>
                     </View>
                     <View style={quizStyle.questionContainer}>
                         <Text style={quizStyle.questionText}>{currentQuestion.question}</Text>
