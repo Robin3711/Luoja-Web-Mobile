@@ -76,6 +76,12 @@ export default function QuizScreen() {
         return 'gray';
     };
 
+    const handleCreateQuiz = () => {
+        const data = {}
+        // navigation.navigate('ResumeQuiz', { resumeData:  });
+    };
+
+
     return (
         <View style={styles.quizContainer}>
             <Text style={styles.quizId}>ID: {quizId}</Text>

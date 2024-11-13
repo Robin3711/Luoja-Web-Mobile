@@ -27,7 +27,8 @@ export default function App() {
       <stack.Navigator>
         <stack.Screen name="MenuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
         <stack.Group screenOptions={{ presentation: 'modal' }}>
-          <stack.Screen name="QuizStack" component={QuizScreen} options={{ title: "Le quiz", headerLeft: () => null }} />
+          <stack.Screen name="QuizStack" component={QuizScreen} options={{ title: "Le quiz", headerLeft: () => null, animation: true }} />
+          <stack.Screen name="ResumeQuiz" component={EndScreen} options={{ title: "Résultat", headerLeft: () => null, animation: true }} />
         </stack.Group>
       </stack.Navigator>
     </NavigationContainer>
