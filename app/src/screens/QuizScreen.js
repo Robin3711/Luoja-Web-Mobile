@@ -12,8 +12,7 @@ export default function QuizScreen() {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
     const [newQuestionNow, setNewQuestionNow] = useState(false);
-    const [answerFeedback, setAnswerFeedback] = useState(null);
-    const [correctAnswer, setCorrectAnswer] = useState(null);
+    const [correct, setCorrect] = useState(null);
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState(null);
     const [totalQuestion, setTotalQuestion] = useState(null);
 
@@ -21,7 +20,7 @@ export default function QuizScreen() {
         (async () => {
             handleNewQuestion();
             const infos = await getCurrentInfos(quizId);
-            setCurrentQuestionNumber(infos.questionCursor);
+            setCurrentQuestionNumber(infos.questionCursor + 1);
             setTotalQuestion(infos.numberOfQuestions);
         })()
     }, [quizId]);
@@ -52,10 +51,9 @@ export default function QuizScreen() {
         };
 
         try {
-            const { correct, correctAnswer: correctAnswerFromApi } = await getCurrentAnswer(responseData, quizId);
+            const { correct: correctAnswerFromApi } = await getCurrentAnswer(responseData, quizId);
             setNewQuestionNow(true);
-            setAnswerFeedback(correct ? 'correct' : 'incorrect');
-            setCorrectAnswer(correctAnswerFromApi);
+            setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
         } catch (error) {
             console.error('Erreur lors de la soumission de la réponse:', error);
@@ -67,14 +65,11 @@ export default function QuizScreen() {
             return 'blue';
         }
         if (answer === selectedAnswer) {
-            if (answerFeedback === 'correct') {
+            if (correct) {
                 return 'green';
-            } else if (answerFeedback === 'incorrect') {
+            } else {
                 return 'red';
             }
-        }
-        if (answer === correctAnswer) {
-            return 'green';
         }
         return 'gray';
     };
@@ -88,7 +83,6 @@ export default function QuizScreen() {
                         <Text style={quizStyle.questionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
                     </View>
                     <View style={quizStyle.questionContainer}>
-                        <Text style={quizStyle.questionText}>Question :</Text>
                         <Text style={quizStyle.questionText}>{currentQuestion.question}</Text>
                     </View>
                     <View style={quizStyle.answersContainer}>
@@ -114,8 +108,7 @@ export default function QuizScreen() {
                                 setNewQuestionNow(false);
                                 setIsAnswered(false);
                                 setSelectedAnswer(null);
-                                setAnswerFeedback(null);
-                                setCorrectAnswer(null);
+                                setCorrect(null);
                                 setCurrentQuestionNumber(currentQuestionNumber + 1);
                                 handleNewQuestion();
                             }
