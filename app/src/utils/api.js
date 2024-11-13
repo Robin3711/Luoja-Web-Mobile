@@ -1,7 +1,9 @@
+import { getPlatformAPI } from "./utils";
+
 export async function createQuiz(questionCount, theme, difficulty) {
     try {
 
-        let url = `https://api.luoja.fr/quiz?amount=${questionCount}`;
+        let url = `${await getPlatformAPI()}/quiz?amount=${questionCount}`;
 
         if (theme !== 'none') {
             url += `&category=${theme}`;
@@ -23,7 +25,7 @@ export async function createQuiz(questionCount, theme, difficulty) {
 
 export async function getCurrentQuestion(quizId) {
     try {
-        const response = await fetch(`https://api.luoja.fr/quiz/${quizId}/question`);
+        const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/question`);
         const data = await response.json();
         return data;
     } catch (error) {
@@ -34,7 +36,7 @@ export async function getCurrentQuestion(quizId) {
 
 export async function getCurrentAnswer(answer, quizId) {
     try {
-        const response = await fetch(`https://api.luoja.fr/quiz/${quizId}/answer`, {
+        const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/answer`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,7 +59,7 @@ export async function getCurrentAnswer(answer, quizId) {
 export async function getCurrentInfos(quizId) {
     try {
 
-        let url = `https://api.luoja.fr/quiz/${quizId}/infos`;
+        let url = `${await getPlatformAPI()}/quiz/${quizId}/infos`;
 
         const response = await fetch(url);
 
