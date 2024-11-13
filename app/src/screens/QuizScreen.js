@@ -11,6 +11,14 @@ export default function QuizScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const { quizData } = route.params;
+    if(quizData.error === "Erreur lors de la récupération des questions"){
+        return (
+            <View style={styles.quizContainer}>
+                <Text style={styles.quizQuestionText}>Il n'y a pas assez de questions disponibles pour vos paramètres, veuillez les modifier.</Text>
+                <Button title="Retour" onPress={() => navigation.navigate('Parameters')} />
+            </View>
+        );
+    }
     const quizId = quizData.quizId;
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
