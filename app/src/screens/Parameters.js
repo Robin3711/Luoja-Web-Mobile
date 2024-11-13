@@ -70,12 +70,16 @@ export default function Parameters() {
         onValueChange={(value) => setTheme(value)}
         items={themeOptions}
         value={theme}
+        placeholder={{ label: 'Sélectionner un thème', value: null }}
+        accessibilityLabel="Sélecteur de thème"
       />
       <Text>Choisissez le difficulté</Text>
       <RNPickerSelect
         onValueChange={(value) => setDifficulty(value)}
         items={difficultyOptions}
         value={difficulty}
+        placeholder={{ label: 'Sélectionner une difficulté', value: null }}
+        accessibilityLabel="Sélecteur de difficulté"
       />
       <Button title="Créer le quiz" onPress={handleCreateQuiz} />
       <StatusBar style="auto" />
