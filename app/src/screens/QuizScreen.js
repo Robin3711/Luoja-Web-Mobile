@@ -89,6 +89,7 @@ export default function QuizScreen() {
                     <View style={quizStyle.questionNumberContainer}>
                         <Text style={quizStyle.quizId}>ID: {quizId}</Text>
                         <Text style={quizStyle.questionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
+                        <Text style={quizStyle.score}>Score: {score}</Text>
                     </View>
                     <View style={quizStyle.questionContainer}>
                         <Text style={quizStyle.questionText}>{currentQuestion.question}</Text>
