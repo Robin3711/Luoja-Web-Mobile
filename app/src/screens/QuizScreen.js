@@ -15,6 +15,7 @@ export default function QuizScreen() {
     const [correct, setCorrect] = useState(null);
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState(null);
     const [totalQuestion, setTotalQuestion] = useState(null);
+    const [score, setScore] = useState(0);
 
     useEffect(() => {
         (async () => {
@@ -22,6 +23,12 @@ export default function QuizScreen() {
             const infos = await getCurrentInfos(quizId);
             setCurrentQuestionNumber(infos.questionCursor + 1);
             setTotalQuestion(infos.numberOfQuestions);
+            for( let i = 0; i < infos.questionCursor; i++) {
+                if(infos.results[i])
+                {
+                    setScore(score + 1);
+                }
+            }
         })()
     }, [quizId]);
 
@@ -55,9 +62,16 @@ export default function QuizScreen() {
             setNewQuestionNow(true);
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
+            if (correctAnswerFromApi) {
+                updateScore();
+            }
         } catch (error) {
             console.error('Erreur lors de la soumission de la réponse:', error);
         }
+    };
+
+    const updateScore = () => {
+        setScore(score + 1);
     };
 
     const getAnswerColor = (answer) => {
@@ -76,11 +90,12 @@ export default function QuizScreen() {
 
     return (
         <View style={quizStyle.container}>
-            <Text style={quizStyle.quizId}>ID: {quizId}</Text>
             {currentQuestion ? (
                 <>
                     <View style={quizStyle.questionNumberContainer}>
+                        <Text style={quizStyle.quizId}>ID: {quizId}</Text>
                         <Text style={quizStyle.questionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
+                        <Text>Score: {score}</Text>
                     </View>
                     <View style={quizStyle.questionContainer}>
                         <Text style={quizStyle.questionText}>{currentQuestion.question}</Text>
