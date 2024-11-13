@@ -64,7 +64,7 @@ export default function Parameters() {
   return (
     <View>
       <Text>Choisissez le nombre de question</Text>
-      <RangeCursor value={questionCount} onValueChange={setQuestionCount} />
+      <RangeCursor testID="range-cursor" value={questionCount} onValueChange={setQuestionCount} />
       <Text>Choisissez un thème</Text>
       <RNPickerSelect
         onValueChange={(value) => setTheme(value)}

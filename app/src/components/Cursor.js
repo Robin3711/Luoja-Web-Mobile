@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import Slider from '@react-native-community/slider';
 
-const RangeCursor = ({ value, onValueChange }) => {
+const RangeCursor = ({ testID, value, onValueChange }) => {
   return (
     <View >
       <Text>Sélection : {value}</Text>
@@ -15,6 +15,7 @@ const RangeCursor = ({ value, onValueChange }) => {
         minimumTrackTintColor="#1EB1FC"
         maximumTrackTintColor="#d3d3d3"
         thumbTintColor="#1EB1FC"
+        testID={testID}
       />
     </View>
   );
