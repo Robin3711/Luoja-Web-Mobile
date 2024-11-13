@@ -29,6 +29,7 @@ const MenuStack = () => {
       <stack.Group screenOptions={{ presentation: 'modal' }}>
         <stack.Screen name="QuizStack" component={QuizScreen} options={{ title: "Le quiz", headerLeft: () => null }} />
         <stack.Screen name="ResumeQuiz" component={EndScreen} options={{ title: "Résultat", headerLeft: () => null }} />
+        <stack.Screen name="Parameters" component={Parameters} options={{ title: "Paramètres" }} />
       </stack.Group>
     </stack.Navigator>
   );
