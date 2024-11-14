@@ -1,9 +1,8 @@
 stages:
-  - build
-  - docker
-  - test
-  - lint  
+  - tests
   - pages
+  - build
+  - docker      
 
 build:
   image: node:latest
@@ -40,9 +39,8 @@ docker:
     - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
 
 
-test:
-  when: always
-  stage: test
+test:  
+  stage: tests
   image: node:latest
   script:    
     - cd app
@@ -56,11 +54,11 @@ test:
       junit: app/reports/junit.xml    
     paths:
       - app/reports/junit.xml
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
 
-
-lint:
-  when: always
-  stage: lint 
+lint:  
+  stage: tests
   image: node:latest
   script:
     - cd app
@@ -72,10 +70,11 @@ lint:
     paths:
       - app/lint_report.html 
     expire_in: 30 days
-    when: always
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
 
-pages:
-  when: always
+pages:  
   stage: pages
   image: alpine:latest
   script:
@@ -101,3 +100,5 @@ pages:
       - public
     expire_in: 30 days
     when: always
+  rules:
+  - if: $CI_COMMIT_BRANCH == "dev"
