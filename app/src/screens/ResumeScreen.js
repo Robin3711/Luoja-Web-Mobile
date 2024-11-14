@@ -43,7 +43,7 @@ export default function ResumeScreen() {
     return (
         <View style={styles.container}>
             <Text>Reprenez votre partie</Text>
-            <TextInput placeholder="Identifiant de votre partie" style={styles.textInput} onChangeText={setGameId} value={gameId}/>
+            <TextInput placeholder="Identifiant de votre partie" style={styles.textInput} onChangeText={setGameId} value={gameId} autoFocus/>
             <Button title="Reprendre" onPress={handleResumeGame} />
         </View>
     );
