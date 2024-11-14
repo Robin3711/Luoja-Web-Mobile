@@ -1,0 +1,169 @@
+import { StyleSheet } from 'react-native';
+
+export default styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    homeScreen: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: 'white',
+    },
+    homeScreenButtonsView: {
+        display: 'flex',
+        backgroundColor: 'lightgrey',
+        minWidth: '50%',
+        minHeight: '25%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 40,
+    },
+    homeScreenButton: {
+        backgroundColor: 'white',
+        minWidth: '50%',
+        minHeight: '20%',
+        margin: '2%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 40,
+    },
+    drawerButtonView: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+    },
+    drawerButton: {
+        width: 50,
+        height: 50,
+        backgroundColor: 'white',
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    textInput: {
+        width: '40%',
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        margin: 10,
+    },
+    quizContainer: {
+        flex: 1,
+        backgroundColor: '#e1f0ff',
+        paddingHorizontal: 20,
+        alignItems: 'center',
+    },
+    quizId: {
+        fontWeight: 'bold',
+        color: '#4b4f60',
+        fontSize: 14,
+        alignSelf: 'flex-end',
+        marginTop: 10,
+        marginBottom: 20,
+    },
+    quizQuestionContainer: {
+        alignItems: 'center',
+        marginBottom: 30,
+    },
+    quizQuestionNumberContainer: {
+        marginVertical: 10,
+        alignItems: 'center',
+    },
+    quizQuestionNumber: {
+        fontSize: 36,
+        color: '#4b4f60',
+        marginBottom: 5,
+    },
+    quizQuestionText: {
+        fontSize: 18,
+        color: '#4b4f60',
+        textAlign: 'center',
+        fontWeight: '400',
+        fontStyle: 'italic',
+        marginBottom: 20,
+    },
+    quizAnswersContainer: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    quizAnswerButton: {
+        width: '90%',
+        minHeight: 70,
+        borderRadius: 15,
+        marginVertical: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        paddingHorizontal: 15,
+    },
+    quizAnswerButtonDefault: {
+        backgroundColor: '#4b7ed6',
+    },
+    quizAnswerButtonCorrect: {
+        backgroundColor: '#87c34b',
+    },
+    quizAnswerButtonIncorrect: {
+        backgroundColor: '#d65a4b',
+    },
+    quizAnswerText: {
+        fontSize: 16,
+        color: '#ffffff',
+        textAlign: 'center',
+    },
+    quizNextButton: {
+        backgroundColor: '#a3d0ff',
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 10,
+        marginTop: 30,
+    },
+    quizNextButtonText: {
+        fontSize: 18,
+        color: '#4b4f60',
+        fontWeight: 'bold',
+    },
+    quizIconContainer: {
+        width: 50,
+        height: 50,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 15,
+        backgroundColor: '#87caff',
+    },
+    quizFeedbackContainer: {
+        backgroundColor: '#4b4f60',
+        padding: 15,
+        borderRadius: 10,
+        marginVertical: 15,
+        alignItems: 'center',
+    },
+    quizFeedbackText: {
+        fontSize: 16,
+        color: '#ffffff',
+        textAlign: 'center',
+    },
+    quizProgressContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    quizProgressCircle: {
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        marginHorizontal: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    quizProgressCircleFilled: {
+        backgroundColor: '#4b7ed6',
+    },
+    quizProgressCircleEmpty: {
+        backgroundColor: '#b8cce0',
+    },
+});

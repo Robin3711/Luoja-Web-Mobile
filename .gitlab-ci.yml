@@ -1,0 +1,104 @@
+stages:
+  - tests
+  - pages
+  - build
+  - docker      
+
+build:
+  image: node:latest
+  stage: build
+  script:
+    - cp -r web-server ./docker
+    - cd app
+    - npm install
+    - npx expo install react-dom react-native-web @expo/metro-runtime
+    - npx expo export --platform web
+    - cp -r dist ../docker/web-server
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - docker/
+
+
+docker:
+  image: docker:latest
+  stage: docker
+  services:
+    - docker:dind
+  needs:
+    - build
+  script:
+    - cd docker
+    - docker login -u gitlab-ci -p $DOCKER_REGISTRY_PASSWORD docker.luoja.fr
+    - docker build -t baldur .
+    - docker tag baldur docker.luoja.fr/baldur
+    - docker push docker.luoja.fr/baldur
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
+
+
+test:  
+  stage: tests
+  image: node:latest
+  script:    
+    - cd app
+    - npm install       
+    - npm install --save-dev jest-junit jest-expo
+    - npm test
+  artifacts:
+    expire_in: 30 days
+    when: always
+    reports:
+      junit: app/reports/junit.xml    
+    paths:
+      - app/reports/junit.xml
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
+
+lint:  
+  stage: tests
+  image: node:latest
+  script:
+    - cd app
+    - npm install    
+    - npm install --save-dev eslint @eslint/js @types/eslint__js typescript typescript-eslint
+    - npm install --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin
+    - npx eslint ./src/**/*.js ./*.js --output-file lint_report.html --format html
+  artifacts:
+    paths:
+      - app/lint_report.html 
+    expire_in: 30 days
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
+
+pages:  
+  stage: pages
+  image: alpine:latest
+  script:
+    - mkdir -p public
+    - echo "<html><body><h1>Rapport de Linting et de Test</h1>" > public/index.html
+    - |
+      if [ -f app/lint_report.html ]; then
+        cp app/lint_report.html public/lint_report.html
+        echo "<h2><a href='lint_report.html'>Voir le Rapport de Linting</a></h2>" >> public/index.html
+      else
+        echo "<h2>Rapport de Linting non disponible</h2>" >> public/index.html
+      fi
+    - |
+      if [ -f app/test.xml ]; then
+        cp app/test.xml public/test.xml
+        echo "<h2><a href='test.xml'>Voir le Rapport de Test</a></h2>" >> public/index.html
+      else
+        echo "<h2>Rapport de Test non disponible</h2>" >> public/index.html
+      fi
+    - echo "</body></html>" >> public/index.html
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+    when: always
+  rules:
+  - if: $CI_COMMIT_BRANCH == "dev"
