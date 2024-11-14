@@ -1,6 +1,9 @@
 stages:
   - build
   - docker
+  - test
+  - lint  
+  - pages
 
 build:
   image: node:latest
@@ -35,3 +38,66 @@ docker:
     - docker push docker.luoja.fr/baldur
   rules:
     - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
+
+
+test:
+  when: always
+  stage: test
+  image: node:latest
+  script:    
+    - cd app
+    - npm install       
+    - npm install --save-dev jest-junit jest-expo
+    - npm test
+  artifacts:
+    expire_in: 30 days
+    when: always
+    reports:
+      junit: app/reports/junit.xml    
+    paths:
+      - app/reports/junit.xml
+
+
+lint:
+  when: always
+  stage: lint 
+  image: node:latest
+  script:
+    - cd app
+    - npm install    
+    - npm install --save-dev eslint @eslint/js @types/eslint__js typescript typescript-eslint
+    - npm install --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin
+    - npx eslint ./src/**/*.js ./*.js --output-file lint_report.html --format html
+  artifacts:
+    paths:
+      - app/lint_report.html 
+    expire_in: 30 days
+    when: always
+
+pages:
+  when: always
+  stage: pages
+  image: alpine:latest
+  script:
+    - mkdir -p public
+    - echo "<html><body><h1>Rapport de Linting et de Test</h1>" > public/index.html
+    - |
+      if [ -f app/lint_report.html ]; then
+        cp app/lint_report.html public/lint_report.html
+        echo "<h2><a href='lint_report.html'>Voir le Rapport de Linting</a></h2>" >> public/index.html
+      else
+        echo "<h2>Rapport de Linting non disponible</h2>" >> public/index.html
+      fi
+    - |
+      if [ -f app/test.xml ]; then
+        cp app/test.xml public/test.xml
+        echo "<h2><a href='test.xml'>Voir le Rapport de Test</a></h2>" >> public/index.html
+      else
+        echo "<h2>Rapport de Test non disponible</h2>" >> public/index.html
+      fi
+    - echo "</body></html>" >> public/index.html
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+    when: always

@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import Resume from '../screens/ResumeScreen';
+import { render, fireEvent } from '@testing-library/react-native';
+import Resume from '../src/screens/ResumeScreen';
 import { NavigationContainer } from '@react-navigation/native';
 
 describe('Resume Component', () => {
