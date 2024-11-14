@@ -28,7 +28,7 @@ export default function ResumeScreen() {
                 }
                 else
                 {
-                    navigation.navigate('QuizStack', { quizData: { quizId: gameId.toLowerCase() } });
+                    navigation.navigate('quizScreen', { quizId: gameId.toLowerCase() });
                 }
             });
         }
