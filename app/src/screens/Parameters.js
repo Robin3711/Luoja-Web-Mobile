@@ -15,7 +15,6 @@ export default function Parameters() {
   const handleCreateQuiz = () => {
     createQuiz(questionCount, theme, difficulty)
       .then(data => {
-        console.log(data);
         navigation.navigate('menuDrawer');
 
         setTimeout(() => {
