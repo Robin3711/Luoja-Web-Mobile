@@ -15,7 +15,7 @@ export default function QuizScreen() {
         return (
             <View style={styles.quizContainer}>
                 <Text style={styles.quizQuestionText}>{quizData.error}</Text>
-                <Button title="Retour" onPress={() => navigation.navigate('Parameters')} />
+                <Button title="Retour" onPress={() => navigation.navigate('newQuiz')} />
             </View>
         );
     }
@@ -98,7 +98,7 @@ export default function QuizScreen() {
 
     const handleEnd = () => {
         const data = { score: score, gameId: quizId }
-        navigation.navigate('ResumeQuiz', { resumeData: data });
+        navigation.navigate('endScreen', { resumeData: data });
     }
 
     return (

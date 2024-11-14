@@ -11,10 +11,10 @@ export default function HomeScreenButtons() {
     return (
         <View style={styles.container}>
             <View style={styles.homeScreenButtonsView}>
-                <TouchableOpacity style={styles.homeScreenButton} onPress={() => navigation.navigate('newQUIZ')}>
+                <TouchableOpacity style={styles.homeScreenButton} onPress={() => navigation.navigate('newQuiz')}>
                     <Text>Créer un QUIZ</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.homeScreenButton} onPress={() => navigation.navigate('resumeQUIZ')}>
+                <TouchableOpacity style={styles.homeScreenButton} onPress={() => navigation.navigate('resumeQuiz')}>
                     <Text>Reprendre un QUIZ</Text>
                 </TouchableOpacity>
             </View>

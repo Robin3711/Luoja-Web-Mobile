@@ -16,10 +16,10 @@ export default function Parameters() {
     createQuiz(questionCount, theme, difficulty)
       .then(data => {
         console.log(data);
-        navigation.navigate('home');
+        navigation.navigate('menuDrawer');
 
         setTimeout(() => {
-          navigation.navigate('QuizStack', { quizData: data });
+          navigation.navigate('quizScreen', { quizData: data });
         }, 0);
       })
       .catch(error => {

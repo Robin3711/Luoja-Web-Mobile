@@ -1,8 +1,6 @@
-import { View, Text, Button, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
-import { useState, useEffect } from 'react';
-import { getCurrentQuestion, getCurrentAnswer, getCurrentInfos } from '../utils/api';
 import { getPlatformStyle } from '../utils/utils';
 
 const styles = getPlatformStyle();
@@ -15,14 +13,12 @@ export default function EndScreen() {
     const gameId = resumeData.gameId;
 
     const handleReturnHome = () => {
-        navigation.navigate("MenuDrawer");
+        navigation.navigate("menuDrawer");
     };
 
     const handleReplay = () => {
-        navigation.navigate('QuizStack', { quizData: { quizId: gameId } });
+        navigation.navigate('quizScreen', { quizData: { quizId: gameId } });
     };
-
-
 
     return (
         <View style={styles.quizContainer}>
