@@ -11,7 +11,8 @@ export default function QuizScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const { quizData } = route.params;
-    if(quizData.error){
+
+    if (quizData.error) {
         return (
             <View style={styles.quizContainer}>
                 <Text style={styles.quizQuestionText}>{quizData.error}</Text>
@@ -19,6 +20,7 @@ export default function QuizScreen() {
             </View>
         );
     }
+
     const quizId = quizData.quizId;
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -28,6 +30,7 @@ export default function QuizScreen() {
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState(null);
     const [totalQuestion, setTotalQuestion] = useState(null);
     const [score, setScore] = useState(0);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -42,15 +45,22 @@ export default function QuizScreen() {
             }
             setScore(scoreTemp);
             handleNewQuestion();
-        })()
+        })();
     }, [quizId]);
 
     const handleNewQuestion = async () => {
         try {
+            setButtonDisabled(true);
+            setNewQuestionNow(false);
+            setIsAnswered(false);
+            setSelectedAnswer(null);
+            setCorrect(null);
             const data = await getCurrentQuestion(quizId);
             setCurrentQuestion(data);
+            setButtonDisabled(false);
         } catch (error) {
             console.error('Erreur lors de la récupération de la question:', error);
+            setButtonDisabled(false);
         }
     };
 
@@ -61,11 +71,10 @@ export default function QuizScreen() {
     };
 
     const handleGetAnswer = async () => {
-        const responseData = {
-            answer: selectedAnswer,
-        };
+        const responseData = { answer: selectedAnswer };
 
         try {
+            setButtonDisabled(true);
             const { correct: correctAnswerFromApi } = await getCurrentAnswer(responseData, quizId);
             setNewQuestionNow(true);
             setCorrect(correctAnswerFromApi);
@@ -73,8 +82,10 @@ export default function QuizScreen() {
             if (correctAnswerFromApi) {
                 updateScore();
             }
+            setButtonDisabled(false);
         } catch (error) {
             console.error('Erreur lors de la soumission de la réponse:', error);
+            setButtonDisabled(false);
         }
     };
 
@@ -87,19 +98,15 @@ export default function QuizScreen() {
             return 'blue';
         }
         if (answer === selectedAnswer) {
-            if (correct) {
-                return 'green';
-            } else {
-                return 'red';
-            }
+            return correct ? 'green' : 'red';
         }
         return 'gray';
     };
 
     const handleEnd = () => {
-        const data = { score: score, gameId: quizId }
+        const data = { score: score, gameId: quizId };
         navigation.navigate('ResumeQuiz', { resumeData: data });
-    }
+    };
 
     return (
         <View style={styles.quizContainer}>
@@ -127,33 +134,42 @@ export default function QuizScreen() {
                             </TouchableOpacity>
                         ))}
                     </View>
-                    <TouchableOpacity
-                        style={styles.quizNextButton}
-                        onPress={() => {
-                            if (!newQuestionNow) {
-                                handleGetAnswer();
-                            } else if (totalQuestion === currentQuestionNumber) {
-                                handleEnd();
-                            } else {
-                                setNewQuestionNow(false);
-                                setIsAnswered(false);
-                                setSelectedAnswer(null);
-                                setCorrect(null);
-                                setCurrentQuestionNumber(currentQuestionNumber + 1);
-                                handleNewQuestion();
-                            }
-                        }}
-                        disabled={!selectedAnswer}
-                    >
-                        <Text style={styles.quizNextButtonText}>
-                            {newQuestionNow === false && currentQuestionNumber !== totalQuestion ? "Envoyer" : "Question suivante"}
-                        </Text>
-                    </TouchableOpacity>
+                    {
+                        newQuestionNow === false ? (
+                            <TouchableOpacity
+                                style={styles.quizNextButton}
+                                onPress={() => {
+                                    handleGetAnswer();
+                                }}
+                                disabled={buttonDisabled || !selectedAnswer}
+                            >
+                                <Text style={styles.quizNextButtonText}>
+                                    {buttonDisabled ? "Chargement..." : "Envoie de la réponse"}
+                                </Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity
+                                style={styles.quizNextButton}
+                                onPress={() => {
+                                    if (totalQuestion === currentQuestionNumber) {
+                                        handleEnd();
+                                    } else {
+                                        handleNewQuestion();
+                                        setCurrentQuestionNumber(currentQuestionNumber + 1);
+                                    }
+                                }}
+                                disabled={buttonDisabled}
+                            >
+                                <Text style={styles.quizNextButtonText}>
+                                    {totalQuestion === currentQuestionNumber ? "Voir les résultats" : "Question suivante"}
+                                </Text>
+                            </TouchableOpacity>
+                        )
+                    }
                 </>
             ) : (
                 <Text style={styles.quizQuestionText}>Chargement de la question...</Text>
-            )
-            }
-        </View >
+            )}
+        </View>
     );
 }
