@@ -100,3 +100,5 @@ pages:
       - public
     expire_in: 30 days
     when: always
+  rules:
+  - if: $CI_COMMIT_BRANCH == "dev"
