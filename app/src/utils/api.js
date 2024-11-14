@@ -46,7 +46,6 @@ export async function getCurrentAnswer(answer, quizId) {
 
         const data = await response.json();
         if (response.ok) {
-            console.log('Réponse envoyée avec succès :', data);
             return data;
         } else {
             console.error('Erreur lors de l\'envoi de la réponse', data);

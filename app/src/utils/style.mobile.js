@@ -44,11 +44,23 @@ export default styles = StyleSheet.create({
         flex: 1,
     },
     textInput: {
-        width: '40%',
+        width: '60%',
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
         margin: 10,
+    },
+    cursorContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    cursorLabel: {
+        marginBottom: 20,
+    },
+    cursorSlider: {
+        width: 325,
+        height: 20,
     },
     quizContainer: {
         flex: 1,
@@ -71,7 +83,7 @@ export default styles = StyleSheet.create({
         alignItems: 'center',
     },
     quizQuestionText: {
-        fontSize: 18,
+        fontSize: 16,
         color: '#4b4f60',
         textAlign: 'center',
         marginBottom: 5,
