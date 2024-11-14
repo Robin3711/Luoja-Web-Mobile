@@ -19,10 +19,7 @@ export default function ResumeScreen() {
                 alert('Veuillez saisir un identifiant de partie');
                 return;
             }
-            console.log("on est la");
             let infos = getCurrentInfos(gameId);
-            console.log(infos);
-            console.log("on est la");
             infos.then(data => {
                 if (data.error)
                 {
