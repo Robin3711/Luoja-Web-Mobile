@@ -1,13 +1,12 @@
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import Parameters from '../screens/Parameters';
+import { render, fireEvent } from '@testing-library/react-native';
+import Parameters from '../src/screens/Parameters';
 import { NavigationContainer } from '@react-navigation/native';
-import { createQuiz } from '../utils/api';
 
 global.clearImmediate = global.clearImmediate || function(immediateID) {
     clearTimeout(immediateID);
 };
 
-jest.mock('../utils/api', () => ({
+jest.mock('../src/utils/api', () => ({
     createQuiz: jest.fn().mockResolvedValue({}),
 }));
 
