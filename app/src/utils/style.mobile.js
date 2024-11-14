@@ -50,6 +50,18 @@ export default styles = StyleSheet.create({
         borderWidth: 1,
         margin: 10,
     },
+    cursorContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    cursorLabel: {
+        marginBottom: 20,
+    },
+    cursorSlider: {
+        width: 325,
+        height: 20,
+    },
     quizContainer: {
         flex: 1,
         backgroundColor: '#e1f0ff',

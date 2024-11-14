@@ -13,14 +13,12 @@ export default function EndScreen() {
     const gameId = resumeData.gameId;
 
     const handleReturnHome = () => {
-        navigation.navigate("MenuDrawer");
+        navigation.navigate("menuDrawer");
     };
 
     const handleReplay = () => {
-        navigation.navigate('QuizStack', { quizData: { quizId: gameId } });
+        navigation.navigate('quizScreen', { quizId: gameId });
     };
-
-
 
     return (
         <View style={styles.quizContainer}>

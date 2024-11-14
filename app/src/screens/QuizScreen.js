@@ -10,18 +10,15 @@ const styles = getPlatformStyle();
 export default function QuizScreen() {
     const route = useRoute();
     const navigation = useNavigation();
-    const { quizData } = route.params;
-
-    if (quizData.error) {
+    const { quizId } = route.params;
+    if (!quizId) {
         return (
             <View style={styles.quizContainer}>
-                <Text style={styles.quizQuestionText}>{quizData.error}</Text>
-                <Button title="Retour" onPress={() => navigation.navigate('Parameters')} />
+                <Text style={styles.quizQuestionText}>Une erreur est survenue lors de la récupération du Quiz.</Text>
+                <Button title="Retour" onPress={() => navigation.navigate('newQuiz')} />
             </View>
         );
     }
-
-    const quizId = quizData.quizId;
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
@@ -104,9 +101,9 @@ export default function QuizScreen() {
     };
 
     const handleEnd = () => {
-        const data = { score: score, gameId: quizId };
-        navigation.navigate('ResumeQuiz', { resumeData: data });
-    };
+        const data = { score: score, gameId: quizId }
+        navigation.navigate('endScreen', { resumeData: data });
+    }
 
     return (
         <View style={styles.quizContainer}>
