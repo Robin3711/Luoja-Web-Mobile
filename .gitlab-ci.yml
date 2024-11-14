@@ -54,7 +54,8 @@ test:
       junit: app/reports/junit.xml    
     paths:
       - app/reports/junit.xml
-
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
 
 lint:  
   stage: tests
@@ -70,6 +71,8 @@ lint:
       - app/lint_report.html 
     expire_in: 30 days
   allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
 
 pages:  
   stage: pages
