@@ -17,7 +17,7 @@ export default function EndScreen() {
     };
 
     const handleReplay = () => {
-        navigation.navigate('quizScreen', { quizData: { quizId: gameId } });
+        navigation.navigate('quizScreen', { quizId: gameId });
     };
 
     return (

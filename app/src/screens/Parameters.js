@@ -19,7 +19,7 @@ export default function Parameters() {
         navigation.navigate('menuDrawer');
 
         setTimeout(() => {
-          navigation.navigate('quizScreen', { quizData: data });
+          navigation.navigate('quizScreen', { quizId: data.quizId });
         }, 0);
       })
       .catch(error => {

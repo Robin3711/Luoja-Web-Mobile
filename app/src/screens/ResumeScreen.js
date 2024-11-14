@@ -17,7 +17,7 @@ export default function ResumeScreen() {
                 alert('Veuillez saisir un identifiant de partie');
                 return;
             }
-            navigation.navigate('quizScreen', { quizData: { quizId: gameId } });
+            navigation.navigate('quizScreen', { quizId: gameId });
         }
         catch (error)
         {
