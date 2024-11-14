@@ -9,27 +9,41 @@ import QuizScreen from './src/screens/QuizScreen';
 import ResumeScreen from './src/screens/ResumeScreen';
 import EndScreen from './src/screens/EndScreen';
 
-const drawerNavigator = createDrawerNavigator();
+// Configuration pour le deep linking
+const linking = {
+  config: {
+    screens: {
+      home: 'home',
+      newQuiz: 'newQuiz',
+      resumeQuiz: 'resumeQuiz',
+      quizScreen: 'quiz',
+      endScreen: 'endScreen',
+      parameters: 'parameters',
+      menuDrawer: 'menu',
+    },
+  },
+};
+
+const drawer = createDrawerNavigator();
 const stack = createStackNavigator()
 
 const MenuDrawer = () => {
   return (
-    <drawerNavigator.Navigator screenOptions={{ drawerPosition: 'left' }}>
-      <drawerNavigator.Screen name="home" component={HomeScreen} options={{ title: "Accueil" }} />
-      <drawerNavigator.Screen name="newQUIZ" component={Parameters} options={{ title: "Créer un nouveau QUIZ" }} />
-      <drawerNavigator.Screen name="resumeQUIZ" component={ResumeScreen} options={{ title: "Reprendre un QUIZ" }} />
-    </drawerNavigator.Navigator>
+    <drawer.Navigator screenOptions={{ drawerPosition: 'left' }}>
+      <drawer.Screen name="home" component={HomeScreen} options={{ title: "Accueil" }} />
+      <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Créer un nouveau QUIZ" }} />
+      <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Reprendre un QUIZ" }} />
+    </drawer.Navigator>
   );
 };
 
 const MenuStack = () => {
   return (
     <stack.Navigator>
-      <stack.Screen name="MenuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
+      <stack.Screen name="menuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
       <stack.Group screenOptions={{ presentation: 'modal' }}>
-        <stack.Screen name="QuizStack" component={QuizScreen} options={{ title: "Le quiz", headerLeft: () => null }} />
-        <stack.Screen name="ResumeQuiz" component={EndScreen} options={{ title: "Résultat", headerLeft: () => null }} />
-        <stack.Screen name="Parameters" component={Parameters} options={{ title: "Paramètres" }} />
+        <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz", headerLeft: () => null }} />
+        <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: () => null }} />
       </stack.Group>
     </stack.Navigator>
   );
@@ -37,7 +51,7 @@ const MenuStack = () => {
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <MenuStack />
     </NavigationContainer>
   );
