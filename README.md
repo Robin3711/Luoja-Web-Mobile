@@ -27,18 +27,18 @@ et d'avoir à tout moment des applications web et android prêtent à être dép
 
 #### stages : 
 		
-1. build : 
+1. build :   
 		- build de l'apk pour le mobile et de de l'image docker pour le web.  
 		- réalisé à chaque commit sur main ou release pour avoir une version prête à déployer.  
 		- image docker stocké sur le dépot docker de l'équipe.  
 		- apk envoyé vers les artefacts du pipeline.  
 
-2. lint et tests : 
+2. lint et tests :   
 		- linting et tests unitaires du code.  
 		- réalisé à chaque commit sur la branche dev pour vérifier que le code marche encore.  
 		- résultats affiché dans les pages.  
  
-3. pages : 
+3. pages :   
 		- affiche les résultats du linting et des tests.   
 
 
