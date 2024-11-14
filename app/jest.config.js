@@ -198,11 +198,12 @@ const config = {
 module.exports = {
   preset: 'react-native',
   transform: {
-    '^.+\\.[tj]sx?$': 'babel-jest', // Utiliser Babel pour les fichiers JS/TSX
+    '^.+\\.[tj]sx?$': 'babel-jest',
   },
-  testEnvironment: 'node', // Spécifie le module jsdom pour Jest
+  testEnvironment: 'node',
   testMatch: ['<rootDir>/src/**/*.(test|spec).js'],
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|@react-navigation|expo-status-bar|react-native-picker-select)/)'
+    'node_modules/(?!(react-native|@react-native|@react-navigation|expo-status-bar|react-native-picker-select|expo-constants|expo-modules-core)/)',
   ],
+  setupFiles: ['<rootDir>/src/__mocks__/expo-constants.js', '<rootDir>/src/__mocks__/expo-modules-core.js'],
 };
