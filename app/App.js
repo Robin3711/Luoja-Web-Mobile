@@ -9,6 +9,8 @@ import QuizScreen from './src/screens/QuizScreen';
 import ResumeScreen from './src/screens/ResumeScreen';
 import EndScreen from './src/screens/EndScreen';
 
+import { Platform } from 'react-native';
+
 // Configuration pour le deep linking
 const linking = {
   config: {
@@ -42,8 +44,8 @@ const MenuStack = () => {
     <stack.Navigator>
       <stack.Screen name="menuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
       <stack.Group screenOptions={{ presentation: 'modal' }}>
-        <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz", headerLeft: () => null }} />
-        <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: () => null }} />
+        <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz",  headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
+        <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
       </stack.Group>
     </stack.Navigator>
   );
