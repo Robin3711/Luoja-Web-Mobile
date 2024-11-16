@@ -8,16 +8,14 @@ const styles = getPlatformStyle();
 const RangeCursor = ({ testID, value, onValueChange }) => {
 
   return (
-    <View>
+    <View style={styles.cursorContainer}>
       <Text style={styles.cursorLabel}>Sélection : {value}</Text>
-      <View style={styles.cursorContainer}>
+      <View style={styles.cursorSliderView}>
         <Slider
-          style={styles.cursorSlider}
           minimumValue={1}
           maximumValue={50}
           step={1}
-          value={value}
-          onSlidingComplete={onValueChange}
+          onValueChange={onValueChange}
           minimumTrackTintColor="#1EB1FC"
           maximumTrackTintColor="#d3d3d3"
           thumbTintColor="#1EB1FC"
