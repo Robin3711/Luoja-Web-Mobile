@@ -40,15 +40,37 @@ export default styles = StyleSheet.create({
         height: 50,
         backgroundColor: 'white',
     },
-    safeAreaView: {
-        flex: 1,
-    },
     textInput: {
         width: '40%',
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
         margin: 10,
+    },
+    cursorContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+    },
+    cursorLabel: {
+        fontSize: 20,
+        marginVertical: '1%',
+    },
+    cursorSliderView: {
+        width: '100%',
+        marginVertical: '1%'
+    },
+    createQuizButton:{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '5%',
+        width: '100%',
+        fontSize: 20,
+        marginTop: '5%',
+        backgroundColor: 'gray',
+        borderRadius: 40,
     },
     quizContainer: {
         flex: 1,
@@ -166,4 +188,16 @@ export default styles = StyleSheet.create({
     quizProgressCircleEmpty: {
         backgroundColor: '#b8cce0',
     },
+    parametersView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        marginHorizontal: '25%',
+    },
+    parametersText: {
+        fontSize: 40,
+        fontWeight: 'bold'
+    }
 });
