@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -8,6 +7,8 @@ import HomeScreen from './src/screens/HomeScreen';
 import QuizScreen from './src/screens/QuizScreen';
 import ResumeScreen from './src/screens/ResumeScreen';
 import EndScreen from './src/screens/EndScreen';
+
+import '@expo/metro-runtime'
 
 import { Platform } from 'react-native';
 
