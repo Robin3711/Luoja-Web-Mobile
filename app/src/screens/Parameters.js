@@ -1,15 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
 import { createQuiz } from '../utils/api';
 import RangeCursor from '../components/Cursor';
+import { getPlatformStyle } from '../utils/utils';
+
+const styles = getPlatformStyle();
 
 export default function Parameters() {
   const [difficulty, setDifficulty] = useState('none');
   const [theme, setTheme] = useState('none');
-  const [questionCount, setQuestionCount] = useState(25);
+  const [questionCount, setQuestionCount] = useState(1);
   const navigation = useNavigation();
 
   const handleCreateQuiz = () => {
@@ -25,7 +28,6 @@ export default function Parameters() {
         console.error(error);
       });
   };
-
 
   const difficultyOptions = [
     { label: 'Facile', value: 'easy' },
@@ -61,27 +63,28 @@ export default function Parameters() {
   ]
 
   return (
-    <View>
-      <Text>Choisissez le nombre de question</Text>
+    <View style={styles.parametersView}>
+      <Text style={styles.parametersText}>Choisissez le nombre de question</Text>
       <RangeCursor testID="range-cursor" value={questionCount} onValueChange={setQuestionCount} />
-      <Text>Choisissez un thème</Text>
+      <Text style={styles.parametersText}>Choisissez un thème</Text>
       <RNPickerSelect
         onValueChange={(value) => setTheme(value)}
         items={themeOptions}
         value={theme}
-        placeholder={{ label: 'Sélectionner un thème', value: null }}
+        placeholder={{ label: 'Thème aléatoire', value: null }}
         accessibilityLabel="Sélecteur de thème"
       />
-      <Text>Choisissez le difficulté</Text>
+      <Text style={styles.parametersText}>Choisissez le difficulté</Text>
       <RNPickerSelect
         onValueChange={(value) => setDifficulty(value)}
         items={difficultyOptions}
         value={difficulty}
-        placeholder={{ label: 'Sélectionner une difficulté', value: null }}
+        placeholder={{ label: 'Difficulté aléatoire', value: null }}
         accessibilityLabel="Sélecteur de difficulté"
       />
-      <Button title="Créer le quiz" onPress={handleCreateQuiz} />
-      <StatusBar style="auto" />
+      <TouchableOpacity style={styles.createQuizButton} onPress={handleCreateQuiz}>
+        <Text>Créer le quiz</Text>
+      </TouchableOpacity>
     </View>
   );
 }
