@@ -1,4 +1,5 @@
-import { getPlatformAPI } from "./utils";
+import { getPlatformAPI, setToken } from "./utils";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function createQuiz(questionCount, theme, difficulty) {
     try {
@@ -70,4 +71,64 @@ export async function getCurrentInfos(quizId) {
     }
 }
 
+export async function userRegister(email, password) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/user/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        });
 
+        const data = await response.json();
+
+        if (response.ok) {
+            await setToken(data.token);
+        } else {
+            throw new Error("Erreur lors de l'inscription");
+        }
+    } catch (error) {
+        throw new Error("Erreur réseau");
+    }
+}
+
+export async function userLogin(email, password) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/user/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            await setToken(data.token);
+        } else {
+            throw new Error("Erreur lors de la connexion");
+        }
+    } catch (error) {
+        throw new Error("Erreur réseau");
+    }
+}
+
+export async function getUserInfos() {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/user/infos`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        const data = await response.json();
+
+        return data.user;
+    }
+    catch (error) {
+        throw new Error("Erreur réseau");
+    }
+}
+                
