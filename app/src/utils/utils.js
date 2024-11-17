@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let apiUrl = null;
 
@@ -31,4 +32,31 @@ export async function getPlatformAPI() {
         }
     }
     return apiUrl;
+}
+
+export async function requireToken(navigation) {
+    if (!await hasToken()) {
+        navigation.navigate('login');
+    }
+}
+
+export async function hasToken() {
+    const token = await AsyncStorage.getItem('token');
+    return token !== null;
+}
+
+export async function setToken(token) {
+    try {
+        await AsyncStorage.setItem('token', token);
+    } catch (error) {
+        console.error('Error setting token:', error);
+    }
+}
+
+export async function removeToken() {
+    try {
+        await AsyncStorage.removeItem('token');
+    } catch (error) {
+        console.error('Error removing token:', error);
+    }
 }

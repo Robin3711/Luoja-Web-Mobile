@@ -1,12 +1,28 @@
 import { StyleSheet } from 'react-native';
 
 export default styles = StyleSheet.create({
+    /* -- Containers -- */
     container: {
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
     },
+    cursorContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+        marginBottom: 20,
+    },
+    quizContainer: {
+        flex: 1,
+        backgroundColor: '#e1f0ff',
+        padding: 20,
+        alignItems: 'center',
+    },
+
+    /* -- Home Screen -- */
     homeScreen: {
         flex: 1,
         flexDirection: 'column',
@@ -30,6 +46,8 @@ export default styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 40,
     },
+
+    /* -- Drawer -- */
     drawerButtonView: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
@@ -40,6 +58,8 @@ export default styles = StyleSheet.create({
         height: 50,
         backgroundColor: 'white',
     },
+
+    /* -- Text Input -- */
     textInput: {
         width: '60%',
         height: 40,
@@ -47,38 +67,25 @@ export default styles = StyleSheet.create({
         borderWidth: 1,
         margin: 10,
     },
-    cursorContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20,
-        marginBottom: 20,
+    loginInput: {
+        width: '100%',
+        minHeight: '5%',
+        marginVertical: '5%',
+        borderColor: 'gray',
+        borderWidth: 1,
     },
+
+    /* -- Cursor -- */
     cursorLabel: {
         fontSize: 20,
         marginBottom: 20,
     },
     cursorSliderView: {
         width: '100%',
-        marginVertical: '1%'
+        marginVertical: '1%',
     },
-    createQuizButton:{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '5%',
-        width: '100%',
-        fontSize: 20,
-        marginTop: '5%',
-        backgroundColor: 'gray',
-        borderRadius: 40,
-    },
-    quizContainer: {
-        flex: 1,
-        backgroundColor: '#e1f0ff',
-        padding: 20,
-        alignItems: 'center',
-    },
+
+    /* -- Quiz -- */
     quizId: {
         fontWeight: 'bold',
         color: '#7c8ca3',
@@ -143,15 +150,77 @@ export default styles = StyleSheet.create({
         color: '#4b4f60',
         fontWeight: 'bold',
     },
+
+    /* -- Parameters -- */
     parametersView: {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         justifyContent: 'flex-start',
-        margin: '5%'
+        margin: '5%',
     },
     parametersText: {
         fontSize: 20,
-        fontWeight: 'bold'
-    }
+        fontWeight: 'bold',
+    },
+
+    /* -- Account & Login -- */
+    accountView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    accountLoginView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: '10%',
+    },
+    accountLoginButton: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '5%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'lightgrey',
+        borderRadius: 40,
+        marginVertical: '5%',
+    },
+    loginView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: '10%',
+    },
+    loginButton: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: 40,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'lightgrey',
+        borderRadius: 40,
+        marginVertical: '5%',
+    },
+
+    /* -- Create Quiz Button -- */
+    createQuizButton: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '5%',
+        width: '100%',
+        fontSize: 20,
+        marginTop: '5%',
+        backgroundColor: 'gray',
+        borderRadius: 40,
+    },
 });

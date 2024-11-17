@@ -22,7 +22,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@testing-library/react-native": "^12.8.1",
-    "expo": "^52.0.4",
+    "expo": "~52.0.7",
     "expo-status-bar": "~2.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
@@ -30,13 +30,14 @@
     "js-tokens": "^9.0.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-native": "0.76.1",
+    "react-native": "0.76.2",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-picker-select": "^9.3.1",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "^4.0.0",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "@react-native-async-storage/async-storage": "1.23.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
