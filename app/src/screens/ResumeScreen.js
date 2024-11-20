@@ -12,35 +12,30 @@ export default function ResumeScreen() {
     const navigation = useNavigation();
 
     const handleResumeGame = () => {
-        try
-        {
-            if (!gameId)
-            {
+        try {
+            if (!gameId) {
                 alert('Veuillez saisir un identifiant de partie');
                 return;
             }
-            let infos = getCurrentInfos(gameId);
+            let infos = getCurrentInfos(gameId.toLowerCase());
             infos.then(data => {
-                if (data.error)
-                {
+                if (data.error) {
                     alert('Aucune partie trouvée avec cet identifiant');
                     return;
                 }
-                else
-                {
+                else {
                     navigation.navigate('quizScreen', { quizId: gameId.toLowerCase() });
                 }
             });
         }
-        catch (error)
-        {
+        catch (error) {
             console.error(error);
         }
     }
     return (
         <View style={styles.container}>
             <Text>Reprenez votre partie</Text>
-            <TextInput placeholder="Identifiant de votre partie" style={styles.textInput} onChangeText={setGameId} value={gameId} autoFocus/>
+            <TextInput placeholder="Identifiant de votre partie" style={styles.textInput} onChangeText={setGameId} value={gameId} autoFocus />
             <Button title="Reprendre" onPress={handleResumeGame} />
         </View>
     );
