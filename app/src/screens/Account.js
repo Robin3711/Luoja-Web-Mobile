@@ -49,14 +49,7 @@ export default function Account() {
 
     if (isLogged && userInfos) {
 
-        return (
-            <View style={styles.accountView}>
-                <Text>Adresse email : {userInfos.email}</Text>
-                <TouchableOpacity onPress={handleLogout}>
-                    <Text>Se déconnecter</Text>
-                </TouchableOpacity>
-            </View>
-        );
+        navigation.navigate('dashboard');
     } 
     else {
         return (
