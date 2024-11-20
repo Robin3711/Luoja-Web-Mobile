@@ -269,4 +269,28 @@ export default styles = StyleSheet.create({
         backgroundColor: 'gray',
         borderRadius: 40,
     },
+
+    /* -- Search Quiz -- */
+    searchQuizView: {
+        display: 'flex',
+        flexDirection: 'row',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    filterView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: '5%',
+    },
+    filterInput: {
+        width: '100%',
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginVertical: '5%',
+    },
 });
