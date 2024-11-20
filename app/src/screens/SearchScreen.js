@@ -4,6 +4,7 @@ import { getPlatformStyle } from '../utils/utils';
 import ThemeSelector from '../components/ThemePicker';
 import RangeCursor from '../components/Cursor';
 import DifficultySelector from '../components/DifficultyPicker';
+import QuizInformation from '../components/QuizInformation';
 
 styles = getPlatformStyle();
 
@@ -16,22 +17,22 @@ export default function SearchScreen() {
 
     const getQuizAutoComplete = async() => {
         try {
-            const parameters ='';
+            let parameters ='';
             if (title !== '') {
-                parameters += 'title=' + title;
+                parameters += (parameters ? '&' : '') + 'title=' + title;
             }
-            if (theme !== 'none') {
-                parameters += '&category=' + theme;
+            if (theme !== 'none' || theme !== null) {
+                parameters += (parameters ? '&' : '') + 'category=' + theme;
             }
-            if (difficulty !== 'none') {
-                parameters += '&difficulty=' + difficulty;
+            if (difficulty !== 'none' || theme !== null) {
+                parameters += (parameters ? '&' : '') + 'difficulty=' + difficulty;
             }
             // if (questionCount !== 1) {
             //     parameters += '&questionCount=' + questionCount;
             // }
             const response = await fetch('https://api.luoja.fr/quiz/list?' + parameters);
             const json = await response.json();
-            setData(json);
+            setData(json.quizs);
             console.log(json);
         }
         catch (error) {
@@ -61,7 +62,7 @@ export default function SearchScreen() {
                 <RangeCursor testID="range-cursor" value={questionCount} onValueChange={setQuestionCount} />
             </View>
         </View>
-        <View style={styles.searchQuizView}>
+        <View style={styles.scrollView}>
             <ScrollView>
                 {data.map(function(quiz, index){
                     return(<>
