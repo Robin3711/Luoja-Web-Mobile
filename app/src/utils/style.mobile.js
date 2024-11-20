@@ -256,14 +256,16 @@ export default styles = StyleSheet.create({
 
     /* -- BrewPresentation -- */
     QuizInformationView: {
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 10,
     },
     QuizInformationText: {
         fontSize: 20,
         fontWeight: 'bold',
+        marginHorizontal: 5,
     },
 });

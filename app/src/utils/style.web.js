@@ -272,23 +272,20 @@ export default styles = StyleSheet.create({
 
     /* -- Search Quiz -- */
     searchQuizView: {
-        display: 'flex',
+        flex: 1, // S'assure que cette vue prend tout l'espace disponible
         flexDirection: 'column',
-        height: '100%',
-        justifyContent: 'center',
+        justifyContent: 'space-between', // Ajoute de l'espacement entre les enfants
         alignItems: 'center',
     },
     searchParameterView: {
-        display: 'flex',
+        flex: 1, // Permet une répartition uniforme
         flexDirection: 'row',
-        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+        width: '100%', // S'assure que les paramètres occupent la largeur disponible
     },
     filterView: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
+        flex: 1, // S'assure que les filtres s'étendent correctement
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: '2%',
@@ -300,17 +297,23 @@ export default styles = StyleSheet.create({
         borderWidth: 1,
         marginVertical: '5%',
     },
+    scrollView: {
+        flex: 1, // Permet au ScrollView de s'étendre sur l'espace restant
+        width: '100%', // S'assure que le contenu est bien aligné
+    },
 
     /* -- BrewPresentation -- */
     QuizInformationView: {
+        flex: 1,
         display: 'flex',
         flexDirection: 'row',
-        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 10,
     },
     QuizInformationText: {
         fontSize: 20,
         fontWeight: 'bold',
+        marginHorizontal: 5,
     },
 });
