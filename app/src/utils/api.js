@@ -71,6 +71,21 @@ export async function getCurrentInfos(quizId) {
     }
 }
 
+export async function createParty(quizId) {
+    try{
+
+        let url = `${await getPlatformAPI()}/quiz/${quizId}/play`;
+        
+        const response = await fetch(url);
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export async function userRegister(email, password) {
     try {
         const response = await fetch(`${await getPlatformAPI()}/user/register`, {
