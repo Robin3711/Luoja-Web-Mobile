@@ -223,4 +223,18 @@ export default styles = StyleSheet.create({
         backgroundColor: 'gray',
         borderRadius: 40,
     },
+
+    /* -- Dashboard -- */
+    dashboardView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    dashbordText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+
 });
