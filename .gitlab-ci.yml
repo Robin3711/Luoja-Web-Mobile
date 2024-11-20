@@ -1,9 +1,9 @@
 stages:
-  - tests
   - pages
   - build
   - docker   
   - deploy   
+  - tests
 
 build:
   image: node:latest
