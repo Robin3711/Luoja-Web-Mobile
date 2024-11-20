@@ -15,7 +15,7 @@ const DifficultySelector = ({ testID, value, onValueChange }) => {
 
     return (
         <View style={styles.cursorContainer}>
-            <Text style={styles.parametersText}>Choisissez le difficulté</Text>
+            <Text style={styles.parametersText}>Toute difficulté</Text>
             <RNPickerSelect
                 onValueChange={onValueChange}
                 items={difficultyOptions}
