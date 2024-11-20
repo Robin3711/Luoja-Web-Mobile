@@ -17,14 +17,13 @@ import '@expo/metro-runtime'
 import { Platform } from 'react-native';
 import Account from './src/screens/Account';
 
-// Configuration pour le deep linking
 const linking = {
   config: {
     screens: {
       home: 'home',
       newQuiz: 'newQuiz',
       resumeQuiz: 'resumeQuiz',
-      quizScreen: 'quiz',
+      quizScreen: 'game',
       endScreen: 'endScreen',
       parameters: 'parameters',
       menuDrawer: 'menu',
@@ -56,10 +55,10 @@ const MenuStack = () => {
     <stack.Navigator initialRouteName='menuDrawer'>
       <stack.Screen name="menuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
       <stack.Group screenOptions={{ presentation: 'modal' }}>
-        <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz",  headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
+        <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
         <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
-        <stack.Screen name="login" component={Login} options={{ title: "Se connecter", headerLeft: Platform.OS === 'web' ? () => null : undefined}} />
-        <stack.Screen name="register" component={Register} options={{ title: "S'inscrire", headerLeft: Platform.OS === 'web' ? () => null : undefined}} />
+        <stack.Screen name="login" component={Login} options={{ title: "Se connecter", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
+        <stack.Screen name="register" component={Register} options={{ title: "S'inscrire", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
       </stack.Group>
     </stack.Navigator>
   );
