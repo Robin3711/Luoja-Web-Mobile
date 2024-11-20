@@ -108,6 +108,8 @@ pages:
 
 deploy:
   stage: deploy
+  needs:
+    - docker
   image: ubuntu:latest
   variables:
     SECURE_FILES_DOWNLOAD_PATH: ".ssh/"
