@@ -10,6 +10,7 @@ import EndScreen from './src/screens/EndScreen';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import AccountInfos from './src/screens/Account';
+import SearchScreen from './src/screens/SearchScreen';
 
 import '@expo/metro-runtime'
 
@@ -30,6 +31,7 @@ const linking = {
       userInfos: 'userInfos',
       login: 'login',
       register: 'register',
+      search: 'search',
     },
   },
 };
@@ -43,6 +45,7 @@ const MenuDrawer = () => {
       <drawer.Screen name="home" component={HomeScreen} options={{ title: "Accueil" }} />
       <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Créer un nouveau QUIZ" }} />
       <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Reprendre un QUIZ" }} />
+      <drawer.Screen name="search" component={SearchScreen} options={{ title: "Rechercher un QUIZ" }} />
       <drawer.Screen name="account" component={Account} options={{ title: "Mon compte" }} />
     </drawer.Navigator>
   );
