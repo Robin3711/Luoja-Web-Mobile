@@ -227,7 +227,14 @@ export default styles = StyleSheet.create({
     /* -- Search Quiz -- */
     searchQuizView: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    searchParameterView: {
+        display: 'flex',
+        flexDirection: 'column',
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
@@ -238,7 +245,6 @@ export default styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: '5%',
     },
     filterInput: {
         width: '100%',
@@ -246,5 +252,18 @@ export default styles = StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 1,
         margin: 10,
+    },
+
+    /* -- BrewPresentation -- */
+    QuizInformationView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    QuizInformationText: {
+        fontSize: 20,
+        fontWeight: 'bold',
     },
 });
