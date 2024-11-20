@@ -237,4 +237,26 @@ export default styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
+    dashboardContainer: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+
+    dashboardSection: {
+        flex: 1, // Chaque section prend un espace égal
+        alignItems: 'center', // Centrage horizontal du contenu
+        justifyContent: 'center', // Centrage vertical du contenu
+        backgroundColor: '#f0f0f0', // Pour distinguer les sections
+        padding: 10, // Espacement interne
+        
+    },
+
+    /* -- Divider -- */
+    divider: {
+        width: 1, // Largeur de la ligne
+        height: '100%', // Hauteur du divider
+        backgroundColor: 'gray', // Couleur de la ligne
+        marginHorizontal: 10, // Espacement autour du divider
+    },
+
 });
