@@ -26,5 +26,8 @@ module.exports = {
       },
     ],
   ],
+  moduleNameMapper: {
+    '^@react-native-async-storage/async-storage$': '<rootDir>/__mocks__/mockAsyncStorage.js',
+  },
 
 };
