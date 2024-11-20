@@ -17,7 +17,6 @@ build:
     - cp -r dist ../docker/web-server
   rules:
     - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
-    - when: always
   artifacts:
     expire_in: 1 hour
     paths:
@@ -39,8 +38,6 @@ docker:
     - docker push docker.luoja.fr/baldur
   rules:
     - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
-    - when: always
-
 
 test:  
   stage: tests
@@ -110,6 +107,8 @@ deploy:
   stage: deploy
   needs:
     - docker
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
   image: ubuntu:latest
   variables:
     SECURE_FILES_DOWNLOAD_PATH: ".ssh/"
