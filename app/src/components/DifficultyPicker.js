@@ -20,7 +20,7 @@ const DifficultySelector = ({ testID, value, onValueChange }) => {
                 onValueChange={onValueChange}
                 items={difficultyOptions}
                 value={value}
-                placeholder={{ label: 'Difficulté aléatoire', value: null }}
+                placeholder={{ label: 'Toute difficulté', value: null }}
                 accessibilityLabel="Sélecteur de difficulté"
                 testID={testID}
             />
