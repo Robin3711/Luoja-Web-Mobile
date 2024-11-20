@@ -23,7 +23,6 @@ const linking = {
       resumeQuiz: 'resumeQuiz',
       quizScreen: 'game',
       endScreen: 'endScreen',
-      parameters: 'parameters',
       menuDrawer: 'menu',
       userInfos: 'userInfos',
       login: 'login',

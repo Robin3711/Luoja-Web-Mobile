@@ -15,7 +15,7 @@ export default function QuizScreen() {
         return (
             <View style={styles.quizContainer}>
                 <Text style={styles.quizQuestionText}>Une erreur est survenue lors de la récupération du Quiz.</Text>
-                <Button title="Retour" onPress={() => navigation.navigate('newQuiz')} />
+                <Button title="Retour" onPress={() => navigation.navigate('menuDrawer')} />
             </View>
         );
     }
