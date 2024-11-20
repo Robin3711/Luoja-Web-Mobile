@@ -10,6 +10,7 @@ import EndScreen from './src/screens/EndScreen';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import AccountInfos from './src/screens/Account';
+import Dashboard from './src/screens/Dashboard';
 
 import '@expo/metro-runtime'
 
@@ -30,6 +31,7 @@ const linking = {
       userInfos: 'userInfos',
       login: 'login',
       register: 'register',
+      dashboard: 'dashboard',
     },
   },
 };
@@ -57,6 +59,7 @@ const MenuStack = () => {
         <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
         <stack.Screen name="login" component={Login} options={{ title: "Se connecter", headerLeft: Platform.OS === 'web' ? () => null : undefined}} />
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire", headerLeft: Platform.OS === 'web' ? () => null : undefined}} />
+        <stack.Screen name="dashboard" component={Dashboard} options={{ title: "Tableau de bord", headerLeft: Platform.OS === 'web' ? () => null : undefined}} />
       </stack.Group>
     </stack.Navigator>
   );
