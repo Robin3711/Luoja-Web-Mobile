@@ -48,7 +48,7 @@ export default function SearchScreen() {
         <View style={styles.searchParameterView}>
             <View style={styles.filterView}>
                 <Text style={styles.parametersText}>Titre</Text>
-                <TextInput style={styles.filterInput} placeholder="Rechercher un quiz par titre" value={title} onValueChange={setTitle} />
+                <TextInput style={styles.filterInput} placeholder="Rechercher un quiz par titre" value={title} onChangeText={setTitle} />
             </View>
             <View style={styles.filterView}>
                 <ThemeSelector testID="themeSelector" value={theme} onValueChange={setTheme} />
