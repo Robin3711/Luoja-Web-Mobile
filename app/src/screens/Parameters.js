@@ -1,8 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
-import { Text, View, Button, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import RNPickerSelect from 'react-native-picker-select';
 import { createQuiz } from '../utils/api';
 import RangeCursor from '../components/Cursor';
 import DifficultySelector from '../components/DifficultyPicker';
@@ -23,7 +21,7 @@ export default function Parameters() {
         navigation.navigate('menuDrawer');
 
         setTimeout(() => {
-          navigation.navigate('quizScreen', { quizId: data.quizId });
+          navigation.navigate('quizScreen', { quizId: data.id });
         }, 0);
       })
       .catch(error => {

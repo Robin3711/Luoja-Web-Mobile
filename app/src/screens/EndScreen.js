@@ -10,6 +10,7 @@ export default function EndScreen() {
     const navigation = useNavigation();
     const { resumeData } = route.params;
     const score = resumeData.score;
+    const numberOfQuestions = resumeData.numberOfQuestions;
     const gameId = resumeData.gameId;
 
     const handleReturnHome = () => {
@@ -24,7 +25,7 @@ export default function EndScreen() {
         <View style={styles.quizContainer}>
             <View style={styles.quizQuestionContainer}>
                 <Text> Fin de partie !</Text>
-                <Text>Votre score : {score} </Text>
+                <Text>Votre score : {score} / {numberOfQuestions} </Text>
             </View>
 
             <TouchableOpacity
