@@ -1,6 +1,5 @@
 import { View, Text, Button, TouchableOpacity } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import { getCurrentQuestion, getCurrentAnswer, getCurrentInfos } from '../utils/api';
 import { getPlatformStyle } from '../utils/utils';
@@ -15,7 +14,10 @@ export default function QuizScreen() {
         return (
             <View style={styles.quizContainer}>
                 <Text style={styles.quizQuestionText}>Une erreur est survenue lors de la récupération du Quiz.</Text>
-                <Button title="Retour" onPress={() => navigation.navigate('newQuiz')} />
+                <Button title="Retour" onPress={() => navigation.navigate('menuDrawer', {
+                    screen: 'newQuiz',
+                })
+                } />
             </View>
         );
     }

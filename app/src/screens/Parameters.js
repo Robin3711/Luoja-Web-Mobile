@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { createQuiz } from '../utils/api';
 import RangeCursor from '../components/Cursor';
@@ -14,13 +14,15 @@ export default function Parameters() {
   const [theme, setTheme] = useState('none');
   const [questionCount, setQuestionCount] = useState(1);
   const [tempQuestionCount, setTempQuestionCount] = useState(1);
+  const [lunch, setlunch] = useState(false);
   const navigation = useNavigation();
 
   const handleCreateQuiz = () => {
+    setlunch(true);
     createQuiz(questionCount, theme, difficulty)
       .then(data => {
         navigation.navigate('menuDrawer');
-
+        setlunch(false);
         setTimeout(() => {
           navigation.navigate('quizScreen', { quizId: data.id });
         }, 0);
@@ -38,8 +40,8 @@ export default function Parameters() {
                         onSlidingComplete={(value) => setQuestionCount(value)}  />
       <ThemeSelector testID="theme-picker" value={theme} onValueChange={setTheme} />
       <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
-      <TouchableOpacity style={styles.createQuizButton} onPress={handleCreateQuiz}>
-        <Text>Créer le quiz</Text>
+      <TouchableOpacity style={styles.createQuizButton} onPress={handleCreateQuiz} disabled={lunch}>
+        {lunch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)}
       </TouchableOpacity>
     </View>
   );
