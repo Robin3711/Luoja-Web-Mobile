@@ -1,14 +1,16 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { hasToken, removeToken } from "../utils/utils";
 import { getPlatformStyle } from "../utils/utils";
 import { Button } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
-import VerticalDivider from '../components/Divider';
+import { useState } from "react";
 
 const styles = getPlatformStyle();
 
 export default function Dashboard() {
     const navigation = useNavigation();
+    const [history, setHistory] = useState([]);
+    const [publishedQuizzes, setPublishedQuizzes] = useState([]);
 
     if(!hasToken()){
         navigation.navigate('login');
@@ -23,12 +25,25 @@ export default function Dashboard() {
         <View style={styles.dashboardView}>
             <Text style={styles.dashboardText   }>Tableau de bord</Text>
             <View style={styles.dashboardContainer}>
-                <View style={styles.section}>
-                    <Text>Section 1</Text>
+                <View style={styles.dashboardSection}>
+                    <Text>Historique</Text>
+                    <ScrollView>
+                        {history.map((item, index) => (
+                            <View key={index}>
+                                <Text>{item}</Text>
+                            </View>
+                        ))}
+                    </ScrollView>
                 </View>
-                <VerticalDivider />
-                <View style={styles.section}>
-                    <Text>Section 2</Text>
+                <View style={styles.dashboardSection}>
+                    <Text>Vos quiz publié</Text>
+                    <ScrollView>
+                        {publishedQuizzes.map((item, index) => (
+                            <View key={index}>
+                                <Text>{item}</Text>
+                            </View>
+                        ))}
+                    </ScrollView>
                 </View>
             </View>
             <Button title="Se déconnecter" onPress={handleLogout} />

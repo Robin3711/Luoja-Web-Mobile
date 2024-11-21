@@ -294,7 +294,7 @@ export default styles = StyleSheet.create({
         justifyContent: 'center', // Centrage vertical du contenu
         backgroundColor: '#f0f0f0', // Pour distinguer les sections
         padding: 10, // Espacement interne
-        
+        marginHorizontal: 50, // Espacement externe
     },
 
     /* -- Divider -- */
