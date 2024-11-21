@@ -229,29 +229,18 @@ export default styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     searchParameterView: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     filterView: {
         display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
         justifyContent: 'center',
-        alignItems: 'center',
     },
     filterInput: {
-        width: '100%',
         height: 40,
+        width: '80%',
         borderColor: 'gray',
         borderWidth: 1,
-        margin: 10,
     },
 
     /* -- BrewPresentation -- */
