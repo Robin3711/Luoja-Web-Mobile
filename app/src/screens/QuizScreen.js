@@ -72,11 +72,11 @@ export default function QuizScreen() {
 
         try {
             setButtonDisabled(true);
-            const { correct: correctAnswerFromApi } = await getCurrentAnswer(responseData, quizId);
+            const { correctAnswer: correctAnswerFromApi } = await getCurrentAnswer(responseData, quizId);
             setNewQuestionNow(true);
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
-            if (correctAnswerFromApi) {
+            if (correctAnswerFromApi === selectedAnswer) {
                 updateScore();
             }
             setButtonDisabled(false);
@@ -95,13 +95,13 @@ export default function QuizScreen() {
             return 'blue';
         }
         if (answer === selectedAnswer) {
-            return correct ? 'green' : 'red';
+            return correct === answer ? 'green' : 'red';
         }
         return 'gray';
     };
 
     const handleEnd = () => {
-        const data = { score: score, gameId: quizId }
+        const data = { score: score, numberOfQuestions: totalQuestion, gameId: quizId }
         navigation.navigate('endScreen', { resumeData: data });
     }
 
