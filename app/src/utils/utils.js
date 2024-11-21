@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, Dimensions } from 'react-native';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -7,7 +7,12 @@ let apiUrl = null;
 export function getPlatformStyle() {
 
     if (Platform.OS === 'web') {
-        const styles = require('./style.web.js');
+        const { width } = Dimensions.get('window');
+        if (width > 1024) {
+            const styles = require('./style.web.js');
+        } else {
+            const styles = require('./style.mobile.js');
+        }
     } else {
         const styles = require('./style.mobile.js');
     }

@@ -1,12 +1,7 @@
 import React from 'react';
-import { Button, Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { getPlatformStyle } from '../utils/utils';
 import { createParty } from '../utils/api';
-
-const styles = getPlatformStyle();
-
-
 
 export default function QuizInformation({quiz}) {
     navigation = useNavigation();
