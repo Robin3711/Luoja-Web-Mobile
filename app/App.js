@@ -10,6 +10,7 @@ import EndScreen from './src/screens/EndScreen';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import RetrieveQuestions from './src/screens/RetrieveQuestionsScreen';
+import SearchScreen from './src/screens/SearchScreen';
 
 import '@expo/metro-runtime'
 
@@ -17,16 +18,15 @@ import { Platform } from 'react-native';
 import Account from './src/screens/Account';
 import QuizCreation from './src/screens/QuizCreationScreen';
 
-// Configuration pour le deep linking
 const linking = {
+  prefixes: ['http://localhost:8081', 'https://luoja.fr'],
   config: {
     screens: {
       home: 'home',
       newQuiz: 'newQuiz',
       resumeQuiz: 'resumeQuiz',
-      quizScreen: 'quiz',
+      quizScreen: 'game',
       endScreen: 'endScreen',
-      parameters: 'parameters',
       menuDrawer: 'menu',
       userInfos: 'userInfos',
       login: 'login',
@@ -37,6 +37,7 @@ const linking = {
           handleAddQuestions: (handleAddQuestions) => "",
         },
       },
+      search: 'search',
     },
   },
 };
@@ -50,6 +51,7 @@ const MenuDrawer = () => {
       <drawer.Screen name="home" component={HomeScreen} options={{ title: "Accueil" }} />
       <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Créer un nouveau QUIZ" }} />
       <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Reprendre un QUIZ" }} />
+      <drawer.Screen name="search" component={SearchScreen} options={{ title: "Rechercher un QUIZ" }} />
       <drawer.Screen name="account" component={Account} options={{ title: "Mon compte" }} />
       {Platform.OS === 'web' ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Créer un quiz" }} /> : null}
     </drawer.Navigator>

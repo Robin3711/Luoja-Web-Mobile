@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export async function createQuiz(questionCount, theme, difficulty) {
     try {
 
-        let url = `${await getPlatformAPI()}/quiz?amount=${questionCount}`;
+        let url = `${await getPlatformAPI()}/quizFast?amount=${questionCount}`;
 
         if (theme !== 'none') {
             url += `&category=${theme}`;
@@ -24,9 +24,20 @@ export async function createQuiz(questionCount, theme, difficulty) {
     }
 }
 
+export async function getNewGameId(quizId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/restart`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export async function getCurrentQuestion(quizId) {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/question`);
+        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/question`);
         const data = await response.json();
         return data;
     } catch (error) {
@@ -37,7 +48,7 @@ export async function getCurrentQuestion(quizId) {
 
 export async function getCurrentAnswer(answer, quizId) {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/answer`, {
+        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/answer`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,8 +70,23 @@ export async function getCurrentAnswer(answer, quizId) {
 export async function getCurrentInfos(quizId) {
     try {
 
-        let url = `${await getPlatformAPI()}/quiz/${quizId}/infos`;
+        let url = `${await getPlatformAPI()}/game/${quizId}/infos`;
 
+        const response = await fetch(url);
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function createParty(quizId) {
+    try{
+
+        let url = `${await getPlatformAPI()}/quiz/${quizId}/play`;
+        
         const response = await fetch(url);
 
         const data = await response.json();

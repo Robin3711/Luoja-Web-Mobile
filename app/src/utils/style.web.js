@@ -335,4 +335,57 @@ export default styles = StyleSheet.create({
     selectedDifficultyRadioSelectorButtonText: {
         color: 'white',
     },
+    
+    /* -- Search Quiz -- */
+    searchQuizView: {
+        flex: 1, // S'assure que cette vue prend tout l'espace disponible
+        flexDirection: 'column',
+        justifyContent: 'space-between', // Ajoute de l'espacement entre les enfants
+        alignItems: 'center',
+    },
+    searchParameterView: {
+        flex: 1, // Permet une répartition uniforme
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%', // S'assure que les paramètres occupent la largeur disponible
+    },
+    filterView: {
+        flex: 1, // S'assure que les filtres s'étendent correctement
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: '2%',
+    },
+    filterInput: {
+        width: '100%',
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginVertical: '5%',
+    },
+    scrollView: {
+        flex: 1, // Permet au ScrollView de s'étendre sur l'espace restant
+        width: '100%', // S'assure que le contenu est bien aligné
+    },
+
+    /* -- BrewPresentation -- */
+    QuizInformationView: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+    },
+    QuizInformationText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginHorizontal: 5,
+    },
+    QuizInformationButton: {
+        backgroundColor: 'lightgrey',
+        padding: 10,
+        borderRadius: 10,
+        marginHorizontal: 5,
+    },
 });

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import QuizInformation from '../components/QuizInformation';
 
 export default styles = StyleSheet.create({
     /* -- Containers -- */
@@ -222,5 +223,50 @@ export default styles = StyleSheet.create({
         marginTop: '5%',
         backgroundColor: 'gray',
         borderRadius: 40,
+    },
+
+    /* -- Search Quiz -- */
+    searchQuizView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+    },
+    searchParameterView: {
+    },
+    filterView: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    filterInput: {
+        height: 40,
+        width: '80%',
+        borderColor: 'gray',
+        borderWidth: 1,
+    },
+
+    /* -- BrewPresentation -- */
+    QuizInformationView: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+    },
+    QuizInformationText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginHorizontal: 5,
+    },
+    QuizInformationButton: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '5%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'lightgrey',
+        borderRadius: 40,
+        marginVertical: '5%',
     },
 });

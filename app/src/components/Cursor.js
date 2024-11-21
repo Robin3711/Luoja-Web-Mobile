@@ -5,7 +5,7 @@ import { getPlatformStyle } from '../utils/utils';
 
 const styles = getPlatformStyle();
 
-const RangeCursor = ({ testID, value, onValueChange }) => {
+const RangeCursor = ({ testID, value, onValueChange, onSlidingComplete }) => {
 
   return (
     <View style={styles.cursorContainer}>
@@ -16,6 +16,7 @@ const RangeCursor = ({ testID, value, onValueChange }) => {
           maximumValue={50}
           step={1}
           onValueChange={onValueChange}
+          onSlidingComplete={onSlidingComplete}
           minimumTrackTintColor="#1EB1FC"
           maximumTrackTintColor="#d3d3d3"
           thumbTintColor="#1EB1FC"
