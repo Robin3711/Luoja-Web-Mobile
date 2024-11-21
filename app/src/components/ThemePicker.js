@@ -41,7 +41,7 @@ const ThemeSelector = ({ testID, value, onValueChange }) => {
                 onValueChange={onValueChange}
                 items={themeOptions}
                 value={value}
-                placeholder={{ label: 'Thème aléatoire', value: null }}
+                placeholder={{ label: 'Thème générale', value: null }}
                 accessibilityLabel="Sélecteur de thème"
                 testID={testID}
             />

@@ -24,6 +24,17 @@ export async function createQuiz(questionCount, theme, difficulty) {
     }
 }
 
+export async function getNewGameId(quizId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/restart`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export async function getCurrentQuestion(quizId) {
     try {
         const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/question`);
@@ -61,6 +72,21 @@ export async function getCurrentInfos(quizId) {
 
         let url = `${await getPlatformAPI()}/game/${quizId}/infos`;
 
+        const response = await fetch(url);
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function createParty(quizId) {
+    try{
+
+        let url = `${await getPlatformAPI()}/quiz/${quizId}/play`;
+        
         const response = await fetch(url);
 
         const data = await response.json();
