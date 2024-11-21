@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import QuizInformation from '../components/QuizInformation';
 
 export default styles = StyleSheet.create({
     /* -- Containers -- */
@@ -256,5 +257,16 @@ export default styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         marginHorizontal: 5,
+    },
+    QuizInformationButton: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '5%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'lightgrey',
+        borderRadius: 40,
+        marginVertical: '5%',
     },
 });

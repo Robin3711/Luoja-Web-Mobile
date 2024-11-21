@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getPlatformStyle } from '../utils/utils';
 import { createParty } from '../utils/api';
@@ -21,7 +21,9 @@ export default function QuizInformation({quiz}) {
             <Text style={styles.QuizInformationText}>{quiz.category}</Text>
             <Text style={styles.QuizInformationText}>{quiz.difficulty}</Text>
             {/*<Text style={styles.QuizInformationText}>{quiz.questionCount}</Text>*/}
-            <Button title="Jouer" onPress={handleStartQuiz}/>
+            <TouchableOpacity style={styles.QuizInformationButton} onPress={handleStartQuiz}>
+                <Text>Jouer</Text>
+            </TouchableOpacity> 
         </View>
     );
 }

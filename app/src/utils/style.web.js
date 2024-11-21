@@ -316,4 +316,10 @@ export default styles = StyleSheet.create({
         fontWeight: 'bold',
         marginHorizontal: 5,
     },
+    QuizInformationButton: {
+        backgroundColor: 'lightgrey',
+        padding: 10,
+        borderRadius: 10,
+        marginHorizontal: 5,
+    },
 });
