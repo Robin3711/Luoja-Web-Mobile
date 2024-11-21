@@ -14,6 +14,7 @@ export default function SearchScreen() {
     const [difficulty, setDifficulty] = useState('none');
     const [title, setTitle] = useState('');
     const [questionCount, setQuestionCount] = useState(1);
+    const [tempQuestionCount, setTempQuestionCount] = useState(1); 
 
     const getQuizAutoComplete = async() => {
         try {
@@ -59,7 +60,9 @@ export default function SearchScreen() {
             </View>
             <View style={styles.filterView}>
                 <Text style={styles.parametersText}>Nombre de questions</Text>
-                <RangeCursor testID="range-cursor" value={questionCount} onValueChange={setQuestionCount} />
+                <RangeCursor testID="range-cursor" value={tempQuestionCount}
+                        onValueChange={setTempQuestionCount} // Mettre à jour temporairement
+                        onSlidingComplete={(value) => setQuestionCount(value)}/>
             </View>
         </View>
         <View style={styles.scrollView}>
