@@ -21,10 +21,10 @@ export default function SearchScreen() {
             if (title !== '') {
                 parameters += (parameters ? '&' : '') + 'title=' + title;
             }
-            if (theme !== 'none' && theme !== null) {
+            if (theme !== 'none' && theme !== null && theme !== 'Thème générale') {
                 parameters += (parameters ? '&' : '') + 'category=' + theme;
             }
-            if (difficulty !== 'none' && difficulty !== null) {
+            if (difficulty !== 'none' && difficulty !== null && difficulty !== 'Toute difficulté') {
                 parameters += (parameters ? '&' : '') + 'difficulty=' + difficulty;
             }
             // if (questionCount !== 1) {
