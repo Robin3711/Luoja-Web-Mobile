@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { getPlatformStyle } from '../utils/utils';
+import { getNewGameId } from '../utils/api';
 
 const styles = getPlatformStyle();
 
@@ -61,7 +62,10 @@ export default function EndScreen() {
         await AsyncStorage.removeItem('score');
         await AsyncStorage.removeItem('numberOfQuestions');
         await AsyncStorage.removeItem('gameId');
-        navigation.navigate('quizScreen', { quizId: gameId });
+        console.log(gameId);
+        const newGameId = await getNewGameId(gameId);
+        console.log(newGameId.id);
+        navigation.navigate('quizScreen', { quizId: newGameId.id });
     };
 
     return (

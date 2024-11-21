@@ -16,16 +16,12 @@ export default function Parameters() {
   const [lunch, setlunch] = useState(false);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    setlunch(false)
-  }, []);
-
   const handleCreateQuiz = () => {
     setlunch(true);
     createQuiz(questionCount, theme, difficulty)
       .then(data => {
         navigation.navigate('menuDrawer');
-
+        setlunch(false);
         setTimeout(() => {
           navigation.navigate('quizScreen', { quizId: data.id });
         }, 0);
@@ -41,7 +37,7 @@ export default function Parameters() {
       <RangeCursor testID="range-cursor" value={questionCount} onValueChange={setQuestionCount} />
       <ThemeSelector testID="theme-picker" value={theme} onValueChange={setTheme} />
       <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
-      <TouchableOpacity style={styles.createQuizButton} onPress={handleCreateQuiz}>
+      <TouchableOpacity style={styles.createQuizButton} onPress={handleCreateQuiz} disabled={lunch}>
         {lunch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)}
       </TouchableOpacity>
     </View>
