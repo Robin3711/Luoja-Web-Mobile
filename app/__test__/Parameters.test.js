@@ -23,7 +23,7 @@ describe('Parameters Component', () => {
         const { getByText } = setup();
         expect(getByText('Choisissez le nombre de question')).toBeTruthy();
         expect(getByText('Choisissez un thème')).toBeTruthy();
-        expect(getByText('Choisissez le difficulté')).toBeTruthy();
+        expect(getByText('Toute difficulté')).toBeTruthy();
         expect(getByText('Créer le quiz')).toBeTruthy();
     });
 

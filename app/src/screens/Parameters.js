@@ -13,6 +13,7 @@ export default function Parameters() {
   const [difficulty, setDifficulty] = useState('none');
   const [theme, setTheme] = useState('none');
   const [questionCount, setQuestionCount] = useState(1);
+  const [tempQuestionCount, setTempQuestionCount] = useState(1);
   const [lunch, setlunch] = useState(false);
   const navigation = useNavigation();
 
@@ -34,7 +35,9 @@ export default function Parameters() {
   return (
     <View style={styles.parametersView}>
       <Text style={styles.parametersText}>Choisissez le nombre de question</Text>
-      <RangeCursor testID="range-cursor" value={questionCount} onValueChange={setQuestionCount} />
+      <RangeCursor testID="range-cursor" value={tempQuestionCount}
+                        onValueChange={setTempQuestionCount} // Mettre à jour temporairement
+                        onSlidingComplete={(value) => setQuestionCount(value)}  />
       <ThemeSelector testID="theme-picker" value={theme} onValueChange={setTheme} />
       <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
       <TouchableOpacity style={styles.createQuizButton} onPress={handleCreateQuiz} disabled={lunch}>
