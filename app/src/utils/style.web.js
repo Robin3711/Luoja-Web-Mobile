@@ -270,6 +270,72 @@ export default styles = StyleSheet.create({
         borderRadius: 40,
     },
 
+    /* -- Quiz Creation -- */
+    quizCreationView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+    },
+    quizCreationChildVIew: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        height: '25%',
+        width: '100%',
+    },
+    quizCreationBottomButtonsView: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    quizCreationLeftView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '50%',
+    },
+    quizCreationRightView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '50%',
+    },
+
+    /* -- Quiz Radio Button Selector -- */
+
+    difficultyRadioSelectorView: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    difficultyRadioSelectorButton: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'lightgrey',
+        borderRadius: 40,
+        marginHorizontal: '5%',
+        paddingVertical: '2%',
+        paddingHorizontal: '5%',
+    },
+    difficultyRadioSelectorButtonText: {
+        fontSize: 20,
+    },
+    selectedDifficultyRadioSelectorButton: {
+        backgroundColor: 'lightgrey',
+    },
+    selectedDifficultyRadioSelectorButtonText: {
+        color: 'white',
+    },
+    
     /* -- Search Quiz -- */
     searchQuizView: {
         flex: 1, // S'assure que cette vue prend tout l'espace disponible

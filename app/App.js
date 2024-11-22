@@ -9,13 +9,14 @@ import ResumeScreen from './src/screens/ResumeScreen';
 import EndScreen from './src/screens/EndScreen';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
-import AccountInfos from './src/screens/Account';
+import RetrieveQuestions from './src/screens/RetrieveQuestionsScreen';
 import SearchScreen from './src/screens/SearchScreen';
 
 import '@expo/metro-runtime'
 
 import { Platform } from 'react-native';
 import Account from './src/screens/Account';
+import QuizCreation from './src/screens/QuizCreationScreen';
 
 const linking = {
   prefixes: ['http://localhost:8081', 'https://luoja.fr'],
@@ -30,6 +31,12 @@ const linking = {
       userInfos: 'userInfos',
       login: 'login',
       register: 'register',
+      retrieveQuestions: {
+        path: 'retrieveQuestions/:handleAddQuestions',
+        stringify: {
+          handleAddQuestions: (handleAddQuestions) => "",
+        },
+      },
       search: 'search',
     },
   },
@@ -46,6 +53,7 @@ const MenuDrawer = () => {
       <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Reprendre un QUIZ" }} />
       <drawer.Screen name="search" component={SearchScreen} options={{ title: "Rechercher un QUIZ" }} />
       <drawer.Screen name="account" component={Account} options={{ title: "Mon compte" }} />
+      {Platform.OS === 'web' ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Créer un quiz" }} /> : null}
     </drawer.Navigator>
   );
 };
@@ -54,10 +62,13 @@ const MenuStack = () => {
   return (
     <stack.Navigator initialRouteName='menuDrawer'>
       <stack.Screen name="menuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
-      <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
-      <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
-      <stack.Screen name="login" component={Login} options={{ title: "Se connecter", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
-      <stack.Screen name="register" component={Register} options={{ title: "S'inscrire", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
+      <stack.Group screenOptions={{ presentation: 'modal' }}>
+        <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz",  headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
+        <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
+        <stack.Screen name="login" component={Login} options={{ title: "Se connecter", headerLeft: Platform.OS === 'web' ? () => null : undefined}} />
+        <stack.Screen name="register" component={Register} options={{ title: "S'inscrire", headerLeft: Platform.OS === 'web' ? () => null : undefined}} />
+        {Platform.OS === 'web' ? <drawer.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Récupérer des questions"}} /> : null}
+      </stack.Group>
     </stack.Navigator>
   );
 };
