@@ -193,12 +193,51 @@ export async function getQuestions(amount, category, difficulty) {
     }
 }
 
-export async function saveQuiz(title, theme, difficulty, quizQuestions){
+export async function saveQuiz(title, category, difficulty, quizQuestions){
     try{
         let url = `${await getPlatformAPI()}/quiz?title=${title}`;
 
-        if(theme !== 'none'){
-            url += `&category=${theme}`;
+        if(category !== 'none'){
+            url += `&category=${category}`;
+        }
+
+        if(difficulty !== 'none'){
+            url += `&difficulty=${difficulty}`;
+        }
+
+        const questions = quizQuestions.map(question => {
+            return {
+                text: question.question,
+                correctAnswer: question.correct_answer,
+                incorrectAnswers: question.incorrect_answers,
+            };
+        });
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: JSON.stringify({questions: questions}),
+        });
+
+        const data = await response.json();
+
+        return data;
+    }
+    catch(error){
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function editQuiz(quizId, title, category, difficulty, quizQuestions){
+    try{
+        let url = `${await getPlatformAPI()}/quiz/${quizId}/edit?title=${title}`;
+
+        if(category !== 'none'){
+            url += `&category=${category}`;
         }
 
         if(difficulty !== 'none'){
