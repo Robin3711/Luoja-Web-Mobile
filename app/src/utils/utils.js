@@ -66,33 +66,35 @@ export async function removeToken() {
     }
 }
 
-export function getThemeName(themeNumber) {
-    // use a dictionary to map themeNumber to themeName
-    const themeNames = {
-        9: 'General Knowledge',
-        10: 'Entertainment: Books',
-        11: 'Entertainment: Film',
-        12: 'Entertainment: Music',
-        13: 'Entertainment: Musicals & Theatres',
-        14: 'Entertainment: Television',
-        15: 'Entertainment: Video Games',
-        16: 'Entertainment: Board Games',
-        17: 'Science & Nature',
-        18: 'Science: Computers',
-        19: 'Science: Mathematics',
-        20: 'Mythology',
-        21: 'Sports',
-        22: 'Geography',
-        23: 'History',
-        24: 'Politics',
-        25: 'Art',
-        26: 'Celebrities',
-        27: 'Animals',
-        28: 'Vehicles',
-        29: 'Entertainment: Comics',
-        30: 'Science: Gadgets',
-        31: 'Entertainment: Japanese Anime & Manga',
-        32: 'Entertainment: Cartoon & Animations'
-    };
-    return themeNames[themeNumber];
-}
+export const themeOptions = [
+    { label: 'General Knowledge', value: 9 },
+    { label: 'Entertainment: Books', value: 10 },
+    { label: 'Entertainment: Film', value: 11 },
+    { label: 'Entertainment: Music', value: 12 },
+    { label: 'Entertainment: Musicals & Theatres', value: 13 },
+    { label: 'Entertainment: Television', value: 14 },
+    { label: 'Entertainment: Video Games', value: 15 },
+    { label: 'Entertainment: Board Games', value: 16 },
+    { label: 'Science & Nature', value: 17 },
+    { label: 'Science: Computers', value: 18 },
+    { label: 'Science: Mathematics', value: 19 },
+    { label: 'Mythology', value: 20 },
+    { label: 'Sports', value: 21 },
+    { label: 'Geography', value: 22 },
+    { label: 'History', value: 23 },
+    { label: 'Politics', value: 24 },
+    { label: 'Art', value: 25 },
+    { label: 'Celebrities', value: 26 },
+    { label: 'Animals', value: 27 },
+    { label: 'Vehicles', value: 28 },
+    { label: 'Entertainment: Comics', value: 29 },
+    { label: 'Science: Gadgets', value: 30 },
+    { label: 'Entertainment: Japanese Anime & Manga', value: 31 },
+    { label: 'Entertainment: Cartoon & Animations', value: 32 },
+];
+
+export const difficultyOptions = [
+    { label: 'Facile', value: 'easy' },
+    { label: 'Moyen', value: 'medium' },
+    { label: 'Difficile', value: 'hard' },
+];

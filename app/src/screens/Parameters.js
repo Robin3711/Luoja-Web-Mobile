@@ -24,7 +24,7 @@ export default function Parameters() {
         navigation.navigate('menuDrawer');
         setlunch(false);
         setTimeout(() => {
-          navigation.navigate('quizScreen', { quizId: data.id });
+          navigation.navigate('quizScreen', { gameId: data.id });
         }, 0);
       })
       .catch(error => {
@@ -36,8 +36,8 @@ export default function Parameters() {
     <View style={styles.parametersView}>
       <Text style={styles.parametersText}>Choisissez le nombre de question</Text>
       <RangeCursor testID="range-cursor" value={tempQuestionCount}
-                        onValueChange={setTempQuestionCount} // Mettre à jour temporairement
-                        onSlidingComplete={(value) => setQuestionCount(value)}  />
+        onValueChange={setTempQuestionCount}
+        onSlidingComplete={(value) => setQuestionCount(value)} />
       <ThemeSelector testID="theme-picker" value={theme} onValueChange={setTheme} />
       <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
       <TouchableOpacity style={styles.createQuizButton} onPress={handleCreateQuiz} disabled={lunch}>

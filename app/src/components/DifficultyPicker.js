@@ -1,15 +1,9 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import { getPlatformStyle } from '../utils/utils';
+import { getPlatformStyle, difficultyOptions } from '../utils/utils';
 
 const styles = getPlatformStyle();
-
-const difficultyOptions = [
-    { label: 'Facile', value: 'easy' },
-    { label: 'Moyen', value: 'medium' },
-    { label: 'Difficile', value: 'hard' },
-];
 
 const DifficultySelector = ({ testID, value, onValueChange }) => {
 
@@ -27,7 +21,5 @@ const DifficultySelector = ({ testID, value, onValueChange }) => {
         </View>
     );
 };
-
-
 
 export default DifficultySelector;

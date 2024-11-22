@@ -1,20 +1,14 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
-import { getPlatformStyle } from '../utils/utils';
+import { getPlatformStyle, difficultyOptions } from '../utils/utils';
 
 const styles = getPlatformStyle();
 
 export default function DifficultyRadioSelector({ value, onValueChange }) {
 
-    const difficulties = [
-        { label: 'Facile', value: 'easy' },
-        { label: 'Moyen', value: 'medium' },
-        { label: 'Difficile', value: 'hard' },
-    ];
-
     return (
         <View style={styles.difficultyRadioSelectorView}>
-            {difficulties.map((difficulty) => (
+            {difficultyOptions.map((difficulty) => (
                 <TouchableOpacity
                     key={difficulty.value}
                     style={[
