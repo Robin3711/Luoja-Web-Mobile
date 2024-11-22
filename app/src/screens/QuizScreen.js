@@ -1,8 +1,9 @@
-import { View, Text, Button, TouchableOpacity } from 'react-native';
+import { View, Text, Button, TouchableOpacity, Platform } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
 import { getPlatformStyle } from '../utils/utils';
+import * as Progress from 'react-native-progress';
 
 const styles = getPlatformStyle();
 
@@ -132,7 +133,8 @@ export default function QuizScreen() {
                 <>
                     <View style={styles.quizQuestionNumberContainer}>
                         <Text style={styles.quizId}>ID: {gameId}</Text>
-                        <Text style={styles.quizQuestionText}>Question {questionNumber}/{totalQuestion}</Text>
+                        <Text style={styles.quizQuestionText}>Question : {questionNumber}</Text>
+                        <Text>0 <Progress.Bar height={12} progress={questionNumber / totalQuestion} width={Platform.OS === 'web' ? 400 : 150} /> {totalQuestion} </Text>
                         <Text>Score: {score}</Text>
                     </View>
                     <View style={styles.quizQuestionContainer}>

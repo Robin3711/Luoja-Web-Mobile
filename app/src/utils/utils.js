@@ -98,6 +98,7 @@ export const themeOptions = [
 ];
 
 export const difficultyOptions = [
+    { label: 'Toute difficulté', value: 'none' },
     { label: 'Facile', value: 'easy' },
     { label: 'Moyen', value: 'medium' },
     { label: 'Difficile', value: 'hard' },

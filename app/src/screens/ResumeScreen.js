@@ -2,7 +2,7 @@ import { Text, View, TextInput, Button } from 'react-native';
 import { getPlatformStyle } from "../utils/utils";
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { getCurrentInfos } from '../utils/api';
+import { getGameInfos } from '../utils/api';
 
 const styles = getPlatformStyle();
 
@@ -16,14 +16,14 @@ export default function ResumeScreen() {
                 alert('Veuillez saisir un identifiant de partie');
                 return;
             }
-            let infos = getCurrentInfos(gameId.toLowerCase());
+            let infos = getGameInfos(gameId.toLowerCase());
             infos.then(data => {
                 if (data.error) {
                     alert('Aucune partie trouvée avec cet identifiant');
                     return;
                 }
                 else {
-                    navigation.navigate('quizScreen', { quizId: gameId.toLowerCase() });
+                    navigation.navigate('quizScreen', { gameId: gameId.toLowerCase() });
                 }
             });
         }

@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import QuizInformation from '../components/QuizInformation';
 
 export default styles = StyleSheet.create({
     /* -- Containers -- */
@@ -13,8 +12,8 @@ export default styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        width: '100%',
         marginTop: 20,
-        marginBottom: 20,
     },
     quizContainer: {
         flex: 1,
@@ -82,8 +81,40 @@ export default styles = StyleSheet.create({
         marginBottom: 20,
     },
     cursorSliderView: {
+        width: '80%',
+        marginVertical: 10,
+    },
+
+    /* -- Difficulty -- */
+    difContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+    },
+    difButtonGroupContainer: {
+        height: 50,
         width: '100%',
-        marginVertical: '1%',
+        borderRadius: 30,
+    },
+    difButtonStyle: {
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 40,
+        width: 80,
+    },
+    difSelectedButtonStyle: {
+        backgroundColor: '#404989',
+    },
+    difTextStyle: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 14,
+        textAlign: 'center',
+    },
+    difSelectedTextStyle: {
+        color: '#fff',
     },
 
     /* -- Quiz -- */
@@ -92,6 +123,7 @@ export default styles = StyleSheet.create({
         color: '#7c8ca3',
         fontSize: 14,
         marginBottom: 15,
+        textAlign: 'center',
     },
     quizQuestionContainer: {
         marginVertical: 10,
@@ -114,8 +146,8 @@ export default styles = StyleSheet.create({
         marginVertical: 20,
     },
     quizAnswerButton: {
-        width: 150,
-        height: 110,
+        width: 130,
+        height: 90,
         borderRadius: 8,
         margin: 10,
         justifyContent: 'center',
@@ -181,12 +213,149 @@ export default styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        justifyContent: 'flex-start',
-        margin: '5%',
+        justifyContent: 'center', // Centrer verticalement pour mobile
+        alignItems: 'center', // Centrer horizontalement pour mobile
+        margin: '5%', // Réduction de la marge
     },
     parametersText: {
-        fontSize: 20,
+        fontSize: 20, // Ajuster la taille du texte pour les petits écrans
         fontWeight: 'bold',
+    },
+
+    /* -- Paramètres Modal -- */
+    paramContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    paramButton: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '25%',
+        width: '75%',
+        fontSize: 18,
+        backgroundColor: 'gray',
+        borderRadius: 30,
+    },
+    paramOpenButton: {
+        backgroundColor: '#4CAF50',
+    },
+    paramButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    paramSelectedTheme: {
+        marginTop: 20,
+        fontSize: 14,
+    },
+    paramCenteredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    paramModalView: {
+        width: '90%',
+        height: '70%',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    paramModalButton: {
+        marginTop: 15,
+        borderRadius: 10,
+        padding: 10,
+        elevation: 2,
+    },
+    paramModalButtonClose: {
+        backgroundColor: '#2196F3',
+    },
+    paramModalTextStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    paramGridButton: {
+        flex: 1,
+        marginHorizontal: '5%',
+        marginVertical: 10,
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: '#76c7c0',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 70,
+        width: '80%',
+    },
+    paramDefaultGridButton: {
+        marginHorizontal: '5%',
+        marginVertical: 10,
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: '#76c7c0',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 50,
+        width: '70%',
+    },
+    paramGridButtonText: {
+        fontSize: 14,
+        textAlign: 'center',
+        color: 'white',
+    },
+
+    /* -- Account & Login -- */
+    accountView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    accountLoginView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: '40%',
+    },
+    accountLoginButton: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '5%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'lightgrey',
+        borderRadius: 40,
+        marginVertical: '5%',
+    },
+    loginView: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: '20%',
+    },
+    loginButton: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '5%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'lightgrey',
+        borderRadius: 40,
+        marginVertical: '5%',
     },
 
     /* -- Account & Login -- */
