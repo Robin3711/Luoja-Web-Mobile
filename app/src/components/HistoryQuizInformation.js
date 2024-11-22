@@ -13,7 +13,6 @@ export default function HistoryQuizInformation({partyId}) {
     useEffect(() => {
         async function fetchParty() {
             const data = await getCurrentInfos(partyId);
-            console.log(data);
             setParty(data);
             setLoading(false);
             if (data.Category !== 0){

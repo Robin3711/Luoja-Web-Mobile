@@ -4,7 +4,7 @@ import { getPlatformStyle } from "../utils/utils";
 import { Button } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { getUserGame } from "../utils/api";
+import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
 const styles = getPlatformStyle();
 
@@ -30,11 +30,14 @@ export default function Dashboard() {
     , []);
 
     useEffect(() => {
-        async function fetchHistory() {
-            const data = await getUserGame();
-            setHistory(data.games);
+        async function fetchData() {
+            const games = await getUserGame();
+            const quizzes = await getCreatedQuiz();
+            setHistory(games.games);
+            console.log(quizzes.games);
+            setPublishedQuizzes(quizzes.games);
         }
-        fetchHistory();
+        fetchData();
     }, []);
     
 
@@ -57,7 +60,7 @@ export default function Dashboard() {
                     <ScrollView>
                         {publishedQuizzes.map((item, index) => (
                             <View key={index}>
-                                <Text>{item}</Text>
+                                <Text>{item.id}</Text>
                             </View>
                         ))}
                     </ScrollView>
