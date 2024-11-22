@@ -32,7 +32,11 @@ export async function createQuiz(questionCount, theme, difficulty) {
 
 export async function getNewGameId(quizId) {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/restart`);
+        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/restart`, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
         const data = await response.json();
         return data;
     } catch (error) {
@@ -43,7 +47,11 @@ export async function getNewGameId(quizId) {
 
 export async function getCurrentQuestion(quizId) {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/question`);
+        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/question`, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
         const data = await response.json();
         return data;
     } catch (error) {
@@ -58,6 +66,7 @@ export async function getCurrentAnswer(answer, quizId) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'token': await AsyncStorage.getItem('token'),
             },
             body: JSON.stringify(answer),
         });
@@ -76,9 +85,7 @@ export async function getCurrentAnswer(answer, quizId) {
 export async function getCurrentInfos(quizId) {
     try {
 
-        let url = `${await getPlatformAPI()}/game/${quizId}/infos`;
-
-        const response = await fetch(url, {
+        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/infos`, {
             headers: { 
                 'token': await AsyncStorage.getItem('token'),
             },
@@ -97,7 +104,11 @@ export async function createParty(quizId) {
 
         let url = `${await getPlatformAPI()}/quiz/${quizId}/play`;
         
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
 
         const data = await response.json();
         return data;
@@ -196,7 +207,11 @@ export async function getQuestions(amount, category, difficulty) {
             url += `&difficulty=${difficulty}`;
         }
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
 
         const data = await response.json();
 
