@@ -22,6 +22,4 @@ const ThemeSelector = ({ testID, value, onValueChange }) => {
     );
 };
 
-
-
 export default ThemeSelector;

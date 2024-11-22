@@ -22,7 +22,7 @@ export default function EndScreen() {
     useEffect(() => {
         const loadGameData = async () => {
             try {
-                if (!score || !numberOfQuestions || !gameId) {
+                if (score === undefined || numberOfQuestions === undefined || gameId === undefined) {
                     handleReturnHome();
                 }
 

@@ -66,6 +66,10 @@ export async function removeToken() {
     }
 }
 
+export function getThemeLabel(value) {
+    return themeOptions.find(option => option.value === value)?.label;
+}
+
 export const themeOptions = [
     { label: 'General Knowledge', value: 9 },
     { label: 'Entertainment: Books', value: 10 },

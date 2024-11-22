@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { createParty } from '../utils/api';
-import { getThemeName } from '../utils/utils';
+import { getThemeLabel } from '../utils/utils';
 
 export default function QuizInformation({quiz}) {
     navigation = useNavigation();
@@ -12,7 +12,7 @@ export default function QuizInformation({quiz}) {
         });
     }
     console.log(quiz.category);
-    const themeName = getThemeName(parseInt(quiz.category));
+    const themeName = getThemeLabel(parseInt(quiz.category));
     return (
         <View style={styles.QuizInformationView}>
             <Text style={styles.QuizInformationText}>{quiz.title}</Text>
