@@ -1,5 +1,6 @@
 import { getPlatformAPI, setToken } from "./utils";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { decode } from 'html-entities';
 
 export async function createQuiz(questionCount, theme, difficulty) {
     try {
@@ -183,24 +184,35 @@ export async function getUserGame() {
         throw error;
     }
 }
-export async function getQuestions(questionCount, theme, difficulty) {
-    try {
+export async function getQuestions(amount, category, difficulty) {
+    try{
+        let url = `https://opentdb.com/api.php?amount=${amount}`;
 
-        let url = `${await getPlatformAPI()}/questions?amount=${questionCount}`;
-
-        if (theme !== 'none') {
-            url += `&category=${theme}`;
+        if (category) {
+            url += `&category=${category}`;
         }
 
-        if (difficulty !== 'none') {
+        if (difficulty) {
             url += `&difficulty=${difficulty}`;
         }
 
         const response = await fetch(url);
 
         const data = await response.json();
-        return data;
-    } catch (error) {
+
+        if (data.response_code !== 0) {
+            throw new Error("Erreur lors de la récupération des questions");
+        }
+
+        data.results.forEach((item) => {
+            item.question = decode(item.question);
+            item.correct_answer = decode(item.correct_answer);
+            item.incorrect_answers = item.incorrect_answers.map((answer) => decode(answer));
+        });
+
+        return data.results;
+    }
+    catch(error){
         console.error(error);
         throw error;
     }
