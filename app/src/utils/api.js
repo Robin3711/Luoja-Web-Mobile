@@ -14,7 +14,12 @@ export async function createQuiz(questionCount, theme, difficulty) {
             url += `&difficulty=${difficulty}`;
         }
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+        
 
         const data = await response.json();
         return data;
@@ -72,7 +77,11 @@ export async function getCurrentInfos(quizId) {
 
         let url = `${await getPlatformAPI()}/game/${quizId}/infos`;
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
 
         const data = await response.json();
         return data;
@@ -160,8 +169,14 @@ export async function getUserInfos() {
 
 export async function getUserGame() {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/quiz/user/Game`, { headers: { 'token': await AsyncStorage.getItem('token') } });
+        const response = await fetch(`${await getPlatformAPI()}/quiz/user/Game`, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+        
         const data = await response.json();
+        console.log(data);
         return data;
     } catch (error) {
         console.error(error);

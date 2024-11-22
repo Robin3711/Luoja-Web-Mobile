@@ -4,7 +4,8 @@ import { getPlatformStyle } from "../utils/utils";
 import { Button } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-
+import { getUserGame } from "../utils/api";
+import HistoryQuizInformation from "../components/HistoryQuizInformation";
 const styles = getPlatformStyle();
 
 export default function Dashboard() {
@@ -21,20 +22,22 @@ export default function Dashboard() {
         navigation.navigate('login');
     }
 
-    // Récupération de l'historique et des quiz publiés
     useEffect(() => {
-        async function fetchDashboardData() {
-            // Récupération de l'historique
-            const historyData = await getUserGame();
-            setHistory(historyData);
-
-            // Récupération des quiz publiés
-            // const publishedQuizzesData = await getPublishedQuizzes();
-            // setPublishedQuizzes(publishedQuizzesData);
+        if (!hasToken()) {
+            navigation.navigate('login');
         }
+    }
+    , []);
 
-        fetchDashboardData();
+    useEffect(() => {
+        async function fetchHistory() {
+            const data = await getUserGame();
+            setHistory(data.games);
+        }
+        fetchHistory();
     }, []);
+    
+
     return (
         <View style={styles.dashboardView}>
             <Text style={styles.dashboardText   }>Tableau de bord</Text>
@@ -44,7 +47,7 @@ export default function Dashboard() {
                     <ScrollView>
                         {history.map((item, index) => (
                             <View key={index}>
-                                <Text>{item}</Text>
+                                <HistoryQuizInformation partyId={item.id} />
                             </View>
                         ))}
                     </ScrollView>

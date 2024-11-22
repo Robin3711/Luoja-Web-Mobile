@@ -305,4 +305,13 @@ export default styles = StyleSheet.create({
         borderRadius: 40,
         marginVertical: '5%',
     },
+
+    /* -- HistoryQuizInformation -- */
+    historyQuizInformationView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+    },
 });

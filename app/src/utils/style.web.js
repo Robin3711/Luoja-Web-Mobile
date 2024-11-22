@@ -388,4 +388,43 @@ export default styles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 5,
     },
+
+    /* -- Dashboard -- */
+    dashboardView: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    dashboardButton: {
+        backgroundColor: 'lightgrey',
+        padding: 10,
+        borderRadius: 10,
+        marginVertical: 10,
+    },
+    dashboardText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    dashboardContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+    },
+
+    /* -- HistoryQuizInformation -- */
+    historyQuizInformationView: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+    },
+    historyQuizInformationText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginHorizontal: 5,
+    },
 });
