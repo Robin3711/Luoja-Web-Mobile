@@ -196,6 +196,30 @@ export default styles = StyleSheet.create({
         backgroundColor: '#b8cce0',
     },
 
+    /* -- EndScreen-- */
+    scoreContainer: {
+        alignItems: 'center',
+        marginVertical: 30,
+        paddingHorizontal: 15,
+    },
+    scoreTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: '#333',
+        textAlign: 'center',
+    },
+    endContainer: {
+        marginTop: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    progressText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333'
+    },
+
     /* -- Parameters -- */
     parametersView: {
         display: 'flex',
@@ -335,7 +359,7 @@ export default styles = StyleSheet.create({
     selectedDifficultyRadioSelectorButtonText: {
         color: 'white',
     },
-    
+
     /* -- Search Quiz -- */
     searchQuizView: {
         flex: 1, // S'assure que cette vue prend tout l'espace disponible

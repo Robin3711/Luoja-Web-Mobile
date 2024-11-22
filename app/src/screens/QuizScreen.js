@@ -1,19 +1,22 @@
 import { View, Text, Button, TouchableOpacity } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
-import { getCurrentQuestion, getCurrentAnswer, getCurrentInfos } from '../utils/api';
+import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
 import { getPlatformStyle } from '../utils/utils';
 
 const styles = getPlatformStyle();
 
 export default function QuizScreen() {
+
     const route = useRoute();
     const navigation = useNavigation();
-    const { quizId } = route.params;
-    if (!quizId) {
+
+    const { gameId } = route.params;
+
+    if (!gameId) {
         return (
             <View style={styles.quizContainer}>
-                <Text style={styles.quizQuestionText}>Une erreur est survenue lors de la récupération du Quiz.</Text>
+                <Text style={styles.quizQuestionText}>Une erreur est survenue lors de la récupération de la partie.</Text>
                 <Button title="Retour" onPress={() => navigation.navigate('menuDrawer', {
                     screen: 'newQuiz',
                 })
@@ -22,40 +25,48 @@ export default function QuizScreen() {
         );
     }
     const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [questionNumber, setQuestionNumber] = useState(null);
+    const [totalQuestion, setTotalQuestion] = useState(null);
+
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
-    const [newQuestionNow, setNewQuestionNow] = useState(false);
-    const [correct, setCorrect] = useState(null);
-    const [currentQuestionNumber, setCurrentQuestionNumber] = useState(null);
-    const [totalQuestion, setTotalQuestion] = useState(null);
-    const [score, setScore] = useState(0);
     const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [fetching, setFetching] = useState(false)
+
+    const [correct, setCorrect] = useState(null);
+    const [score, setScore] = useState(0);
 
     useEffect(() => {
-        (async () => {
-            const infos = await getCurrentInfos(quizId);
-            setCurrentQuestionNumber(infos.questionCursor + 1);
-            setTotalQuestion(infos.numberOfQuestions);
-            let scoreTemp = 0;
-            for (let i = 0; i < infos.questionCursor; i++) {
-                if (infos.results[i]) {
-                    scoreTemp++;
+        (
+            async () => {
+                const infos = await getGameInfos(gameId);
+
+                setQuestionNumber(infos.questionCursor + 1);
+                setTotalQuestion(infos.numberOfQuestions);
+
+                let scoreTemp = 0;
+
+                for (let i = 0; i < infos.questionCursor; i++) {
+                    if (infos.results[i]) {
+                        scoreTemp++;
+                    }
                 }
-            }
-            setScore(scoreTemp);
-            handleNewQuestion();
-        })();
-    }, [quizId]);
+
+                setScore(scoreTemp);
+                handleNewQuestion();
+            })();
+    }, [gameId]);
 
     const handleNewQuestion = async () => {
         try {
             setButtonDisabled(true);
-            setNewQuestionNow(false);
             setIsAnswered(false);
             setSelectedAnswer(null);
             setCorrect(null);
-            const data = await getCurrentQuestion(quizId);
+
+            const data = await getCurrentQuestion(gameId);
             setCurrentQuestion(data);
+
             setButtonDisabled(false);
         } catch (error) {
             console.error('Erreur lors de la récupération de la question:', error);
@@ -70,17 +81,23 @@ export default function QuizScreen() {
     };
 
     const handleGetAnswer = async () => {
-        const responseData = { answer: selectedAnswer };
-
         try {
             setButtonDisabled(true);
-            const { correctAnswer: correctAnswerFromApi } = await getCurrentAnswer(responseData, quizId);
-            setNewQuestionNow(true);
+
+            setFetching(true);
+
+            const { correctAnswer: correctAnswerFromApi } = await getCurrentAnswer({ answer: selectedAnswer }, gameId);
+
+            setFetching(false);
+
             setCorrect(correctAnswerFromApi);
+
             setIsAnswered(true);
+
             if (correctAnswerFromApi === selectedAnswer) {
                 updateScore();
             }
+
             setButtonDisabled(false);
         } catch (error) {
             console.error('Erreur lors de la soumission de la réponse:', error);
@@ -99,12 +116,14 @@ export default function QuizScreen() {
         if (answer === selectedAnswer) {
             return correct === answer ? 'green' : 'red';
         }
+        if (answer === correct && selectedAnswer !== answer) {
+            return 'green';
+        }
         return 'gray';
     };
 
     const handleEnd = () => {
-        const data = { score: score, numberOfQuestions: totalQuestion, gameId: quizId }
-        navigation.navigate('endScreen', { resumeData: data });
+        navigation.navigate('endScreen', { score: score, numberOfQuestions: totalQuestion, gameId: gameId });
     }
 
     return (
@@ -112,8 +131,8 @@ export default function QuizScreen() {
             {currentQuestion ? (
                 <>
                     <View style={styles.quizQuestionNumberContainer}>
-                        <Text style={styles.quizId}>ID: {quizId}</Text>
-                        <Text style={styles.quizQuestionText}>Question {currentQuestionNumber}/{totalQuestion}</Text>
+                        <Text style={styles.quizId}>ID: {gameId}</Text>
+                        <Text style={styles.quizQuestionText}>Question {questionNumber}/{totalQuestion}</Text>
                         <Text>Score: {score}</Text>
                     </View>
                     <View style={styles.quizQuestionContainer}>
@@ -134,7 +153,7 @@ export default function QuizScreen() {
                         ))}
                     </View>
                     {
-                        newQuestionNow === false ? (
+                        !isAnswered ? (
                             <TouchableOpacity
                                 style={styles.quizNextButton}
                                 onPress={() => {
@@ -143,24 +162,24 @@ export default function QuizScreen() {
                                 disabled={buttonDisabled || !selectedAnswer}
                             >
                                 <Text style={styles.quizNextButtonText}>
-                                    {buttonDisabled ? "Chargement..." : "Envoie de la réponse"}
+                                    {buttonDisabled ? "Chargement..." : "Vérifier ma réponse"}
                                 </Text>
                             </TouchableOpacity>
                         ) : (
                             <TouchableOpacity
                                 style={styles.quizNextButton}
                                 onPress={() => {
-                                    if (totalQuestion === currentQuestionNumber) {
+                                    if (totalQuestion === questionNumber) {
                                         handleEnd();
                                     } else {
                                         handleNewQuestion();
-                                        setCurrentQuestionNumber(currentQuestionNumber + 1);
+                                        setQuestionNumber(questionNumber + 1);
                                     }
                                 }}
                                 disabled={buttonDisabled}
                             >
                                 <Text style={styles.quizNextButtonText}>
-                                    {totalQuestion === currentQuestionNumber ? "Voir les résultats" : "Question suivante"}
+                                    {totalQuestion === questionNumber ? "Voir les résultats" : "Question suivante"}
                                 </Text>
                             </TouchableOpacity>
                         )

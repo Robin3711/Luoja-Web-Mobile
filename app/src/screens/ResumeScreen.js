@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { getCurrentInfos } from '../utils/api';
 
-
 const styles = getPlatformStyle();
 
 export default function ResumeScreen() {

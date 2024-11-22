@@ -152,6 +152,30 @@ export default styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
+    /* -- EndScreen-- */
+    scoreContainer: {
+        alignItems: 'center',
+        marginVertical: 30,
+        paddingHorizontal: 15,
+    },
+    scoreTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: '#333',
+        textAlign: 'center',
+    },
+    endContainer: {
+        marginTop: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    progressText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+
     /* -- Parameters -- */
     parametersView: {
         display: 'flex',

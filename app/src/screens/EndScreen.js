@@ -3,77 +3,76 @@ import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { getPlatformStyle } from '../utils/utils';
-import { getNewGameId } from '../utils/api';
+import { getPlatformStyle, themeOptions } from '../utils/utils';
+import { restartGame, getGameInfos } from '../utils/api';
+
+import * as Progress from 'react-native-progress';
 
 const styles = getPlatformStyle();
 
 export default function EndScreen() {
     const route = useRoute();
     const navigation = useNavigation();
-    const { resumeData } = route.params;
 
-    const [score, setScore] = useState(null);
-    const [numberOfQuestions, setNumberOfQuestions] = useState(null);
-    const [gameId, setGameId] = useState(null);
+    const { score, numberOfQuestions, gameId } = route.params;
+
+    const [category, setCategory] = useState(null);
+    const [difficulty, setDifficulty] = useState(null);
 
     useEffect(() => {
         const loadGameData = async () => {
             try {
-                const savedScore = await AsyncStorage.getItem('score');
-                const savedNumberOfQuestions = await AsyncStorage.getItem('numberOfQuestions');
-                const savedGameId = await AsyncStorage.getItem('gameId');
-
-                if (savedScore && savedNumberOfQuestions && savedGameId) {
-                    setScore(Number(savedScore));
-                    setNumberOfQuestions(Number(savedNumberOfQuestions));
-                    setGameId(savedGameId);
-                } else {
-                    setScore(resumeData.score);
-                    setNumberOfQuestions(resumeData.numberOfQuestions);
-                    setGameId(resumeData.gameId);
-
-                    await AsyncStorage.setItem('score', resumeData.score.toString());
-                    await AsyncStorage.setItem('numberOfQuestions', resumeData.numberOfQuestions.toString());
-                    await AsyncStorage.setItem('gameId', resumeData.gameId.toString());
+                if (!score || !numberOfQuestions || !gameId) {
+                    handleReturnHome();
                 }
+
+                const infos = await getGameInfos(gameId);
+
+                setCategory(infos.Category !== 0 ? themeOptions.find(option => option.value === infos.Category)?.label : "any");
+                setDifficulty(infos.Difficulty);
             } catch (error) {
                 console.error('Erreur de chargement des données:', error);
             }
         };
 
         loadGameData();
-
-        return () => {
-            AsyncStorage.removeItem('score');
-            AsyncStorage.removeItem('numberOfQuestions');
-            AsyncStorage.removeItem('gameId');
-        };
-    }, [resumeData]);
+    }, [gameId]);
 
     const handleReturnHome = async () => {
-        await AsyncStorage.removeItem('score');
-        await AsyncStorage.removeItem('numberOfQuestions');
-        await AsyncStorage.removeItem('gameId');
         navigation.navigate("menuDrawer");
     };
 
     const handleReplay = async () => {
-        await AsyncStorage.removeItem('score');
-        await AsyncStorage.removeItem('numberOfQuestions');
-        await AsyncStorage.removeItem('gameId');
-        console.log(gameId);
-        const newGameId = await getNewGameId(gameId);
-        console.log(newGameId.id);
-        navigation.navigate('quizScreen', { quizId: newGameId.id });
+        const newGameId = await restartGame(gameId);
+        navigation.navigate('quizScreen', { gameId: newGameId.id });
     };
 
     return (
         <View style={styles.quizContainer}>
             <View style={styles.quizQuestionContainer}>
                 <Text>Fin de partie !</Text>
+                <Text>Recapitulatif de la partie :</Text>
+                <Text>Categorie : {category} | difficulté : {difficulty}</Text>
                 {score !== null && numberOfQuestions !== null ? (
-                    <Text>Votre score : {score} / {numberOfQuestions}</Text>
+                    <View style={styles.scoreContainer}>
+                        <Text style={styles.scoreTitle}>
+                            Votre score : {score} / {numberOfQuestions}
+                        </Text>
+                        <View style={styles.endContainer}>
+                            <Progress.Circle
+                                progress={numberOfQuestions > 0 ? score / numberOfQuestions : 0}
+                                size={120}
+                                showsText={true}
+                                color="#76c7c0"
+                                borderWidth={0}
+                                thickness={15}
+                                textStyle={styles.progressText}
+                                unfilledColor="#e12f09"
+                                formatText={() => `${Math.round((score / numberOfQuestions) * 100) || 0}%`}
+                                indeterminateAnimationDuration={1000}
+                            />
+                        </View>
+                    </View>
                 ) : (
                     <Text>Chargement du score...</Text>
                 )}
