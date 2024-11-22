@@ -2,8 +2,8 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { getPlatformStyle } from '../utils/utils';
 import DifficultyRadioSelector from '../components/DifficultyRadioSelector';
 import React, { useState } from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { publishQuiz, saveQuiz } from '../utils/api';
+import { useNavigation } from '@react-navigation/native';
+import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 
 const styles = getPlatformStyle();
 
@@ -37,12 +37,13 @@ export default function QuizCreation() {
 
     const handleSave = async () => {
         try{
-            console.log('title', title);
-            console.log('category', category);
-            console.log('difficulty', difficulty);
-            console.log('questions', questions);
-            const data = await saveQuiz(title, category, difficulty, questions);
-            setQuizId(data.quizId);
+            if(quizId === null){
+                const data = await saveQuiz(title, category, difficulty, questions);
+                setQuizId(data.quizId);
+            }
+            else{
+                await editQuiz(quizId, title, category, difficulty, questions);
+            }
         }
         catch(error){
             alert(error.message);
@@ -51,7 +52,14 @@ export default function QuizCreation() {
     
     const handlePublish = async () => {
         try{
+            await editQuiz(quizId, title, category, difficulty, questions);
             await publishQuiz(quizId);
+
+            setQuizId(null);
+            setTitle('');
+            setCategory('none');
+            setDifficulty('easy');
+            setQuestions([]);
         }
         catch(error){
             alert(error.message);
@@ -66,7 +74,7 @@ export default function QuizCreation() {
             <View style={styles.quizCreationChildVIew}>
                 <View style={styles.quizCreationLeftView}>
                     <View>
-                        <TextInput placeholder='Titre du quiz' onChangeText={setTitle}></TextInput>
+                        <TextInput placeholder='Titre du quiz' value={title} onChangeText={setTitle}></TextInput>
                         <DifficultyRadioSelector value={difficulty} onValueChange={setDifficulty}/>
                         <TouchableOpacity onPress={handleRetrieveQuestions}>
                             <Text>Récupérer des questions</Text>
