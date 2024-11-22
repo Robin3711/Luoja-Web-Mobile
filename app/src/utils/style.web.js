@@ -348,9 +348,10 @@ export default styles = StyleSheet.create({
         width: 400,
     },
     paramGridButtonText: {
-        fontSize: 12,
+        fontSize: 25,
         textAlign: 'center',
         color: 'white',
+        fontWeight: 'bold',
     },
 
     /* -- Account & Login -- */

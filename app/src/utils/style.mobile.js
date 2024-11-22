@@ -213,12 +213,12 @@ export default styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        justifyContent: 'center', // Centrer verticalement pour mobile
-        alignItems: 'center', // Centrer horizontalement pour mobile
-        margin: '5%', // Réduction de la marge
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: '5%',
     },
     parametersText: {
-        fontSize: 20, // Ajuster la taille du texte pour les petits écrans
+        fontSize: 20,
         fontWeight: 'bold',
     },
 
@@ -293,6 +293,7 @@ export default styles = StyleSheet.create({
         alignItems: 'center',
         height: 70,
         width: '80%',
+
     },
     paramDefaultGridButton: {
         marginHorizontal: '5%',
@@ -306,9 +307,10 @@ export default styles = StyleSheet.create({
         width: '70%',
     },
     paramGridButtonText: {
-        fontSize: 14,
+        fontSize: 15,
         textAlign: 'center',
         color: 'white',
+
     },
 
     /* -- Account & Login -- */

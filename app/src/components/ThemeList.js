@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, Pressable, TouchableOpacity, FlatList, Platform } from 'react-native';
-import { getPlatformStyle, themeOptions } from '../utils/utils';
+import { getPlatformStyle, themeOptions, iconSize } from '../utils/utils';
+import { Dices } from 'lucide-react-native';
 
 const styles = getPlatformStyle();
 
@@ -29,7 +30,7 @@ const ThemeSelector = ({ onValueChange }) => {
                         <Pressable
                             style={styles.paramDefaultGridButton}
                             onPress={() => handleThemeSelection('none')}>
-                            <Text style={styles.paramGridButtonText}>Thème générale</Text>
+                            <Text style={styles.paramGridButtonText}><Dices color="black" size={iconSize} /> Thème générale</Text>
                         </Pressable>
                         <FlatList
                             data={themeOptions}
@@ -39,7 +40,7 @@ const ThemeSelector = ({ onValueChange }) => {
                                 <Pressable
                                     style={styles.paramGridButton}
                                     onPress={() => { handleThemeSelection(item.value); onValueChange(item.value); }}>
-                                    <Text style={styles.paramGridButtonText}>{item.label}</Text>
+                                    <Text style={styles.paramGridButtonText}>{item.icon} {item.label}</Text>
                                 </Pressable>
                             )}
                         />
