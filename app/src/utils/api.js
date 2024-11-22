@@ -276,3 +276,21 @@ export async function publishQuiz(quizId){
         throw error;
     }
 }
+
+export async function getCreatedQuiz(){
+    try{
+        const response = await fetch(`${await getPlatformAPI()}/quiz/user/Game`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        const data = await response.json();
+
+        return data;
+    }
+    catch(error){
+        console.error(error);
+        throw error;
+    }
+}
