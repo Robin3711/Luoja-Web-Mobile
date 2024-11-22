@@ -8,7 +8,7 @@ export default function QuizInformation({quiz}) {
     navigation = useNavigation();
     const handleStartQuiz = () => {
         createParty(quiz.id).then((party) => {
-            navigation.navigate('quizScreen', {quizId: party.id});
+            navigation.navigate('quizScreen', {gameId: party.id});
         });
     }
     console.log(quiz.category);
