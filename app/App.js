@@ -9,7 +9,6 @@ import ResumeScreen from './src/screens/ResumeScreen';
 import EndScreen from './src/screens/EndScreen';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
-import Dashboard from './src/screens/Dashboard';
 import RetrieveQuestions from './src/screens/RetrieveQuestionsScreen';
 import SearchScreen from './src/screens/SearchScreen';
 
@@ -32,7 +31,6 @@ const linking = {
       userInfos: 'userInfos',
       login: 'login',
       register: 'register',
-      dashboard: 'dashboard',
       retrieveQuestions: {
         path: 'retrieveQuestions/:handleAddQuestions',
         stringify: {
@@ -71,7 +69,6 @@ const MenuStack = () => {
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire", headerLeft: Platform.OS === 'web' ? () => null : undefined}} />
         {Platform.OS === 'web' ? <drawer.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Récupérer des questions"}} /> : null}
       </stack.Group>
-      <stack.Screen name="dashboard" component={Dashboard} options={{ title: "Tableau de bord", headerLeft: Platform.OS === 'web' ? () => null : undefined}} />
     </stack.Navigator>
   );
 };

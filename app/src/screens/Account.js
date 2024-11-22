@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getUserInfos } from '../utils/api';
 import { hasToken, removeToken } from '../utils/utils';
 import { getPlatformStyle } from '../utils/utils';
+import Dashboard from './Dashboard';
 
 const styles = getPlatformStyle();
 
@@ -49,7 +50,11 @@ export default function Account() {
 
     if (isLogged && userInfos) {
 
-        navigation.navigate('dashboard');
+        return(
+            <View>
+                <Dashboard />
+            </View>
+        )
     } 
     else {
         return (
