@@ -18,12 +18,13 @@ export default function HistoryQuizInformation({partyId}) {
             if (data.Category !== 0){
                 setThemeName(getThemeName(data.Category));
             }
-            console.log(party.results);
-            for (let i = 0; i < party.results.length; i++) {
-                if (party.results[i] === true) {
-                    setScore(score + 1);
+            let scoreTemp = 0;
+            for (let i = 0; i < data.results.length; i++) {
+                if (data.results[i] === true) {
+                    scoreTemp++;
                 }
             }
+            setScore(scoreTemp);
         }
         fetchParty();
     }, [partyId]);
