@@ -18,6 +18,12 @@ export default function HistoryQuizInformation({partyId}) {
             if (data.Category !== 0){
                 setThemeName(getThemeName(data.Category));
             }
+            console.log(party.results);
+            for (let i = 0; i < party.results.length; i++) {
+                if (party.results[i] === true) {
+                    setScore(score + 1);
+                }
+            }
         }
         fetchParty();
     }, [partyId]);
@@ -26,18 +32,14 @@ export default function HistoryQuizInformation({partyId}) {
         return <Text>Chargement...</Text>;
     }
 
-    for (let i = 0; i < party.results.length; i++) {
-        if (party.results[i] === true) {
-            setScore(score + 1);
-        }
-    }
+    
     
     return (
         <View style={styles.historyQuizInformationView}>
             <Text style={styles.historyQuizInformationText}>Partie : {partyId}</Text>
             <Text style={styles.historyQuizInformationText}>Thème : {themeName}</Text>
             <Text style={styles.historyQuizInformationText}>Difficulté : {party.Difficulty}</Text>
-            <Text style={styles.historyQuizInformationText}>Date : {party.date}</Text>
+            <Text style={styles.historyQuizInformationText}>Date : {party.CreateDate}</Text>
             <Text style={styles.historyQuizInformationText}>Résultat : {score}</Text>
         </View>
     );

@@ -46,7 +46,7 @@ export default function Dashboard() {
             <Text style={styles.dashboardText   }>Tableau de bord</Text>
             <View style={styles.dashboardContainer}>
                 <View style={styles.dashboardSection}>
-                    <Text>Historique</Text>
+                    <Text style={styles.dashboardText   }>Historique</Text>
                     <ScrollView>
                         {history.map((item, index) => (
                             <View key={index}>
@@ -56,11 +56,11 @@ export default function Dashboard() {
                     </ScrollView>
                 </View>
                 <View style={styles.dashboardSection}>
-                    <Text>Vos quiz publié</Text>
+                    <Text style={styles.dashboardText   }>Vos quiz publié</Text>
                     <ScrollView>
                         {publishedQuizzes.map((item, index) => (
                             <View key={index}>
-                                <Text>{item.id}</Text>
+                                <HistoryQuizInformation partyId={item.id} />
                             </View>
                         ))}
                     </ScrollView>

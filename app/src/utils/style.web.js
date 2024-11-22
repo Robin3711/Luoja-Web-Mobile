@@ -423,8 +423,7 @@ export default styles = StyleSheet.create({
         padding: 10,
     },
     historyQuizInformationText: {
-        fontSize: 20,
-        fontWeight: 'bold',
+        fontSize: 15,
         marginHorizontal: 5,
     },
 });
