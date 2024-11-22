@@ -270,41 +270,72 @@ export default styles = StyleSheet.create({
         borderRadius: 40,
     },
 
-    /* -- Dashboard -- */
-    dashboardView: {
+    /* -- Quiz Creation -- */
+    quizCreationView: {
         display: 'flex',
         flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         height: '100%',
+    },
+    quizCreationChildVIew: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        height: '25%',
+        width: '100%',
+    },
+    quizCreationBottomButtonsView: {
+        display: 'flex',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    dashboardText: {
-        fontSize: 40,
-        fontWeight: 'bold',
+    quizCreationLeftView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '50%',
+    },
+    quizCreationRightView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '50%',
     },
 
-    dashboardContainer: {
-        flex: 1,
+    /* -- Quiz Radio Button Selector -- */
+
+    difficultyRadioSelectorView: {
+        display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-
-    dashboardSection: {
-        flex: 1, // Chaque section prend un espace égal
-        alignItems: 'center', // Centrage horizontal du contenu
-        justifyContent: 'center', // Centrage vertical du contenu
-        backgroundColor: '#f0f0f0', // Pour distinguer les sections
-        padding: 10, // Espacement interne
-        marginHorizontal: 50, // Espacement externe
+    difficultyRadioSelectorButton: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'lightgrey',
+        borderRadius: 40,
+        marginHorizontal: '5%',
+        paddingVertical: '2%',
+        paddingHorizontal: '5%',
     },
-
-    /* -- Divider -- */
-    divider: {
-        width: 1, // Largeur de la ligne
-        height: '100%', // Hauteur du divider
-        backgroundColor: 'gray', // Couleur de la ligne
-        marginHorizontal: 10, // Espacement autour du divider
+    difficultyRadioSelectorButtonText: {
+        fontSize: 20,
     },
-
+    selectedDifficultyRadioSelectorButton: {
+        backgroundColor: 'lightgrey',
+    },
+    selectedDifficultyRadioSelectorButtonText: {
+        color: 'white',
+    },
+    
     /* -- Search Quiz -- */
     searchQuizView: {
         flex: 1, // S'assure que cette vue prend tout l'espace disponible
@@ -337,7 +368,7 @@ export default styles = StyleSheet.create({
         width: '100%', // S'assure que le contenu est bien aligné
     },
 
-    /* -- QuizPresentation -- */
+    /* -- BrewPresentation -- */
     QuizInformationView: {
         flex: 1,
         display: 'flex',

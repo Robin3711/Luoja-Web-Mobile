@@ -168,3 +168,84 @@ export async function getUserGame() {
         throw error;
     }
 }
+export async function getQuestions(questionCount, theme, difficulty) {
+    try {
+
+        let url = `${await getPlatformAPI()}/questions?amount=${questionCount}`;
+
+        if (theme !== 'none') {
+            url += `&category=${theme}`;
+        }
+
+        if (difficulty !== 'none') {
+            url += `&difficulty=${difficulty}`;
+        }
+
+        const response = await fetch(url);
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function saveQuiz(title, theme, difficulty, quizQuestions){
+    try{
+        let url = `${await getPlatformAPI()}/quiz?title=${title}`;
+
+        if(theme !== 'none'){
+            url += `&category=${theme}`;
+        }
+
+        if(difficulty !== 'none'){
+            url += `&difficulty=${difficulty}`;
+        }
+
+        const questions = quizQuestions.map(question => {
+            return {
+                text: question.question,
+                correctAnswer: question.correct_answer,
+                incorrectAnswers: question.incorrect_answers,
+            };
+        });
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: JSON.stringify({questions: questions}),
+        });
+
+        const data = await response.json();
+
+        return data;
+    }
+    catch(error){
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function publishQuiz(quizId){
+    try{
+        console.log(`${await getPlatformAPI()}/quiz/${quizId}/publish`);
+        const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/publish`, {
+            method: 'GET',
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        const data = await response.json();
+
+        return data;
+    }
+    catch(error){
+        console.error(error);
+        throw error;
+    }
+}
