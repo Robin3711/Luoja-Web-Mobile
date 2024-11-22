@@ -157,3 +157,14 @@ export async function getUserInfos() {
         throw new Error("Erreur réseau");
     }
 }
+
+export async function getUserGame() {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/quiz/user/Game`, { headers: { 'token': await AsyncStorage.getItem('token') } });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
