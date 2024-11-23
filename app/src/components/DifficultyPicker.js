@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
+
 import { getPlatformStyle, difficultyOptions } from '../utils/utils';
 
 const styles = getPlatformStyle();
+
 
 const DifficultySelector = ({ testID, value, onValueChange }) => {
     const [selectedIndex, setSelectedIndex] = useState(

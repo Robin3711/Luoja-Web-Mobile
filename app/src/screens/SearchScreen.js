@@ -1,13 +1,16 @@
-import { Text, View, TextInput, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { Text, View, TextInput, ScrollView } from 'react-native';
+
 import { getPlatformStyle } from '../utils/utils';
+import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
 import RangeCursor from '../components/Cursor';
 import DifficultySelector from '../components/DifficultyPicker';
 import QuizInformation from '../components/QuizInformation';
-import { getQuizAutoComplete } from '../utils/api';
+
 
 styles = getPlatformStyle();
+
 
 export default function SearchScreen() {
     const [data, setData] = useState([]);

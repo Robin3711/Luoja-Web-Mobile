@@ -1,14 +1,14 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+
 import { getPlatformStyle, themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
 
 import * as Progress from 'react-native-progress';
 
 const styles = getPlatformStyle();
+
 
 export default function EndScreen() {
     const route = useRoute();

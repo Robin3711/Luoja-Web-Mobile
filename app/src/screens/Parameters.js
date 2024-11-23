@@ -1,13 +1,15 @@
-import { Text, View, TouchableOpacity, Modal, Pressable, FlatList } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
+import { getPlatformStyle } from '../utils/utils';
 import { createQuiz } from '../utils/api';
 import RangeCursor from '../components/Cursor';
 import ThemeSelector from '../components/ThemeList'
 import DifficultySelector from '../components/DifficultyPicker';
-import { getPlatformStyle, themeOptions } from '../utils/utils';
 
 const styles = getPlatformStyle();
+
 
 export default function Parameters() {
   const [difficulty, setDifficulty] = useState('none');

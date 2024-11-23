@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
+
 import { getPlatformStyle, difficultyOptions } from '../utils/utils';
 
 const styles = getPlatformStyle();
+
 
 export default function DifficultyRadioSelector({ value, onValueChange }) {
 

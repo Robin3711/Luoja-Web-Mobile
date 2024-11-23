@@ -1,11 +1,13 @@
+import { useState, useEffect } from 'react';
 import { View, Text, Button, TouchableOpacity, Platform } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { useState, useEffect } from 'react';
-import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
-import { getPlatformStyle } from '../utils/utils';
 import * as Progress from 'react-native-progress';
 
+import { getPlatformStyle } from '../utils/utils';
+import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
+
 const styles = getPlatformStyle();
+
 
 export default function QuizScreen() {
 
@@ -131,7 +133,7 @@ export default function QuizScreen() {
                         <Text style={styles.quizId}>ID: {gameId}</Text>
                         <Text style={styles.quizQuestionText}>Question : {questionNumber}</Text>
                         <View style={styles.quizBarView}>
-                            <Text style={styles.quizBarTextView}>0</Text>
+                            <Text style={styles.quizBarTextView}>1</Text>
                             <Progress.Bar height={25} progress={questionNumber / totalQuestion} width={Platform.OS === 'web' ? 400 : 200} />
                             <Text style={styles.quizBarTextView}>{totalQuestion}</Text>
                         </View>

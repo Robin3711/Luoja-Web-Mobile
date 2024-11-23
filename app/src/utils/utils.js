@@ -1,6 +1,6 @@
 import { Platform, Dimensions } from 'react-native';
-import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import {
     Amphora,
     Atom,

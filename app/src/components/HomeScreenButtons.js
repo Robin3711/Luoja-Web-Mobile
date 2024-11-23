@@ -1,8 +1,10 @@
-import { getPlatformStyle } from "../utils/utils";
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+import { getPlatformStyle } from "../utils/utils";
+
 const styles = getPlatformStyle();
+
 
 export default function HomeScreenButtons() {
 

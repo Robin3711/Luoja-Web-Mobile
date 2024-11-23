@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, Pressable, TouchableOpacity, FlatList, Platform } from 'react-native';
-import { getPlatformStyle, themeOptions, iconSize } from '../utils/utils';
 import { Dices } from 'lucide-react-native';
 
+import { getPlatformStyle, themeOptions, iconSize } from '../utils/utils';
+
 const styles = getPlatformStyle();
+
 
 const ThemeSelector = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);

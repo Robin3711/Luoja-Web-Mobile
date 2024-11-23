@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { userLogin } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
+
+import { userLogin } from '../utils/api';
 import { getPlatformStyle } from '../utils/utils';
 
 const styles = getPlatformStyle();
@@ -15,11 +16,11 @@ export default function Login() {
     const [password, setPassword] = useState("");
 
     const handleLogin = async () => {
-        try{
+        try {
             await userLogin(email, password);
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
-        catch(error){
+        catch (error) {
             alert(error.message);
         }
     };

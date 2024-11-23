@@ -1,9 +1,10 @@
-import { TouchableOpacity, View, Text } from 'react-native';
 import { useState } from 'react';
+import { TouchableOpacity, View, Text } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+
+import { getQuestions } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
 import DifficultyRadioSelector from '../components/DifficultyRadioSelector';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { getQuestions } from '../utils/api';
 import RangeCursor from '../components/Cursor';
 
 export default function RetrieveQuestions() {

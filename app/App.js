@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -11,12 +12,11 @@ import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import RetrieveQuestions from './src/screens/RetrieveQuestionsScreen';
 import SearchScreen from './src/screens/SearchScreen';
+import Account from './src/screens/Account';
+import QuizCreation from './src/screens/QuizCreationScreen';
 
 import '@expo/metro-runtime'
 
-import { Platform } from 'react-native';
-import Account from './src/screens/Account';
-import QuizCreation from './src/screens/QuizCreationScreen';
 
 const linking = {
   prefixes: ['http://localhost:8081', 'https://luoja.fr'],
