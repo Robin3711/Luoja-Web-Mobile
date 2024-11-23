@@ -14,6 +14,7 @@ import RetrieveQuestions from './src/screens/RetrieveQuestionsScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import Account from './src/screens/Account';
 import QuizCreation from './src/screens/QuizCreationScreen';
+import CreateQuestionScreen from './src/screens/CreateQuestionScreen';
 
 import '@expo/metro-runtime'
 
@@ -33,6 +34,12 @@ const linking = {
       register: 'register',
       retrieveQuestions: {
         path: 'retrieveQuestions/:handleAddQuestions',
+        stringify: {
+          handleAddQuestions: (handleAddQuestions) => "",
+        },
+      },
+      createQuestion: {
+        path: 'createQuestion/:handleAddQuestions',
         stringify: {
           handleAddQuestions: (handleAddQuestions) => "",
         },
@@ -67,7 +74,8 @@ const MenuStack = () => {
         <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
         <stack.Screen name="login" component={Login} options={{ title: "Se connecter", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
-        {Platform.OS === 'web' ? <drawer.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Récupérer des questions" }} /> : null}
+        {Platform.OS === 'web' ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Récupérer des questions" }} /> : null}
+        {Platform.OS === 'web' ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
       </stack.Group>
     </stack.Navigator>
   );
