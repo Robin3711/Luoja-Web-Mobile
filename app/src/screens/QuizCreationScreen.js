@@ -38,6 +38,15 @@ export default function QuizCreation() {
         }
     };
 
+    const handleCreateQuestion = async () => {
+        try {
+            navigation.navigate('createQuestion', {handleAddQuestions});
+        }
+        catch (error) {
+            alert(error.message);
+        }
+    }
+
     const handleSave = async () => {
         try {
             if (quizId === null) {
@@ -55,6 +64,7 @@ export default function QuizCreation() {
 
     const handlePublish = async () => {
         try {
+            console.log(questions);
             await editQuiz(quizId, title, category, difficulty, questions);
             await publishQuiz(quizId);
 
@@ -82,7 +92,7 @@ export default function QuizCreation() {
                         <TouchableOpacity onPress={handleRetrieveQuestions}>
                             <Text>Récupérer des questions</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handleCreateQuestion}>
                             <Text>Rédiger une question</Text>
                         </TouchableOpacity>
                     </View>
