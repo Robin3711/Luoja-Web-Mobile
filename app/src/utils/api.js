@@ -1,5 +1,6 @@
 import { getPlatformAPI, setToken } from "./utils";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { decode } from 'html-entities';
 
 export async function createQuiz(questionCount, theme, difficulty) {
@@ -288,5 +289,29 @@ export async function publishQuiz(quizId) {
     catch (error) {
         console.error(error);
         throw error;
+    }
+}
+
+export async function getQuizAutoComplete(title, theme, difficulty) {
+    try {
+        let parameters = '';
+        if (title !== '') {
+            parameters += (parameters ? '&' : '') + 'title=' + title;
+        }
+        if (theme !== 'none' && theme !== null && theme !== 'Thème générale') {
+            parameters += (parameters ? '&' : '') + 'category=' + theme;
+        }
+        if (difficulty !== 'none' && difficulty !== null && difficulty !== 'Toute difficulté') {
+            parameters += (parameters ? '&' : '') + 'difficulty=' + difficulty;
+        }
+        // if (questionCount !== 1) {
+        //     parameters += '&questionCount=' + questionCount;
+        // }
+        const response = await fetch('https://api.luoja.fr/quiz/list?' + parameters);
+        const json = await response.json();
+        return (json.quizs);
+    }
+    catch (error) {
+        console.error(error);
     }
 }

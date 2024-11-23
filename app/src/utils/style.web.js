@@ -84,14 +84,46 @@ export default styles = StyleSheet.create({
         marginVertical: '1%',
     },
 
+    /* --Difficulty -- */
+    difContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+    },
+    difButtonGroupContainer: {
+        height: 60,
+        width: '70%',
+        borderRadius: 30,
+    },
+    difButtonStyle: {
+
+        borderRadius: 30,
+
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    difSelectedButtonStyle: {
+        backgroundColor: '#404989',
+    },
+    difTextStyle: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 16,
+        textAlign: 'center'
+    },
+    difSelectedTextStyle: {
+        color: '#fff',
+    },
+
     /* -- Quiz -- */
     quizId: {
         fontWeight: 'bold',
         color: '#4b4f60',
         fontSize: 14,
-        alignSelf: 'flex-end',
         marginTop: 10,
         marginBottom: 20,
+        textAlign: 'center',
     },
     quizQuestionContainer: {
         alignItems: 'center',
@@ -195,6 +227,12 @@ export default styles = StyleSheet.create({
     quizProgressCircleEmpty: {
         backgroundColor: '#b8cce0',
     },
+    quizBarView: {
+        flexDirection: 'row',
+    },
+    quizBarTextView: {
+        fontSize: 22,
+    },
 
     /* -- EndScreen-- */
     scoreContainer: {
@@ -231,6 +269,94 @@ export default styles = StyleSheet.create({
     },
     parametersText: {
         fontSize: 40,
+        fontWeight: 'bold',
+    },
+    paramContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    paramButton: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '40%',
+        width: '100%',
+        fontSize: 20,
+        backgroundColor: 'gray',
+        borderRadius: 40,
+    },
+    paramOpenButton: {
+        backgroundColor: '#4CAF50',
+    },
+    paramButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    paramSelectedTheme: {
+        marginTop: 20,
+        fontSize: 16,
+    },
+    paramCenteredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    paramModalView: {
+        width: '90%',
+        height: '80%',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    paramModalButton: {
+        marginTop: 15,
+        borderRadius: 10,
+        padding: 10,
+        elevation: 2,
+    },
+    paramModalButtonClose: {
+        backgroundColor: '#2196F3',
+    },
+    paramModalTextStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    paramDefaultGridButton: {
+        marginHorizontal: 40,
+        marginVertical: 10,
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: '#76c7c0',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 80,
+        width: 400,
+    },
+    paramGridButton: {
+        flex: 1,
+        marginHorizontal: 40,
+        marginVertical: 10,
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: '#76c7c0',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 80,
+        width: 400,
+    },
+    paramGridButtonText: {
+        fontSize: 25,
+        textAlign: 'center',
+        color: 'white',
         fontWeight: 'bold',
     },
 

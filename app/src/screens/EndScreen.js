@@ -1,14 +1,14 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+
 import { getPlatformStyle, themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
 
 import * as Progress from 'react-native-progress';
 
 const styles = getPlatformStyle();
+
 
 export default function EndScreen() {
     const route = useRoute();
@@ -18,6 +18,7 @@ export default function EndScreen() {
 
     const [category, setCategory] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
+    const [progress, setProgress] = useState(0);
 
     useEffect(() => {
         const loadGameData = async () => {
@@ -30,6 +31,18 @@ export default function EndScreen() {
 
                 setCategory(infos.Category !== 0 ? themeOptions.find(option => option.value === infos.Category)?.label : "any");
                 setDifficulty(infos.Difficulty);
+
+                let animationProgress = 0;
+                const targetProgress = score / numberOfQuestions;
+                const interval = setInterval(() => {
+                    animationProgress += 0.01;
+                    if (animationProgress >= targetProgress) {
+                        animationProgress = targetProgress;
+                        clearInterval(interval);
+                    }
+                    setProgress(animationProgress);
+                }, 20);
+
             } catch (error) {
                 console.error('Erreur de chargement des données:', error);
             }
@@ -60,7 +73,7 @@ export default function EndScreen() {
                         </Text>
                         <View style={styles.endContainer}>
                             <Progress.Circle
-                                progress={numberOfQuestions > 0 ? score / numberOfQuestions : 0}
+                                progress={progress}
                                 size={120}
                                 showsText={true}
                                 color="#76c7c0"
@@ -68,8 +81,7 @@ export default function EndScreen() {
                                 thickness={15}
                                 textStyle={styles.progressText}
                                 unfilledColor="#e12f09"
-                                formatText={() => `${Math.round((score / numberOfQuestions) * 100) || 0}%`}
-                                indeterminateAnimationDuration={1000}
+                                formatText={() => `${Math.round(progress * 100) || 0}%`}
                             />
                         </View>
                     </View>

@@ -1,12 +1,13 @@
-import { TouchableOpacity, View, Text } from 'react-native';
 import { useState } from 'react';
-import ThemePicker from '../components/ThemePicker';
-import DifficultyRadioSelector from '../components/DifficultyRadioSelector';
+import { TouchableOpacity, View, Text } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
+
 import { getQuestions } from '../utils/api';
+import ThemeSelector from '../components/ThemeList';
+import DifficultyRadioSelector from '../components/DifficultyRadioSelector';
 import RangeCursor from '../components/Cursor';
 
-export default function RetrieveQuestions(){
+export default function RetrieveQuestions() {
     const route = useRoute();
     const { handleAddQuestions } = route.params;
 
@@ -23,11 +24,11 @@ export default function RetrieveQuestions(){
         navigation.goBack();
     }
 
-    return(
+    return (
         <View>
-            <ThemePicker value={category} onValueChange={setCategory}/>
-            <DifficultyRadioSelector value={difficulty} onValueChange={setDifficulty}/>
-            <RangeCursor value={amount} onValueChange={setAmount}/>
+            <ThemeSelector onValueChange={setCategory} />
+            <DifficultyRadioSelector value={difficulty} onValueChange={setDifficulty} />
+            <RangeCursor value={amount} onValueChange={setAmount} />
             <TouchableOpacity onPress={handleRetrieveQuestions}>
                 <Text>Valider</Text>
             </TouchableOpacity>

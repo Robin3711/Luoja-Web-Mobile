@@ -1,10 +1,13 @@
-import { View, Text, Button, TouchableOpacity } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
-import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
+import { View, Text, Button, TouchableOpacity, Platform } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import * as Progress from 'react-native-progress';
+
 import { getPlatformStyle } from '../utils/utils';
+import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
 
 const styles = getPlatformStyle();
+
 
 export default function QuizScreen() {
 
@@ -31,7 +34,6 @@ export default function QuizScreen() {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
     const [buttonDisabled, setButtonDisabled] = useState(false);
-    const [fetching, setFetching] = useState(false)
 
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
@@ -84,11 +86,7 @@ export default function QuizScreen() {
         try {
             setButtonDisabled(true);
 
-            setFetching(true);
-
             const { correctAnswer: correctAnswerFromApi } = await getCurrentAnswer({ answer: selectedAnswer }, gameId);
-
-            setFetching(false);
 
             setCorrect(correctAnswerFromApi);
 
@@ -116,6 +114,7 @@ export default function QuizScreen() {
         if (answer === selectedAnswer) {
             return correct === answer ? 'green' : 'red';
         }
+
         if (answer === correct && selectedAnswer !== answer) {
             return 'green';
         }
@@ -132,7 +131,12 @@ export default function QuizScreen() {
                 <>
                     <View style={styles.quizQuestionNumberContainer}>
                         <Text style={styles.quizId}>ID: {gameId}</Text>
-                        <Text style={styles.quizQuestionText}>Question {questionNumber}/{totalQuestion}</Text>
+                        <Text style={styles.quizQuestionText}>Question : {questionNumber}</Text>
+                        <View style={styles.quizBarView}>
+                            <Text style={styles.quizBarTextView}>1</Text>
+                            <Progress.Bar height={25} progress={questionNumber / totalQuestion} width={Platform.OS === 'web' ? 400 : 200} />
+                            <Text style={styles.quizBarTextView}>{totalQuestion}</Text>
+                        </View>
                         <Text>Score: {score}</Text>
                     </View>
                     <View style={styles.quizQuestionContainer}>
