@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
+    "name": "Luoja",
+    "slug": "Luoja",
     "version": "1.0.0",
     "newArchEnabled": true,
     "orientation": "portrait",
