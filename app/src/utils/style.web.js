@@ -227,6 +227,12 @@ export default styles = StyleSheet.create({
     quizProgressCircleEmpty: {
         backgroundColor: '#b8cce0',
     },
+    quizBarView: {
+        flexDirection: 'row',
+    },
+    quizBarTextView: {
+        fontSize: 22,
+    },
 
     /* -- EndScreen-- */
     scoreContainer: {

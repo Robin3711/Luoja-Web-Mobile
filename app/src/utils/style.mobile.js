@@ -183,6 +183,12 @@ export default styles = StyleSheet.create({
         color: '#4b4f60',
         fontWeight: 'bold',
     },
+    quizBarView: {
+        flexDirection: 'row',
+    },
+    quizBarTextView: {
+        fontSize: 14,
+    },
 
     /* -- EndScreen-- */
     scoreContainer: {
@@ -284,7 +290,7 @@ export default styles = StyleSheet.create({
     },
     paramGridButton: {
         flex: 1,
-        marginHorizontal: '5%',
+        marginHorizontal: '10%',
         marginVertical: 10,
         padding: 10,
         borderRadius: 10,
@@ -307,8 +313,9 @@ export default styles = StyleSheet.create({
         width: '70%',
     },
     paramGridButtonText: {
-        fontSize: 15,
+        fontSize: 17,
         textAlign: 'center',
+        justifyContent: 'center',
         color: 'white',
 
     },
