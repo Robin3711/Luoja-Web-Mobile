@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { StyleSheet } from 'react-native';
 
 import { userRegister } from '../utils/api';
 
@@ -54,7 +55,7 @@ export default function Register() {
     );
 }
 
-const styles = {
+const styles = StyleSheet.create({
     registerView: {
         flex: 1,
         display: 'flex',
@@ -113,4 +114,4 @@ const styles = {
         fontSize: 20,
         fontWeight: 'bold',
     },
-};
+});
