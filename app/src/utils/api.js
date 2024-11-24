@@ -12,7 +12,7 @@ export async function createQuiz(questionCount, theme, difficulty) {
             url += `&category=${theme}`;
         }
 
-        if (difficulty !== 'none') {
+        if (difficulty !== null) {
             url += `&difficulty=${difficulty}`;
         }
 
@@ -202,7 +202,7 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
             url += `&category=${category}`;
         }
 
-        if (difficulty !== 'none') {
+        if (difficulty !== null) {
             url += `&difficulty=${difficulty}`;
         }
 
@@ -241,7 +241,7 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
             url += `&category=${category}`;
         }
 
-        if (difficulty !== 'none') {
+        if (difficulty !== null) {
             url += `&difficulty=${difficulty}`;
         }
 
