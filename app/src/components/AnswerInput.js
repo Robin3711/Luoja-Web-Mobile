@@ -63,8 +63,8 @@ const Star = () => (
 
 const Triangle = () => (
     <Svg width="75" height="75" viewBox="0 0 24 24" fill="none">
-        <Path d="M12 2L2 22h20L12 2z" stroke="#28713a" strokeWidth="3" />
-        <Path d="M12 2L2 22h20L12 2z" fill="#96e4af" />
+        <Path d="M12 2L2 22h20L12 2z" stroke="#283971" strokeWidth="3" />
+        <Path d="M12 2L2 22h20L12 2z" fill="#96a9e4" />
     </Svg>
 );
 
@@ -72,7 +72,7 @@ const AnswerInput = ({ shape, onTextChange, onShapeClick }) => {
     const backgroundColors = {
         SQUARE: '#58bdfe',
         CIRCLE: '#484a77',
-        TRIANGLE: '#4db459',
+        TRIANGLE: '#4d65b4',
         STAR: '#323353',
     };
 
