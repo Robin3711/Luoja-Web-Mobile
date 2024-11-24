@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import { getUserInfos } from '../utils/api';
 import { hasToken, removeToken } from '../utils/utils';
-import { StyleSheet } from 'react-native';
 import { Platform } from 'react-native';
 
 const platform = Platform.OS;

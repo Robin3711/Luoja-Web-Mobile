@@ -32,22 +32,6 @@ export const iconSize = Platform.OS === 'web' ? 30 : 18;
 
 let apiUrl = null;
 
-export function getPlatformStyle() {
-
-    if (Platform.OS === 'web') {
-        const { width } = Dimensions.get('window');
-        if (width > 1024) {
-            const styles = require('./style.web.js');
-        } else {
-            const styles = require('./style.mobile.js');
-        }
-    } else {
-        const styles = require('./style.mobile.js');
-    }
-
-    return styles;
-}
-
 export async function getPlatformAPI() {
     if (apiUrl == null) {
         if (Platform.OS === 'web') {
@@ -126,7 +110,6 @@ export const themeOptions = [
 ];
 
 export const difficultyOptions = [
-    { label: 'Toute difficulté', value: 'none' },
     { label: 'Facile', value: 'easy' },
     { label: 'Moyen', value: 'medium' },
     { label: 'Difficile', value: 'hard' },

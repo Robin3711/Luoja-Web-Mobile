@@ -3,50 +3,6 @@ import { View, TextInput, StyleSheet, Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import PropTypes from 'prop-types';
 
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        height: 125,
-        paddingHorizontal: 20,
-        borderRadius: 25,
-    },
-    shapeContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        marginRight: 10,
-    },
-    textInput: {
-        flex: 1,
-        height: '70%',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 10,
-        borderRadius: 20,
-        backgroundColor: '#fff',
-        textAlign: 'left',
-    },
-    shapeStyles: {
-        square: {
-            width: 75,
-            height: 75,
-            backgroundColor: '#c0e6ff',
-            borderRadius: 10,
-            borderWidth: 5,
-            borderColor: '#09649f',
-        },
-        circle: {
-            width: 75,
-            height: 75,
-            backgroundColor: '#7577af',
-            borderRadius: 45,
-            borderWidth: 5,
-            borderColor: '#212248',
-        },
-    },
-});
-
 const Star = () => (
     <Svg width="75" height="75" viewBox="-2 -2 28 28" fill="none">
         <Path
@@ -110,10 +66,48 @@ const AnswerInput = ({ shape, onTextChange, onShapeClick }) => {
     );
 };
 
-AnswerInput.propTypes = {
-    shape: PropTypes.oneOf(['SQUARE', 'CIRCLE', 'TRIANGLE', 'STAR']).isRequired,
-    onTextChange: PropTypes.func.isRequired,
-    onShapeClick: PropTypes.func.isRequired,
-};
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 125,
+        paddingHorizontal: 20,
+        borderRadius: 25,
+    },
+    shapeContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        marginRight: 10,
+    },
+    textInput: {
+        flex: 1,
+        height: '70%',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        padding: 10,
+        borderRadius: 20,
+        backgroundColor: '#fff',
+        textAlign: 'left',
+    },
+    shapeStyles: {
+        square: {
+            width: 75,
+            height: 75,
+            backgroundColor: '#c0e6ff',
+            borderRadius: 10,
+            borderWidth: 5,
+            borderColor: '#09649f',
+        },
+        circle: {
+            width: 75,
+            height: 75,
+            backgroundColor: '#7577af',
+            borderRadius: 45,
+            borderWidth: 5,
+            borderColor: '#212248',
+        },
+    },
+});
 
 export default AnswerInput;

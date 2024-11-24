@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { createParty } from '../utils/api';
@@ -26,3 +26,6 @@ export default function QuizInformation({ quiz }) {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+});

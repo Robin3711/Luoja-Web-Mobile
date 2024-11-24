@@ -1,13 +1,8 @@
 import { useState } from 'react';
-import { Text, View, TextInput, Button } from 'react-native';
+import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
 
-import { getPlatformStyle } from "../utils/utils";
 import { getGameInfos } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
-
-
-const styles = getPlatformStyle();
-
 
 export default function ResumeScreen() {
     const [gameId, setGameId] = useState('');
@@ -42,3 +37,6 @@ export default function ResumeScreen() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+});

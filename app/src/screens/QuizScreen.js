@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { StyleSheet } from 'react-native';
 import AnswerButton from '../components/AnswerButton';
 import * as Progress from 'react-native-progress';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';

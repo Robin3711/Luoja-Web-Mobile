@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
-import { getPlatformStyle, themeOptions } from '../utils/utils';
+import { themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
 
 import * as Progress from 'react-native-progress';
-
-const styles = getPlatformStyle();
-
 
 export default function EndScreen() {
     const route = useRoute();
@@ -110,3 +107,6 @@ export default function EndScreen() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+});

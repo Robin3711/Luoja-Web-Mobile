@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet } from 'react-native';
-
 import { userRegister } from '../utils/api';
 
 export default function Register() {

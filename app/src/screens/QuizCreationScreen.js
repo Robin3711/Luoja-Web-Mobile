@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { getPlatformStyle } from '../utils/utils';
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
-import DifficultyRadioSelector from '../components/DifficultyRadioSelector';
+import DifficultyPicker from '../components/DifficultyPicker';
 
-
-const styles = getPlatformStyle();
 
 
 export default function QuizCreation() {
@@ -88,7 +85,7 @@ export default function QuizCreation() {
                 <View style={styles.quizCreationLeftView}>
                     <View>
                         <TextInput placeholder='Titre du quiz' value={title} onChangeText={setTitle}></TextInput>
-                        <DifficultyRadioSelector value={difficulty} onValueChange={setDifficulty} />
+                        <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
                         <TouchableOpacity onPress={handleRetrieveQuestions}>
                             <Text>Récupérer des questions</Text>
                         </TouchableOpacity>
@@ -124,3 +121,6 @@ export default function QuizCreation() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+});

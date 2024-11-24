@@ -1,11 +1,6 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
-
-import { getPlatformStyle } from '../utils/utils';
-
-const styles = getPlatformStyle();
-
 
 const RangeCursor = ({ testID, value, onValueChange, onSlidingComplete }) => {
 
@@ -28,5 +23,8 @@ const RangeCursor = ({ testID, value, onValueChange, onSlidingComplete }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+});
 
 export default RangeCursor;
