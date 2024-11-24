@@ -72,8 +72,8 @@ const MenuStack = () => {
       <stack.Group screenOptions={{ presentation: 'modal' }}>
         <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
         <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
-        <stack.Screen name="login" component={Login} options={{ title: "Se connecter", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
-        <stack.Screen name="register" component={Register} options={{ title: "S'inscrire", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
+        <stack.Screen name="login" component={Login} options={{ title: "Se connecter"}} />
+        <stack.Screen name="register" component={Register} options={{ title: "S'inscrire"}} />
         {Platform.OS === 'web' ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Récupérer des questions" }} /> : null}
         {Platform.OS === 'web' ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
       </stack.Group>
