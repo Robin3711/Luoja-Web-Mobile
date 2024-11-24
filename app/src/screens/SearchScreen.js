@@ -10,7 +10,7 @@ import QuizInformation from '../components/QuizInformation';
 export default function SearchScreen() {
     const [data, setData] = useState([]);
     const [theme, setTheme] = useState('none');
-    const [difficulty, setDifficulty] = useState('none');
+    const [difficulty, setDifficulty] = useState(null);
     const [title, setTitle] = useState('');
     const [questionCount, setQuestionCount] = useState(1);
     const [tempQuestionCount, setTempQuestionCount] = useState(1);

@@ -301,7 +301,7 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
         if (theme !== 'none' && theme !== null && theme !== 'Thème générale') {
             parameters += (parameters ? '&' : '') + 'category=' + theme;
         }
-        if (difficulty !== 'none' && difficulty !== null && difficulty !== 'Toute difficulté') {
+        if (difficulty !== null && difficulty !== null && difficulty !== 'Toute difficulté') {
             parameters += (parameters ? '&' : '') + 'difficulty=' + difficulty;
         }
         // if (questionCount !== 1) {

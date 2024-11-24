@@ -10,7 +10,7 @@ import DifficultySelector from '../components/DifficultyPicker';
 const platform = Platform.OS;
 
 export default function Parameters() {
-  const [difficulty, setDifficulty] = useState('none');
+  const [difficulty, setDifficulty] = useState(null);
   const [theme, setTheme] = useState('none');
   const [questionCount, setQuestionCount] = useState(1);
   const [tempQuestionCount, setTempQuestionCount] = useState(1);
