@@ -20,7 +20,7 @@ const ThemeSelector = ({ onValueChange }) => {
 
     return (
         <View style={styles.themeListView}>
-            <TouchableOpacity style={styles.paramButton} onPress={handleOpenModal}><Text>Choisir un thème</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.paramButton} onPress={handleOpenModal}><Text style={styles.paramButtonText}>Choisir un thème</Text></TouchableOpacity>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -58,12 +58,25 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10,
     },
     paramButton: {
-        backgroundColor: '#f0f0f0',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#58BDFE',
+        width: platform === 'web' ? 750 : '100%',
+        padding: 15,
+        borderRadius: 20,
+    },
+    paramButtonText: {
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        textAlign: 'center',
+        width: '100%',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 10,
+        fontSize: 15,
     },
     themeListModal: {
         display: 'flex',

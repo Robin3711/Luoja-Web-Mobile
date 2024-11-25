@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import Slider from '@react-native-community/slider';
+
+const platform = Platform.OS;
 
 const RangeCursor = ({ testID, value, onValueChange, onSlidingComplete }) => {
 
@@ -25,6 +27,20 @@ const RangeCursor = ({ testID, value, onValueChange, onSlidingComplete }) => {
 };
 
 const styles = StyleSheet.create({
+  cursorContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: platform === 'web' ? '50%' : '100%',
+    margin: 10,
+  },
+  cursorLabel: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  cursorSliderView: {
+    width: '100%',
+  },
 });
 
 export default RangeCursor;

@@ -44,9 +44,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: platform === 'web' ? '50%' : '100%',
-        ...platform === 'web' ? { 
-            boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
-        } : { elevation: 2 },
     },
     buttonContainer: {
         height: 60,

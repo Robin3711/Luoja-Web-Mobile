@@ -14,15 +14,15 @@ export default function Parameters() {
   const [theme, setTheme] = useState('none');
   const [questionCount, setQuestionCount] = useState(1);
   const [tempQuestionCount, setTempQuestionCount] = useState(1);
-  const [lunch, setlunch] = useState(false);
+  const [launch, setlaunch] = useState(false);
   const navigation = useNavigation();
 
   const handleCreateQuiz = () => {
-    setlunch(true);
+    setlaunch(true);
     createQuiz(questionCount, theme, difficulty)
       .then(data => {
         navigation.navigate('menuDrawer');
-        setlunch(false);
+        setlaunch(false);
         setTimeout(() => {
           navigation.navigate('quizScreen', { gameId: data.id });
         }, 0);
@@ -41,8 +41,8 @@ export default function Parameters() {
         onSlidingComplete={(value) => setQuestionCount(value)} />
       <ThemeSelector onValueChange={setTheme} />
       <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
-      <TouchableOpacity  r     onPress={handleCreateQuiz} disabled={lunch}>
-        {lunch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)}
+      <TouchableOpacity style={styles.buttons} onPress={handleCreateQuiz} disabled={launch}>
+        {launch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)}
       </TouchableOpacity>
     </View>
   );
@@ -56,14 +56,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
   },
-  button: {
-    backgroundColor: '#4d65b4',
-    padding: 10,
-    borderRadius: 10,
-    margin: 10,
+  buttons: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#8fd3ff',
+    height: 50,
+    width: 250,
+    borderRadius: 15,
+    marginVertical: 10,
   },
   buttonText: {
-    color: 'white',
-    fontSize: 20,
+      fontSize: 20,
+      fontWeight: 'bold',
   },
 });
