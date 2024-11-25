@@ -37,10 +37,13 @@ export default function QuizScreen() {
     useEffect(() => {
         (async () => {
             const infos = await getGameInfos(gameId);
+            const data = await getCurrentQuestion(gameId);
+
             setQuestionNumber(infos.questionCursor + 1);
             setTotalQuestion(infos.numberOfQuestions);
             setScore(infos.results.filter(Boolean).length);
-            handleNewQuestion();
+            
+            setCurrentQuestion(data);
         })();
     }, [gameId]);
 
