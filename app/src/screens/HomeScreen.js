@@ -1,5 +1,7 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
+const platform = Platform.OS;
 
 export default function HomeScreen() {
     const navigation = useNavigation();
@@ -45,6 +47,9 @@ const styles = StyleSheet.create({
         width: 250,
         borderRadius: 15,
         marginVertical: 10,
+        ...platform === 'web' ? { 
+            boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+        } : { elevation: 2 },
     },
     buttonText: {
         fontSize: 20,

@@ -129,6 +129,10 @@ export default function QuizScreen() {
         </TouchableOpacity>
     );
 
+    console.log('questionNumber', questionNumber);
+    console.log('totalQuestion', totalQuestion);
+    console.log('progress', questionNumber/totalQuestion);
+
     return (
         <View style={styles.quizScreenView}>
             {currentQuestion ? (
@@ -140,8 +144,9 @@ export default function QuizScreen() {
                                 progress={questionNumber/totalQuestion}
                                 size={120}
                                 showsText={true}
-                                color="white"
-                                fill='#8fd3ff'
+                                textStyle={{ fontWeight: 'bold' }}
+                                color="#8fd3ff"
+                                thickness={15}
                                 formatText={() => `${questionNumber}`}
                             />
                             <Text>{currentQuestion.question}</Text>
@@ -208,6 +213,7 @@ const styles = StyleSheet.create({
         width: 250,
         borderRadius: 15,
         marginVertical: 10,
+        elevation: 2,
     },
     buttonText: {
         fontSize: 20,

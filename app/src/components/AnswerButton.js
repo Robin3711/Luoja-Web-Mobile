@@ -88,6 +88,9 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         position: 'relative',
         overflow: 'hidden',
+        ...platform === 'web' ? { 
+            boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+        } : { elevation: 2 },
     },
     text: {
         width: '75%',

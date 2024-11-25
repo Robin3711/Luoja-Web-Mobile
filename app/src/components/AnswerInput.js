@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import PropTypes from 'prop-types';
 
 const Star = () => (
     <Svg width="75" height="75" viewBox="-2 -2 28 28" fill="none">
@@ -73,6 +72,7 @@ const styles = StyleSheet.create({
         height: 125,
         paddingHorizontal: 20,
         borderRadius: 25,
+        boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
     },
     shapeContainer: {
         justifyContent: 'center',
