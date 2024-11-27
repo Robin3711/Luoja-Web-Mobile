@@ -8,6 +8,7 @@ const platform = Platform.OS;
 
 const ThemeSelector = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
+    const [theme, setTheme] = useState("Choisir un thème");
 
     const handleOpenModal = () => {
         setModalVisible(true);
@@ -20,7 +21,7 @@ const ThemeSelector = ({ onValueChange }) => {
 
     return (
         <View style={styles.themeListView}>
-            <TouchableOpacity style={styles.paramButton} onPress={handleOpenModal}><Text style={styles.paramButtonText}>Choisir un thème</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.paramButton} onPress={handleOpenModal}><Text style={styles.paramButtonText}>{theme}</Text></TouchableOpacity>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -39,7 +40,7 @@ const ThemeSelector = ({ onValueChange }) => {
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.themeButton}
-                                onPress={() => handleThemeSelection(item.value)}
+                                onPress={() => { handleThemeSelection(item.value), setTheme(item.label) }}
                             >
                                 <Text style={styles.themeLabel}>{item.icon}{item.label}</Text>
                             </TouchableOpacity>
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         backgroundColor: '#f0f0f0',
-        width: platform === 'web' ? 350 : '100%',  
+        width: platform === 'web' ? 350 : '100%',
         height: 50,
     },
     themeLabel: {

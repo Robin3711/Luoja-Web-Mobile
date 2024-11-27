@@ -35,12 +35,16 @@ export default function Parameters() {
 
   return (
     <View style={styles.quickQuizView}>
-      <Text>Choisissez le nombre de question</Text>
+      <Text>Générer un nouveau quiz !</Text>
+      <ThemeSelector onValueChange={setTheme} />
+
+      <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
+
       <RangeCursor testID="range-cursor" value={tempQuestionCount}
         onValueChange={setTempQuestionCount}
         onSlidingComplete={(value) => setQuestionCount(value)} />
-      <ThemeSelector onValueChange={setTheme} />
-      <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
+
+
       <TouchableOpacity style={styles.buttons} onPress={handleCreateQuiz} disabled={launch}>
         {launch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)}
       </TouchableOpacity>
@@ -68,7 +72,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   buttonText: {
-      fontSize: 20,
-      fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
