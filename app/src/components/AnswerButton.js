@@ -34,9 +34,9 @@ const AnswerButton = ({ shape, onClick, text, filter }) => {
     };
 
     const filters = {
-        GREEN: 'rgba(0, 255, 0, 0.3)',
-        BLUE: 'rgba(0, 0, 255, 0.3)',
-        RED: 'rgba(255, 0, 0, 0.3)',
+        GREEN: 'rgba(0, 255, 0, 0.6)',
+        BLUE: 'rgba(0, 0, 255, 0.6)',
+        RED: 'rgba(255, 0, 0, 0.6)',
     };
 
     const renderShape = () => {
@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
     text: {
         width: '75%',
         textAlign: 'center',
+        color: 'white',
     },
     shapeStyles: {
         square: {

@@ -4,6 +4,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import * as Progress from 'react-native-progress';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 const platform = Platform.OS;
 
@@ -16,7 +17,7 @@ export default function QuizScreen() {
         return (
             <View style={styles.quizContainer}>
                 <Text style={styles.quizQuestionText}>
-                    Une erreur est survenue lors de la récupération de la partie.
+                    Une erreur est survenue lors de la récupération de la partie. 
                 </Text>
                 <TouchableOpacity onPress={() => navigation.navigate('menuDrawer', { screen: 'newQuiz' })}>
                     <Text style={styles.buttonText}>Retour</Text>
@@ -33,11 +34,14 @@ export default function QuizScreen() {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
+    const [loading, setLoading] = useState(true);
+    
 
     useEffect(() => {
         (async () => {
             const infos = await getGameInfos(gameId);
             const data = await getCurrentQuestion(gameId);
+            setLoading(false);
 
             setQuestionNumber(infos.questionCursor + 1);
             setTotalQuestion(infos.numberOfQuestions);
@@ -50,13 +54,13 @@ export default function QuizScreen() {
     const handleNewQuestion = async () => {
         try {
             setButtonDisabled(true);
-            setIsAnswered(false);
             setSelectedAnswer(null);
             setCorrect(null);
-            setQuestionNumber(questionNumber + 1)
 
             const data = await getCurrentQuestion(gameId);
             setCurrentQuestion(data);
+            setIsAnswered(false);
+            setQuestionNumber(questionNumber + 1)
         } catch (error) {
             console.error('Erreur lors de la récupération de la question:', error);
         } finally {
@@ -120,12 +124,17 @@ export default function QuizScreen() {
             disabled={buttonDisabled || (!isAnswered && !selectedAnswer)}
         >
             <Text style={styles.buttonText}>
-                {isAnswered
-                    ? totalQuestion === questionNumber
-                        ? 'Voir les résultats'
-                        : 'Question suivante'
-                    : 'Vérifier ma réponse'}
+                {isAnswered ? (
+                    totalQuestion === questionNumber ? (
+                        buttonDisabled ? 'Chargement des résultats...' : 'Voir les résultats'
+                    ) : (
+                        buttonDisabled ? 'Chargement de la question...' : 'Question suivante'
+                    )
+                ) : (
+                    buttonDisabled ? 'Vérification...' : 'Vérifier ma réponse'
+                )}
             </Text>
+
         </TouchableOpacity>
     );
 
@@ -140,15 +149,29 @@ export default function QuizScreen() {
                     <Text style={styles.gameId}>ID : {gameId}</Text>
                     <View style={styles.mainView}>
                         <View style={styles.questionView}>
-                            <Progress.Circle
-                                progress={questionNumber/totalQuestion}
-                                size={120}
-                                showsText={true}
-                                textStyle={{ fontWeight: 'bold' }}
-                                color="#8fd3ff"
-                                thickness={15}
-                                formatText={() => `${questionNumber}`}
-                            />
+                            <CountdownCircleTimer 
+                                duration={7} 
+                                size={100}
+                                strokeWidth={10}
+                                colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+                                colorsTime={[7, 5, 2, 0]}
+                            >
+                                {({ remainingTime }) => (
+                                    <Text>{questionNumber}</Text>
+                                )}
+                            </CountdownCircleTimer>
+                            <View style={styles.quizBarView}>
+                                <Text style={styles.quizBarTextView}>1 </Text>
+                                <Progress.Bar
+                                    borderRadius={0}
+                                    height={10}
+                                    progress={questionNumber / totalQuestion}
+                                    width={platform === 'web' ? 400 : 200}
+                                    indeterminate={loading}
+                                    indeterminateAnimationDuration={2000}
+                                />
+                                <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
+                            </View>
                             <Text>{currentQuestion.question}</Text>
                             <Text>Score: {score}</Text>
                             {platform === 'web' && nextQuestionButton()}
@@ -162,6 +185,7 @@ export default function QuizScreen() {
                                     text={answer}
                                     onClick={handleAnswerSelection}
                                     filter={getAnswerFilter(answer)}
+                                    
                                 />
                             ))}
                             {platform !== 'web' && nextQuestionButton()}
@@ -218,5 +242,13 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    quizBarView: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    quizBarTextView: {
+        fontSize: 22,
     },
 });
