@@ -7,12 +7,12 @@ export default function Register() {
 
     const navigation = useNavigation();
 
-    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
     const handleLogin = async () => {
         try {
-            await userRegister(email, password);
+            await userRegister(name, password);
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
         catch (error) {
@@ -21,30 +21,23 @@ export default function Register() {
     };
 
     return (
-        <View style={styles.registerView}>
-            <Text style={styles.pageTitle}>Créer un compte</Text>
-
-            <Text style={styles.inputTitle}>Email</Text>
-            <View style={styles.emailInputView}>
-                <TextInput
-                    style={styles.registerInput}
-                    onChangeText={setEmail}
-                    value={email}
-                    placeholder="Email"
-                    autoFocus={true}
-                />
-            </View>
-
-            <Text style={styles.inputTitle}>Password</Text>
-            <View style={styles.passwordInputView}>
-                <TextInput
-                    style={styles.registerInput}
-                    onChangeText={setPassword}
-                    value={password}
-                    placeholder="Password"
-                    secureTextEntry={true}
-                />
-            </View>
+        <View style={styles.loginView}>
+            <Text>Nom d'utilisateur</Text>
+            <TextInput
+                style={styles.loginInput}
+                onChangeText={setName}
+                value={name}
+                placeholder="Nom d'utilisateur"
+                autoFocus={true}
+            />
+            <Text>Mot de passe</Text>
+            <TextInput
+                style={styles.loginInput}
+                onChangeText={setPassword}
+                value={password}
+                placeholder="Password"
+                secureTextEntry={true}
+            />
 
             <TouchableOpacity style={styles.buttons} onPress={handleLogin}>
                 <Text style={styles.buttonText}>S'inscrire</Text>
