@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
+import CreatedQuizInformation from "../components/CreatedQuizInformation";
 const styles = getPlatformStyle();
 
 export default function Dashboard() {
@@ -33,9 +34,9 @@ export default function Dashboard() {
         async function fetchData() {
             const games = await getUserGame();
             const quizzes = await getCreatedQuiz();
+            console.log(quizzes);
             setHistory(games.games);
-            console.log(quizzes.games);
-            setPublishedQuizzes(quizzes.games);
+            setPublishedQuizzes(quizzes.quizs);
         }
         fetchData();
     }, []);
@@ -60,7 +61,7 @@ export default function Dashboard() {
                     <ScrollView>
                         {publishedQuizzes.map((item, index) => (
                             <View key={index}>
-                                <HistoryQuizInformation partyId={item.id} />
+                                <CreatedQuizInformation quizId={item.id} category={item.category} difficulty={item.difficulty} date={item.createdAt} status={item.public} title={item.title} />
                             </View>
                         ))}
                     </ScrollView>
