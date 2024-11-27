@@ -31,6 +31,8 @@ export const COLORS={
         },
 
         blue:{
+            basic: '#8FD3FF',
+
             square:{
                 light: '#C0E6FF',
                 normal: '#58BDFE',
@@ -57,6 +59,8 @@ export const COLORS={
         },
 
         pink:{
+            basic: '#FE6C90',
+
             square:{
                 light: '#FFA0B7',
                 normal: '#FE6C90',
