@@ -38,24 +38,32 @@ export default function QuizScreen() {
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [error, setError] = useState(false);
 
 
     useEffect(() => {
         (async () => {
-            const infos = await getGameInfos(gameId);
-            const data = await getCurrentQuestion(gameId);
-            setLoading(false);
+            try {
+                setLoading(true);
+                const infos = await getGameInfos(gameId);
+                const data = await getCurrentQuestion(gameId);
 
-            if (infos.questionCursor === infos.numberOfQuestions) {
-                setQuestionNumber(infos.questionCursor);
-            } else {
-                setQuestionNumber(infos.questionCursor + 1);
+                if (infos.questionCursor === infos.numberOfQuestions) {
+                    setQuestionNumber(infos.questionCursor);
+                } else {
+                    setQuestionNumber(infos.questionCursor + 1);
+                }
+
+                setTotalQuestion(infos.numberOfQuestions);
+                setScore(infos.results.filter(Boolean).length);
+                setCurrentQuestion(data);
+            } catch (err) {
+                setError(true);
+                setErrorMessage(err.status + " " + err.message);
+            } finally {
+                setLoading(false);
             }
-
-            setTotalQuestion(infos.numberOfQuestions);
-            setScore(infos.results.filter(Boolean).length);
-
-            setCurrentQuestion(data);
         })();
     }, [gameId]);
 
@@ -68,9 +76,10 @@ export default function QuizScreen() {
             const data = await getCurrentQuestion(gameId);
             setCurrentQuestion(data);
             setIsAnswered(false);
-            setQuestionNumber(questionNumber + 1)
-        } catch (error) {
-            console.error('Erreur lors de la récupération de la question:', error);
+            setQuestionNumber(questionNumber + 1);
+        } catch (err) {
+            setError(true);
+            setErrorMessage(err.status + " " + err.message);
         } finally {
             setButtonDisabled(false);
         }
@@ -93,13 +102,13 @@ export default function QuizScreen() {
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
             if (correctAnswerFromApi === selectedAnswer) updateScore();
-        } catch (error) {
-            console.error('Erreur lors de la soumission de la réponse:', error);
+        } catch (err) {
+            setError(true);
+            setErrorMessage(err.status + " " + err.message);
         } finally {
             setButtonDisabled(false);
         }
     };
-
     const updateScore = () => setScore(score + 1);
 
     const getAnswerFilter = (answer) => {
@@ -166,65 +175,78 @@ export default function QuizScreen() {
     console.log('progress', questionNumber / totalQuestion);
 
     return (
-        <View style={styles.quizScreenView}>
-            {currentQuestion ? (
-                <>
-                    <View style={styles.gameId}>
-                        <Text style={styles.gameIdText}>ID : {gameId} </Text>
-                        <TouchableOpacity onPress={handleCopyGameId}>
-                            <Copy size={20} />
-                        </TouchableOpacity>
-                        <Toast ref={(ref) => Toast.setRef(ref)} />
-                    </View>
-                    <View style={styles.mainView}>
-                        <View style={styles.questionView}>
-                            <CountdownCircleTimer
-                                duration={7}
-                                size={100}
-                                strokeWidth={10}
-                                colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-                                colorsTime={[7, 5, 2, 0]}
-                            >
-                                {({ remainingTime }) => (
-                                    <Text>{questionNumber}</Text>
-                                )}
-                            </CountdownCircleTimer>
-                            <View style={styles.quizBarView}>
-                                <Text style={styles.quizBarTextView}>1 </Text>
-                                <Progress.Bar
-                                    borderRadius={0}
-                                    height={10}
-                                    progress={questionNumber / totalQuestion}
-                                    width={platform === 'web' ? 400 : 200}
-                                    indeterminate={loading}
-                                    indeterminateAnimationDuration={2000}
-                                />
-                                <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
+        !error ? (
+            <View style={styles.quizScreenView}>
+                {currentQuestion ? (
+                    <>
+                        <View style={styles.gameId}>
+                            <Text style={styles.gameIdText}>ID : {gameId} </Text>
+                            <TouchableOpacity onPress={handleCopyGameId}>
+                                <Copy size={20} />
+                            </TouchableOpacity>
+                            <Toast ref={(ref) => Toast.setRef(ref)} />
+                        </View>
+                        <View style={styles.mainView}>
+                            <View style={styles.questionView}>
+                                <CountdownCircleTimer
+                                    duration={7}
+                                    size={100}
+                                    strokeWidth={10}
+                                    colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+                                    colorsTime={[7, 5, 2, 0]}
+                                >
+                                    {({ remainingTime }) => (
+                                        <Text>{questionNumber}</Text>
+                                    )}
+                                </CountdownCircleTimer>
+                                <View style={styles.quizBarView}>
+                                    <Text style={styles.quizBarTextView}>1 </Text>
+                                    <Progress.Bar
+                                        borderRadius={0}
+                                        height={10}
+                                        progress={questionNumber / totalQuestion}
+                                        width={platform === 'web' ? 400 : 200}
+                                        indeterminate={loading}
+                                        indeterminateAnimationDuration={2000}
+                                    />
+                                    <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
+                                </View>
+                                <Text>{currentQuestion.question}</Text>
+                                <Text>Score: {score}</Text>
+                                {platform === 'web' && nextQuestionButton()}
                             </View>
-                            <Text>{currentQuestion.question}</Text>
-                            <Text>Score: {score}</Text>
-                            {platform === 'web' && nextQuestionButton()}
-                        </View>
 
-                        <View style={styles.answersView}>
-                            {currentQuestion.answers.map((answer, index) => (
-                                <AnswerButton
-                                    key={index}
-                                    shape={shapes[index]}
-                                    text={answer}
-                                    onClick={handleAnswerSelection}
-                                    filter={getAnswerFilter(answer)}
+                            <View style={styles.answersView}>
+                                {currentQuestion.answers.map((answer, index) => (
+                                    <AnswerButton
+                                        key={index}
+                                        shape={shapes[index]}
+                                        text={answer}
+                                        onClick={handleAnswerSelection}
+                                        filter={getAnswerFilter(answer)}
 
-                                />
-                            ))}
-                            {platform !== 'web' && nextQuestionButton()}
+                                    />
+                                ))}
+                                {platform !== 'web' && nextQuestionButton()}
+                            </View>
                         </View>
-                    </View>
-                </>
-            ) : (
-                <Text>Chargement de la question...</Text>
-            )}
-        </View>
+                    </>
+                ) : (
+                    <Text>Chargement de la question...</Text>
+                )}
+            </View>
+        ) : (
+            <View style={styles.quizScreenView}>
+                <Text style={styles.errorText}>{errorMessage}</Text>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('menuDrawer', { screen: 'newQuiz' })
+                }
+                }>
+                    <Text style={styles.buttonText}>Retour au menu</Text>
+                </TouchableOpacity>
+            </View>
+        )
+
     );
 }
 
@@ -282,5 +304,11 @@ const styles = StyleSheet.create({
     },
     quizBarTextView: {
         fontSize: 22,
+    },
+    errorText: {
+        fontSize: 18,
+        color: 'red',
+        textAlign: 'center',
+        marginVertical: 20,
     },
 });
