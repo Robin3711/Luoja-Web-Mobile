@@ -8,7 +8,7 @@ const styles = getPlatformStyle();
 export default function CreatedQuizInformation({quizId, category, difficulty, date, status, title, nbQuestions}) {
     const [loading, setLoading] = useState(true);
     const [average, setAverage] = useState("aucune donnée");
-    const [themeName, setThemeName] = useState("any");
+    const [themeName, setThemeName] = useState("aucun thème");
     const [statusStr, setStatus] = useState("privé");
     const [dateStr, setDate] = useState("any");
     const [nbPlayed, setNbPlayed] = useState(0);
@@ -16,7 +16,7 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
     useEffect(() => {
         async function fetchParty() {
             setLoading(false);
-            if (category !== 0){
+            if (category !== 0 && category !== null){
                 setThemeName(getThemeLabel(category));
             }
             getQuizAverage(quizId).then((data) => {
@@ -52,9 +52,9 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
             <Text style={styles.historyQuizInformationText}>{difficulty}</Text>
             <Text style={styles.historyQuizInformationText}>{statusStr}</Text>
             <Text style={styles.historyQuizInformationText}>{dateStr}</Text>
-            <Text style={styles.historyQuizInformationText}>Nombre de questions : {nbQuestionsStr}</Text>
+            <Text style={styles.historyQuizInformationText}>Nb de questions : {nbQuestionsStr}</Text>
             <Text style={styles.historyQuizInformationText}>Réussite : {average}</Text>
-            <Text style={styles.historyQuizInformationText}>Nombre de parties jouées : {nbPlayed}</Text>
+            <Text style={styles.historyQuizInformationText}>Nb de parties jouées : {nbPlayed}</Text>
 
         </View>
     );
