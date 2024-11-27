@@ -1,7 +1,7 @@
 import { Platform, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
-import { useFonts, LobsterTwo_400Regular } from '@expo-google-fonts/dev';
+import { useFonts, LobsterTwo_400Regular, LobsterTwo_700Bold, LobsterTwo_700Bold_Italic } from '@expo-google-fonts/dev';
 import {
     Amphora,
     Atom,
@@ -119,6 +119,8 @@ export const difficultyOptions = [
 export function loadFont() {
     let [fontsLoaded] = useFonts({
         LobsterTwo_400Regular,
+        LobsterTwo_700Bold,
+        LobsterTwo_700Bold_Italic,
       });
     
       if (!fontsLoaded) {
