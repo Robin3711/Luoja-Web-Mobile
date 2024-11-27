@@ -3,17 +3,17 @@ import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { createParty } from '../utils/api';
-import { getThemeName } from '../utils/utils';
+import { getThemeLabel } from '../utils/utils';
 
 export default function QuizInformation({ quiz }) {
     navigation = useNavigation();
     const handleStartQuiz = () => {
         createParty(quiz.id).then((party) => {
-            navigation.navigate('quizScreen', { quizId: party.id });
+            navigation.navigate('quizScreen', { gameId: party.id });
         });
     }
     console.log(quiz.category);
-    const themeName = getThemeName(parseInt(quiz.category));
+    const themeName = getThemeLabel(parseInt(quiz.category));
     return (
         <View style={styles.QuizInformationView}>
             <Text style={styles.QuizInformationText}>{quiz.title}</Text>
