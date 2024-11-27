@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
+import { Text, View, TextInput, Button, StyleSheet, Platform } from 'react-native';
 
 import { getGameInfos } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
+
+const platform = Platform.OS;
 
 export default function ResumeScreen() {
     const [gameId, setGameId] = useState('');
