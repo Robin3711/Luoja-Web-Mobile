@@ -1,30 +1,38 @@
 import React, {useEffect, useState} from 'react';
 import { Text, View } from 'react-native';
 import { getQuizAverage } from '../utils/api';
-import { getThemeLabel, getPlatformStyle } from '../utils/utils';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { getThemeLabel, getPlatformStyle, formatReadableDate } from '../utils/utils';
 
 const styles = getPlatformStyle();
 
 export default function CreatedQuizInformation({quizId, category, difficulty, date, status, title}) {
     const [loading, setLoading] = useState(true);
-    const [average, setAverage] = useState(75);
+    const [average, setAverage] = useState("aucune donnée");
     const [themeName, setThemeName] = useState("any");
     const [statusStr, setStatus] = useState("privé");
+    const [dateStr, setDate] = useState("any");
     useEffect(() => {
         async function fetchParty() {
             setLoading(false);
             if (category !== 0){
                 setThemeName(getThemeLabel(category));
             }
-            let scoreTemp = getQuizAverage(quizId);
-            setAverage(scoreTemp);
+            getQuizAverage(quizId).then((score) => {
+                if (score.score === null){
+                    score.score = "aucune donnée";
+                } else {
+                    setAverage(score.score);
+                }
+                
+            });
             if(status === "true"){
                 setStatus("public");
             }
+            let dateTemp = formatReadableDate(date);
+            setDate(dateTemp);
         }
         fetchParty();
-    }, [category, status, quizId]);
+    }, [category, status, quizId, date]);
 
     if (loading) {
         return <Text>Chargement...</Text>;
@@ -38,8 +46,8 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
             <Text style={styles.historyQuizInformationText}>{themeName}</Text>
             <Text style={styles.historyQuizInformationText}>{difficulty}</Text>
             <Text style={styles.historyQuizInformationText}>{statusStr}</Text>
-            <Text style={styles.historyQuizInformationText}>{date}</Text>
-            <Text style={styles.historyQuizInformationText}>Pourcentage de réussite : {average} %</Text>
+            <Text style={styles.historyQuizInformationText}>{dateStr}</Text>
+            <Text style={styles.historyQuizInformationText}>Pourcentage de réussite : {average}</Text>
         </View>
     );
 }
