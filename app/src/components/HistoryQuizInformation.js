@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Text, View } from 'react-native';
 import { getGameInfos } from '../utils/api';
-import { getThemeLabel, getPlatformStyle } from '../utils/utils';
+import { getThemeLabel, getPlatformStyle, formatReadableDate } from '../utils/utils';
 
 const styles = getPlatformStyle();
 
@@ -10,6 +10,7 @@ export default function HistoryQuizInformation({partyId}) {
     const [loading, setLoading] = useState(true);
     const [score, setScore] = useState(0);
     const [themeName, setThemeName] = useState("any");
+    const [date, setDate] = useState("any");
     useEffect(() => {
         async function fetchParty() {
             const data = await getGameInfos(partyId);
@@ -25,6 +26,8 @@ export default function HistoryQuizInformation({partyId}) {
                 }
             }
             setScore(scoreTemp);
+            let dateTemp = formatReadableDate(data.CreateDate);
+            setDate(dateTemp);
         }
         fetchParty();
     }, [partyId]);
@@ -38,9 +41,9 @@ export default function HistoryQuizInformation({partyId}) {
     return (
         <View style={styles.historyQuizInformationView}>
             <Text style={styles.historyQuizInformationText}>Partie : {partyId}</Text>
-            <Text style={styles.historyQuizInformationText}>Thème : {themeName}</Text>
-            <Text style={styles.historyQuizInformationText}>Difficulté : {party.Difficulty}</Text>
-            <Text style={styles.historyQuizInformationText}>Date : {party.CreateDate}</Text>
+            <Text style={styles.historyQuizInformationText}>{themeName}</Text>
+            <Text style={styles.historyQuizInformationText}>{party.Difficulty}</Text>
+            <Text style={styles.historyQuizInformationText}>{date}</Text>
             <Text style={styles.historyQuizInformationText}>Résultat : {score}</Text>
         </View>
     );
