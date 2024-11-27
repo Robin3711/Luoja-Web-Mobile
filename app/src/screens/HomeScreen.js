@@ -13,7 +13,7 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.homeView}>
-            <Text style={[FONT.title, {fontFamily:'LobsterTwo_700Bold_Italic'}]}>Luoja</Text>
+            <Text style={styles.appTitle}>Luoja</Text>
 
             {platform === 'web' && <Image source={require('../../assets/splash.png')} />}
 
@@ -44,4 +44,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    appTitle:{
+        color: COLORS.text.blue.dark,
+        position: 'absolute',
+        top: 15,
+        fontSize: 150,
+        fontWeight: 'bold',
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+    }
 });
