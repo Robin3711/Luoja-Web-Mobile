@@ -99,6 +99,25 @@ export async function getGameInfos(gameId) {
     }
 }
 
+export async function getGameAverage(gameId) {
+    try {
+        let url = `${await getPlatformAPI()}/game/${gameId}/average`
+
+        const response = await fetch(url, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        const data = await response.json();
+        
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export async function createParty(quizId) {
     try {
 
