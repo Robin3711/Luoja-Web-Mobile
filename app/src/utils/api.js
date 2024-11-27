@@ -82,7 +82,7 @@ export async function getCurrentAnswer(answer, quizId) {
 export async function getGameInfos(gameId) {
     try {
 
-        let url = `${await getPlatformAPI()}/game/${quizId}/infos`;
+        let url = `${await getPlatformAPI()}/game/${gameId}/infos`;
 
         const response = await fetch(url, {
             headers: { 
@@ -207,11 +207,7 @@ export async function getQuestions(amount, category, difficulty) {
             url += `&difficulty=${difficulty}`;
         }
 
-        const response = await fetch(url, {
-            headers: { 
-                'token': await AsyncStorage.getItem('token'),
-            },
-        });
+        const response = await fetch(url);
 
         const data = await response.json();
 

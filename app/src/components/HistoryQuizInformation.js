@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Text, View } from 'react-native';
-import { getCurrentInfos } from '../utils/api';
-import { getThemeName, getPlatformStyle } from '../utils/utils';
+import { getGameInfos } from '../utils/api';
+import { getThemeLabel, getPlatformStyle } from '../utils/utils';
 
 const styles = getPlatformStyle();
 
@@ -12,11 +12,11 @@ export default function HistoryQuizInformation({partyId}) {
     const [themeName, setThemeName] = useState("any");
     useEffect(() => {
         async function fetchParty() {
-            const data = await getCurrentInfos(partyId);
+            const data = await getGameInfos(partyId);
             setParty(data);
             setLoading(false);
             if (data.Category !== 0){
-                setThemeName(getThemeName(data.Category));
+                setThemeName(getThemeLabel(data.Category));
             }
             let scoreTemp = 0;
             for (let i = 0; i < data.results.length; i++) {
