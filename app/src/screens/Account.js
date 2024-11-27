@@ -1,12 +1,14 @@
+import { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { useState, useEffect, useCallback } from 'react';
+
 import { getUserInfos } from '../utils/api';
 import { hasToken, removeToken } from '../utils/utils';
 import { getPlatformStyle } from '../utils/utils';
 import Dashboard from './Dashboard';
 
 const styles = getPlatformStyle();
+
 
 export default function Account() {
     const navigation = useNavigation();
@@ -28,7 +30,7 @@ export default function Account() {
                 setIsLogged(await hasToken());
                 setLoading(false);
             };
-    
+
             checkToken();
         }, [])
     );
@@ -54,8 +56,8 @@ export default function Account() {
             <View>
                 <Dashboard />
             </View>
-        )
-    } 
+        );
+    }
     else {
         return (
             <View style={styles.accountLoginView}>
@@ -63,7 +65,7 @@ export default function Account() {
                 <TouchableOpacity style={styles.accountLoginButton} onPress={() => navigation.navigate('login')}>
                     <Text>Se connecter</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.accountLoginButton}onPress={() => navigation.navigate('register')}>
+                <TouchableOpacity style={styles.accountLoginButton} onPress={() => navigation.navigate('register')}>
                     <Text>S'inscrire</Text>
                 </TouchableOpacity>
             </View>

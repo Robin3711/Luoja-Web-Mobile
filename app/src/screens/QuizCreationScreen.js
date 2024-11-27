@@ -1,11 +1,14 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { getPlatformStyle } from '../utils/utils';
-import DifficultyRadioSelector from '../components/DifficultyRadioSelector';
 import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
+import { getPlatformStyle } from '../utils/utils';
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
+import DifficultyRadioSelector from '../components/DifficultyRadioSelector';
+
 
 const styles = getPlatformStyle();
+
 
 export default function QuizCreation() {
 
@@ -18,40 +21,50 @@ export default function QuizCreation() {
     const [questions, setQuestions] = useState([]);
 
     const handleAddQuestions = (newQuestions) => {
-        try{
+        try {
             setQuestions([...questions, ...newQuestions]);
         }
-        catch(error){
+        catch (error) {
             alert(error.message);
         }
     }
 
     const handleRetrieveQuestions = async () => {
-        try{
+        try {
             navigation.navigate('retrieveQuestions', { handleAddQuestions });
         }
-        catch(error){
+        catch (error) {
             alert(error.message);
         }
     };
 
+    const handleCreateQuestion = async () => {
+        try {
+            navigation.navigate('createQuestion', {handleAddQuestions});
+        }
+        catch (error) {
+            alert(error.message);
+        }
+    }
+
     const handleSave = async () => {
-        try{
-            if(quizId === null){
+        try {
+            if (quizId === null) {
                 const data = await saveQuiz(title, category, difficulty, questions);
                 setQuizId(data.quizId);
             }
-            else{
+            else {
                 await editQuiz(quizId, title, category, difficulty, questions);
             }
         }
-        catch(error){
+        catch (error) {
             alert(error.message);
         }
     };
-    
+
     const handlePublish = async () => {
-        try{
+        try {
+            console.log(questions);
             await editQuiz(quizId, title, category, difficulty, questions);
             await publishQuiz(quizId);
 
@@ -61,7 +74,7 @@ export default function QuizCreation() {
             setDifficulty('easy');
             setQuestions([]);
         }
-        catch(error){
+        catch (error) {
             alert(error.message);
         }
     }
@@ -75,11 +88,11 @@ export default function QuizCreation() {
                 <View style={styles.quizCreationLeftView}>
                     <View>
                         <TextInput placeholder='Titre du quiz' value={title} onChangeText={setTitle}></TextInput>
-                        <DifficultyRadioSelector value={difficulty} onValueChange={setDifficulty}/>
+                        <DifficultyRadioSelector value={difficulty} onValueChange={setDifficulty} />
                         <TouchableOpacity onPress={handleRetrieveQuestions}>
                             <Text>Récupérer des questions</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handleCreateQuestion}>
                             <Text>Rédiger une question</Text>
                         </TouchableOpacity>
                     </View>
@@ -106,7 +119,7 @@ export default function QuizCreation() {
                                 : <Text>Aucune question</Text>
                         }
                     </View>
-                </View> 
+                </View>
             </View>
         </View>
     );

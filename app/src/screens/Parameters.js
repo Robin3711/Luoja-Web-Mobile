@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
-import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+
+import { getPlatformStyle } from '../utils/utils';
 import { createQuiz } from '../utils/api';
 import RangeCursor from '../components/Cursor';
+import ThemeSelector from '../components/ThemeList'
 import DifficultySelector from '../components/DifficultyPicker';
-import ThemeSelector from '../components/ThemePicker';
-import { getPlatformStyle } from '../utils/utils';
 
 const styles = getPlatformStyle();
+
 
 export default function Parameters() {
   const [difficulty, setDifficulty] = useState('none');
@@ -24,7 +26,7 @@ export default function Parameters() {
         navigation.navigate('menuDrawer');
         setlunch(false);
         setTimeout(() => {
-          navigation.navigate('quizScreen', { quizId: data.id });
+          navigation.navigate('quizScreen', { gameId: data.id });
         }, 0);
       })
       .catch(error => {
@@ -32,13 +34,14 @@ export default function Parameters() {
       });
   };
 
+
   return (
     <View style={styles.parametersView}>
       <Text style={styles.parametersText}>Choisissez le nombre de question</Text>
       <RangeCursor testID="range-cursor" value={tempQuestionCount}
-                        onValueChange={setTempQuestionCount} // Mettre à jour temporairement
-                        onSlidingComplete={(value) => setQuestionCount(value)}  />
-      <ThemeSelector testID="theme-picker" value={theme} onValueChange={setTheme} />
+        onValueChange={setTempQuestionCount}
+        onSlidingComplete={(value) => setQuestionCount(value)} />
+      <ThemeSelector onValueChange={setTheme} />
       <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
       <TouchableOpacity style={styles.createQuizButton} onPress={handleCreateQuiz} disabled={lunch}>
         {lunch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)}

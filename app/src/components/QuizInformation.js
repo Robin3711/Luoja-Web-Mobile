@@ -1,14 +1,15 @@
 import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
 import { createParty } from '../utils/api';
 import { getThemeName } from '../utils/utils';
 
-export default function QuizInformation({quiz}) {
+export default function QuizInformation({ quiz }) {
     navigation = useNavigation();
     const handleStartQuiz = () => {
         createParty(quiz.id).then((party) => {
-            navigation.navigate('quizScreen', {quizId: party.id});
+            navigation.navigate('quizScreen', { quizId: party.id });
         });
     }
     console.log(quiz.category);
@@ -21,7 +22,7 @@ export default function QuizInformation({quiz}) {
             {/*<Text style={styles.QuizInformationText}>{quiz.questionCount}</Text>*/}
             <TouchableOpacity style={styles.QuizInformationButton} onPress={handleStartQuiz}>
                 <Text>Jouer</Text>
-            </TouchableOpacity> 
+            </TouchableOpacity>
         </View>
     );
 }

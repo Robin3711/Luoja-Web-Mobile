@@ -1,6 +1,34 @@
 import { Platform, Dimensions } from 'react-native';
-import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
+import {
+    Amphora,
+    Atom,
+    Book,
+    BookOpen,
+    Calculator,
+    Car,
+    Clapperboard,
+    Cone,
+    Crown,
+    Drama,
+    Earth,
+    Gamepad2,
+    Globe,
+    JapaneseYen,
+    Laptop,
+    Microscope,
+    Music,
+    Palette,
+    Spade,
+    Sparkle,
+    Squirrel,
+    Tv,
+    Volleyball,
+    Vote,
+} from 'lucide-react-native';
+
+export const iconSize = Platform.OS === 'web' ? 30 : 18;
 
 let apiUrl = null;
 
@@ -66,33 +94,40 @@ export async function removeToken() {
     }
 }
 
-export function getThemeName(themeNumber) {
-    // use a dictionary to map themeNumber to themeName
-    const themeNames = {
-        9: 'General Knowledge',
-        10: 'Entertainment: Books',
-        11: 'Entertainment: Film',
-        12: 'Entertainment: Music',
-        13: 'Entertainment: Musicals & Theatres',
-        14: 'Entertainment: Television',
-        15: 'Entertainment: Video Games',
-        16: 'Entertainment: Board Games',
-        17: 'Science & Nature',
-        18: 'Science: Computers',
-        19: 'Science: Mathematics',
-        20: 'Mythology',
-        21: 'Sports',
-        22: 'Geography',
-        23: 'History',
-        24: 'Politics',
-        25: 'Art',
-        26: 'Celebrities',
-        27: 'Animals',
-        28: 'Vehicles',
-        29: 'Entertainment: Comics',
-        30: 'Science: Gadgets',
-        31: 'Entertainment: Japanese Anime & Manga',
-        32: 'Entertainment: Cartoon & Animations'
-    };
-    return themeNames[themeNumber];
+export function getThemeLabel(value) {
+    return themeOptions.find(option => option.value === value)?.label;
 }
+
+export const themeOptions = [
+    { label: 'General Knowledge', value: 9, icon: <Globe color="black" size={iconSize} /> },
+    { label: 'Entertainment: Books', value: 10, icon: <Book color="black" size={iconSize} /> },
+    { label: 'Entertainment: Film', value: 11, icon: <Clapperboard color="black" size={iconSize} /> },
+    { label: 'Entertainment: Music', value: 12, icon: <Music color="black" size={iconSize} /> },
+    { label: 'Entertainment: Musicals & Theatres', value: 13, icon: <Drama color="black" size={iconSize} /> },
+    { label: 'Entertainment: Television', value: 14, icon: <Tv color="black" size={iconSize} /> },
+    { label: 'Entertainment: Video Games', value: 15, icon: <Gamepad2 color="black" size={iconSize} /> },
+    { label: 'Entertainment: Board Games', value: 16, icon: <Spade color="black" size={iconSize} /> },
+    { label: 'Science & Nature', value: 17, icon: <Atom color="black" size={iconSize} /> },
+    { label: 'Science: Computers', value: 18, icon: <Laptop color="black" size={iconSize} /> },
+    { label: 'Science: Mathematics', value: 19, icon: <Calculator color="black" size={iconSize} /> },
+    { label: 'Mythology', value: 20, icon: <Amphora color="black" size={iconSize} /> },
+    { label: 'Sports', value: 21, icon: <Volleyball color="black" size={iconSize} /> },
+    { label: 'Geography', value: 22, icon: <Earth color="black" size={iconSize} /> },
+    { label: 'History', value: 23, icon: <Crown color="black" size={iconSize} /> },
+    { label: 'Politics', value: 24, icon: <Vote color="black" size={iconSize} /> },
+    { label: 'Art', value: 25, icon: <Palette color="black" size={iconSize} /> },
+    { label: 'Celebrities', value: 26, icon: <Sparkle color="black" size={iconSize} /> },
+    { label: 'Animals', value: 27, icon: <Squirrel color="black" size={iconSize} /> },
+    { label: 'Vehicles', value: 28, icon: <Car color="black" size={iconSize} /> },
+    { label: 'Entertainment: Comics', value: 29, icon: <BookOpen color="black" size={iconSize} /> },
+    { label: 'Science: Gadgets', value: 30, icon: <Microscope color="black" size={iconSize} /> },
+    { label: 'Entertainment: Japanese Anime & Manga', value: 31, icon: <JapaneseYen color="black" size={iconSize} /> },
+    { label: 'Entertainment: Cartoon & Animations', value: 32, icon: <Cone color="black" size={iconSize} /> },
+];
+
+export const difficultyOptions = [
+    { label: 'Toute difficulté', value: 'none' },
+    { label: 'Facile', value: 'easy' },
+    { label: 'Moyen', value: 'medium' },
+    { label: 'Difficile', value: 'hard' },
+];
