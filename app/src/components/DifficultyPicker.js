@@ -24,7 +24,6 @@ const DifficultySelector = ({ testID, value, onValueChange }) => {
 
     return (
         <View style={styles.difficultyPickerView}>
-            <Text>Sélectionnez la difficulté</Text>
             <ButtonGroup
                 buttons={buttons}
                 selectedIndex={selectedIndex}
@@ -43,7 +42,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        width: platform === 'web' ? '50%' : '100%',
+        width: '100%',
     },
     buttonContainer: {
         height: 60,

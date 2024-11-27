@@ -78,34 +78,36 @@ export default function QuizCreation() {
 
     return (
         <View style={styles.quizCreationView}>
-            <View>
-                <Text>Créez votre propre quiz !</Text>
-            </View>
+            <Text style={styles.titleText}>Créez votre propre quiz !</Text>
             <View style={styles.quizCreationChildVIew}>
                 <View style={styles.quizCreationLeftView}>
                     <View>
-                        <TextInput placeholder='Titre du quiz' value={title} onChangeText={setTitle}></TextInput>
+                        <View style={styles.quizTitleView}>
+                            <TextInput style={styles.quizTitleText} placeholder='Titre du quiz' value={title} onChangeText={setTitle} />
+                        </View>
                         <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
-                        <TouchableOpacity onPress={handleRetrieveQuestions}>
-                            <Text>Récupérer des questions</Text>
+                        <View style={styles.quizCreationTopButtonsView}>
+                            <TouchableOpacity style={styles.buttons} onPress={handleRetrieveQuestions}>
+                                <Text style={styles.buttonText}>Récupérer des questions</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttons} onPress={handleCreateQuestion}>
+                                <Text style={styles.buttonText}>Rédiger une question</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={handleCreateQuestion}>
-                            <Text>Rédiger une question</Text>
-                        </TouchableOpacity>
+                        </View>
                     </View>
                     <View style={styles.quizCreationBottomButtonsView}>
-                        <TouchableOpacity onPress={handleSave}>
-                            <Text>Enregistrer</Text>
+                        <TouchableOpacity style={styles.buttons} onPress={handleSave}>
+                            <Text style={styles.buttonText}>Enregistrer</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={handlePublish} disabled={quizId === null}>
-                            <Text>Publier</Text>
+                        <TouchableOpacity style={quizId === null ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={quizId === null}>
+                            <Text style={styles.buttonText}>Publier</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
                 <View style={styles.quizCreationRightView}>
-                    <Text>Liste des questions :</Text>
-                    <View>
+                    <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
+                    <View style={styles.questionsView}>
                         {
                             questions.length !== 0 ?
                                 questions.map((question, index) => (
@@ -123,4 +125,95 @@ export default function QuizCreation() {
 }
 
 const styles = StyleSheet.create({
+    quizCreationView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    titleText:{
+        position: 'absolute',
+        top: 20,
+        fontSize: 40,
+    },
+    quizCreationChildVIew: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        width: '100%',
+    },
+    quizTitleView: {
+        backgroundColor: '#58bdfe',
+        width: '100%',
+        padding: 10,
+        borderRadius: 20,
+    },
+    quizTitleText: {
+        padding: 5,
+        textAlign: 'center',
+        backgroundColor: 'white',
+        borderRadius: 20,
+    },
+    quizCreationLeftView: {
+        width: '40%',
+    },
+    quizCreationTopButtonsView: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    quizCreationBottomButtonsView: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    quizCreationRightView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        backgroundColor: '#8fd3ff',
+        height: '100%',
+        borderRadius: 20,
+        padding: 20,
+        width: '40%',
+    },
+    quizCreationQuestionsTitle: {
+        backgroundColor: 'white',
+        padding: 5,
+        borderRadius: 20,
+    },
+    questionsView: {
+        backgroundColor: 'white',
+        padding: 5,
+        borderRadius: 20,
+        height: '80%'
+    },
+    buttons: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#8fd3ff',
+        height: 50,
+        width: 250,
+        borderRadius: 15,
+        marginVertical: 10,
+        marginHorizontal: 10,
+        boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+    },
+    disabledButton: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#d3d3d3',
+        height: 50,
+        width: 250,
+        borderRadius: 15,
+        marginVertical: 10,
+        marginHorizontal: 10,
+        boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+      },
+    buttonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
 });
