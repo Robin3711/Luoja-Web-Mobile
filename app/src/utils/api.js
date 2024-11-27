@@ -99,9 +99,9 @@ export async function getGameInfos(gameId) {
     }
 }
 
-export async function getGameAverage(gameId) {
+export async function getQuizAverage(quizId) {
     try {
-        let url = `${await getPlatformAPI()}/game/${gameId}/average`
+        let url = `${await getPlatformAPI()}/game/${quizId}/score`
 
         const response = await fetch(url, {
             headers: {
@@ -130,6 +130,23 @@ export async function createParty(quizId) {
         });
 
         const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function getQuizInfos(quizId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/retrieve`, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        const data = await response.json();
+
         return data;
     } catch (error) {
         console.error(error);
@@ -348,7 +365,7 @@ export async function publishQuiz(quizId) {
 
 export async function getCreatedQuiz(){
     try{
-        const response = await fetch(`${await getPlatformAPI()}/quiz/user/Game`, {
+        const response = await fetch(`${await getPlatformAPI()}/quiz/user/Create`, {
             headers: {
                 'token': await AsyncStorage.getItem('token'),
             },
