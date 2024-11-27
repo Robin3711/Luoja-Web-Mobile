@@ -34,9 +34,8 @@ export default function Dashboard() {
         async function fetchData() {
             const games = await getUserGame();
             const quizzes = await getCreatedQuiz();
-            console.log(quizzes);
             setHistory(games.games);
-            setPublishedQuizzes(quizzes.quizs);
+            setPublishedQuizzes(quizzes);
         }
         fetchData();
     }, []);
@@ -61,7 +60,7 @@ export default function Dashboard() {
                     <ScrollView>
                         {publishedQuizzes.map((item, index) => (
                             <View key={index}>
-                                <CreatedQuizInformation quizId={item.id} category={item.category} difficulty={item.difficulty} date={item.createdAt} status={item.public} title={item.title} />
+                                <CreatedQuizInformation quizId={item.id} category={item.category} difficulty={item.difficulty} date={item.createdAt} status={item.public} title={item.title} nbQuestions={item.numberOfQuestions}/>
                             </View>
                         ))}
                     </ScrollView>
