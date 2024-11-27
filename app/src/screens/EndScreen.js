@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
-import { getPlatformStyle, themeOptions } from '../utils/utils';
+import { themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
 
 import * as Progress from 'react-native-progress';
-
-const styles = getPlatformStyle();
-
 
 export default function EndScreen() {
     const route = useRoute();
@@ -19,6 +16,7 @@ export default function EndScreen() {
     const [category, setCategory] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
     const [progress, setProgress] = useState(0);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadGameData = async () => {
@@ -31,6 +29,7 @@ export default function EndScreen() {
 
                 setCategory(infos.Category !== 0 ? themeOptions.find(option => option.value === infos.Category)?.label : "any");
                 setDifficulty(infos.Difficulty);
+                setLoading(false);
 
                 let animationProgress = 0;
                 const targetProgress = score / numberOfQuestions;
@@ -72,17 +71,18 @@ export default function EndScreen() {
                             Votre score : {score} / {numberOfQuestions}
                         </Text>
                         <View style={styles.endContainer}>
-                            <Progress.Circle
-                                progress={progress}
-                                size={120}
-                                showsText={true}
-                                color="#76c7c0"
-                                borderWidth={0}
-                                thickness={15}
-                                textStyle={styles.progressText}
-                                unfilledColor="#e12f09"
-                                formatText={() => `${Math.round(progress * 100) || 0}%`}
-                            />
+                        <Progress.Circle
+                            progress={!loading ? progress : 0} 
+                            size={120}
+                            showsText={!loading}
+                            color={!loading ? "#76c7c0" : "#007AFF"} 
+                            borderWidth={!loading ? 0 : 10}
+                            thickness={15}
+                            unfilledColor={!loading ? "#e12f09" : "#f0f0f0"} 
+                            indeterminate={loading} 
+                            indeterminateAnimationDuration={1000}
+                        />
+
                         </View>
                     </View>
                 ) : (
@@ -110,3 +110,6 @@ export default function EndScreen() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+});

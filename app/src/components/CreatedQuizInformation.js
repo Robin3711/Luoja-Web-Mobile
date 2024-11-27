@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { getQuizAverage } from '../utils/api';
-import { getThemeLabel, getPlatformStyle, formatReadableDate } from '../utils/utils';
-
-const styles = getPlatformStyle();
+import { getThemeLabel, formatReadableDate } from '../utils/utils';
 
 export default function CreatedQuizInformation({quizId, category, difficulty, date, status, title, nbQuestions}) {
     const [loading, setLoading] = useState(true);
@@ -59,3 +57,18 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    historyQuizInformationView: {
+        backgroundColor: '#f0f0f0',
+        padding: 10,
+        margin: 5,
+        borderRadius: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    historyQuizInformationText: {
+        fontSize: 16,
+        margin: 2
+    }
+});

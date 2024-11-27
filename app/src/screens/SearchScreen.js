@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, TextInput, ScrollView } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Text, View, TextInput, ScrollView, StyleSheet } from 'react-native';
 
-import { getPlatformStyle } from '../utils/utils';
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
 import RangeCursor from '../components/Cursor';
 import DifficultySelector from '../components/DifficultyPicker';
 import QuizInformation from '../components/QuizInformation';
 
-
-styles = getPlatformStyle();
-
-
 export default function SearchScreen() {
     const [data, setData] = useState([]);
     const [theme, setTheme] = useState('none');
-    const [difficulty, setDifficulty] = useState('none');
+    const [difficulty, setDifficulty] = useState(null);
     const [title, setTitle] = useState('');
     const [questionCount, setQuestionCount] = useState(1);
     const [tempQuestionCount, setTempQuestionCount] = useState(1);
 
     useEffect(() => {
-        (async () => {
-            await setData(getQuizAutoComplete(title, theme, difficulty));
-            console.log(data);
-        })
+        const fetchData = async () => {
+            const result = await getQuizAutoComplete(title, theme, difficulty, questionCount);
+            setData(result);
+        }
+
+        fetchData();
 
     }, [title, theme, difficulty, questionCount]);
 
@@ -60,3 +57,6 @@ export default function SearchScreen() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+});

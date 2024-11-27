@@ -1,13 +1,11 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { hasToken, removeToken } from "../utils/utils";
-import { getPlatformStyle } from "../utils/utils";
 import { Button } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
 import CreatedQuizInformation from "../components/CreatedQuizInformation";
-const styles = getPlatformStyle();
 
 export default function Dashboard() {
     const navigation = useNavigation();
@@ -70,3 +68,23 @@ export default function Dashboard() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    dashboardView: {
+        margin: 10,
+        padding: 10,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 10,
+    },
+    dashboardText: {
+        fontSize: 24,
+    },
+    dashboardContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    dashboardSection: {
+        width: '48%',
+    },
+});

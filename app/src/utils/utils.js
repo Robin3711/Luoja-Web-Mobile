@@ -1,6 +1,7 @@
 import { Platform, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
+import { useFonts, LobsterTwo_400Regular } from '@expo-google-fonts/dev';
 import {
     Amphora,
     Atom,
@@ -31,22 +32,6 @@ import {
 export const iconSize = Platform.OS === 'web' ? 30 : 18;
 
 let apiUrl = null;
-
-export function getPlatformStyle() {
-
-    if (Platform.OS === 'web') {
-        const { width } = Dimensions.get('window');
-        if (width > 1024) {
-            const styles = require('./style.web.js');
-        } else {
-            const styles = require('./style.mobile.js');
-        }
-    } else {
-        const styles = require('./style.mobile.js');
-    }
-
-    return styles;
-}
 
 export async function getPlatformAPI() {
     if (apiUrl == null) {
@@ -141,8 +126,17 @@ export const themeOptions = [
 ];
 
 export const difficultyOptions = [
-    { label: 'Toute difficulté', value: 'none' },
     { label: 'Facile', value: 'easy' },
     { label: 'Moyen', value: 'medium' },
     { label: 'Difficile', value: 'hard' },
 ];
+
+export function loadFont() {
+    let [fontsLoaded] = useFonts({
+        LobsterTwo_400Regular,
+      });
+    
+      if (!fontsLoaded) {
+        return null;
+      }
+}

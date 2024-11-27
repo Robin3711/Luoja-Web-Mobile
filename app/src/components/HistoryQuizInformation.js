@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { getGameInfos } from '../utils/api';
-import { getThemeLabel, getPlatformStyle, formatReadableDate } from '../utils/utils';
-
-const styles = getPlatformStyle();
+import { getThemeLabel, formatReadableDate } from '../utils/utils';
 
 export default function HistoryQuizInformation({partyId}) {
     const [party, setParty] = useState(null);
@@ -48,3 +46,17 @@ export default function HistoryQuizInformation({partyId}) {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    historyQuizInformationView: {
+        margin: 10,
+        padding: 10,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    historyQuizInformationText: {
+        fontSize: 16,
+    },
+});
