@@ -37,7 +37,7 @@ export default function QuizCreation() {
 
     const handleCreateQuestion = async () => {
         try {
-            navigation.navigate('createQuestion', {handleAddQuestions});
+            navigation.navigate('createQuestion', { handleAddQuestions });
         }
         catch (error) {
             alert(error.message);
@@ -92,7 +92,7 @@ export default function QuizCreation() {
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.buttons} onPress={handleCreateQuestion}>
                                 <Text style={styles.buttonText}>Rédiger une question</Text>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.quizCreationBottomButtonsView}>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    titleText:{
+    titleText: {
         position: 'absolute',
         top: 20,
         fontSize: 40,
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         marginHorizontal: 10,
         boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
-      },
+    },
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',

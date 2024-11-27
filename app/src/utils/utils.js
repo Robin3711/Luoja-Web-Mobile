@@ -38,7 +38,7 @@ export async function getPlatformAPI() {
         if (Platform.OS === 'web') {
             // Vérifie si l'application tourne sur Expo Metro Web
             if (Constants.debugMode) {
-                apiUrl = 'https://api.luoja.fr';
+                apiUrl = 'http://localhost:3000';
                 return apiUrl;
             } else {
                 const response = await fetch('/get-api-url');
@@ -46,7 +46,7 @@ export async function getPlatformAPI() {
                 apiUrl = data.apiUrl;
             }
         } else {
-            apiUrl = 'https://api.luoja.fr';
+            apiUrl = 'http://localhost:3000';
         }
     }
     return apiUrl;
@@ -121,9 +121,9 @@ export function loadFont() {
         LobsterTwo_400Regular,
         LobsterTwo_700Bold,
         LobsterTwo_700Bold_Italic,
-      });
-    
-      if (!fontsLoaded) {
+    });
+
+    if (!fontsLoaded) {
         return null;
-      }
+    }
 }

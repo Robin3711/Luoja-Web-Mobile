@@ -17,7 +17,7 @@ export default function Login() {
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
         catch (error) {
-            alert(error.message);
+            alert(error);
         }
     };
 
