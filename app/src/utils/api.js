@@ -118,14 +118,14 @@ export async function createParty(quizId) {
     }
 }
 
-export async function userRegister(email, password) {
+export async function userRegister(name, password) {
     try {
         const response = await fetch(`${await getPlatformAPI()}/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ name, password }),
         });
 
         const data = await response.json();
@@ -140,14 +140,14 @@ export async function userRegister(email, password) {
     }
 }
 
-export async function userLogin(email, password) {
+export async function userLogin(name, password) {
     try {
         const response = await fetch(`${await getPlatformAPI()}/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ name, password }),
         });
 
         const data = await response.json();

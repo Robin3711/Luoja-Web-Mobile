@@ -12,12 +12,12 @@ export default function Login() {
 
     const navigation = useNavigation();
 
-    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
     const handleLogin = async () => {
         try {
-            await userLogin(email, password);
+            await userLogin(name, password);
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
         catch (error) {
@@ -27,15 +27,15 @@ export default function Login() {
 
     return (
         <View style={styles.loginView}>
-            <Text>Email</Text>
+            <Text>Nom d'utilisateur</Text>
             <TextInput
                 style={styles.loginInput}
-                onChangeText={setEmail}
-                value={email}
-                placeholder="Email"
+                onChangeText={setName}
+                value={name}
+                placeholder="Nom d'utilisateur"
                 autoFocus={true}
             />
-            <Text>Password</Text>
+            <Text>Mot de passe</Text>
             <TextInput
                 style={styles.loginInput}
                 onChangeText={setPassword}
