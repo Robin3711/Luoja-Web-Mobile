@@ -23,22 +23,29 @@ export default function Login() {
 
     return (
         <View style={styles.loginView}>
-            <Text>Nom d'utilisateur</Text>
-            <TextInput
-                style={styles.loginInput}
-                onChangeText={setName}
-                value={name}
-                placeholder="Nom d'utilisateur"
-                autoFocus={true}
-            />
-            <Text>Mot de passe</Text>
-            <TextInput
-                style={styles.loginInput}
-                onChangeText={setPassword}
-                value={password}
-                placeholder="Password"
-                secureTextEntry={true}
-            />
+            <Text style={styles.pageTitle}>Connexion</Text>
+
+            <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
+            <View style={styles.nameInputView}>
+                <TextInput
+                    style={styles.loginInput}
+                    onChangeText={setName}
+                    value={name}
+                    placeholder="Nom d'utilisateur"
+                    autoFocus={true}
+                />
+            </View>
+
+            <Text style={styles.inputTitle}>Password</Text>
+            <View style={styles.passwordInputView}>
+                <TextInput
+                    style={styles.loginInput}
+                    onChangeText={setPassword}
+                    value={password}
+                    placeholder="Password"
+                    secureTextEntry={true}
+                />
+            </View>
 
             <TouchableOpacity style={styles.buttons} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Se connecter</Text>
@@ -74,7 +81,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         backgroundColor: 'white',
     },
-    emailInputView: {
+    nameInputView: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
