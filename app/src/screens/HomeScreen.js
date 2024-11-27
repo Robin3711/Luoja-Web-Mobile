@@ -15,13 +15,13 @@ export default function HomeScreen() {
 
             <Image source={require('../../assets/splash.png')} />
 
-            <div style={styles.listButton}>
+            <View style={styles.listButton}>
             <SimpleButton text="Générer un Quiz" onPress={() => navigation.navigate('newQuiz')}/>
 
             <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
 
             <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
-            </div>
+            </View>
 
             <Image source={require('../../assets/splash.png')} />
         </View>
