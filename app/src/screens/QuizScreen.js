@@ -5,6 +5,9 @@ import AnswerButton from '../components/AnswerButton';
 import * as Progress from 'react-native-progress';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { Clipboard as Copy } from 'lucide-react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Toast from 'react-native-toast-message';
 
 const platform = Platform.OS;
 
@@ -17,7 +20,7 @@ export default function QuizScreen() {
         return (
             <View style={styles.quizContainer}>
                 <Text style={styles.quizQuestionText}>
-                    Une erreur est survenue lors de la récupération de la partie. 
+                    Une erreur est survenue lors de la récupération de la partie.
                 </Text>
                 <TouchableOpacity onPress={() => navigation.navigate('menuDrawer', { screen: 'newQuiz' })}>
                     <Text style={styles.buttonText}>Retour</Text>
@@ -35,7 +38,7 @@ export default function QuizScreen() {
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
     const [loading, setLoading] = useState(true);
-    
+
 
     useEffect(() => {
         (async () => {
@@ -43,10 +46,15 @@ export default function QuizScreen() {
             const data = await getCurrentQuestion(gameId);
             setLoading(false);
 
-            setQuestionNumber(infos.questionCursor + 1);
+            if (infos.questionCursor === infos.numberOfQuestions) {
+                setQuestionNumber(infos.questionCursor);
+            } else {
+                setQuestionNumber(infos.questionCursor + 1);
+            }
+
             setTotalQuestion(infos.numberOfQuestions);
             setScore(infos.results.filter(Boolean).length);
-            
+
             setCurrentQuestion(data);
         })();
     }, [gameId]);
@@ -138,19 +146,40 @@ export default function QuizScreen() {
         </TouchableOpacity>
     );
 
+    const handleCopyGameId = () => {
+        Clipboard.setString(gameId);
+        Toast.show({
+            type: 'info',
+            position: 'top',
+            text1: 'L\'id à bien été copier ! ',
+            text1Style: { fontSize: 16, textAlign: 'center' },
+            text2: "",
+            visibilityTime: 2000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+        });
+    };
+
     console.log('questionNumber', questionNumber);
     console.log('totalQuestion', totalQuestion);
-    console.log('progress', questionNumber/totalQuestion);
+    console.log('progress', questionNumber / totalQuestion);
 
     return (
         <View style={styles.quizScreenView}>
             {currentQuestion ? (
                 <>
-                    <Text style={styles.gameId}>ID : {gameId}</Text>
+                    <View style={styles.gameId}>
+                        <Text style={styles.gameIdText}>ID : {gameId} </Text>
+                        <TouchableOpacity onPress={handleCopyGameId}>
+                            <Copy size={20} />
+                        </TouchableOpacity>
+                        <Toast ref={(ref) => Toast.setRef(ref)} />
+                    </View>
                     <View style={styles.mainView}>
                         <View style={styles.questionView}>
-                            <CountdownCircleTimer 
-                                duration={7} 
+                            <CountdownCircleTimer
+                                duration={7}
                                 size={100}
                                 strokeWidth={10}
                                 colors={['#004777', '#F7B801', '#A30000', '#A30000']}
@@ -185,7 +214,7 @@ export default function QuizScreen() {
                                     text={answer}
                                     onClick={handleAnswerSelection}
                                     filter={getAnswerFilter(answer)}
-                                    
+
                                 />
                             ))}
                             {platform !== 'web' && nextQuestionButton()}
@@ -209,6 +238,9 @@ const styles = StyleSheet.create({
     gameId: {
         position: 'absolute',
         top: 1,
+        flexDirection: "row",
+    },
+    gameIdText: {
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
