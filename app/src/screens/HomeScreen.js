@@ -1,9 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, Platform, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SimpleButton from '../components/SimpleButton';
 import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
+
+const platform = Platform.OS;
 
 export default function HomeScreen() {
     const navigation = useNavigation();
@@ -13,17 +15,17 @@ export default function HomeScreen() {
         <View style={styles.homeView}>
             <Text style={[FONT.title, {fontFamily:'LobsterTwo_700Bold_Italic'}]}>Luoja</Text>
 
-            <Image source={require('../../assets/splash.png')} />
+            {platform === 'web' && <Image source={require('../../assets/splash.png')} />}
 
             <View style={styles.listButton}>
-            <SimpleButton text="Générer un Quiz" onPress={() => navigation.navigate('newQuiz')}/>
+                <SimpleButton text="Générer un Quiz" onPress={() => navigation.navigate('newQuiz')}/>
 
-            <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
+                <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
 
-            <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
+                <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
             </View>
 
-            <Image source={require('../../assets/splash.png')} />
+            {platform === 'web' && <Image source={require('../../assets/splash.png')} />}
         </View>
     );
 }
