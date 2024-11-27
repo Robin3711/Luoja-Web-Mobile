@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { TouchableOpacity, View, Text } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 import { getQuestions } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
-import DifficultyRadioSelector from '../components/DifficultyRadioSelector';
+import DifficultyPicker from '../components/DifficultyPicker';
 import RangeCursor from '../components/Cursor';
 
 export default function RetrieveQuestions() {
@@ -27,7 +27,7 @@ export default function RetrieveQuestions() {
     return (
         <View>
             <ThemeSelector onValueChange={setCategory} />
-            <DifficultyRadioSelector value={difficulty} onValueChange={setDifficulty} />
+            <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
             <RangeCursor value={amount} onValueChange={setAmount} />
             <TouchableOpacity onPress={handleRetrieveQuestions}>
                 <Text>Valider</Text>
@@ -35,3 +35,6 @@ export default function RetrieveQuestions() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+});

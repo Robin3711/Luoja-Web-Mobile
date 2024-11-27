@@ -12,7 +12,7 @@ export async function createQuiz(questionCount, theme, difficulty) {
             url += `&category=${theme}`;
         }
 
-        if (difficulty !== 'none') {
+        if (difficulty !== null) {
             url += `&difficulty=${difficulty}`;
         }
 
@@ -202,7 +202,7 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
             url += `&category=${category}`;
         }
 
-        if (difficulty !== 'none') {
+        if (difficulty !== null) {
             url += `&difficulty=${difficulty}`;
         }
 
@@ -241,7 +241,7 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
             url += `&category=${category}`;
         }
 
-        if (difficulty !== 'none') {
+        if (difficulty !== null) {
             url += `&difficulty=${difficulty}`;
         }
 
@@ -301,7 +301,7 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
         if (theme !== 'none' && theme !== null && theme !== 'Thème générale') {
             parameters += (parameters ? '&' : '') + 'category=' + theme;
         }
-        if (difficulty !== 'none' && difficulty !== null && difficulty !== 'Toute difficulté') {
+        if (difficulty !== null && difficulty !== null && difficulty !== 'Toute difficulté') {
             parameters += (parameters ? '&' : '') + 'difficulty=' + difficulty;
         }
         // if (questionCount !== 1) {

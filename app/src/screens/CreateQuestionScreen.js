@@ -4,81 +4,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
-const styles = StyleSheet.create({
-    createQuestionView: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
-        height: '100%',
-    },
-    createQuestionLeftView: {
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        width: '45%',
-        height: '100%',
-    },
-    createQuestionInputView: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#8fd3ff',
-        paddingVertical: '5%',
-        borderRadius: 25,
-        width: '100%',
-        height: '70%',
-    },
-    createQuestionTitle: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '50%',
-        height: '10%',
-        backgroundColor: 'white',
-        borderRadius: 25,
-    },
-    createQuestionInput: {
-        width: '90%',
-        height: '75%',
-        padding: 10,
-        backgroundColor: 'white',
-        borderRadius: 25,
-    },
-    createQuestionSubmit: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '50%',
-        height: 80,
-        backgroundColor: '#8fd3ff',
-        borderRadius: 25,
-    },
-    createQuestionRightView: {
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        width: '45%',
-        height: '100%',
-    },
-    answerInputContainer: {
-        position: 'relative',
-        marginVertical: 10,
-    },
-    checkmarkIcon: {
-        position: 'absolute',
-        left: -30,
-        top: '50%',
-        transform: [{ translateY: -12 }],
-    },
-    toggleContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 10,
-    },
-    toggleLabel: {
-        fontSize: 16,
-        marginHorizontal: 10,
-    },
-});
-
 export default function CreateQuestionScreen() {
 
     const route = useRoute();
@@ -214,3 +139,78 @@ export default function CreateQuestionScreen() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    createQuestionView: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+        height: '100%',
+    },
+    createQuestionLeftView: {
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        width: '45%',
+        height: '100%',
+    },
+    createQuestionInputView: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: '#8fd3ff',
+        paddingVertical: '5%',
+        borderRadius: 25,
+        width: '100%',
+        height: '70%',
+    },
+    createQuestionTitle: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '50%',
+        height: '10%',
+        backgroundColor: 'white',
+        borderRadius: 25,
+    },
+    createQuestionInput: {
+        width: '90%',
+        height: '75%',
+        padding: 10,
+        backgroundColor: 'white',
+        borderRadius: 25,
+    },
+    createQuestionSubmit: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '50%',
+        height: 80,
+        backgroundColor: '#8fd3ff',
+        borderRadius: 25,
+    },
+    createQuestionRightView: {
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        width: '45%',
+        height: '100%',
+    },
+    answerInputContainer: {
+        position: 'relative',
+        marginVertical: 10,
+    },
+    checkmarkIcon: {
+        position: 'absolute',
+        left: -30,
+        top: '50%',
+        transform: [{ translateY: -12 }],
+    },
+    toggleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    toggleLabel: {
+        fontSize: 16,
+        marginHorizontal: 10,
+    },
+});

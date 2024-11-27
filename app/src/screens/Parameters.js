@@ -1,30 +1,28 @@
 import { useState } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { getPlatformStyle } from '../utils/utils';
 import { createQuiz } from '../utils/api';
 import RangeCursor from '../components/Cursor';
 import ThemeSelector from '../components/ThemeList'
 import DifficultySelector from '../components/DifficultyPicker';
 
-const styles = getPlatformStyle();
-
+const platform = Platform.OS;
 
 export default function Parameters() {
-  const [difficulty, setDifficulty] = useState('none');
+  const [difficulty, setDifficulty] = useState(null);
   const [theme, setTheme] = useState('none');
   const [questionCount, setQuestionCount] = useState(1);
   const [tempQuestionCount, setTempQuestionCount] = useState(1);
-  const [lunch, setlunch] = useState(false);
+  const [launch, setlaunch] = useState(false);
   const navigation = useNavigation();
 
   const handleCreateQuiz = () => {
-    setlunch(true);
+    setlaunch(true);
     createQuiz(questionCount, theme, difficulty)
       .then(data => {
         navigation.navigate('menuDrawer');
-        setlunch(false);
+        setlaunch(false);
         setTimeout(() => {
           navigation.navigate('quizScreen', { gameId: data.id });
         }, 0);
@@ -36,16 +34,45 @@ export default function Parameters() {
 
 
   return (
-    <View style={styles.parametersView}>
-      <Text style={styles.parametersText}>Choisissez le nombre de question</Text>
+    <View style={styles.quickQuizView}>
+      <Text>Générer un nouveau quiz !</Text>
+      <ThemeSelector onValueChange={setTheme} />
+
+      <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
+
       <RangeCursor testID="range-cursor" value={tempQuestionCount}
         onValueChange={setTempQuestionCount}
         onSlidingComplete={(value) => setQuestionCount(value)} />
-      <ThemeSelector onValueChange={setTheme} />
-      <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
-      <TouchableOpacity style={styles.createQuizButton} onPress={handleCreateQuiz} disabled={lunch}>
-        {lunch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)}
+
+
+      <TouchableOpacity style={styles.buttons} onPress={handleCreateQuiz} disabled={launch}>
+        {launch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)}
       </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  quickQuizView: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+  },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#8fd3ff',
+    height: 50,
+    width: 250,
+    borderRadius: 15,
+    marginVertical: 10,
+  },
+  buttonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});

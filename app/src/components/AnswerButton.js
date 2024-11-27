@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Platform } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+
+const platform = Platform.OS;
 
 const Star = () => (
     <Svg width="75" height="75" viewBox="-2 -2 28 28" fill="none">
@@ -23,12 +25,18 @@ const Triangle = () => (
     </Svg>
 );
 
-const AnswerInput = ({ shape, onTextChange, onShapeClick }) => {
+const AnswerButton = ({ shape, onClick, text, filter }) => {
     const backgroundColors = {
         SQUARE: '#58bdfe',
         CIRCLE: '#484a77',
         TRIANGLE: '#4d65b4',
         STAR: '#323353',
+    };
+
+    const filters = {
+        GREEN: 'rgba(0, 255, 0, 0.6)',
+        BLUE: 'rgba(0, 0, 255, 0.6)',
+        RED: 'rgba(255, 0, 0, 0.6)',
     };
 
     const renderShape = () => {
@@ -47,21 +55,24 @@ const AnswerInput = ({ shape, onTextChange, onShapeClick }) => {
     };
 
     return (
-        <View
+        <TouchableOpacity
+            onPress={() => onClick(text)}
             style={[
                 styles.container,
                 { backgroundColor: backgroundColors[shape] || '#ffffff' },
             ]}
         >
-            <Pressable style={styles.shapeContainer} onPress={() => onShapeClick(shape)}>
-                {renderShape()}
-            </Pressable>
-            <TextInput
-                style={styles.textInput}
-                placeholder="Réponse"
-                onChangeText={onTextChange}
-            />
-        </View>
+            {renderShape()}
+            <Text style={styles.text}>{text}</Text>
+            {filter && (
+                <View
+                    style={[
+                        styles.filterOverlay,
+                        { backgroundColor: filters[filter] },
+                    ]}
+                />
+            )}
+        </TouchableOpacity>
     );
 };
 
@@ -69,26 +80,22 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: 125,
+        justifyContent: 'center',
+        height: platform === 'web' ? 125 : 100,
+        width: '95%',
+        marginVertical: 5,
         paddingHorizontal: 20,
         borderRadius: 25,
-        boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+        position: 'relative',
+        overflow: 'hidden',
+        ...platform === 'web' ? { 
+            boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+        } : { elevation: 2 },
     },
-    shapeContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        marginRight: 10,
-    },
-    textInput: {
-        flex: 1,
-        height: '70%',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 10,
-        borderRadius: 20,
-        backgroundColor: '#fff',
-        textAlign: 'left',
+    text: {
+        width: '75%',
+        textAlign: 'center',
+        color: 'white',
     },
     shapeStyles: {
         square: {
@@ -108,6 +115,9 @@ const styles = StyleSheet.create({
             borderColor: '#212248',
         },
     },
+    filterOverlay: {
+        ...StyleSheet.absoluteFillObject,
+    },
 });
 
-export default AnswerInput;
+export default AnswerButton;
