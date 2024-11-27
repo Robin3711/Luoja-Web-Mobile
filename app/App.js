@@ -2,6 +2,7 @@ import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
+import { useFonts, LobsterTwo_400Regular } from '@expo-google-fonts/dev';
 
 import Parameters from './src/screens/Parameters';
 import HomeScreen from './src/screens/HomeScreen';
@@ -55,12 +56,12 @@ const stack = createStackNavigator()
 const MenuDrawer = () => {
   return (
     <drawer.Navigator screenOptions={{ drawerPosition: 'left' }} initialRouteName='home'>
-      <drawer.Screen name="home" component={HomeScreen} options={{ title: "Accueil" }} />
-      <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Créer un nouveau QUIZ" }} />
-      <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Reprendre un QUIZ" }} />
-      <drawer.Screen name="search" component={SearchScreen} options={{ title: "Rechercher un QUIZ" }} />
-      <drawer.Screen name="account" component={Account} options={{ title: "Mon compte" }} />
-      {Platform.OS === 'web' ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Créer un quiz" }} /> : null}
+      <drawer.Screen name="home" component={HomeScreen} options={{ title: "Luoja", drawerLabel: "Accueil" }} />
+      <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Luoja", drawerLabel: "Créer un nouveau QUIZ" }} />
+      <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Luoja", drawerLabel: "Reprendre un QUIZ" }} />
+      <drawer.Screen name="search" component={SearchScreen} options={{ title: "Luoja", drawerLabel: "Rechercher un QUIZ" }} />
+      <drawer.Screen name="account" component={Account} options={{ title: "Luoja", drawerLabel: "Mon compte" }} />
+      {Platform.OS === 'web' ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Luoja", drawerLabel: "Créer un quiz" }} /> : null}
     </drawer.Navigator>
   );
 };
@@ -82,6 +83,14 @@ const MenuStack = () => {
 };
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    LobsterTwo_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+  
   return (
     <NavigationContainer linking={linking}>
       <MenuStack />
