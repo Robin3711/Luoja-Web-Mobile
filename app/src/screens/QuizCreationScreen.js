@@ -100,7 +100,7 @@ export default function QuizCreation() {
 
     return (
         <View style={styles.quizCreationView}>
-            <Toast ref={(ref) => Toast.setRef(ref)} />
+            <Toast />
             <Text style={styles.titleText}>Créez votre propre quiz !</Text>
             <View style={styles.quizCreationChildVIew}>
                 <View style={styles.quizCreationLeftView}>

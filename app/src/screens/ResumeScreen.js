@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Text, View, TextInput, Button, StyleSheet, Platform } from 'react-native';
+import { Text, View, TextInput, Button, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 
 import { getGameInfos } from '../utils/api';
 import { toast } from '../utils/utils';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
+import { ClipboardPaste } from 'lucide-react-native';
+import * as Clipboard from 'expo-clipboard';
 
 const platform = Platform.OS;
 
@@ -49,11 +51,20 @@ export default function ResumeScreen() {
             }
         }
     }
+
+    const handlePasteGameId = async () => {
+        const idOfGame = await Clipboard.getStringAsync();
+        setGameId(idOfGame);
+    };
+
     return (
         <View style={styles.container}>
-            <Toast ref={(ref) => Toast.setRef(ref)} />
+            <Toast />
             <Text>Reprenez votre partie</Text>
             <TextInput placeholder="Identifiant de votre partie" style={styles.textInput} onChangeText={setGameId} value={gameId} autoFocus />
+            <TouchableOpacity onPress={handlePasteGameId}>
+                <ClipboardPaste size={20} />
+            </TouchableOpacity>
             <Button title={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
         </View>
     );

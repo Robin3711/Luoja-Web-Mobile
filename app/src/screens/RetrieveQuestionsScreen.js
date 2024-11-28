@@ -35,7 +35,7 @@ export default function RetrieveQuestions() {
 
     return (
         <View>
-            <Toast ref={(ref) => Toast.setRef(ref)} />
+            <Toast />
             <ThemeSelector onValueChange={setCategory} />
             <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
             <RangeCursor value={amount} onValueChange={setAmount} />

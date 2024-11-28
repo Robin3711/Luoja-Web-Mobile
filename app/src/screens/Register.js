@@ -28,7 +28,7 @@ export default function Register() {
 
     return (
         <View style={styles.registerView}>
-            <Toast ref={(ref) => Toast.setRef(ref)} />
+            <Toast />
             <Text style={styles.pageTitle}>Inscription</Text>
 
             <Text style={styles.inputTitle}>Nom d'utilisateur</Text>

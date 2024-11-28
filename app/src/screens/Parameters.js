@@ -42,7 +42,7 @@ export default function Parameters() {
   return (
     <View style={styles.quickQuizView}>
       <Text>Générer un nouveau quiz !</Text>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+      <Toast />
       <ThemeSelector onValueChange={setTheme} />
 
       <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />

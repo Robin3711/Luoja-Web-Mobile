@@ -32,7 +32,7 @@ export default function Login() {
     return (
         <View style={styles.loginView}>
             <Text style={styles.pageTitle}>Connexion</Text>
-            <Toast ref={(ref) => Toast.setRef(ref)} />
+            <Toast />
 
             <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
             <View style={styles.nameInputView}>
