@@ -39,7 +39,7 @@ export async function getPlatformAPI() {
         if (Platform.OS === 'web') {
             // Vérifie si l'application tourne sur Expo Metro Web
             if (Constants.debugMode) {
-                apiUrl = 'http://localhost:3000';
+                apiUrl = 'https://api.luoja.fr';
                 return apiUrl;
             } else {
                 const response = await fetch('/get-api-url');
@@ -47,7 +47,7 @@ export async function getPlatformAPI() {
                 apiUrl = data.apiUrl;
             }
         } else {
-            apiUrl = 'http://localhost:3000';
+            apiUrl = 'https://api.luoja.fr';
         }
     }
     return apiUrl;
