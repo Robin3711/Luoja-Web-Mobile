@@ -8,6 +8,7 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Clipboard as Copy } from 'lucide-react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-toast-message';
+import { toast } from '../utils/utils';
 
 const platform = Platform.OS;
 
@@ -157,17 +158,7 @@ export default function QuizScreen() {
 
     const handleCopyGameId = () => {
         Clipboard.setString(gameId);
-        Toast.show({
-            type: 'info',
-            position: 'top',
-            text1: 'L\'id à bien été copier ! ',
-            text1Style: { fontSize: 16, textAlign: 'center' },
-            text2: "",
-            visibilityTime: 2000,
-            autoHide: true,
-            topOffset: 30,
-            bottomOffset: 40,
-        });
+        toast('info', 'L\'id à bien été copier !', "", 2000);
     };
 
     console.log('questionNumber', questionNumber);

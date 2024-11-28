@@ -3,6 +3,8 @@ import { Text, View, TouchableOpacity, Platform, StyleSheet } from 'react-native
 import { useNavigation } from '@react-navigation/native';
 
 import { createQuiz } from '../utils/api';
+import { toast } from '../utils/utils';
+import Toast from 'react-native-toast-message';
 import RangeCursor from '../components/Cursor';
 import ThemeSelector from '../components/ThemeList'
 import DifficultySelector from '../components/DifficultyPicker';
@@ -28,7 +30,11 @@ export default function Parameters() {
         }, 0);
       })
       .catch(error => {
-        console.error(error);
+        if (error.status && error.message) {
+          toast('error', error.status, error.message, 3000);
+        } else {
+          toast('error', "Erreur", error, 3000);
+        }
       });
   };
 
@@ -36,6 +42,7 @@ export default function Parameters() {
   return (
     <View style={styles.quickQuizView}>
       <Text>Générer un nouveau quiz !</Text>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
       <ThemeSelector onValueChange={setTheme} />
 
       <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />

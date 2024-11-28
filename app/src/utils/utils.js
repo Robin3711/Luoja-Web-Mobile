@@ -28,6 +28,7 @@ import {
     Volleyball,
     Vote,
 } from 'lucide-react-native';
+import Toast from 'react-native-toast-message';
 
 export const iconSize = Platform.OS === 'web' ? 30 : 18;
 
@@ -126,4 +127,19 @@ export function loadFont() {
     if (!fontsLoaded) {
         return null;
     }
+}
+
+export const toast = (type, text1, text2, visibilityTime) => {
+    Toast.show({
+        type: type,
+        position: 'top',
+        text1: text1,
+        text1Style: { fontSize: 20, textAlign: 'center', fontWeight: 'bold' },
+        text2: text2,
+        text2Style: { fontSize: 15, textAlign: 'center', fontStyle: 'italic' },
+        visibilityTime: visibilityTime,
+        autoHide: true,
+        topOffset: -25,
+        bottomOffset: 0,
+    });
 }

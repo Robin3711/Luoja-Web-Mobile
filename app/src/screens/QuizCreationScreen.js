@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { useNavigation } from '@react-navigation/native';
 
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
+import { toast } from '../utils/utils';
+import Toast from 'react-native-toast-message';
 import DifficultyPicker from '../components/DifficultyPicker';
 
 
@@ -22,7 +24,11 @@ export default function QuizCreation() {
             setQuestions([...questions, ...newQuestions]);
         }
         catch (error) {
-            alert(error.message);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
         }
     }
 
@@ -31,7 +37,11 @@ export default function QuizCreation() {
             navigation.navigate('retrieveQuestions', { handleAddQuestions });
         }
         catch (error) {
-            alert(error.message);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
         }
     };
 
@@ -40,7 +50,11 @@ export default function QuizCreation() {
             navigation.navigate('createQuestion', { handleAddQuestions });
         }
         catch (error) {
-            alert(error.message);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
         }
     }
 
@@ -55,7 +69,11 @@ export default function QuizCreation() {
             }
         }
         catch (error) {
-            alert(error.message);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
         }
     };
 
@@ -72,12 +90,17 @@ export default function QuizCreation() {
             setQuestions([]);
         }
         catch (error) {
-            alert(error.message);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
         }
     }
 
     return (
         <View style={styles.quizCreationView}>
+            <Toast ref={(ref) => Toast.setRef(ref)} />
             <Text style={styles.titleText}>Créez votre propre quiz !</Text>
             <View style={styles.quizCreationChildVIew}>
                 <View style={styles.quizCreationLeftView}>
@@ -132,7 +155,7 @@ const styles = StyleSheet.create({
     },
     titleText: {
         position: 'absolute',
-        top: 20,
+        top: 60,
         fontSize: 40,
     },
     quizCreationChildVIew: {

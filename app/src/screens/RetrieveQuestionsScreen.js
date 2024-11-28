@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 import { getQuestions } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
 import DifficultyPicker from '../components/DifficultyPicker';
 import RangeCursor from '../components/Cursor';
+import { toast } from '../utils/utils';
 
 export default function RetrieveQuestions() {
     const route = useRoute();
@@ -18,14 +20,22 @@ export default function RetrieveQuestions() {
     const [difficulty, setDifficulty] = useState('easy');
 
     const handleRetrieveQuestions = async () => {
-
-        const questions = await getQuestions(amount, category, difficulty);
-        handleAddQuestions(questions);
-        navigation.goBack();
+        try {
+            const questions = await getQuestions(amount, category, difficulty);
+            handleAddQuestions(questions);
+            navigation.goBack();
+        } catch (error) {
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
+        }
     }
 
     return (
         <View>
+            <Toast ref={(ref) => Toast.setRef(ref)} />
             <ThemeSelector onValueChange={setCategory} />
             <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
             <RangeCursor value={amount} onValueChange={setAmount} />
