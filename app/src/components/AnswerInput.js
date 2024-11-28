@@ -23,7 +23,7 @@ const Triangle = () => (
     </Svg>
 );
 
-const AnswerInput = ({ shape, onTextChange, onShapeClick }) => {
+const AnswerInput = ({ shape, text, onTextChange, onShapeClick }) => {
     const backgroundColors = {
         SQUARE: '#58bdfe',
         CIRCLE: '#484a77',
@@ -60,6 +60,7 @@ const AnswerInput = ({ shape, onTextChange, onShapeClick }) => {
                 style={styles.textInput}
                 placeholder="Réponse"
                 onChangeText={onTextChange}
+                value={text}
             />
         </View>
     );
