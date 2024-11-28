@@ -5,6 +5,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getUserInfos } from '../utils/api';
 import { hasToken, removeToken } from '../utils/utils';
 import { Platform } from 'react-native';
+import Dashboard from './Dashboard';
 
 const platform = Platform.OS;
 
@@ -50,12 +51,9 @@ export default function Account() {
 
     if (isLogged && userInfos) {
 
-        return (
-            <View style={styles.accountView}>
-                <Text>Adresse email : {userInfos.email}</Text>
-                <TouchableOpacity onPress={handleLogout}>
-                    <Text>Se déconnecter</Text>
-                </TouchableOpacity>
+        return(
+            <View>
+                <Dashboard />
             </View>
         );
     }

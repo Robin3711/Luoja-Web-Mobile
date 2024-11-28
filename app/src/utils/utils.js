@@ -79,6 +79,21 @@ export async function removeToken() {
     }
 }
 
+export const formatReadableDate = (isoDate) => {
+    const date = new Date(isoDate);
+  
+    // Obtenir les parties de la date
+    const day = date.getDate().toString().padStart(2, '0'); // Jour avec un 0 devant si < 10
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Mois (0-indexé)
+    const year = date.getFullYear();
+  
+    // Optionnel : Format d'heure
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+  
+    return `${day}/${month}/${year} ${hours}:${minutes}`; // Format DD/MM/YYYY HH:mm
+  };  
+
 export function getThemeLabel(value) {
     return themeOptions.find(option => option.value === value)?.label;
 }
