@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+
 import { userLogin } from '../utils/api';
+import { toast } from '../utils/utils';
+import Toast from 'react-native-toast-message';
 
 export default function Login() {
 
@@ -17,13 +20,19 @@ export default function Login() {
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
         catch (error) {
-            alert(error);
+            console.log(error);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', 'Erreur', error, 3000);
+            }
         }
     };
 
     return (
         <View style={styles.loginView}>
             <Text style={styles.pageTitle}>Connexion</Text>
+            <Toast ref={(ref) => Toast.setRef(ref)} />
 
             <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
             <View style={styles.nameInputView}>

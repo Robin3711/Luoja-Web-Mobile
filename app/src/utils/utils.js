@@ -28,6 +28,7 @@ import {
     Volleyball,
     Vote,
 } from 'lucide-react-native';
+import Toast from 'react-native-toast-message';
 
 export const iconSize = Platform.OS === 'web' ? 30 : 18;
 
@@ -38,7 +39,7 @@ export async function getPlatformAPI() {
         if (Platform.OS === 'web') {
             // Vérifie si l'application tourne sur Expo Metro Web
             if (Constants.debugMode) {
-                apiUrl = 'http://localhost:3000';
+                apiUrl = 'https://api.luoja.fr';
                 return apiUrl;
             } else {
                 const response = await fetch('/get-api-url');
@@ -46,7 +47,7 @@ export async function getPlatformAPI() {
                 apiUrl = data.apiUrl;
             }
         } else {
-            apiUrl = 'http://localhost:3000';
+            apiUrl = 'https://api.luoja.fr';
         }
     }
     return apiUrl;
@@ -126,4 +127,19 @@ export function loadFont() {
     if (!fontsLoaded) {
         return null;
     }
+}
+
+export const toast = (type, text1, text2, visibilityTime) => {
+    Toast.show({
+        type: type,
+        position: 'top',
+        text1: text1,
+        text1Style: { fontSize: 20, textAlign: 'center', fontWeight: 'bold' },
+        text2: text2,
+        text2Style: { fontSize: 15, textAlign: 'center', fontStyle: 'italic' },
+        visibilityTime: visibilityTime,
+        autoHide: true,
+        topOffset: -25,
+        bottomOffset: 0,
+    });
 }
