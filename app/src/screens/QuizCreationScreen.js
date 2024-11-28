@@ -44,6 +44,10 @@ export default function QuizCreation() {
         }
     }
 
+    const handleEditQuestion = (questionToEdit) => {
+        navigation.navigate('createQuestion', { handleAddQuestions, questionToEdit });
+    };    
+
     const handleSave = async () => {
         try {
             if (quizId === null) {
@@ -112,7 +116,9 @@ export default function QuizCreation() {
                             questions.length !== 0 ?
                                 questions.map((question, index) => (
                                     <View key={index}>
-                                        <Text>{question.question}</Text>
+                                        <TouchableOpacity onPress={() => handleEditQuestion(question)}>
+                                            <Text>{question.question}</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 ))
                                 : <Text>Aucune question</Text>
