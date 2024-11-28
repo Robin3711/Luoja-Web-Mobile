@@ -6,6 +6,8 @@ import ThemeSelector from '../components/ThemeList';
 import RangeCursor from '../components/Cursor';
 import DifficultySelector from '../components/DifficultyPicker';
 import QuizInformation from '../components/QuizInformation';
+import { loadFont } from '../utils/utils';
+import { COLORS } from '../css/utils/color';
 
 export default function SearchScreen() {
     const [data, setData] = useState([]);
@@ -32,9 +34,10 @@ export default function SearchScreen() {
 
     }, [title, theme, difficulty, questionCount]);
 
+    loadFont();
     return (
         error ? (
-            <View style={styles.quizScreenView}>
+            <View style={styles.screen}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
                 <TouchableOpacity onPress={() => {
                     navigation.navigate('menuDrawer', { screen: 'account' })
@@ -44,20 +47,23 @@ export default function SearchScreen() {
                 </TouchableOpacity>
             </View>
         ) : (
-            <View style={styles.searchQuizView}>
+            <View style={styles.screen}>
+                <Text style={[styles.title, {width:'100%'}]}>Quiz de la communauté !</Text>
+
                 <View style={styles.searchParameterView}>
+
                     <View style={styles.filterView}>
-                        <Text style={styles.parametersText}>Titre</Text>
-                        <TextInput style={styles.filterInput} placeholder="Rechercher un quiz par titre" value={title} onChangeText={setTitle} />
+                        <Text style={styles.text}>Titre</Text>
                     </View>
                     <View style={styles.filterView}>
                         <ThemeSelector onValueChange={setTheme} />
                     </View>
                     <View style={styles.filterView}>
+                        <Text style={styles.text}>Difficulté</Text>
                         <DifficultySelector testID="difficultySelector" value={difficulty} onValueChange={setDifficulty} />
                     </View>
                     <View style={styles.filterView}>
-                        <Text style={styles.parametersText}>Nombre de questions</Text>
+                        <Text style={styles.text}>Nombre de questions</Text>
                         <RangeCursor testID="range-cursor" value={tempQuestionCount}
                             onValueChange={setTempQuestionCount}
                             onSlidingComplete={(value) => setQuestionCount(value)} />
@@ -83,5 +89,38 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
+    },
+
+    screen: {
+        flex: 1,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        backgroundColor: COLORS.background.blue,
+    },
+
+    title: {
+        textAlign: 'center',
+        color: COLORS.text.blue.dark,
+        fontSize: 50,
+        fontWeight: 'bold',
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+    },
+
+    text: {
+        fontSize: 20,
+        color: COLORS.text.blue.dark,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+    },
+
+    filterList: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    
+    filterView: {
+        marginBottom: 20,
     },
 });
