@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Switch } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import AnswerInput from '../components/AnswerInput';
@@ -9,7 +9,7 @@ export default function CreateQuestionScreen() {
     const route = useRoute();
     const navigation = useNavigation();
 
-    const { handleAddQuestions } = route.params;
+    const { handleAddQuestions, questionToEdit } = route.params;
 
     const [questionText, setQuestionText] = useState('');
     const [selectedShape, setSelectedShape] = useState('');
@@ -22,6 +22,28 @@ export default function CreateQuestionScreen() {
         CIRCLE: '',
         STAR: '',
     });
+    useEffect(() => {
+        if (questionToEdit) {
+            setQuestionText(questionToEdit.question);
+            if(questionToEdit.type === 'boolean'){
+                setShowFourAnswers(false);
+                setAnswers({
+                    SQUARE: questionToEdit.incorrect_answers[0],
+                    TRIANGLE: questionToEdit.correct_answer,
+                });
+                setSelectedShape('TRIANGLE');
+            } else {
+                setAnswers({
+                    SQUARE: questionToEdit.incorrect_answers[0],
+                    TRIANGLE: questionToEdit.incorrect_answers[1],
+                    CIRCLE: questionToEdit.incorrect_answers[2],
+                    STAR: questionToEdit.correct_answer,
+                });
+                setSelectedShape('STAR');
+            }
+        }
+    }
+    , [questionToEdit]);
 
     const shapes = ['SQUARE', 'TRIANGLE', ...(showFourAnswers ? ['CIRCLE', 'STAR'] : [])];
 
@@ -103,12 +125,13 @@ export default function CreateQuestionScreen() {
             )}
             <AnswerInput
                 shape={shape}
+                text={answers[shape]}
                 onTextChange={(text) => handleTextChange(shape, text)}
                 onShapeClick={handleShapeClick}
             />
         </View>
     );
-
+    
     return (
         <View style={styles.createQuestionView}>
             {/* Left Panel */}
