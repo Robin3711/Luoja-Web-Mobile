@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { useNavigation } from '@react-navigation/native';
 
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
+import { toast } from '../utils/utils';
+import Toast from 'react-native-toast-message';
 import DifficultyPicker from '../components/DifficultyPicker';
 
 
@@ -22,7 +24,11 @@ export default function QuizCreation() {
             setQuestions([...questions, ...newQuestions]);
         }
         catch (error) {
-            alert(error.message);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
         }
     }
 
@@ -31,16 +37,24 @@ export default function QuizCreation() {
             navigation.navigate('retrieveQuestions', { handleAddQuestions });
         }
         catch (error) {
-            alert(error.message);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
         }
     };
 
     const handleCreateQuestion = async () => {
         try {
-            navigation.navigate('createQuestion', {handleAddQuestions});
+            navigation.navigate('createQuestion', { handleAddQuestions });
         }
         catch (error) {
-            alert(error.message);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
         }
     }
 
@@ -55,7 +69,11 @@ export default function QuizCreation() {
             }
         }
         catch (error) {
-            alert(error.message);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
         }
     };
 
@@ -72,12 +90,17 @@ export default function QuizCreation() {
             setQuestions([]);
         }
         catch (error) {
-            alert(error.message);
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
         }
     }
 
     return (
         <View style={styles.quizCreationView}>
+            <Toast />
             <Text style={styles.titleText}>Créez votre propre quiz !</Text>
             <View style={styles.quizCreationChildVIew}>
                 <View style={styles.quizCreationLeftView}>
@@ -92,7 +115,7 @@ export default function QuizCreation() {
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.buttons} onPress={handleCreateQuestion}>
                                 <Text style={styles.buttonText}>Rédiger une question</Text>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.quizCreationBottomButtonsView}>
@@ -130,9 +153,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    titleText:{
+    titleText: {
         position: 'absolute',
-        top: 20,
+        top: 60,
         fontSize: 40,
     },
     quizCreationChildVIew: {
@@ -211,7 +234,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         marginHorizontal: 10,
         boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
-      },
+    },
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',

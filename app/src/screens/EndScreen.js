@@ -17,6 +17,8 @@ export default function EndScreen() {
     const [difficulty, setDifficulty] = useState(null);
     const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         const loadGameData = async () => {
@@ -42,8 +44,9 @@ export default function EndScreen() {
                     setProgress(animationProgress);
                 }, 20);
 
-            } catch (error) {
-                console.error('Erreur de chargement des données:', error);
+            } catch (err) {
+                setError(true);
+                setErrorMessage(err.status + " " + err.message);
             }
         };
 
@@ -55,11 +58,26 @@ export default function EndScreen() {
     };
 
     const handleReplay = async () => {
-        const newGameId = await restartGame(gameId);
-        navigation.navigate('quizScreen', { gameId: newGameId.id });
+        try {
+            const newGameId = await restartGame(gameId);
+            navigation.navigate('quizScreen', { gameId: newGameId.id });
+        } catch (err) {
+            setError(true);
+            setErrorMessage(err.status + " " + err.message);
+        }
     };
 
-    return (
+    return (error ? (
+        <View style={styles.quizScreenView}>
+            <Text style={styles.errorText}>{errorMessage}</Text>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('menuDrawer')
+            }
+            }>
+                <Text style={styles.buttonText}>Retour au menu</Text>
+            </TouchableOpacity>
+        </View>
+    ) : (
         <View style={styles.quizContainer}>
             <View style={styles.quizQuestionContainer}>
                 <Text>Fin de partie !</Text>
@@ -71,17 +89,17 @@ export default function EndScreen() {
                             Votre score : {score} / {numberOfQuestions}
                         </Text>
                         <View style={styles.endContainer}>
-                        <Progress.Circle
-                            progress={!loading ? progress : 0} 
-                            size={120}
-                            showsText={!loading}
-                            color={!loading ? "#76c7c0" : "#007AFF"} 
-                            borderWidth={!loading ? 0 : 10}
-                            thickness={15}
-                            unfilledColor={!loading ? "#e12f09" : "#f0f0f0"} 
-                            indeterminate={loading} 
-                            indeterminateAnimationDuration={1000}
-                        />
+                            <Progress.Circle
+                                progress={!loading ? progress : 0}
+                                size={120}
+                                showsText={!loading}
+                                color={!loading ? "#76c7c0" : "#007AFF"}
+                                borderWidth={!loading ? 0 : 10}
+                                thickness={15}
+                                unfilledColor={!loading ? "#e12f09" : "#f0f0f0"}
+                                indeterminate={loading}
+                                indeterminateAnimationDuration={1000}
+                            />
 
                         </View>
                     </View>
@@ -108,8 +126,15 @@ export default function EndScreen() {
                 </Text>
             </TouchableOpacity>
         </View>
+    )
     );
 }
 
 const styles = StyleSheet.create({
+    errorText: {
+        fontSize: 18,
+        color: 'red',
+        textAlign: 'center',
+        marginVertical: 20,
+    },
 });

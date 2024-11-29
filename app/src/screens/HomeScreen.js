@@ -1,25 +1,33 @@
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, Platform, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import SimpleButton from '../components/SimpleButton';
+import { loadFont } from '../utils/utils';
+import { COLORS } from '../css/utils/color';
 
 const platform = Platform.OS;
 
 export default function HomeScreen() {
     const navigation = useNavigation();
+    loadFont();
 
     return (
         <View style={styles.homeView}>
+
             <Text style={styles.appTitle}>Luoja</Text>
-            <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate('newQuiz')}>
-                <Text style={styles.buttonText}>Générer un Quiz</Text>
-            </TouchableOpacity>
+            
+            <View style={styles.childView}>
+                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/splash.png')} />}
 
-            <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate('search')}>
-                <Text style={styles.buttonText}>Quiz de la communauté</Text>
-            </TouchableOpacity>
+                <View style={styles.listButton}>
+                    <SimpleButton text="Générer un Quiz" onPress={() => navigation.navigate('newQuiz')}/>
 
-            <TouchableOpacity style={styles.buttons} onPress={() => navigation.navigate('resumeQuiz')}>
-                <Text style={styles.buttonText}>Reprendre la partie</Text>
-            </TouchableOpacity>
+                    <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
+
+                    <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
+                </View>
+
+                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/splash.png')} />}
+            </View>            
         </View>
     );
 }
@@ -27,32 +35,32 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     homeView: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-    },
-    appTitle: {
-        position: 'absolute',
-        top: 100,
-        fontSize: 50,
-        fontWeight: 'bold',
-    },
-    buttons: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#8fd3ff',
-        height: 50,
-        width: 250,
-        borderRadius: 15,
-        marginVertical: 10,
-        ...platform === 'web' ? { 
-            boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
-        } : { elevation: 2 },
+        backgroundColor: COLORS.background.blue,
     },
-    buttonText: {
-        fontSize: 20,
-        fontWeight: 'bold',
+    appTitle:{
+        height: platform === 'web' ? '10%' : '25%',
+        fontSize: 150,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+    },
+    childView: {
+        height: platform === 'web' ? '90%' : '75%',
+        flexDirection: platform === 'web' ? 'row' : 'column',
+        justifyContent: platform === 'web' ? 'flex-start' : 'center',
+        alignItems: 'center',
+    },
+    listButton: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    logo: {
+        marginHorizontal: 200,
+        width: 500,
+        height: 700,
     },
 });
