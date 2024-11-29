@@ -30,10 +30,7 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
     }
 
     const isDraft = status === false;
-    const containerStyle = [
-        styles.QuizInformationView,
-        isDraft && styles.draftQuiz, // Ajouter le style de brouillon si nécessaire
-    ];
+
     const detailTextStyle = [
         styles.detailText,
         isDraft && styles.draftText, // Ajouter un texte grisé pour les brouillons
