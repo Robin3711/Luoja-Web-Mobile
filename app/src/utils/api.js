@@ -5,10 +5,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const handleResponseError = async (response) => {
     let errorMessage = 'Une erreur est survenue';
 
+
     try {
         const errorData = await response.json();
         errorMessage = errorData.error || errorData.message || errorMessage;
-    } 
+    }
     catch {
         errorMessage = response.statusText || errorMessage;
     }
@@ -26,7 +27,7 @@ export async function createQuiz(questionCount, theme, difficulty) {
     try {
         let url = `${await getPlatformAPI()}/quizFast?amount=${questionCount}`;
 
-        if (theme !== 'none') { 
+        if (theme !== 'none') {
             url += `&category=${theme}`;
         }
 
@@ -42,10 +43,12 @@ export async function createQuiz(questionCount, theme, difficulty) {
 
         const response = await fetch(url, { headers });
 
+        if (!response.ok) await handleResponseError(response);
+
         const data = await response.json();
 
         return data;
-    } 
+    }
     catch (error) {
         throw error;
     }
@@ -64,7 +67,7 @@ export async function restartGame(gameId) {
         if (!response.ok) await handleResponseError(response);
 
         return await response.json();
-    } 
+    }
     catch (error) {
         throw error;
     }
@@ -80,10 +83,12 @@ export async function getCurrentQuestion(quizId) {
 
         const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/question`, { headers });
 
+        if (!response.ok) await handleResponseError(response);
+
         const data = await response.json();
 
         return data;
-    } 
+    }
     catch (error) {
         console.error(error);
         throw error;
@@ -129,6 +134,8 @@ export async function getGameInfos(gameId) {
 
         const response = await fetch(url, { headers });
 
+        if (!response.ok) await handleResponseError(response);
+
         const data = await response.json();
 
         return data;
@@ -147,6 +154,8 @@ export async function getQuizAverage(quizId) {
                 'token': await AsyncStorage.getItem('token'),
             },
         });
+
+        if (!response.ok) await handleResponseError(response);
 
         const data = await response.json();
 
@@ -169,6 +178,8 @@ export async function createParty(quizId) {
 
         const response = await fetch(url, { headers });
 
+        if (!response.ok) await handleResponseError(response);
+
         const data = await response.json();
 
         return data;
@@ -185,6 +196,8 @@ export async function getQuizInfos(quizId) {
                 'token': await AsyncStorage.getItem('token'),
             },
         });
+
+        if (!response.ok) await handleResponseError(response);
 
         const data = await response.json();
 
@@ -204,6 +217,7 @@ export async function userRegister(name, password) {
             },
             body: JSON.stringify({ name, password }),
         });
+
         if (!response.ok) await handleResponseError(response);
 
         const data = await response.json();
@@ -260,6 +274,8 @@ export async function getUserGame() {
                 'token': await AsyncStorage.getItem('token'),
             },
         });
+
+        if (!response.ok) await handleResponseError(response);
 
         const data = await response.json();
 
@@ -385,6 +401,8 @@ export async function getCreatedQuiz() {
                 'token': await AsyncStorage.getItem('token'),
             },
         });
+
+        if (!response.ok) await handleResponseError(response);
 
         const data = await response.json();
 

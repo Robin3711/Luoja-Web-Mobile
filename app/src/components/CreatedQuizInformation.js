@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { getQuizAverage } from '../utils/api';
+import { toast } from '../utils/utils';
 import { getThemeLabel, formatReadableDate } from '../utils/utils';
+import Toast from 'react-native-toast-message';
 
-export default function CreatedQuizInformation({quizId, category, difficulty, date, status, title, nbQuestions}) {
+export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions }) {
     const [loading, setLoading] = useState(true);
     const [average, setAverage] = useState("aucune donnée");
     const [themeName, setThemeName] = useState("aucun thème");
@@ -14,20 +16,26 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
     useEffect(() => {
         async function fetchParty() {
             setLoading(false);
-            if (category !== 0 && category !== null){
+            if (category !== 0 && category !== null) {
                 setThemeName(getThemeLabel(category));
             }
             getQuizAverage(quizId).then((data) => {
                 console.log(data);
-                if (data.score === null){
+                if (data.score === null) {
                     data.score = "aucune donnée";
                 } else {
                     setAverage(data.score + "%");
-                    
+
                 }
                 setNbPlayed(data.nombreDePartie);
+            }).catch((error) => {
+                if (error.status && error.message) {
+                    toast('error', error.status, error.message, 3000, 'red');
+                } else {
+                    toast('error', 'Erreur', error, 3000, 'red');
+                }
             });
-            if(status === "true"){
+            if (status === "true") {
                 setStatus("public");
             }
             let dateTemp = formatReadableDate(date);
@@ -41,10 +49,11 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
         return <Text>Chargement...</Text>;
     }
 
-    
-    
+
+
     return (
         <View style={styles.historyQuizInformationView}>
+            <Toast />
             <Text style={styles.historyQuizInformationText}>{title}</Text>
             <Text style={styles.historyQuizInformationText}>{themeName}</Text>
             <Text style={styles.historyQuizInformationText}>{difficulty}</Text>
@@ -53,7 +62,6 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
             <Text style={styles.historyQuizInformationText}>Nb de questions : {nbQuestionsStr}</Text>
             <Text style={styles.historyQuizInformationText}>Réussite : {average}</Text>
             <Text style={styles.historyQuizInformationText}>Nb de parties jouées : {nbPlayed}</Text>
-
         </View>
     );
 }

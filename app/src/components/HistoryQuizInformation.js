@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { getGameInfos } from '../utils/api';
+import { toast } from '../utils/utils';
 import { getThemeLabel, formatReadableDate } from '../utils/utils';
+import Toast from 'react-native-toast-message';
 
-export default function HistoryQuizInformation({partyId}) {
+export default function HistoryQuizInformation({ partyId }) {
     const [party, setParty] = useState(null);
     const [loading, setLoading] = useState(true);
     const [score, setScore] = useState(0);
@@ -11,21 +13,30 @@ export default function HistoryQuizInformation({partyId}) {
     const [date, setDate] = useState("any");
     useEffect(() => {
         async function fetchParty() {
-            const data = await getGameInfos(partyId);
-            setParty(data);
-            setLoading(false);
-            if (data.Category !== 0){
-                setThemeName(getThemeLabel(data.Category));
-            }
-            let scoreTemp = 0;
-            for (let i = 0; i < data.results.length; i++) {
-                if (data.results[i] === true) {
-                    scoreTemp++;
+            try {
+
+                const data = await getGameInfos(partyId);
+                setParty(data);
+                setLoading(false);
+                if (data.Category !== 0) {
+                    setThemeName(getThemeLabel(data.Category));
+                }
+                let scoreTemp = 0;
+                for (let i = 0; i < data.results.length; i++) {
+                    if (data.results[i] === true) {
+                        scoreTemp++;
+                    }
+                }
+                setScore(scoreTemp);
+                let dateTemp = formatReadableDate(data.CreateDate);
+                setDate(dateTemp);
+            } catch (error) {
+                if (error.status && error.message) {
+                    toast('error', error.status, error.message, 3000, 'red');
+                } else {
+                    toast('error', 'Erreur', error, 3000, 'red');
                 }
             }
-            setScore(scoreTemp);
-            let dateTemp = formatReadableDate(data.CreateDate);
-            setDate(dateTemp);
         }
         fetchParty();
     }, [partyId]);
@@ -34,10 +45,11 @@ export default function HistoryQuizInformation({partyId}) {
         return <Text>Chargement...</Text>;
     }
 
-    
-    
+
+
     return (
         <View style={styles.historyQuizInformationView}>
+            <Toast />
             <Text style={styles.historyQuizInformationText}>Partie : {partyId}</Text>
             <Text style={styles.historyQuizInformationText}>{themeName}</Text>
             <Text style={styles.historyQuizInformationText}>{party.Difficulty}</Text>

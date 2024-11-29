@@ -178,7 +178,7 @@ export default function QuizScreen() {
 
     const handleCopyGameId = async () => {
         await Clipboard.setStringAsync(gameId);
-        toast('info', 'L\'id à bien été copier !', "", 2000);
+        toast('info', 'L\'id à bien été copier !', "", 2000, 'blue');
     };
 
 

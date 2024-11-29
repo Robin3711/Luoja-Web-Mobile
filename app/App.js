@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
 import { useFonts, LobsterTwo_400Regular } from '@expo-google-fonts/dev';
+import Toast from 'react-native-toast-message';
 
 import Parameters from './src/screens/Parameters';
 import HomeScreen from './src/screens/HomeScreen';
@@ -82,6 +83,7 @@ const MenuStack = () => {
   );
 };
 
+
 export default function App() {
   let [fontsLoaded] = useFonts({
     LobsterTwo_400Regular,
@@ -93,6 +95,7 @@ export default function App() {
 
   return (
     <NavigationContainer linking={linking}>
+      <Toast />
       <MenuStack />
     </NavigationContainer>
   );

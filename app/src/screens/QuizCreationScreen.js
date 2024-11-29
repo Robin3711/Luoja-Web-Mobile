@@ -26,9 +26,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'red');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'red');
             }
         }
     }
@@ -41,14 +41,14 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'red');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'red');
             }
         }
     }
 
-    const handleDeleteQuestion = (index) => { 
+    const handleDeleteQuestion = (index) => {
         try {
             const newQuestions = [...questions];
             newQuestions.splice(index, 1);
@@ -57,9 +57,9 @@ export default function QuizCreation() {
 
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'red');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'red');
             }
         }
     }
@@ -70,9 +70,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'red');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'red');
             }
         }
     };
@@ -83,9 +83,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'red');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'red');
             }
         }
     }
@@ -94,11 +94,11 @@ export default function QuizCreation() {
         try {
             navigation.navigate('createQuestion', { question, index, handleQuestion: handleUpdateQuestion });
         }
-        catch (error) { 
+        catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'red');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'red');
             }
         }
     }
@@ -115,9 +115,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'red');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'red');
             }
         }
     };
@@ -136,9 +136,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'red');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'red');
             }
         }
     }
@@ -183,7 +183,7 @@ export default function QuizCreation() {
                                         <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
                                             <Text>{question.question}</Text>
                                         </TouchableOpacity>
-                                        
+
                                         <TouchableOpacity onPress={() => handleDeleteQuestion(index)}>
                                             <LucideTrash size={30} />
                                         </TouchableOpacity>

@@ -11,8 +11,10 @@ export default function Dashboard() {
     const navigation = useNavigation();
     const [history, setHistory] = useState([]);
     const [publishedQuizzes, setPublishedQuizzes] = useState([]);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [error, setError] = useState(false);
 
-    if(!hasToken()){
+    if (!hasToken()) {
         navigation.navigate('login');
     }
 
@@ -26,46 +28,64 @@ export default function Dashboard() {
             navigation.navigate('login');
         }
     }
-    , []);
+        , []);
 
     useEffect(() => {
         async function fetchData() {
-            const games = await getUserGame();
-            const quizzes = await getCreatedQuiz();
-            setHistory(games.games);
-            setPublishedQuizzes(quizzes);
+            try {
+                const games = await getUserGame();
+                const quizzes = await getCreatedQuiz();
+                setHistory(games.games);
+                setPublishedQuizzes(quizzes);
+            } catch (err) {
+                setError(true);
+                setErrorMessage(err.status + " " + err.message);
+            }
+
         }
         fetchData();
     }, []);
-    
+
 
     return (
-        <View style={styles.dashboardView}>
-            <Text style={styles.dashboardText   }>Tableau de bord</Text>
-            <View style={styles.dashboardContainer}>
-                <View style={styles.dashboardSection}>
-                    <Text style={styles.dashboardText   }>Historique</Text>
-                    <ScrollView>
-                        {history.map((item, index) => (
-                            <View key={index}>
-                                <HistoryQuizInformation partyId={item.id} />
-                            </View>
-                        ))}
-                    </ScrollView>
-                </View>
-                <View style={styles.dashboardSection}>
-                    <Text style={styles.dashboardText   }>Vos quiz publié</Text>
-                    <ScrollView>
-                        {publishedQuizzes.map((item, index) => (
-                            <View key={index}>
-                                <CreatedQuizInformation quizId={item.id} category={item.category} difficulty={item.difficulty} date={item.createdAt} status={item.public} title={item.title} nbQuestions={item.numberOfQuestions}/>
-                            </View>
-                        ))}
-                    </ScrollView>
-                </View>
+        error ? (
+            <View style={styles.quizScreenView}>
+                <Text style={styles.errorText}>{errorMessage}</Text>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('menuDrawer', { screen: 'account' })
+                }
+                }>
+                    <Text style={styles.buttonText}>Retour au menu</Text>
+                </TouchableOpacity>
             </View>
-            <Button title="Se déconnecter" onPress={handleLogout} />
-        </View>
+        ) : (
+            <View style={styles.dashboardView}>
+                <Text style={styles.dashboardText}>Tableau de bord</Text>
+                <View style={styles.dashboardContainer}>
+                    <View style={styles.dashboardSection}>
+                        <Text style={styles.dashboardText}>Historique</Text>
+                        <ScrollView>
+                            {history.map((item, index) => (
+                                <View key={index}>
+                                    <HistoryQuizInformation partyId={item.id} />
+                                </View>
+                            ))}
+                        </ScrollView>
+                    </View>
+                    <View style={styles.dashboardSection}>
+                        <Text style={styles.dashboardText}>Vos quiz publié</Text>
+                        <ScrollView>
+                            {publishedQuizzes.map((item, index) => (
+                                <View key={index}>
+                                    <CreatedQuizInformation quizId={item.id} category={item.category} difficulty={item.difficulty} date={item.createdAt} status={item.public} title={item.title} nbQuestions={item.numberOfQuestions} />
+                                </View>
+                            ))}
+                        </ScrollView>
+                    </View>
+                </View>
+                <Button title="Se déconnecter" onPress={handleLogout} />
+            </View>
+        )
     );
 }
 
