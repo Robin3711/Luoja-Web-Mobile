@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -11,6 +11,8 @@ export default function Login() {
 
     const navigation = useNavigation();
 
+    const passwordInputRef = useRef(null);
+
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
@@ -20,11 +22,10 @@ export default function Login() {
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
         catch (error) {
-            console.log(error);
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'red');
             } else {
-                toast('error', 'Erreur', error, 3000);
+                toast('error', 'Erreur', error, 3000, 'red');
             }
         }
     };
@@ -42,17 +43,26 @@ export default function Login() {
                     value={name}
                     placeholder="Nom d'utilisateur"
                     autoFocus={true}
+                    returnKeyType="next"
+                    onSubmitEditing={() => {
+                        if (passwordInputRef.current) {
+                            passwordInputRef.current.focus();
+                        }
+                    }}
                 />
             </View>
 
             <Text style={styles.inputTitle}>Password</Text>
             <View style={styles.passwordInputView}>
                 <TextInput
+                    ref={passwordInputRef}
                     style={styles.loginInput}
                     onChangeText={setPassword}
                     value={password}
                     placeholder="Password"
                     secureTextEntry={true}
+                    returnKeyType="done"
+                    onSubmitEditing={handleLogin}
                 />
             </View>
 

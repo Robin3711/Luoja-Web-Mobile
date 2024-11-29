@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -12,6 +12,8 @@ export default function Register() {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
+    const passwordInputRef = useRef(null);
+
     const handleRegister = async () => {
         try {
             await userRegister(name, password);
@@ -19,9 +21,9 @@ export default function Register() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'red');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'red');
             }
         }
     };
@@ -39,18 +41,28 @@ export default function Register() {
                     value={name}
                     placeholder="Nom d'utilisateur"
                     autoFocus={true}
+                    returnKeyType="next"
+                    onSubmitEditing={() => {
+                        if (passwordInputRef.current) {
+                            passwordInputRef.current.focus();
+                        }
+                    }}
                 />
             </View>
 
             <Text style={styles.inputTitle}>Password</Text>
             <View style={styles.passwordInputView}>
                 <TextInput
+                    ref={passwordInputRef}
                     style={styles.registerInput}
                     onChangeText={setPassword}
                     value={password}
                     placeholder="Password"
                     secureTextEntry={true}
+                    returnKeyType="done"
+                    onSubmitEditing={handleRegister}
                 />
+
             </View>
 
             <TouchableOpacity style={styles.buttons} onPress={handleRegister}>
