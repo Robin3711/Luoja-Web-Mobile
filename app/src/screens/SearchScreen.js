@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Text, View, TextInput, ScrollView, StyleSheet } from 'react-native';
+import { Text, View, Platform, StyleSheet, ScrollView } from 'react-native';
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
@@ -8,6 +8,8 @@ import DifficultySelector from '../components/DifficultyPicker';
 import QuizInformation from '../components/QuizInformation';
 import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+
+const platform = Platform.OS;
 
 export default function SearchScreen() {
     const [data, setData] = useState([]);
@@ -69,13 +71,19 @@ export default function SearchScreen() {
                             onSlidingComplete={(value) => setQuestionCount(value)} />
                     </View>
                 </View>
-                <View style={styles.scrollView}>
-                    <ScrollView>
-                        {data.map(function (quiz, index) {
-                            return (<>
-                                <QuizInformation quiz={quiz} />
-                            </>)
-                        })}
+  
+                <View style={styles.quizCreationRightView}>
+                    <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
+                    <ScrollView style={styles.questionsView}>
+                        {
+                            data.length !== 0 ?
+                                data.map((quiz, index) => (
+                                    <View key={index} style={styles.questionItem}>
+                                        <QuizInformation quiz={quiz} />
+                                    </View>
+                                ))
+                                : <Text>Aucune question</Text>
+                        }
                     </ScrollView>
                 </View>
             </View>
@@ -84,22 +92,13 @@ export default function SearchScreen() {
 }
 
 const styles = StyleSheet.create({
-    errorText: {
-        fontSize: 18,
-        color: 'red',
-        textAlign: 'center',
-        marginVertical: 20,
-    },
-
     screen: {
         flex: 1,
         justifyContent: 'space-around',
         alignItems: 'center',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        flexDirection: platform === 'web' ? 'row' : 'column',
         backgroundColor: COLORS.background.blue,
     },
-
     title: {
         textAlign: 'center',
         color: COLORS.text.blue.dark,
@@ -107,20 +106,50 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontFamily: 'LobsterTwo_700Bold_Italic',
     },
-
     text: {
         fontSize: 20,
         color: COLORS.text.blue.dark,
         fontFamily: 'LobsterTwo_700Bold_Italic',
     },
-
-    filterList: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    
     filterView: {
         marginBottom: 20,
+    },
+    quizCreationRightView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        backgroundColor: '#8fd3ff',
+        height: '75%',
+        borderRadius: 20,
+        padding: 20,
+        width: platform === 'web' ? '40%' : '100%',
+        ...platform !== 'web' && { height: '40%'},
+    },
+    quizCreationQuestionsTitle: {
+        backgroundColor: 'white',
+        padding: 5,
+        borderRadius: 20,
+    },
+    questionsView: {
+        backgroundColor: 'white',
+        padding: 5,
+        borderRadius: 20,
+        height: '80%'
+    },
+    errorText: {
+        fontSize: 18,
+        color: 'red',
+        textAlign: 'center',
+        marginVertical: 20,
+    },
+    buttonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    questionItem:{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
     },
 });

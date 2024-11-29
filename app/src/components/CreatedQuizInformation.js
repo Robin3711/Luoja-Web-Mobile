@@ -1,37 +1,29 @@
 import React, {useEffect, useState} from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { getQuizAverage } from '../utils/api';
-import { getThemeLabel, formatReadableDate } from '../utils/utils';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CreatedQuizInformation({quizId, category, difficulty, date, status, title, nbQuestions}) {
     const [loading, setLoading] = useState(true);
     const [average, setAverage] = useState("aucune donnée");
-    const [themeName, setThemeName] = useState("aucun thème");
-    const [statusStr, setStatus] = useState("privé");
-    const [dateStr, setDate] = useState("any");
     const [nbPlayed, setNbPlayed] = useState(0);
     const [nbQuestionsStr, setNbQuestions] = useState("any");
+
+    navigation = useNavigation();
+
     useEffect(() => {
         async function fetchParty() {
             setLoading(false);
-            if (category !== 0 && category !== null){
-                setThemeName(getThemeLabel(category));
-            }
             getQuizAverage(quizId).then((data) => {
-                console.log(data);
                 if (data.score === null){
                     data.score = "aucune donnée";
                 } else {
-                    setAverage(data.score + "%");
+                    setAverage(Math.trunc(data.score) + "%");
                     
                 }
                 setNbPlayed(data.nombreDePartie);
             });
-            if(status === "true"){
-                setStatus("public");
-            }
-            let dateTemp = formatReadableDate(date);
-            setDate(dateTemp);
+
             setNbQuestions(nbQuestions);
         }
         fetchParty();
@@ -41,34 +33,91 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
         return <Text>Chargement...</Text>;
     }
 
-    
-    
-    return (
-        <View style={styles.historyQuizInformationView}>
-            <Text style={styles.historyQuizInformationText}>{title}</Text>
-            <Text style={styles.historyQuizInformationText}>{themeName}</Text>
-            <Text style={styles.historyQuizInformationText}>{difficulty}</Text>
-            <Text style={styles.historyQuizInformationText}>{statusStr}</Text>
-            <Text style={styles.historyQuizInformationText}>{dateStr}</Text>
-            <Text style={styles.historyQuizInformationText}>Nb de questions : {nbQuestionsStr}</Text>
-            <Text style={styles.historyQuizInformationText}>Réussite : {average}</Text>
-            <Text style={styles.historyQuizInformationText}>Nb de parties jouées : {nbPlayed}</Text>
+    const isDraft = status === false;
 
+    const detailTextStyle = [
+        styles.detailText,
+        isDraft && styles.draftText, // Ajouter un texte grisé pour les brouillons
+    ];
+
+    const handleCreationQuiz = () => {
+        if (status === false && Platform.OS === 'web') {
+            navigation.navigate('quizCreation');
+            
+        }
+    };
+
+    if (status === false && Platform.OS === 'web') {
+        return (
+            <TouchableOpacity onPress={handleCreationQuiz}>
+                <View style={styles.QuizInformationView}>
+                    <View style={styles.PrincipalInformationsView}>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
+                    </View>
+                    <View style={styles.SecondaryInformationsView}>
+                        <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
+                        <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
+    return (
+        <View style={styles.QuizInformationView}>
+            <View style={styles.PrincipalInformationsView}>
+                <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
+                <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
+                <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
+            </View>
+            <View style={styles.SecondaryInformationsView}>
+                <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
+                <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    historyQuizInformationView: {
-        backgroundColor: '#f0f0f0',
-        padding: 10,
-        margin: 5,
-        borderRadius: 10,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+    QuizInformationView: {
+        marginBottom: 8, // Espacement entre les éléments
+        padding: 12, // Espacement interne
+        borderRadius: 8, // Coins arrondis
+        borderColor: '#cccccc', // Bordure légère
+        borderWidth: 1,
+        shadowColor: '#000', // Ombre légère
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2, // Ombre sur Android
     },
-    historyQuizInformationText: {
+    PrincipalInformationsView: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginBottom: 8, // Espacement entre les éléments
+        justifyContent: 'space-around',
+    },
+    SecondaryInformationsView: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    titleText: {
         fontSize: 16,
-        margin: 2
-    }
+        fontWeight: 'bold',
+        marginBottom: 4, // Espace sous le titre
+    },
+    detailText: {
+        fontSize: 12,
+        color: '#666666', // Texte secondaire plus clair
+    },
+    draftQuiz: {
+        borderColor: '#aaaaaa', // Bordure grise
+        backgroundColor: '#f5f5f5', // Fond grisé
+    },
+    draftText: {
+        color: '#aaaaaa', // Texte grisé
+    },
 });

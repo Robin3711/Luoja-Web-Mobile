@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet, ScrollView } from 'react-native';
 import { Dices } from 'lucide-react-native';
+import { loadFont } from '../utils/utils';
+import { COLORS } from '../css/utils/color';
 
 import { themeOptions, iconSize } from '../utils/utils';
 
@@ -19,6 +21,7 @@ const ThemeSelector = ({ onValueChange }) => {
         onValueChange(theme);
     };
 
+
     return (
         <View style={styles.themeListView}>
             <TouchableOpacity style={styles.paramButton} onPress={handleOpenModal}><Text style={styles.paramButtonText}>{theme}</Text></TouchableOpacity>
@@ -29,9 +32,9 @@ const ThemeSelector = ({ onValueChange }) => {
                 onRequestClose={() => setModalVisible(false)}>
                 <View style={styles.themeListModal}>
                     <TouchableOpacity
-                        style={styles.defaultThemeButton}
+                        style={styles.themeButton}
                         onPress={() => handleThemeSelection('none')}>
-                        <Text style={styles.themeLabel}><Dices color="black" size={iconSize} /> Thème générale</Text>
+                        <Text style={[styles.themeLabel, {fontWeight:'bold'}]}><Dices color="black" size={iconSize} /> Thème générale</Text>
                     </TouchableOpacity>
                     <FlatList
                         data={themeOptions}
@@ -85,35 +88,43 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 100,
-        marginHorizontal: 20,
-        backgroundColor: 'white',
+        marginHorizontal: 300,
+        backgroundColor: COLORS.background.blue,
         padding: 20,
         borderRadius: 10,
+        borderWidth: 5,
+        borderStyle: 'solid',
+        borderColor: COLORS.button.blue.basic,
     },
     defaultThemeButton: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         alignItems: 'center',
         marginVertical: 5,
         padding: 10,
         borderRadius: 5,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: COLORS.background.blue,
     },
     themeButton: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        marginVertical: 5,
-        padding: 10,
+        margin: 5,
         borderRadius: 5,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: COLORS.button.blue.basic,
         width: platform === 'web' ? 350 : '100%',
-        height: 50,
+        height: 70,
     },
     themeLabel: {
-        fontSize: 16,
+        fontSize: 20,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 10,
+        gap: 10,
     },
 });
 

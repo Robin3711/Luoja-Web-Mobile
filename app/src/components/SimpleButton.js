@@ -17,7 +17,7 @@ export default function SimpleButton({ text, onPress }) {
 const styles = StyleSheet.create({
     button: {
         position: 'relative', // Permet de positionner le texte absolument par rapport au bouton
-        backgroundColor: '#8fd3ff',
+        backgroundColor: COLORS.button.blue.basic,
         height: 75,
         width: 350,
         borderRadius: 15,
@@ -36,6 +36,6 @@ const styles = StyleSheet.create({
         fontSize: 32,
         fontFamily: 'LobsterTwo_700Bold',
         textAlign: 'center', // Centre le texte horizontalement
-        
+        color: COLORS.text.blue.dark,
     },
 });
