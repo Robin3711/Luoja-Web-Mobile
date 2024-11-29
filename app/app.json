@@ -23,7 +23,7 @@
         "backgroundColor": "#ffffff",
         "buildType": "apk"
       },
-      "package": "com.baldurexpoaccount.app"  
+      "package": "com.baldurexpoaccount.luoja"  
     },
     "web": {
       "favicon": "./assets/favicon.png"
