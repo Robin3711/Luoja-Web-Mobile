@@ -6,6 +6,7 @@ import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
 import Toast from 'react-native-toast-message';
 import DifficultyPicker from '../components/DifficultyPicker';
+import { LucideDraftingCompass, LucideTrash } from 'lucide-react-native';
 
 
 
@@ -38,6 +39,22 @@ export default function QuizCreation() {
             newQuestions[index] = question[0];
             setQuestions(newQuestions);
         }
+        catch (error) {
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
+        }
+    }
+
+    const handleDeleteQuestion = (index) => { 
+        try {
+            const newQuestions = [...questions];
+            newQuestions.splice(index, 1);
+            setQuestions(newQuestions);
+        }
+
         catch (error) {
             if (error.status && error.message) {
                 toast('error', error.status, error.message, 3000);
@@ -162,9 +179,13 @@ export default function QuizCreation() {
                         {
                             questions.length !== 0 ?
                                 questions.map((question, index) => (
-                                    <View key={index}>
+                                    <View style={styles.question} key={index}>
                                         <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
                                             <Text>{question.question}</Text>
+                                        </TouchableOpacity>
+                                        
+                                        <TouchableOpacity onPress={() => handleDeleteQuestion(index)}>
+                                            <LucideTrash size={30} />
                                         </TouchableOpacity>
                                     </View>
                                 ))
@@ -238,6 +259,16 @@ const styles = StyleSheet.create({
         padding: 5,
         borderRadius: 20,
         height: '80%'
+    },
+    question: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 5,
+        padding: 5,
+        backgroundColor: '#58bdfe',
+        borderRadius: 20,
     },
     buttons: {
         display: 'flex',
