@@ -12,7 +12,6 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
         async function fetchParty() {
             setLoading(false);
             getQuizAverage(quizId).then((data) => {
-                console.log(data);
                 if (data.score === null){
                     data.score = "aucune donnée";
                 } else {
@@ -21,7 +20,7 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
                 }
                 setNbPlayed(data.nombreDePartie);
             });
-            if(status === "true"){
+            if(status === true){
                 setStatus("public");
             }
             setNbQuestions(nbQuestions);
@@ -33,16 +32,26 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
         return <Text>Chargement...</Text>;
     }
 
+    const isDraft = status === false;
+    const containerStyle = [
+        styles.QuizInformationView,
+        isDraft && styles.draftQuiz, // Ajouter le style de brouillon si nécessaire
+    ];
+    const detailTextStyle = [
+        styles.detailText,
+        isDraft && styles.draftText, // Ajouter un texte grisé pour les brouillons
+    ];
+
     return (
         <View style={styles.QuizInformationView}>
             <View style={styles.PrincipalInformationsView}>
-                <Text style={styles.titleText}>{title}</Text>
-                <Text style={styles.titleText}>{difficulty}</Text>
-                <Text style={styles.titleText}>{nbQuestionsStr}</Text>
+                <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
+                <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
+                <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
             </View>
             <View style={styles.SecondaryInformationsView}>
-                <Text style={styles.detailText}>Joué {nbPlayed} fois</Text>
-                <Text style={styles.detailText}>Réussite moyenne : {average}</Text>
+                <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
+                <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
             </View>
         </View>
     );
@@ -80,5 +89,12 @@ const styles = StyleSheet.create({
     detailText: {
         fontSize: 12,
         color: '#666666', // Texte secondaire plus clair
+    },
+    draftQuiz: {
+        borderColor: '#aaaaaa', // Bordure grise
+        backgroundColor: '#f5f5f5', // Fond grisé
+    },
+    draftText: {
+        color: '#aaaaaa', // Texte grisé
     },
 });
