@@ -32,7 +32,22 @@ export default function QuizCreation() {
         }
     }
 
-    const handleRetrieveQuestions = async () => {
+    const handleUpdateQuestion = (question, index) => {
+        try {
+            const newQuestions = [...questions];
+            newQuestions[index] = question[0];
+            setQuestions(newQuestions);
+        }
+        catch (error) {
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
+        }
+    }
+
+    const handleClickRetrieveQuestions = async () => {
         try {
             navigation.navigate('retrieveQuestions', { handleAddQuestions });
         }
@@ -45,9 +60,9 @@ export default function QuizCreation() {
         }
     };
 
-    const handleCreateQuestion = async () => {
+    const handleClickCreateQuestion = async () => {
         try {
-            navigation.navigate('createQuestion', { handleAddQuestions });
+            navigation.navigate('createQuestion', { question: null, index: null, handleQuestion: handleAddQuestions });
         }
         catch (error) {
             if (error.status && error.message) {
@@ -58,9 +73,18 @@ export default function QuizCreation() {
         }
     }
 
-    const handleEditQuestion = (questionToEdit) => {
-        navigation.navigate('createQuestion', { handleAddQuestions, questionToEdit });
-    };    
+    const handleClickEditQuestion = (question, index) => {
+        try {
+            navigation.navigate('createQuestion', { question, index, handleQuestion: handleUpdateQuestion });
+        }
+        catch (error) { 
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
+        }
+    }
 
     const handleSave = async () => {
         try {
@@ -114,10 +138,10 @@ export default function QuizCreation() {
                         </View>
                         <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
                         <View style={styles.quizCreationTopButtonsView}>
-                            <TouchableOpacity style={styles.buttons} onPress={handleRetrieveQuestions}>
+                            <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
                                 <Text style={styles.buttonText}>Récupérer des questions</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttons} onPress={handleCreateQuestion}>
+                            <TouchableOpacity style={styles.buttons} onPress={handleClickCreateQuestion}>
                                 <Text style={styles.buttonText}>Rédiger une question</Text>
                             </TouchableOpacity>
                         </View>
@@ -139,7 +163,7 @@ export default function QuizCreation() {
                             questions.length !== 0 ?
                                 questions.map((question, index) => (
                                     <View key={index}>
-                                        <TouchableOpacity onPress={() => handleEditQuestion(question)}>
+                                        <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
                                             <Text>{question.question}</Text>
                                         </TouchableOpacity>
                                     </View>

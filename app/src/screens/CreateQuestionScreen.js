@@ -9,7 +9,7 @@ export default function CreateQuestionScreen() {
     const route = useRoute();
     const navigation = useNavigation();
 
-    const { handleAddQuestions, questionToEdit } = route.params;
+    const { question, index, handleQuestion } = route.params;
 
     const [questionText, setQuestionText] = useState('');
     const [selectedShape, setSelectedShape] = useState('');
@@ -23,27 +23,27 @@ export default function CreateQuestionScreen() {
         STAR: '',
     });
     useEffect(() => {
-        if (questionToEdit) {
-            setQuestionText(questionToEdit.question);
-            if(questionToEdit.type === 'boolean'){
+        if (question) {
+            setQuestionText(question.question);
+            if(question.type === 'boolean'){
                 setShowFourAnswers(false);
                 setAnswers({
-                    SQUARE: questionToEdit.incorrect_answers[0],
-                    TRIANGLE: questionToEdit.correct_answer,
+                    SQUARE: question.incorrect_answers[0],
+                    TRIANGLE: question.correct_answer,
                 });
                 setSelectedShape('TRIANGLE');
             } else {
                 setAnswers({
-                    SQUARE: questionToEdit.incorrect_answers[0],
-                    TRIANGLE: questionToEdit.incorrect_answers[1],
-                    CIRCLE: questionToEdit.incorrect_answers[2],
-                    STAR: questionToEdit.correct_answer,
+                    SQUARE: question.incorrect_answers[0],
+                    TRIANGLE: question.incorrect_answers[1],
+                    CIRCLE: question.incorrect_answers[2],
+                    STAR: question.correct_answer,
                 });
                 setSelectedShape('STAR');
             }
         }
     }
-    , [questionToEdit]);
+    , [question]);
 
     const shapes = ['SQUARE', 'TRIANGLE', ...(showFourAnswers ? ['CIRCLE', 'STAR'] : [])];
 
@@ -85,13 +85,13 @@ export default function CreateQuestionScreen() {
                 return;
             }
             
-            handleAddQuestions([
+            handleQuestion([
                 {
                     question: questionText,
                     correct_answer: answers[selectedShape],
                     incorrect_answers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
                 },
-            ]);
+            ], index);
         }
         else{
             if (!answers.SQUARE || !answers.TRIANGLE) {
@@ -105,7 +105,7 @@ export default function CreateQuestionScreen() {
                     correct_answer: answers[selectedShape],
                     incorrect_answers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
                 },
-            ]);
+            ], index);
         }
 
         handleReset();
