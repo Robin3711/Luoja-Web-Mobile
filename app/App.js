@@ -5,6 +5,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { useFonts, LobsterTwo_400Regular } from '@expo-google-fonts/dev';
 import Toast from 'react-native-toast-message';
 
+import { toastConfig } from './src/utils/utils';
+
 import Parameters from './src/screens/Parameters';
 import HomeScreen from './src/screens/HomeScreen';
 import QuizScreen from './src/screens/QuizScreen';
@@ -94,9 +96,11 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer linking={linking}>
-      <Toast />
-      <MenuStack />
-    </NavigationContainer>
+    <>
+      <NavigationContainer linking={linking}>
+        <MenuStack />
+      </NavigationContainer>
+      <Toast config={toastConfig} />
+    </>
   );
 }

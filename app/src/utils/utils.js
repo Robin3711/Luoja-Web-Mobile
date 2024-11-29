@@ -1,4 +1,4 @@
-import { Platform, Dimensions } from 'react-native';
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { useFonts, LobsterTwo_400Regular, LobsterTwo_700Bold, LobsterTwo_700Bold_Italic } from '@expo-google-fonts/dev';
@@ -29,6 +29,7 @@ import {
     Vote,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
+import { ErrorToast, InfoToast, SuccessToast } from 'react-native-toast-message';
 
 export const iconSize = Platform.OS === 'web' ? 30 : 18;
 
@@ -149,12 +150,70 @@ export const toast = (type, text1, text2, visibilityTime, color) => {
         type: type,
         position: 'top',
         text1: text1.toString(),
-        text1Style: { fontSize: 25, textAlign: 'center', fontWeight: 'bold', color },
+        text1Style: { fontSize: 22, textAlign: 'center', fontWeight: 'bold', color },
         text2: text2.toString(),
-        text2Style: { fontSize: 20, textAlign: 'center', fontStyle: 'italic', color: 'black' },
+        text2Style: { fontSize: 18, textAlign: 'center', fontStyle: 'italic', color: 'black' },
         visibilityTime: visibilityTime,
         autoHide: true,
-        topOffset: -25,
-        bottomOffset: 0,
+        topOffset: 64,
     });
 }
+
+export const toastConfig = {
+    /*
+      Personnaliser le toast de type 'success'
+    */
+    success: (props) => (
+        <SuccessToast
+            {...props}
+            style={{
+                borderLeftColor: 'limegreen',
+                width: 400,
+                height: 100,
+            }}
+            contentContainerStyle={{
+                paddingHorizontal: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        />
+    ),
+
+    /*
+      Personnaliser un toast de type 'error'
+    */
+    error: (props) => (
+        <ErrorToast
+            {...props}
+            style={{
+                borderLeftColor: 'crimson',
+                width: 400,
+                height: 100,
+            }}
+            contentContainerStyle={{
+                paddingHorizontal: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        />
+    ),
+
+    /*
+      Personnaliser un toast de type 'info'
+    */
+    info: (props) => (
+        <InfoToast
+            {...props}
+            style={{
+                borderLeftColor: 'deepskyblue',
+                width: 400,
+                height: 100,
+            }}
+            contentContainerStyle={{
+                paddingHorizontal: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        />
+    ),
+};

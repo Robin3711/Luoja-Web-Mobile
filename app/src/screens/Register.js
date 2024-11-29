@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
 import { userRegister } from '../utils/api';
 import { toast } from '../utils/utils';
 
@@ -17,20 +16,20 @@ export default function Register() {
     const handleRegister = async () => {
         try {
             await userRegister(name, password);
+            toast('success', "Enregistrement réussi !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, 'seagreen');
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000, 'red');
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     };
 
     return (
         <View style={styles.registerView}>
-            <Toast />
             <Text style={styles.pageTitle}>Inscription</Text>
 
             <Text style={styles.inputTitle}>Nom d'utilisateur</Text>

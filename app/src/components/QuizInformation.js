@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 
 import { createParty } from '../utils/api';
 import { getThemeLabel, toast } from '../utils/utils';
-import Toast from 'react-native-toast-message';
 
 
 export default function QuizInformation({ quiz }) {
@@ -14,9 +13,9 @@ export default function QuizInformation({ quiz }) {
             navigation.navigate('quizScreen', { gameId: party.id });
         }).catch((error) => {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', 'Erreur', error, 3000, 'red');
+                toast('error', 'Erreur', error, 3000, 'crimson');
             }
         });
     }
@@ -24,7 +23,6 @@ export default function QuizInformation({ quiz }) {
     const themeName = getThemeLabel(parseInt(quiz.category));
     return (
         <View style={styles.QuizInformationView}>
-            <Toast />
             <Text style={styles.QuizInformationText}>{quiz.title}</Text>
             <Text style={styles.QuizInformationText}>{themeName}</Text>
             <Text style={styles.QuizInformationText}>{quiz.difficulty}</Text>

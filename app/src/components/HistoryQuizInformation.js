@@ -3,7 +3,6 @@ import { Text, View, StyleSheet } from 'react-native';
 import { getGameInfos } from '../utils/api';
 import { toast } from '../utils/utils';
 import { getThemeLabel, formatReadableDate } from '../utils/utils';
-import Toast from 'react-native-toast-message';
 
 export default function HistoryQuizInformation({ partyId }) {
     const [party, setParty] = useState(null);
@@ -32,9 +31,9 @@ export default function HistoryQuizInformation({ partyId }) {
                 setDate(dateTemp);
             } catch (error) {
                 if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, 'red');
+                    toast('error', error.status, error.message, 3000, 'crimson');
                 } else {
-                    toast('error', 'Erreur', error, 3000, 'red');
+                    toast('error', 'Erreur', error, 3000, 'crimson');
                 }
             }
         }
@@ -49,7 +48,6 @@ export default function HistoryQuizInformation({ partyId }) {
 
     return (
         <View style={styles.historyQuizInformationView}>
-            <Toast />
             <Text style={styles.historyQuizInformationText}>Partie : {partyId}</Text>
             <Text style={styles.historyQuizInformationText}>{themeName}</Text>
             <Text style={styles.historyQuizInformationText}>{party.Difficulty}</Text>

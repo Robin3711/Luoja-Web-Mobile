@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from 'react-native';
 import { getQuizAverage } from '../utils/api';
 import { toast } from '../utils/utils';
 import { getThemeLabel, formatReadableDate } from '../utils/utils';
-import Toast from 'react-native-toast-message';
+
 
 export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions }) {
     const [loading, setLoading] = useState(true);
@@ -30,9 +30,9 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                 setNbPlayed(data.nombreDePartie);
             }).catch((error) => {
                 if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, 'red');
+                    toast('error', error.status, error.message, 3000, 'crimson');
                 } else {
-                    toast('error', 'Erreur', error, 3000, 'red');
+                    toast('error', 'Erreur', error, 3000, 'crimson');
                 }
             });
             if (status === "true") {
@@ -53,7 +53,6 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
 
     return (
         <View style={styles.historyQuizInformationView}>
-            <Toast />
             <Text style={styles.historyQuizInformationText}>{title}</Text>
             <Text style={styles.historyQuizInformationText}>{themeName}</Text>
             <Text style={styles.historyQuizInformationText}>{difficulty}</Text>

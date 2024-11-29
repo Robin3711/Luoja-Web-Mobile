@@ -1,11 +1,12 @@
 import { View, Text, ScrollView, StyleSheet } from "react-native";
-import { hasToken, removeToken } from "../utils/utils";
+import { hasToken, removeToken, toast } from "../utils/utils";
 import { Button } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
 import CreatedQuizInformation from "../components/CreatedQuizInformation";
+
 
 export default function Dashboard() {
     const navigation = useNavigation();
@@ -20,6 +21,7 @@ export default function Dashboard() {
 
     const handleLogout = async () => {
         await removeToken();
+        toast('success', "Déconnection réussi !", `Au revoir et à bientot :-(`, 3000, 'seagreen');
         navigation.navigate('login');
     }
 

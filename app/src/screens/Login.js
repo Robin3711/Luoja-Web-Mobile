@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 
 import { userLogin } from '../utils/api';
 import { toast } from '../utils/utils';
-import Toast from 'react-native-toast-message';
 
 export default function Login() {
 
@@ -19,13 +18,14 @@ export default function Login() {
     const handleLogin = async () => {
         try {
             await userLogin(name, password);
+            toast('success', "Connection réussi !", `Bienvenue ${name}`, 3000, 'seagreen');
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', 'Erreur', error, 3000, 'red');
+                toast('error', 'Erreur', error, 3000, 'crimson');
             }
         }
     };
@@ -33,7 +33,6 @@ export default function Login() {
     return (
         <View style={styles.loginView}>
             <Text style={styles.pageTitle}>Connexion</Text>
-            <Toast />
 
             <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
             <View style={styles.nameInputView}>

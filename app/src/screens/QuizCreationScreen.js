@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
-import Toast from 'react-native-toast-message';
 import DifficultyPicker from '../components/DifficultyPicker';
 import { LucideDraftingCompass, LucideTrash } from 'lucide-react-native';
 
@@ -26,9 +25,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000, 'red');
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -41,9 +40,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000, 'red');
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -57,9 +56,9 @@ export default function QuizCreation() {
 
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000, 'red');
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -70,9 +69,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000, 'red');
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     };
@@ -83,9 +82,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000, 'red');
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -96,9 +95,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000, 'red');
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -115,9 +114,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000, 'red');
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     };
@@ -136,16 +135,15 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'red');
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000, 'red');
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
 
     return (
         <View style={styles.quizCreationView}>
-            <Toast />
             <Text style={styles.titleText}>Créez votre propre quiz !</Text>
             <View style={styles.quizCreationChildVIew}>
                 <View style={styles.quizCreationLeftView}>
