@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Luoja",
-    "slug": "Luoja",
+    "slug": "luoja",
     "packageName":"com.baldurexpoaccount.luoja",
     "owner": "baldur-expo-account",
     "version": "1.0.0",
