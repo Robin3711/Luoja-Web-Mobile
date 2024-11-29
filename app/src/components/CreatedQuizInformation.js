@@ -5,7 +5,6 @@ import { getQuizAverage } from '../utils/api';
 export default function CreatedQuizInformation({quizId, category, difficulty, date, status, title, nbQuestions}) {
     const [loading, setLoading] = useState(true);
     const [average, setAverage] = useState("aucune donnée");
-    const [statusStr, setStatus] = useState("privé");
     const [nbPlayed, setNbPlayed] = useState(0);
     const [nbQuestionsStr, setNbQuestions] = useState("any");
     useEffect(() => {
@@ -20,9 +19,7 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
                 }
                 setNbPlayed(data.nombreDePartie);
             });
-            if(status === true){
-                setStatus("public");
-            }
+
             setNbQuestions(nbQuestions);
         }
         fetchParty();
@@ -33,10 +30,7 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
     }
 
     const isDraft = status === false;
-    const containerStyle = [
-        styles.QuizInformationView,
-        isDraft && styles.draftQuiz, // Ajouter le style de brouillon si nécessaire
-    ];
+
     const detailTextStyle = [
         styles.detailText,
         isDraft && styles.draftText, // Ajouter un texte grisé pour les brouillons
