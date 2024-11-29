@@ -19,11 +19,24 @@ const handleResponseError = async (response) => {
 export async function createQuiz(questionCount, theme, difficulty) {
     try {
         let url = `${await getPlatformAPI()}/quizFast?amount=${questionCount}`;
-        if (theme !== 'none') url += `&category=${theme}`;
-        if (difficulty !== null) url += `&difficulty=${difficulty}`;
-        const response = await fetch(url);
-        if (!response.ok) await handleResponseError(response);
-        return await response.json();
+
+        if (theme !== 'none') {
+            url += `&category=${theme}`;
+        }
+
+        if (difficulty !== null) {
+            url += `&difficulty=${difficulty}`;
+        }
+
+        const response = await fetch(url, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+        
+
+        const data = await response.json();
+        return data;
     } catch (error) {
         console.error(error);
         throw error;
@@ -43,9 +56,13 @@ export async function restartGame(gameId) {
 
 export async function getCurrentQuestion(quizId) {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/question`);
-        if (!response.ok) await handleResponseError(response);
-        return await response.json();
+        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/question`, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+        const data = await response.json();
+        return data;
     } catch (error) {
         console.error(error);
         throw error;
@@ -58,6 +75,7 @@ export async function getCurrentAnswer(answer, quizId) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'token': await AsyncStorage.getItem('token'),
             },
             body: JSON.stringify(answer),
         });
@@ -71,9 +89,37 @@ export async function getCurrentAnswer(answer, quizId) {
 
 export async function getGameInfos(gameId) {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/game/${gameId}/infos`);
-        if (!response.ok) await handleResponseError(response);
-        return await response.json();
+
+        let url = `${await getPlatformAPI()}/game/${gameId}/infos`;
+
+        const response = await fetch(url, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        const data = await response.json();
+
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function getQuizAverage(quizId) {
+    try {
+        let url = `${await getPlatformAPI()}/game/${quizId}/score`
+
+        const response = await fetch(url, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        const data = await response.json();
+        
+        return data;
     } catch (error) {
         console.error(error);
         throw error;
@@ -82,9 +128,34 @@ export async function getGameInfos(gameId) {
 
 export async function createParty(quizId) {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/play`);
-        if (!response.ok) await handleResponseError(response);
-        return await response.json();
+
+        let url = `${await getPlatformAPI()}/quiz/${quizId}/play`;
+
+        const response = await fetch(url, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function getQuizInfos(quizId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/retrieve`, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        const data = await response.json();
+
+        return data;
     } catch (error) {
         console.error(error);
         throw error;
@@ -142,6 +213,22 @@ export async function getUserInfos() {
     }
 }
 
+export async function getUserGame() {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/quiz/user/Game`, {
+            headers: { 
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+        
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 export async function getQuestions(amount, category, difficulty) {
     try {
         let url = `https://opentdb.com/api.php?amount=${amount}`;
@@ -226,6 +313,24 @@ export async function publishQuiz(quizId) {
         if (!response.ok) await handleResponseError(response);
         return await response.json();
     } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export async function getCreatedQuiz(){
+    try{
+        const response = await fetch(`${await getPlatformAPI()}/quiz/user/Create`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        const data = await response.json();
+
+        return data;
+    }
+    catch(error){
         console.error(error);
         throw error;
     }
