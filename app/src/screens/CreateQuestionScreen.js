@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Switch } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import AnswerInput from '../components/AnswerInput';
@@ -9,7 +9,7 @@ export default function CreateQuestionScreen() {
     const route = useRoute();
     const navigation = useNavigation();
 
-    const { handleAddQuestions } = route.params;
+    const { question, index, handleQuestion } = route.params;
 
     const [questionText, setQuestionText] = useState('');
     const [selectedShape, setSelectedShape] = useState('');
@@ -22,6 +22,28 @@ export default function CreateQuestionScreen() {
         CIRCLE: '',
         STAR: '',
     });
+    useEffect(() => {
+        if (question) {
+            setQuestionText(question.question);
+            if(question.type === 'boolean'){
+                setShowFourAnswers(false);
+                setAnswers({
+                    SQUARE: question.incorrect_answers[0],
+                    TRIANGLE: question.correct_answer,
+                });
+                setSelectedShape('TRIANGLE');
+            } else {
+                setAnswers({
+                    SQUARE: question.incorrect_answers[0],
+                    TRIANGLE: question.incorrect_answers[1],
+                    CIRCLE: question.incorrect_answers[2],
+                    STAR: question.correct_answer,
+                });
+                setSelectedShape('STAR');
+            }
+        }
+    }
+    , [question]);
 
     const shapes = ['SQUARE', 'TRIANGLE', ...(showFourAnswers ? ['CIRCLE', 'STAR'] : [])];
 
@@ -63,13 +85,13 @@ export default function CreateQuestionScreen() {
                 return;
             }
             
-            handleAddQuestions([
+            handleQuestion([
                 {
                     question: questionText,
                     correct_answer: answers[selectedShape],
                     incorrect_answers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
                 },
-            ]);
+            ], index);
         }
         else{
             if (!answers.SQUARE || !answers.TRIANGLE) {
@@ -83,7 +105,7 @@ export default function CreateQuestionScreen() {
                     correct_answer: answers[selectedShape],
                     incorrect_answers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
                 },
-            ]);
+            ], index);
         }
 
         handleReset();
@@ -103,12 +125,13 @@ export default function CreateQuestionScreen() {
             )}
             <AnswerInput
                 shape={shape}
+                text={answers[shape]}
                 onTextChange={(text) => handleTextChange(shape, text)}
                 onShapeClick={handleShapeClick}
             />
         </View>
     );
-
+    
     return (
         <View style={styles.createQuestionView}>
             {/* Left Panel */}

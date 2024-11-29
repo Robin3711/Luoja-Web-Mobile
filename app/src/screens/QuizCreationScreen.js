@@ -6,6 +6,7 @@ import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
 import Toast from 'react-native-toast-message';
 import DifficultyPicker from '../components/DifficultyPicker';
+import { LucideDraftingCompass, LucideTrash } from 'lucide-react-native';
 
 
 
@@ -32,7 +33,38 @@ export default function QuizCreation() {
         }
     }
 
-    const handleRetrieveQuestions = async () => {
+    const handleUpdateQuestion = (question, index) => {
+        try {
+            const newQuestions = [...questions];
+            newQuestions[index] = question[0];
+            setQuestions(newQuestions);
+        }
+        catch (error) {
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
+        }
+    }
+
+    const handleDeleteQuestion = (index) => { 
+        try {
+            const newQuestions = [...questions];
+            newQuestions.splice(index, 1);
+            setQuestions(newQuestions);
+        }
+
+        catch (error) {
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
+        }
+    }
+
+    const handleClickRetrieveQuestions = async () => {
         try {
             navigation.navigate('retrieveQuestions', { handleAddQuestions });
         }
@@ -45,11 +77,24 @@ export default function QuizCreation() {
         }
     };
 
-    const handleCreateQuestion = async () => {
+    const handleClickCreateQuestion = async () => {
         try {
-            navigation.navigate('createQuestion', { handleAddQuestions });
+            navigation.navigate('createQuestion', { question: null, index: null, handleQuestion: handleAddQuestions });
         }
         catch (error) {
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000);
+            } else {
+                toast('error', "Erreur", error, 3000);
+            }
+        }
+    }
+
+    const handleClickEditQuestion = (question, index) => {
+        try {
+            navigation.navigate('createQuestion', { question, index, handleQuestion: handleUpdateQuestion });
+        }
+        catch (error) { 
             if (error.status && error.message) {
                 toast('error', error.status, error.message, 3000);
             } else {
@@ -110,10 +155,10 @@ export default function QuizCreation() {
                         </View>
                         <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
                         <View style={styles.quizCreationTopButtonsView}>
-                            <TouchableOpacity style={styles.buttons} onPress={handleRetrieveQuestions}>
+                            <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
                                 <Text style={styles.buttonText}>Récupérer des questions</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttons} onPress={handleCreateQuestion}>
+                            <TouchableOpacity style={styles.buttons} onPress={handleClickCreateQuestion}>
                                 <Text style={styles.buttonText}>Rédiger une question</Text>
                             </TouchableOpacity>
                         </View>
@@ -134,8 +179,14 @@ export default function QuizCreation() {
                         {
                             questions.length !== 0 ?
                                 questions.map((question, index) => (
-                                    <View key={index}>
-                                        <Text>{question.question}</Text>
+                                    <View style={styles.question} key={index}>
+                                        <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
+                                            <Text>{question.question}</Text>
+                                        </TouchableOpacity>
+                                        
+                                        <TouchableOpacity onPress={() => handleDeleteQuestion(index)}>
+                                            <LucideTrash size={30} />
+                                        </TouchableOpacity>
                                     </View>
                                 ))
                                 : <Text>Aucune question</Text>
@@ -208,6 +259,16 @@ const styles = StyleSheet.create({
         padding: 5,
         borderRadius: 20,
         height: '80%'
+    },
+    question: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 5,
+        padding: 5,
+        backgroundColor: '#58bdfe',
+        borderRadius: 20,
     },
     buttons: {
         display: 'flex',
