@@ -8,6 +8,9 @@ import Toast from 'react-native-toast-message';
 import RangeCursor from '../components/Cursor';
 import ThemeSelector from '../components/ThemeList'
 import DifficultySelector from '../components/DifficultyPicker';
+import SimpleButton from '../components/SimpleButton';
+
+import { COLORS } from '../css/utils/color';
 
 const platform = Platform.OS;
 
@@ -40,32 +43,43 @@ export default function Parameters() {
 
 
   return (
-    <View style={styles.quickQuizView}>
-      <Text>Générer un nouveau quiz !</Text>
+    <View style={styles.screen}>
+      <Text style={styles.title}>Générer un nouveau quiz !</Text>
       <Toast />
-      <ThemeSelector onValueChange={setTheme} />
 
-      <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
+      <View style={styles.list}>
+        <ThemeSelector onValueChange={setTheme} />
 
-      <RangeCursor testID="range-cursor" value={tempQuestionCount}
-        onValueChange={setTempQuestionCount}
-        onSlidingComplete={(value) => setQuestionCount(value)} />
+        <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
 
+        <View style={{width:'100%'}}>
+        <RangeCursor 
+          testID="range-cursor" value={tempQuestionCount}
+          onValueChange={setTempQuestionCount}
+          onSlidingComplete={(value) => setQuestionCount(value)} 
+        />
+        </View>
 
-      <TouchableOpacity style={styles.buttons} onPress={handleCreateQuiz} disabled={launch}>
-        {launch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)}
-      </TouchableOpacity>
+        <SimpleButton style={styles.buttons} text={launch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)} disabled={launch} onPress={handleCreateQuiz} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  quickQuizView: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 10,
+    screen: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: COLORS.background.blue,
+  },
+  title: {
+      textAlign: 'center',
+      color: COLORS.text.blue.dark,
+      fontSize: 50,
+      fontFamily: 'LobsterTwo_700Bold_Italic',
   },
   buttons: {
     display: 'flex',
@@ -81,5 +95,11 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  list: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

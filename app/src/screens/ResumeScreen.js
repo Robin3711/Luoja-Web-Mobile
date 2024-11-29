@@ -8,6 +8,10 @@ import { useNavigation } from '@react-navigation/native';
 import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 
+import { COLORS } from '../css/utils/color';
+import { loadFont } from '../utils/utils';
+import SimpleButton from '../components/SimpleButton';
+
 const platform = Platform.OS;
 
 export default function ResumeScreen() {
@@ -57,18 +61,41 @@ export default function ResumeScreen() {
         setGameId(idOfGame);
     };
 
+    loadFont();
     return (
-        <View style={styles.container}>
-            <Toast />
-            <Text>Reprenez votre partie</Text>
-            <TextInput placeholder="Identifiant de votre partie" style={styles.textInput} onChangeText={setGameId} value={gameId} autoFocus />
-            <TouchableOpacity onPress={handlePasteGameId}>
-                <ClipboardPaste size={20} />
-            </TouchableOpacity>
-            <Button title={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
+        <View style={styles.screen}>
+            <Toast/>
+            <Text style={styles.title}>Reprenez votre partie</Text>
+            <View style={styles.paste}>
+                <TouchableOpacity onPress={handlePasteGameId}>
+                    <ClipboardPaste size={20} />
+                </TouchableOpacity>
+                <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus />
+            </View>
+            <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: COLORS.background.blue,
+    },
+    title: {
+        textAlign: 'center',
+        color: COLORS.text.blue.dark,
+        fontSize: 50,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+    },
+    paste:{
+        display:'flex',
+        flexDirection:'row',
+        gap:10,
+    }
+
 });
