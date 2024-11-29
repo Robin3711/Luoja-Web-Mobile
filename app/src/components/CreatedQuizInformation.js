@@ -1,12 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { getQuizAverage } from '../utils/api';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CreatedQuizInformation({quizId, category, difficulty, date, status, title, nbQuestions}) {
     const [loading, setLoading] = useState(true);
     const [average, setAverage] = useState("aucune donnée");
     const [nbPlayed, setNbPlayed] = useState(0);
     const [nbQuestionsStr, setNbQuestions] = useState("any");
+
+    navigation = useNavigation();
+
     useEffect(() => {
         async function fetchParty() {
             setLoading(false);
@@ -35,6 +39,31 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
         styles.detailText,
         isDraft && styles.draftText, // Ajouter un texte grisé pour les brouillons
     ];
+
+    const handleCreationQuiz = () => {
+        if (status === false && Platform.OS === 'web') {
+            navigation.navigate('quizCreation');
+            
+        }
+    };
+
+    if (status === false && Platform.OS === 'web') {
+        return (
+            <TouchableOpacity onPress={handleCreationQuiz}>
+                <View style={styles.QuizInformationView}>
+                    <View style={styles.PrincipalInformationsView}>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
+                    </View>
+                    <View style={styles.SecondaryInformationsView}>
+                        <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
+                        <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
+    }
 
     return (
         <View style={styles.QuizInformationView}>
