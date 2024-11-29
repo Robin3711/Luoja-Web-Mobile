@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { hasToken, removeToken } from "../utils/utils";
 import { Button } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
@@ -64,7 +64,9 @@ export default function Dashboard() {
                     </ScrollView>
                 </View>
             </View>
-            <Button title="Se déconnecter" onPress={handleLogout} />
+            <TouchableOpacity onPress={handleLogout}>
+                <Text>Se déconnecter</Text>
+            </TouchableOpacity>
         </View>
     );
 }
