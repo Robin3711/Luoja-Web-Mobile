@@ -1,18 +1,24 @@
-import { getPlatformAPI, setToken } from "./utils";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { decode } from 'html-entities';
+import { getPlatformAPI, setToken, hasToken } from "./utils";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const handleResponseError = async (response) => {
     let errorMessage = 'Une erreur est survenue';
+
     try {
         const errorData = await response.json();
         errorMessage = errorData.error || errorData.message || errorMessage;
-    } catch {
+    } 
+    catch {
         errorMessage = response.statusText || errorMessage;
     }
+
     const error = new Error('Une erreur est survenue');
+
     error.status = response.status;
+
     error.message = errorMessage;
+
     throw error;
 };
 
@@ -20,7 +26,7 @@ export async function createQuiz(questionCount, theme, difficulty) {
     try {
         let url = `${await getPlatformAPI()}/quizFast?amount=${questionCount}`;
 
-        if (theme !== 'none') {
+        if (theme !== 'none') { 
             url += `&category=${theme}`;
         }
 
@@ -28,42 +34,57 @@ export async function createQuiz(questionCount, theme, difficulty) {
             url += `&difficulty=${difficulty}`;
         }
 
-        const response = await fetch(url, {
-            headers: { 
-                'token': await AsyncStorage.getItem('token'),
-            },
-        });
-        
+        const headers = {};
+
+        if (await hasToken()) {
+            headers['token'] = await AsyncStorage.getItem('token');
+        }
+
+        const response = await fetch(url, { headers });
 
         const data = await response.json();
+
         return data;
-    } catch (error) {
-        console.error(error);
+    } 
+    catch (error) {
         throw error;
     }
 }
 
 export async function restartGame(gameId) {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/game/${gameId}/restart`);
+        const headers = {};
+
+        if (await hasToken()) {
+            headers['token'] = await AsyncStorage.getItem('token');
+        }
+
+        const response = await fetch(`${await getPlatformAPI()}/game/${gameId}/restart`, { headers });
+
         if (!response.ok) await handleResponseError(response);
+
         return await response.json();
-    } catch (error) {
-        console.error(error);
+    } 
+    catch (error) {
         throw error;
     }
 }
 
 export async function getCurrentQuestion(quizId) {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/question`, {
-            headers: { 
-                'token': await AsyncStorage.getItem('token'),
-            },
-        });
+        const headers = {};
+
+        if (await hasToken()) {
+            headers['token'] = await AsyncStorage.getItem('token');
+        }
+
+        const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/question`, { headers });
+
         const data = await response.json();
+
         return data;
-    } catch (error) {
+    } 
+    catch (error) {
         console.error(error);
         throw error;
     }
@@ -71,17 +92,26 @@ export async function getCurrentQuestion(quizId) {
 
 export async function getCurrentAnswer(answer, quizId) {
     try {
+        const token = {};
+
+        if (await hasToken()) {
+            token = await AsyncStorage.getItem('token');
+        }
+
         const response = await fetch(`${await getPlatformAPI()}/game/${quizId}/answer`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'token': await AsyncStorage.getItem('token'),
+                token
             },
             body: JSON.stringify(answer),
         });
+
         if (!response.ok) await handleResponseError(response);
+
         return await response.json();
-    } catch (error) {
+    }
+    catch (error) {
         console.error(error);
         throw error;
     }
@@ -89,20 +119,21 @@ export async function getCurrentAnswer(answer, quizId) {
 
 export async function getGameInfos(gameId) {
     try {
+        const headers = {};
+
+        if (await hasToken()) {
+            headers['token'] = await AsyncStorage.getItem('token');
+        }
 
         let url = `${await getPlatformAPI()}/game/${gameId}/infos`;
 
-        const response = await fetch(url, {
-            headers: { 
-                'token': await AsyncStorage.getItem('token'),
-            },
-        });
+        const response = await fetch(url, { headers });
 
         const data = await response.json();
 
         return data;
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
@@ -118,29 +149,31 @@ export async function getQuizAverage(quizId) {
         });
 
         const data = await response.json();
-        
+
         return data;
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
 
 export async function createParty(quizId) {
     try {
+        const headers = {};
+
+        if (await hasToken()) {
+            headers['token'] = await AsyncStorage.getItem('token');
+        }
 
         let url = `${await getPlatformAPI()}/quiz/${quizId}/play`;
 
-        const response = await fetch(url, {
-            headers: { 
-                'token': await AsyncStorage.getItem('token'),
-            },
-        });
+        const response = await fetch(url, { headers });
 
         const data = await response.json();
+
         return data;
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
@@ -148,7 +181,7 @@ export async function createParty(quizId) {
 export async function getQuizInfos(quizId) {
     try {
         const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/retrieve`, {
-            headers: { 
+            headers: {
                 'token': await AsyncStorage.getItem('token'),
             },
         });
@@ -156,8 +189,8 @@ export async function getQuizInfos(quizId) {
         const data = await response.json();
 
         return data;
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
@@ -172,10 +205,12 @@ export async function userRegister(name, password) {
             body: JSON.stringify({ name, password }),
         });
         if (!response.ok) await handleResponseError(response);
+
         const data = await response.json();
+
         await setToken(data.token);
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
@@ -189,11 +224,14 @@ export async function userLogin(name, password) {
             },
             body: JSON.stringify({ name, password }),
         });
+
         if (!response.ok) await handleResponseError(response);
+
         const data = await response.json();
+
         await setToken(data.token);
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
@@ -205,10 +243,12 @@ export async function getUserInfos() {
                 'token': await AsyncStorage.getItem('token'),
             },
         });
+
         if (!response.ok) await handleResponseError(response);
+
         return (await response.json()).user;
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
@@ -216,36 +256,43 @@ export async function getUserInfos() {
 export async function getUserGame() {
     try {
         const response = await fetch(`${await getPlatformAPI()}/quiz/user/Game`, {
-            headers: { 
+            headers: {
                 'token': await AsyncStorage.getItem('token'),
             },
         });
-        
+
         const data = await response.json();
-        console.log(data);
+
         return data;
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
 export async function getQuestions(amount, category, difficulty) {
     try {
         let url = `https://opentdb.com/api.php?amount=${amount}`;
+
         if (category) url += `&category=${category}`;
+
         if (difficulty) url += `&difficulty=${difficulty}`;
+
         const response = await fetch(url);
+
         if (!response.ok) await handleResponseError(response);
+
         const data = await response.json();
+
         if (data.response_code !== 0) throw new Error("Erreur lors de la récupération des questions");
         data.results.forEach((item) => {
             item.question = decode(item.question);
             item.correct_answer = decode(item.correct_answer);
             item.incorrect_answers = item.incorrect_answers.map(decode);
         });
+
         return data.results;
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
@@ -253,13 +300,17 @@ export async function getQuestions(amount, category, difficulty) {
 export async function saveQuiz(title, category, difficulty, quizQuestions) {
     try {
         let url = `${await getPlatformAPI()}/quiz?title=${title}`;
+
         if (category !== 'none') url += `&category=${category}`;
+
         if (difficulty !== null) url += `&difficulty=${difficulty}`;
+
         const questions = quizQuestions.map((q) => ({
             text: q.question,
             correctAnswer: q.correct_answer,
             incorrectAnswers: q.incorrect_answers,
         }));
+
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -268,10 +319,12 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
             },
             body: JSON.stringify({ questions }),
         });
+
         if (!response.ok) await handleResponseError(response);
+
         return await response.json();
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
@@ -279,13 +332,17 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
 export async function editQuiz(quizId, title, category, difficulty, quizQuestions) {
     try {
         let url = `${await getPlatformAPI()}/quiz/${quizId}/edit?title=${title}`;
+
         if (category !== 'none') url += `&category=${category}`;
+
         if (difficulty !== null) url += `&difficulty=${difficulty}`;
+
         const questions = quizQuestions.map((q) => ({
             text: q.question,
             correctAnswer: q.correct_answer,
             incorrectAnswers: q.incorrect_answers,
         }));
+
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -294,10 +351,11 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
             },
             body: JSON.stringify({ questions }),
         });
+
         if (!response.ok) await handleResponseError(response);
+
         return await response.json();
     } catch (error) {
-        console.error(error);
         throw error;
     }
 }
@@ -310,16 +368,18 @@ export async function publishQuiz(quizId) {
                 'token': await AsyncStorage.getItem('token'),
             },
         });
+
         if (!response.ok) await handleResponseError(response);
+
         return await response.json();
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
 
-export async function getCreatedQuiz(){
-    try{
+export async function getCreatedQuiz() {
+    try {
         const response = await fetch(`${await getPlatformAPI()}/quiz/user/Create`, {
             headers: {
                 'token': await AsyncStorage.getItem('token'),
@@ -330,8 +390,7 @@ export async function getCreatedQuiz(){
 
         return data;
     }
-    catch(error){
-        console.error(error);
+    catch (error) {
         throw error;
     }
 }
@@ -339,14 +398,20 @@ export async function getCreatedQuiz(){
 export async function getQuizAutoComplete(title, theme, difficulty) {
     try {
         let parameters = '';
+
         if (title) parameters += `title=${title}`;
+
         if (theme !== 'none' && theme) parameters += `&category=${theme}`;
+
         if (difficulty) parameters += `&difficulty=${difficulty}`;
+
         const response = await fetch(`https://api.luoja.fr/quiz/list?${parameters}`);
+
         if (!response.ok) await handleResponseError(response);
+
         return (await response.json()).quizs;
-    } catch (error) {
-        console.error(error);
+    }
+    catch (error) {
         throw error;
     }
 }
