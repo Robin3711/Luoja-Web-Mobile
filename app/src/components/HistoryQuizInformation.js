@@ -13,7 +13,6 @@ export default function HistoryQuizInformation({partyId}) {
     useEffect(() => {
         async function fetchParty() {
             const data = await getGameInfos(partyId);
-            console.log(data);
             setLoading(false);
             let scoreTemp = 0;
             for (let i = 0; i < data.results.length; i++) {
@@ -25,7 +24,6 @@ export default function HistoryQuizInformation({partyId}) {
             let dateTemp = formatReadableDate(data.CreateDate);
             setDate(dateTemp);
             let difficultyTemp = data.Difficulty;
-            console.log(difficultyTemp);
             if (difficultyTemp === "easy") {
                 setDifficulty("Facile");
             } else if (difficultyTemp === "medium") {
