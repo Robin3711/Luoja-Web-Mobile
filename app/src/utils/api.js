@@ -92,7 +92,7 @@ export async function getCurrentQuestion(quizId) {
 
 export async function getCurrentAnswer(answer, quizId) {
     try {
-        const token = {};
+        let token = null;
 
         if (await hasToken()) {
             token = await AsyncStorage.getItem('token');
