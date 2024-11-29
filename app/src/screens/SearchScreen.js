@@ -69,15 +69,21 @@ export default function SearchScreen() {
                             onSlidingComplete={(value) => setQuestionCount(value)} />
                     </View>
                 </View>
-                <View style={styles.scrollView}>
-                    <ScrollView>
-                        {data.map(function (quiz, index) {
-                            return (<>
+  
+                <View style={styles.quizCreationRightView}>
+            <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
+            <View style={styles.questionsView}>
+                {
+                    data.length !== 0 ?
+                        data.map((quiz, index) => (
+                            <View key={index} style={styles.questionItem}>
                                 <QuizInformation quiz={quiz} />
-                            </>)
-                        })}
-                    </ScrollView>
-                </View>
+                            </View>
+                        ))
+                        : <Text>Aucune question</Text>
+                }
+            </View>
+        </View>
             </View>
         )
     );
@@ -113,14 +119,40 @@ const styles = StyleSheet.create({
         color: COLORS.text.blue.dark,
         fontFamily: 'LobsterTwo_700Bold_Italic',
     },
-
-    filterList: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    
     filterView: {
         marginBottom: 20,
     },
+    quizCreationRightView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        backgroundColor: '#8fd3ff',
+        height: '75%',
+        borderRadius: 20,
+        padding: 20,
+        width: '40%',
+    },
+    quizCreationQuestionsTitle: {
+        backgroundColor: 'white',
+        padding: 5,
+        borderRadius: 20,
+    },
+    questionsView: {
+        backgroundColor: 'white',
+        padding: 5,
+        borderRadius: 20,
+        height: '80%'
+    },
+
+    buttonText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    questionItem:{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+
 });
