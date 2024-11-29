@@ -49,17 +49,7 @@ export default function QuizScreen() {
             try {
                 setLoading(true);
                 const infos = await getGameInfos(gameId);
-                const data = await getCurrentQuestion(gameId);
-
-                if (infos.questionCursor === infos.numberOfQuestions) {
-                    setQuestionNumber(infos.questionCursor);
-                } else {
-                    setQuestionNumber(infos.questionCursor + 1);
-                }
-
-                setTotalQuestion(infos.numberOfQuestions);
-                setScore(infos.results.filter(Boolean).length);
-                setCurrentQuestion(data);
+                refreshData(infos);
             } catch (err) {
                 setError(true);
                 setErrorMessage(err.status + " " + err.message);
@@ -68,6 +58,25 @@ export default function QuizScreen() {
             }
         })();
     }, [gameId]);
+
+    const refreshData = async (infos) => {
+        try {
+            const data = await getCurrentQuestion(gameId);
+
+            if (infos.questionCursor === infos.numberOfQuestions) {
+                setQuestionNumber(infos.questionCursor);
+            } else {
+                setQuestionNumber(infos.questionCursor + 1);
+            }
+
+            setTotalQuestion(infos.numberOfQuestions);
+            setScore(infos.results.filter(Boolean).length);
+            setCurrentQuestion(data);
+        } catch (err) {
+            setError(true);
+            setErrorMessage(err.status + " " + err.message);
+        }
+    }
 
     const handleNewQuestion = async () => {
         try {
@@ -96,14 +105,20 @@ export default function QuizScreen() {
     const handleGetAnswer = async () => {
         try {
             setButtonDisabled(true);
-            const { correctAnswer: correctAnswerFromApi } = await getCurrentAnswer(
-                { answer: selectedAnswer },
-                gameId
-            );
 
-            setCorrect(correctAnswerFromApi);
-            setIsAnswered(true);
-            if (correctAnswerFromApi === selectedAnswer) updateScore();
+            const infos = await getGameInfos(gameId);
+            if (infos.questionCursor + 1 !== questionNumber) {
+                refreshData(infos);
+            } else {
+                const { correctAnswer: correctAnswerFromApi } = await getCurrentAnswer(
+                    { answer: selectedAnswer },
+                    gameId
+                );
+
+                setCorrect(correctAnswerFromApi);
+                setIsAnswered(true);
+                if (correctAnswerFromApi === selectedAnswer) updateScore();
+            }
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
