@@ -22,24 +22,25 @@ export default function CreateQuestionScreen() {
         CIRCLE: '',
         STAR: '',
     });
+
     useEffect(() => {
         if (question) {
-            setQuestionText(question.question);
-            if(question.type === 'boolean'){
+            setQuestionText(question.text);
+            if(question.trueFalse){
                 setShowFourAnswers(false);
                 setAnswers({
-                    SQUARE: question.incorrect_answers[0],
-                    TRIANGLE: question.correct_answer,
+                    SQUARE: question.correctAnswer,
+                    TRIANGLE: question.incorrectAnswers[0],
                 });
-                setSelectedShape('TRIANGLE');
+                setSelectedShape('SQUARE');
             } else {
                 setAnswers({
-                    SQUARE: question.incorrect_answers[0],
-                    TRIANGLE: question.incorrect_answers[1],
-                    CIRCLE: question.incorrect_answers[2],
-                    STAR: question.correct_answer,
+                    SQUARE: question.correctAnswer,
+                    TRIANGLE: question.incorrectAnswers[0],
+                    CIRCLE: question.incorrectAnswers[1],
+                    STAR: question.incorrectAnswers[2],
                 });
-                setSelectedShape('STAR');
+                setSelectedShape('SQUARE');
             }
         }
     }
@@ -87,9 +88,10 @@ export default function CreateQuestionScreen() {
             
             handleQuestion([
                 {
-                    question: questionText,
-                    correct_answer: answers[selectedShape],
-                    incorrect_answers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
+                    text: questionText,
+                    trueFalse: !showFourAnswers,
+                    correctAnswer: answers[selectedShape],
+                    incorrectAnswers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
                 },
             ], index);
         }
@@ -99,11 +101,12 @@ export default function CreateQuestionScreen() {
                 return;
             }
 
-            handleAddQuestions([
+            handleQuestion([
                 {
-                    question: questionText,
-                    correct_answer: answers[selectedShape],
-                    incorrect_answers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
+                    text: questionText,
+                    trueFalse: !showFourAnswers,
+                    correctAnswer: answers[selectedShape],
+                    incorrectAnswers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
                 },
             ], index);
         }
