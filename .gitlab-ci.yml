@@ -5,7 +5,7 @@ stages:
   - deploy   
   - tests
 
-build:
+build: 
   image: node:latest
   stage: build
   script:
@@ -23,6 +23,7 @@ build:
       - docker/
 
 
+
 docker:
   image: docker:latest
   stage: docker
@@ -38,6 +39,15 @@ docker:
     - docker push docker.luoja.fr/baldur
   rules:
     - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
+
+apk:
+  image: node:latest
+  stage: build  
+  script :    
+  - cd app
+  - npm install  
+  - npm install eas-cli    
+  - npx eas-cli build --platform android  --profile production --non-interactive --no-wait
 
 test:  
   stage: tests
