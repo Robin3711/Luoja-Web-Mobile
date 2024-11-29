@@ -2,7 +2,6 @@
   "expo": {
     "name": "Luoja",
     "slug": "luoja",
-    "packageName":"com.baldurexpoaccount.luoja",
     "owner": "baldur-expo-account",
     "version": "1.0.0",
     "newArchEnabled": true,
@@ -20,8 +19,7 @@
     "android": {      
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
-        "buildType": "apk"
+        "backgroundColor": "#ffffff"
       },
       "package": "com.baldurexpoaccount.luoja"  
     },
