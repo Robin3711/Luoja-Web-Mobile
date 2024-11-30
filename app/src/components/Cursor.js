@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: platform === 'web' ? '50%' : '100%',
     margin: 10,
   },
   cursorLabel: {

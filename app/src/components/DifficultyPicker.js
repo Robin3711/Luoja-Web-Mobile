@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, Platform, StyleSheet } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 
@@ -21,6 +21,14 @@ const DifficultySelector = ({ testID, value, onValueChange }) => {
             onValueChange(difficultyOptions[index].value);
         }
     };
+
+    useEffect(() => {
+        if (value) {
+            const index = difficultyOptions.findIndex(option => option.value === value);
+            setSelectedIndex(index);
+        }
+    }
+    , [value]);
 
     return (
         <View style={styles.difficultyPickerView}>

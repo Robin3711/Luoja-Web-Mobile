@@ -300,13 +300,20 @@ export async function getQuestions(amount, category, difficulty) {
         const data = await response.json();
 
         if (data.response_code !== 0) throw new Error("Erreur lors de la récupération des questions");
+        
         data.results.forEach((item) => {
             item.question = decode(item.question);
             item.correct_answer = decode(item.correct_answer);
             item.incorrect_answers = item.incorrect_answers.map(decode);
         });
 
-        return data.results;
+        const questions = data.results.map((item) => ({
+            text: item.question,
+            correctAnswer: item.correct_answer,
+            incorrectAnswers: item.incorrect_answers,
+        }));
+
+        return questions;
     }
     catch (error) {
         throw error;
@@ -322,9 +329,9 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
         if (difficulty !== null) url += `&difficulty=${difficulty}`;
 
         const questions = quizQuestions.map((q) => ({
-            text: q.question,
-            correctAnswer: q.correct_answer,
-            incorrectAnswers: q.incorrect_answers,
+            text: q.text,
+            correctAnswer: q.correctAnswer,
+            incorrectAnswers: q.incorrectAnswers,
         }));
 
         const response = await fetch(url, {
@@ -349,14 +356,14 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
     try {
         let url = `${await getPlatformAPI()}/quiz/${quizId}/edit?title=${title}`;
 
-        if (category !== 'none') url += `&category=${category}`;
+        if (category !== null) url += `&category=${category}`;
 
         if (difficulty !== null) url += `&difficulty=${difficulty}`;
 
         const questions = quizQuestions.map((q) => ({
-            text: q.question,
-            correctAnswer: q.correct_answer,
-            incorrectAnswers: q.incorrect_answers,
+            text: q.text,
+            correctAnswer: q.correctAnswer,
+            incorrectAnswers: q.incorrectAnswers,
         }));
 
         const response = await fetch(url, {

@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { getQuizInfos } from '../utils/api';
 
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
 import DifficultyPicker from '../components/DifficultyPicker';
-import { LucideDraftingCompass, LucideTrash } from 'lucide-react-native';
-
-
+import { LucideTrash } from 'lucide-react-native';
 
 export default function QuizCreation() {
 
     const navigation = useNavigation();
+    const route = useRoute();
 
     const [quizId, setQuizId] = useState(null);
     const [title, setTitle] = useState('');
@@ -123,8 +123,7 @@ export default function QuizCreation() {
 
     const handlePublish = async () => {
         try {
-            console.log(questions);
-            await editQuiz(quizId, title, category, difficulty, questions);
+            await handleSave();
             await publishQuiz(quizId);
 
             setQuizId(null);
@@ -141,6 +140,24 @@ export default function QuizCreation() {
             }
         }
     }
+
+    useEffect(() => {
+        const handleRetrieveQuiz = async () => {
+            if (route.params !== undefined) {
+                const data = await getQuizInfos(route.params.quizId);
+                const quiz = data.quiz;
+
+                setQuizId(route.params.quizId);
+                setTitle(quiz.title);
+                setCategory(quiz.category);
+                setDifficulty(quiz.difficulty);
+                setQuestions(quiz.questions);
+            }
+        }
+
+        handleRetrieveQuiz();
+    }
+    , [route.params]);
 
     return (
         <View style={styles.quizCreationView}>
@@ -179,7 +196,7 @@ export default function QuizCreation() {
                                 questions.map((question, index) => (
                                     <View style={styles.question} key={index}>
                                         <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
-                                            <Text>{question.question}</Text>
+                                            <Text>{question.text}</Text>
                                         </TouchableOpacity>
 
                                         <TouchableOpacity onPress={() => handleDeleteQuestion(index)}>

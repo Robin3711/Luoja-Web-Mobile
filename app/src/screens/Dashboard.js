@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { hasToken, removeToken, toast } from "../utils/utils";
 import { Button } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
