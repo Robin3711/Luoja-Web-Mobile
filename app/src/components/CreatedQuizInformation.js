@@ -10,7 +10,7 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
     const [nbPlayed, setNbPlayed] = useState(0);
     const [nbQuestionsStr, setNbQuestions] = useState("any");
 
-    navigation = useNavigation();
+    const navigation = useNavigation();
 
     useEffect(() => {
         async function fetchParty() {
