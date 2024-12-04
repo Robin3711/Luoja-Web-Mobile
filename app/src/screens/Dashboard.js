@@ -1,8 +1,8 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { hasToken, removeToken, toast } from "../utils/utils";
 import { Button } from "react-native-web";
-import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useEffect, useState, useCallback } from "react";
 import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
 import CreatedQuizInformation from "../components/CreatedQuizInformation";
@@ -32,21 +32,23 @@ export default function Dashboard() {
     }
         , []);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const games = await getUserGame();
-                const quizzes = await getCreatedQuiz();
-                setHistory(games.games);
-                setPublishedQuizzes(quizzes);
-            } catch (err) {
-                setError(true);
-                setErrorMessage(err.status + " " + err.message);
+    useFocusEffect(
+        useCallback(() => {
+            async function fetchData() {
+                try {
+                    const games = await getUserGame();
+                    const quizzes = await getCreatedQuiz();
+                    setHistory(games.games);
+                    setPublishedQuizzes(quizzes);
+                } catch (err) {
+                    setError(true);
+                    setErrorMessage(err.status + " " + err.message);
+                }
             }
 
-        }
-        fetchData();
-    }, []);
+            fetchData();
+        }, [])
+    );
 
 
     return (
