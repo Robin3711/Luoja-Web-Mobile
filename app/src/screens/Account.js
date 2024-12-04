@@ -57,7 +57,7 @@ export default function Account() {
     if (isLogged && userInfos) {
 
         return (
-            <View>
+            <View style={styles.container}>
                 <Dashboard />
             </View>
         );
