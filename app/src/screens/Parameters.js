@@ -46,8 +46,9 @@ export default function Parameters() {
       <Text style={styles.title}>Générer un nouveau quiz !</Text>
 
       <View style={styles.list}>
-        <ThemeSelector onValueChange={setTheme} />
-
+        <View style={{width:'100%'}}>
+          <ThemeSelector onValueChange={setTheme} />
+        </View>
         <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
 
         <View style={{ width: '100%' }}>
@@ -99,5 +100,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    width: '50%',
   },
 });

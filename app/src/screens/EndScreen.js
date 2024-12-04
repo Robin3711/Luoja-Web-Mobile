@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { loadFont } from '../utils/utils';
+import { COLORS } from '../css/utils/color';
+import SimpleButton from '../components/SimpleButton';
 
 import { themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
@@ -10,6 +13,7 @@ import * as Progress from 'react-native-progress';
 export default function EndScreen() {
     const route = useRoute();
     const navigation = useNavigation();
+    loadFont();
 
     const { score, numberOfQuestions, gameId } = route.params;
 
@@ -68,9 +72,9 @@ export default function EndScreen() {
     };
 
     return (error ? (
-        <View style={styles.quizScreenView}>
+        <View style={styles.container}>
             <Text style={styles.errorText}>{errorMessage}</Text>
-            <TouchableOpacity onPress={() => {
+            <TouchableOpacity style={styles.button} onPress={() => {
                 navigation.navigate('menuDrawer')
             }
             }>
@@ -78,25 +82,25 @@ export default function EndScreen() {
             </TouchableOpacity>
         </View>
     ) : (
-        <View style={styles.quizContainer}>
-            <View style={styles.quizQuestionContainer}>
-                <Text>Fin de partie !</Text>
-                <Text>Recapitulatif de la partie :</Text>
-                <Text>Categorie : {category} | difficulté : {difficulty}</Text>
+        <View style={styles.container}>
+            <View style={styles.parentContainer}>
+                <Text style={styles.title}>Fin de partie !</Text>
+                <Text style={styles.text}>Recapitulatif de la partie :</Text>
+                <Text style={styles.text}>Categorie : {category} | difficulté : {difficulty}</Text>
                 {score !== null && numberOfQuestions !== null ? (
                     <View style={styles.scoreContainer}>
                         <Text style={styles.scoreTitle}>
                             Votre score : {score} / {numberOfQuestions}
                         </Text>
-                        <View style={styles.endContainer}>
+                        <View style={styles.wheelContainer}>
                             <Progress.Circle
                                 progress={!loading ? progress : 0}
                                 size={120}
                                 showsText={!loading}
-                                color={!loading ? "#76c7c0" : "#007AFF"}
+                                color={COLORS.text.blue.dark}
                                 borderWidth={!loading ? 0 : 10}
                                 thickness={15}
-                                unfilledColor={!loading ? "#e12f09" : "#f0f0f0"}
+                                unfilledColor={"#f0f0f0"}
                                 indeterminate={loading}
                                 indeterminateAnimationDuration={1000}
                             />
@@ -108,23 +112,15 @@ export default function EndScreen() {
                 )}
             </View>
 
-            <TouchableOpacity
-                style={styles.quizNextButton}
+            <SimpleButton
+                text="Retourner au Menu"
                 onPress={handleReturnHome}
-            >
-                <Text style={styles.quizNextButtonText}>
-                    Retourner au Menu.
-                </Text>
-            </TouchableOpacity>
+            />
 
-            <TouchableOpacity
-                style={styles.quizNextButton}
+            <SimpleButton
+                text="Rejouer au Quiz"
                 onPress={handleReplay}
-            >
-                <Text style={styles.quizNextButtonText}>
-                    Rejouer au même quiz.
-                </Text>
-            </TouchableOpacity>
+            />
         </View>
     )
     );
@@ -136,5 +132,51 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
+
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f0f0f0',
+        backgroundColor: COLORS.background.blue,
+    },
+    parentContainer: {
+        alignItems: 'center',
+        margin: 20,
+    },
+    scoreContainer: {
+        alignItems: 'center',
+        margin: 20,
+    },
+    title: {
+        textAlign: 'center',
+        color: COLORS.text.blue.dark,
+        fontSize: 50,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        width: '100%',
+        marginBottom: '25%',
+    },
+    text: {
+        fontSize: 25,
+        color: COLORS.text.blue.dark,
+    },
+    scoreTitle: {
+        fontSize: 25,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+    },
+    wheelContainer: {
+        margin: 20,
+    },
+    button: {
+        backgroundColor: '#007AFF',
+        padding: 10,
+        margin: 10,
+        borderRadius: 10,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
     },
 });
