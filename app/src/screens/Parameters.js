@@ -15,7 +15,7 @@ const platform = Platform.OS;
 
 export default function Parameters() {
   const [difficulty, setDifficulty] = useState(null);
-  const [theme, setTheme] = useState('none');
+  const [theme, setTheme] = useState(null);
   const [questionCount, setQuestionCount] = useState(1);
   const [tempQuestionCount, setTempQuestionCount] = useState(1);
   const [launch, setlaunch] = useState(false);
@@ -44,18 +44,18 @@ export default function Parameters() {
   return (
     <View style={styles.screen}>
       <Text style={styles.title}>Générer un nouveau quiz !</Text>
-      
+
       <View style={styles.list}>
         <ThemeSelector onValueChange={setTheme} />
 
         <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
 
-        <View style={{width:'100%'}}>
-        <RangeCursor 
-          testID="range-cursor" value={tempQuestionCount}
-          onValueChange={setTempQuestionCount}
-          onSlidingComplete={(value) => setQuestionCount(value)} 
-        />
+        <View style={{ width: '100%' }}>
+          <RangeCursor
+            testID="range-cursor" value={tempQuestionCount}
+            onValueChange={setTempQuestionCount}
+            onSlidingComplete={(value) => setQuestionCount(value)}
+          />
         </View>
 
         <SimpleButton style={styles.buttons} text={launch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)} disabled={launch} onPress={handleCreateQuiz} />
@@ -65,19 +65,19 @@ export default function Parameters() {
 }
 
 const styles = StyleSheet.create({
-    screen: {
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: COLORS.background.blue,
+  screen: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.background.blue,
   },
   title: {
-      textAlign: 'center',
-      color: COLORS.text.blue.dark,
-      fontSize: 50,
-      fontFamily: 'LobsterTwo_700Bold_Italic',
+    textAlign: 'center',
+    color: COLORS.text.blue.dark,
+    fontSize: 50,
+    fontFamily: 'LobsterTwo_700Bold_Italic',
   },
   buttons: {
     display: 'flex',
