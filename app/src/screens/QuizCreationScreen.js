@@ -126,14 +126,20 @@ export default function QuizCreation() {
 
     const handlePublish = async () => {
         try {
-            await handleSave();
-            await publishQuiz(quizId);
+            if(title === '') {
+                throw new Error("Le titre du quiz ne peut pas être vide.");
+            } else if (questions.length === 0) {
+                throw new Error("Aucune question n'a été ajoutée au quiz.");
+            } else {
+                await handleSave();
+                await publishQuiz(quizId);
 
-            setQuizId(null);
-            setTitle('');
-            setCategory('none');
-            setDifficulty('easy');
-            setQuestions([]);
+                setQuizId(null);
+                setTitle('');
+                setCategory('none');
+                setDifficulty('easy');
+                setQuestions([]);
+            }
         }
         catch (error) {
             if (error.status && error.message) {

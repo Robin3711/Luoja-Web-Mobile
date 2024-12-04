@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Text, View, Platform, StyleSheet, ScrollView } from 'react-native';
 
 import { getQuizAutoComplete } from '../utils/api';
@@ -6,8 +6,9 @@ import ThemeSelector from '../components/ThemeList';
 import RangeCursor from '../components/Cursor';
 import DifficultySelector from '../components/DifficultyPicker';
 import QuizInformation from '../components/QuizInformation';
-import { loadFont } from '../utils/utils';
+import { loadFont, requireToken } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 const platform = Platform.OS;
 
@@ -20,6 +21,14 @@ export default function SearchScreen() {
     const [tempQuestionCount, setTempQuestionCount] = useState(1);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
+    
+    navigation = useNavigation();
+
+    useFocusEffect(
+        useCallback(() => {
+            requireToken(navigation);
+        }, [])
+    );
 
     useEffect(() => {
         const fetchData = async () => {
