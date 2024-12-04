@@ -19,48 +19,46 @@ export default function HistoryQuizInformation({ partyId }) {
 
     useEffect(() => {
         async function fetchParty() {
-        try{
-            const data = await getGameInfos(partyId);
-            console.log(data);
-            setLoading(false);
-            setCursor(data.questionCursor);
-            let scoreTemp = 0;
-            for (let i = 0; i < data.results.length; i++) {
-                if (data.results[i] === true) {
-                    scoreTemp++;
+            try {
+                const data = await getGameInfos(partyId);
+                setLoading(false);
+                setCursor(data.questionCursor);
+                let scoreTemp = 0;
+                for (let i = 0; i < data.results.length; i++) {
+                    if (data.results[i] === true) {
+                        scoreTemp++;
+                    }
+                }
+                setScore(scoreTemp);
+                let dateTemp = formatReadableDate(data.CreateDate);
+                setDate(dateTemp);
+                let difficultyTemp = data.Difficulty;
+                if (difficultyTemp === "easy") {
+                    setDifficulty("Facile");
+                } else if (difficultyTemp === "medium") {
+                    setDifficulty("Moyen");
+                } else {
+                    setDifficulty("Difficile");
+                }
+                setDifficulty(difficultyTemp);
+                setTitle(data.Title);
+                setNbQuestions(data.numberOfQuestions);
+                if (data.numberOfQuestions === data.questionCursor) {
+                    setButtonText('Rejouer');
                 }
             }
-            setScore(scoreTemp);
-            let dateTemp = formatReadableDate(data.CreateDate);
-            setDate(dateTemp);
-            let difficultyTemp = data.Difficulty;
-            if (difficultyTemp === "easy") {
-                setDifficulty("Facile");
-            } else if (difficultyTemp === "medium") {
-                setDifficulty("Moyen");
-            } else{
-                setDifficulty("Difficile");
-            }
-            setDifficulty(difficultyTemp);
-            setTitle(data.Title);
-            setNbQuestions(data.numberOfQuestions);
-            console.log(cursor, nbQuestions);
-            if(data.numberOfQuestions === data.questionCursor){
-                setButtonText('Rejouer');
+            catch (error) {
+                if (error.status && error.message) {
+                    toast('error', error.status, error.message, 3000, 'crimson');
+                } else {
+                    toast('error', 'Erreur', error, 3000, 'crimson');
+                }
             }
         }
-        catch (error) {
-            if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
-            } else {
-                toast('error', 'Erreur', error, 3000, 'crimson');
-            }
-        }
-    }
         fetchParty();
     }, [partyId, cursor, nbQuestions]);
 
-    const handleContinueGame = async() => {
+    const handleContinueGame = async () => {
         if (cursor === nbQuestions) {
             // on recrée une partie
             const newGameId = await restartGame(partyId);
