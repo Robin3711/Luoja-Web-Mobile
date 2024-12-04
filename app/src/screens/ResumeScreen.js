@@ -3,7 +3,6 @@ import { Text, View, TextInput, Button, StyleSheet, Platform, TouchableOpacity }
 
 import { getGameInfos } from '../utils/api';
 import { toast } from '../utils/utils';
-import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
 import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
@@ -23,14 +22,14 @@ export default function ResumeScreen() {
         try {
             setSearch(true);
             if (!gameId) {
-                alert('Veuillez saisir un identifiant de partie');
+                toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, 'crimson');
                 setSearch(false);
                 return;
             }
             let infos = getGameInfos(gameId.toLowerCase());
             infos.then(data => {
                 if (data.error) {
-                    alert('Aucune partie trouvée avec cet identifiant');
+                    toast('error', 'Erreur', 'Aucune partie trouvée avec cet identifiant', 3000, 'crimson');
                     setSearch(false);
                     return;
                 }
@@ -41,17 +40,17 @@ export default function ResumeScreen() {
             })
                 .catch(error => {
                     if (error.status && error.message) {
-                        toast('error', error.status, error.message, 3000);
+                        toast('error', error.status, error.message, 3000, 'crimson');
                     } else {
-                        toast('error', "Erreur", error, 3000);
+                        toast('error', "Erreur", error, 3000, 'crimson');
                     }
                 });
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -64,7 +63,6 @@ export default function ResumeScreen() {
     loadFont();
     return (
         <View style={styles.screen}>
-            <Toast/>
             <Text style={styles.title}>Reprenez votre partie</Text>
             <View style={styles.paste}>
                 <TouchableOpacity onPress={handlePasteGameId}>

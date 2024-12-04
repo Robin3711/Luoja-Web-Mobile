@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 
 import { userLogin } from '../utils/api';
 import { toast } from '../utils/utils';
-import Toast from 'react-native-toast-message';
 
 export default function Login() {
 
     const navigation = useNavigation();
+
+    const passwordInputRef = useRef(null);
 
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
@@ -17,14 +18,14 @@ export default function Login() {
     const handleLogin = async () => {
         try {
             await userLogin(name, password);
+            toast('success', "Connection réussi !", `Bienvenue ${name}`, 3000, 'seagreen');
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
         catch (error) {
-            console.log(error);
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', 'Erreur', error, 3000);
+                toast('error', 'Erreur', error, 3000, 'crimson');
             }
         }
     };
@@ -32,7 +33,6 @@ export default function Login() {
     return (
         <View style={styles.loginView}>
             <Text style={styles.pageTitle}>Connexion</Text>
-            <Toast />
 
             <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
             <View style={styles.nameInputView}>
@@ -42,17 +42,26 @@ export default function Login() {
                     value={name}
                     placeholder="Nom d'utilisateur"
                     autoFocus={true}
+                    returnKeyType="next"
+                    onSubmitEditing={() => {
+                        if (passwordInputRef.current) {
+                            passwordInputRef.current.focus();
+                        }
+                    }}
                 />
             </View>
 
             <Text style={styles.inputTitle}>Password</Text>
             <View style={styles.passwordInputView}>
                 <TextInput
+                    ref={passwordInputRef}
                     style={styles.loginInput}
                     onChangeText={setPassword}
                     value={password}
                     placeholder="Password"
                     secureTextEntry={true}
+                    returnKeyType="done"
+                    onSubmitEditing={handleLogin}
                 />
             </View>
 

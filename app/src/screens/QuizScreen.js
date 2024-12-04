@@ -7,7 +7,6 @@ import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
-import Toast from 'react-native-toast-message';
 import { toast } from '../utils/utils';
 
 
@@ -178,7 +177,7 @@ export default function QuizScreen() {
 
     const handleCopyGameId = async () => {
         await Clipboard.setStringAsync(gameId);
-        toast('info', 'L\'id à bien été copier !', "", 2000);
+        toast('info', 'L\'id à bien été copier !', "", 2000, 'dodgerblue');
     };
 
 
@@ -192,7 +191,6 @@ export default function QuizScreen() {
                             <TouchableOpacity onPress={handleCopyGameId}>
                                 <Copy size={20} />
                             </TouchableOpacity>
-                            <Toast />
                         </View>
                         <View style={styles.mainView}>
                             <View style={styles.questionView}>

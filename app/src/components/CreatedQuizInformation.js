@@ -2,26 +2,37 @@ import React, {useEffect, useState} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
+import { toast } from '../utils/utils';
 
-export default function CreatedQuizInformation({quizId, category, difficulty, date, status, title, nbQuestions}) {
+export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions }) {
     const [loading, setLoading] = useState(true);
     const [average, setAverage] = useState("aucune donnée");
     const [nbPlayed, setNbPlayed] = useState(0);
     const [nbQuestionsStr, setNbQuestions] = useState("any");
 
-    navigation = useNavigation();
+    const navigation = useNavigation();
 
     useEffect(() => {
         async function fetchParty() {
             setLoading(false);
+
+            if (category !== 0 && category !== null) {
+                setThemeName(getThemeLabel(category));
+            }
+ 
             getQuizAverage(quizId).then((data) => {
                 if (data.score === null){
                     data.score = "aucune donnée";
                 } else {
-                    setAverage(Math.trunc(data.score) + "%");
-                    
+                    setAverage(Math.trunc(data.score) + "%");                    
                 }
                 setNbPlayed(data.nombreDePartie);
+            }).catch((error) => {
+                if (error.status && error.message) {
+                    toast('error', error.status, error.message, 3000, 'crimson');
+                } else {
+                    toast('error', 'Erreur', error, 3000, 'crimson');
+                }
             });
 
             setNbQuestions(nbQuestions);
@@ -42,7 +53,7 @@ export default function CreatedQuizInformation({quizId, category, difficulty, da
 
     const handleCreationQuiz = () => {
         if (status === false && Platform.OS === 'web') {
-            navigation.navigate('quizCreation');
+            navigation.navigate('quizCreation', {quizId: quizId});
             
         }
     };

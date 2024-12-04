@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 
 import { createQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
-import Toast from 'react-native-toast-message';
 import RangeCursor from '../components/Cursor';
 import ThemeSelector from '../components/ThemeList'
 import DifficultySelector from '../components/DifficultyPicker';
@@ -34,9 +33,9 @@ export default function Parameters() {
       })
       .catch(error => {
         if (error.status && error.message) {
-          toast('error', error.status, error.message, 3000);
+          toast('error', error.status, error.message, 3000, 'crimson');
         } else {
-          toast('error', "Erreur", error, 3000);
+          toast('error', "Erreur", error, 3000, 'crimson');
         }
       });
   };
@@ -45,8 +44,7 @@ export default function Parameters() {
   return (
     <View style={styles.screen}>
       <Text style={styles.title}>Générer un nouveau quiz !</Text>
-      <Toast />
-
+      
       <View style={styles.list}>
         <ThemeSelector onValueChange={setTheme} />
 

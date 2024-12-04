@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { getQuizInfos } from '../utils/api';
 
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
-import Toast from 'react-native-toast-message';
 import DifficultyPicker from '../components/DifficultyPicker';
-import { LucideDraftingCompass, LucideTrash } from 'lucide-react-native';
-
-
+import { LucideTrash } from 'lucide-react-native';
 
 export default function QuizCreation() {
 
     const navigation = useNavigation();
+    const route = useRoute();
 
     const [quizId, setQuizId] = useState(null);
     const [title, setTitle] = useState('');
@@ -26,9 +25,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -41,14 +40,14 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
 
-    const handleDeleteQuestion = (index) => { 
+    const handleDeleteQuestion = (index) => {
         try {
             const newQuestions = [...questions];
             newQuestions.splice(index, 1);
@@ -57,9 +56,9 @@ export default function QuizCreation() {
 
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -70,9 +69,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     };
@@ -83,9 +82,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -94,11 +93,11 @@ export default function QuizCreation() {
         try {
             navigation.navigate('createQuestion', { question, index, handleQuestion: handleUpdateQuestion });
         }
-        catch (error) { 
+        catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -115,17 +114,16 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     };
 
     const handlePublish = async () => {
         try {
-            console.log(questions);
-            await editQuiz(quizId, title, category, difficulty, questions);
+            await handleSave();
             await publishQuiz(quizId);
 
             setQuizId(null);
@@ -136,16 +134,33 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
 
+    useEffect(() => {
+        const handleRetrieveQuiz = async () => {
+            if (route.params !== undefined) {
+                const data = await getQuizInfos(route.params.quizId);
+                const quiz = data.quiz;
+
+                setQuizId(route.params.quizId);
+                setTitle(quiz.title);
+                setCategory(quiz.category);
+                setDifficulty(quiz.difficulty);
+                setQuestions(quiz.questions);
+            }
+        }
+
+        handleRetrieveQuiz();
+    }
+    , [route.params]);
+
     return (
         <View style={styles.quizCreationView}>
-            <Toast />
             <Text style={styles.titleText}>Créez votre propre quiz !</Text>
             <View style={styles.quizCreationChildVIew}>
                 <View style={styles.quizCreationLeftView}>
@@ -181,9 +196,9 @@ export default function QuizCreation() {
                                 questions.map((question, index) => (
                                     <View style={styles.question} key={index}>
                                         <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
-                                            <Text>{question.question}</Text>
+                                            <Text>{question.text}</Text>
                                         </TouchableOpacity>
-                                        
+
                                         <TouchableOpacity onPress={() => handleDeleteQuestion(index)}>
                                             <LucideTrash size={30} />
                                         </TouchableOpacity>

@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import { hasToken, removeToken } from "../utils/utils";
+import { hasToken, removeToken, toast } from "../utils/utils";
 import { Button } from "react-native-web";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -7,17 +7,21 @@ import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
 import CreatedQuizInformation from "../components/CreatedQuizInformation";
 
+
 export default function Dashboard() {
     const navigation = useNavigation();
     const [history, setHistory] = useState([]);
     const [publishedQuizzes, setPublishedQuizzes] = useState([]);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [error, setError] = useState(false);
 
-    if(!hasToken()){
+    if (!hasToken()) {
         navigation.navigate('login');
     }
 
     const handleLogout = async () => {
         await removeToken();
+        toast('success', "Déconnection réussi !", `Au revoir et à bientot :-(`, 3000, 'seagreen');
         navigation.navigate('login');
     }
 
@@ -26,48 +30,64 @@ export default function Dashboard() {
             navigation.navigate('login');
         }
     }
-    , []);
+        , []);
 
     useEffect(() => {
         async function fetchData() {
-            const games = await getUserGame();
-            const quizzes = await getCreatedQuiz();
-            setHistory(games.games);
-            setPublishedQuizzes(quizzes);
+            try {
+                const games = await getUserGame();
+                const quizzes = await getCreatedQuiz();
+                setHistory(games.games);
+                setPublishedQuizzes(quizzes);
+            } catch (err) {
+                setError(true);
+                setErrorMessage(err.status + " " + err.message);
+            }
+
         }
         fetchData();
     }, []);
-    
+
 
     return (
-        <View style={styles.dashboardView}>
-            <Text style={styles.dashboardText   }>Tableau de bord</Text>
-            <View style={styles.dashboardContainer}>
-                <View style={styles.dashboardSection}>
-                    <Text style={styles.dashboardText   }>Historique</Text>
-                    <ScrollView>
-                        {history.map((item, index) => (
-                            <View key={index}>
-                                <HistoryQuizInformation partyId={item.id} />
-                            </View>
-                        ))}
-                    </ScrollView>
-                </View>
-                <View style={styles.dashboardSection}>
-                    <Text style={styles.dashboardText   }>Vos quiz publié</Text>
-                    <ScrollView>
-                        {publishedQuizzes.map((item, index) => (
-                            <View key={index}>
-                                <CreatedQuizInformation quizId={item.id} category={item.category} difficulty={item.difficulty} date={item.createdAt} status={item.public} title={item.title} nbQuestions={item.numberOfQuestions}/>
-                            </View>
-                        ))}
-                    </ScrollView>
-                </View>
+        error ? (
+            <View style={styles.quizScreenView}>
+                <Text style={styles.errorText}>{errorMessage}</Text>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('menuDrawer', { screen: 'account' })
+                }
+                }>
+                    <Text style={styles.buttonText}>Retour au menu</Text>
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={handleLogout}>
-                <Text>Se déconnecter</Text>
-            </TouchableOpacity>
-        </View>
+        ) : (
+            <View style={styles.dashboardView}>
+                <Text style={styles.dashboardText}>Tableau de bord</Text>
+                <View style={styles.dashboardContainer}>
+                    <View style={styles.dashboardSection}>
+                        <Text style={styles.dashboardText}>Historique</Text>
+                        <ScrollView>
+                            {history.map((item, index) => (
+                                <View key={index}>
+                                    <HistoryQuizInformation partyId={item.id} />
+                                </View>
+                            ))}
+                        </ScrollView>
+                    </View>
+                    <View style={styles.dashboardSection}>
+                        <Text style={styles.dashboardText}>Vos quiz publié</Text>
+                        <ScrollView>
+                            {publishedQuizzes.map((item, index) => (
+                                <View key={index}>
+                                    <CreatedQuizInformation quizId={item.id} category={item.category} difficulty={item.difficulty} date={item.createdAt} status={item.public} title={item.title} nbQuestions={item.numberOfQuestions} />
+                                </View>
+                            ))}
+                        </ScrollView>
+                    </View>
+                </View>
+                <Button title="Se déconnecter" onPress={handleLogout} />
+            </View>
+        )
     );
 }
 
