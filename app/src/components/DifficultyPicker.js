@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { View, Text, Platform, StyleSheet } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 
+import { COLORS } from '../css/utils/color';
 import { difficultyOptions } from '../utils/utils';
 
 const platform = Platform.OS;
@@ -57,6 +58,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderRadius: 20,
         backgroundColor: '#4d65b4',
+        borderColor: '#4d65b4',
     },
     button: {
         margin: 10,
