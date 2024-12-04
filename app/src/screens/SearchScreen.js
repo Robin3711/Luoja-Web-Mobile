@@ -14,14 +14,14 @@ const platform = Platform.OS;
 
 export default function SearchScreen() {
     const [data, setData] = useState([]);
-    const [theme, setTheme] = useState('none');
+    const [theme, setTheme] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
     const [title, setTitle] = useState('');
     const [questionCount, setQuestionCount] = useState(1);
     const [tempQuestionCount, setTempQuestionCount] = useState(1);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
-    
+
     navigation = useNavigation();
 
     useFocusEffect(
@@ -59,7 +59,7 @@ export default function SearchScreen() {
             </View>
         ) : (
             <View style={styles.screen}>
-                <Text style={[styles.title, {width:'100%'}]}>Quiz de la communauté !</Text>
+                <Text style={[styles.title, { width: '100%' }]}>Quiz de la communauté !</Text>
 
                 <View style={styles.searchParameterView}>
 
@@ -80,7 +80,7 @@ export default function SearchScreen() {
                             onSlidingComplete={(value) => setQuestionCount(value)} />
                     </View>
                 </View>
-  
+
                 <View style={styles.quizCreationRightView}>
                     <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
                     <ScrollView style={styles.questionsView}>
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 20,
         width: platform === 'web' ? '40%' : '100%',
-        ...platform !== 'web' && { height: '40%'},
+        ...platform !== 'web' && { height: '40%' },
     },
     quizCreationQuestionsTitle: {
         backgroundColor: 'white',
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
     },
-    questionItem:{
+    questionItem: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
