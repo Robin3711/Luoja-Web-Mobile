@@ -9,6 +9,10 @@ import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { toast } from '../utils/utils';
 
+import { SimpleButton } from '../components/SimpleButton';
+import { loadFont } from '../utils/utils';
+import { COLORS } from '../css/utils/color';
+
 
 const platform = Platform.OS;
 
@@ -180,17 +184,17 @@ export default function QuizScreen() {
         toast('info', 'L\'id à bien été copier !', "", 2000, 'dodgerblue');
     };
 
-
+    loadFont();
     return (
         !error ? (
             <View style={styles.quizScreenView}>
                 {currentQuestion ? (
                     <>
                         <View style={styles.gameId}>
-                            <Text style={styles.gameIdText}>ID : {gameId} </Text>
-                            <TouchableOpacity onPress={handleCopyGameId}>
+                            <TouchableOpacity onPress={handleCopyGameId} style={{marginRight:10, marginTop:2}}>
                                 <Copy size={20} />
                             </TouchableOpacity>
+                            <Text style={styles.gameIdText}>ID : {gameId} </Text>
                         </View>
                         <View style={styles.mainView}>
                             <View style={styles.questionView}>
@@ -202,9 +206,10 @@ export default function QuizScreen() {
                                     colorsTime={[7, 5, 2, 0]}
                                 >
                                     {({ remainingTime }) => (
-                                        <Text>{questionNumber}</Text>
+                                        <Text style={styles.questionNumber}>{questionNumber}</Text>
                                     )}
                                 </CountdownCircleTimer>
+                                <Text style={styles.questionNumber}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
                                     <Text style={styles.quizBarTextView}>1 </Text>
                                     <Progress.Bar
@@ -217,8 +222,7 @@ export default function QuizScreen() {
                                     />
                                     <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
                                 </View>
-                                <Text>{currentQuestion.question}</Text>
-                                <Text>Score: {score}</Text>
+                                <Text style={styles.question}>{currentQuestion.question}</Text>
                                 {platform === 'web' && nextQuestionButton()}
                             </View>
 
@@ -230,7 +234,7 @@ export default function QuizScreen() {
                                         text={answer}
                                         onClick={handleAnswerSelection}
                                         filter={getAnswerFilter(answer)}
-
+                                    
                                     />
                                 ))}
                                 {platform !== 'web' && nextQuestionButton()}
@@ -238,18 +242,15 @@ export default function QuizScreen() {
                         </View>
                     </>
                 ) : (
-                    <Text>Chargement de la question...</Text>
+                    <Text>Chargement...</Text>
                 )}
             </View>
         ) : (
             <View style={styles.quizScreenView}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('menuDrawer', { screen: 'newQuiz' })
-                }
-                }>
-                    <Text style={styles.buttonText}>Retour au menu</Text>
-                </TouchableOpacity>
+
+                <SimpleButton title="Retour au menu" onPress={() => navigation.navigate('menuDrawer', { screen: 'newQuiz' })} />
+                
             </View>
         )
 
@@ -262,6 +263,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
+        backgroundColor: COLORS.background.blue,
     },
     gameId: {
         position: 'absolute',
@@ -278,14 +280,30 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
+        gap: 20,
     },
     questionView: {
         alignItems: 'center',
         width: platform === 'web' ? '50%' : '100%',
     },
+    question: {
+        fontSize: 30,
+        textAlign: 'center',
+        marginVertical: 100,
+        width: '80%',
+        fontWeight: 'bold',
+        color: COLORS.text.blue.dark
+    },
+    questionNumber: {
+        fontSize: 30,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+        fontWeight: 'bold',
+    },
     answersView: {
         width: platform === 'web' ? '50%' : '100%',
         alignItems: 'center',
+        
     },
     buttons: {
         display: 'flex',
@@ -293,8 +311,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#8fd3ff',
-        height: 50,
-        width: 250,
+        height: 75,
+        width: "35%",
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,

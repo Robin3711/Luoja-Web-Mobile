@@ -5,7 +5,7 @@ import Svg, { Path } from 'react-native-svg';
 const platform = Platform.OS;
 
 const Star = () => (
-    <Svg width="75" height="75" viewBox="-2 -2 28 28" fill="none">
+    <Svg width="115" height="115" viewBox="-2 -2 28 28" fill="none">
         <Path
             d="M12 .587l3.668 7.429L24 9.433l-6 5.843 1.42 8.294L12 19.771l-7.42 3.799L6 15.276 0 9.433l8.332-1.417L12 .587z"
             stroke="#0c0d25"
@@ -19,7 +19,7 @@ const Star = () => (
 );
 
 const Triangle = () => (
-    <Svg width="75" height="75" viewBox="0 0 24 24" fill="none">
+    <Svg width="115" height="115" viewBox="0 0 24 24" fill="none">
         <Path d="M12 2L2 22h20L12 2z" stroke="#283971" strokeWidth="3" />
         <Path d="M12 2L2 22h20L12 2z" fill="#96a9e4" />
     </Svg>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        height: platform === 'web' ? 125 : 100,
+        height: platform === 'web' ? 160 : 100,
         width: '95%',
         marginVertical: 5,
         paddingHorizontal: 20,
@@ -96,22 +96,23 @@ const styles = StyleSheet.create({
         width: '75%',
         textAlign: 'center',
         color: 'white',
+        fontSize: 25,
     },
     shapeStyles: {
         square: {
-            width: 75,
-            height: 75,
+            width: 115,
+            height: 115,
             backgroundColor: '#c0e6ff',
             borderRadius: 10,
-            borderWidth: 5,
+            borderWidth: 7,
             borderColor: '#09649f',
         },
         circle: {
-            width: 75,
-            height: 75,
+            width: 115,
+            height: 115,
             backgroundColor: '#7577af',
-            borderRadius: 45,
-            borderWidth: 5,
+            borderRadius: 70,
+            borderWidth: 7,
             borderColor: '#212248',
         },
     },
