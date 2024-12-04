@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 2, // Ombre sur Android
+        elevation: 2, // Ombre sur Android,
+        backgroundColor: '#ffffff', // Fond blanc
     },
     historyPrincipalInformationsView: {
         display: 'flex',
@@ -135,6 +136,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#007bff', // Bleu Bootstrap
         padding: 8, // Espacement interne
         borderRadius: 4, // Coins arrondis
-        marginLeft: 'auto', // Aligner à droite
+        width: 100, // Largeur fixe
+        justifyContent: 'center', // Centrer le texte
+        alignItems: 'center', // Centrer le texte
     }
 });
