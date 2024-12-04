@@ -1,8 +1,7 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { hasToken, removeToken, toast } from "../utils/utils";
-import { Button } from "react-native-web";
-import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useEffect, useState, useCallback } from "react";
 import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
 import CreatedQuizInformation from "../components/CreatedQuizInformation";
@@ -32,21 +31,23 @@ export default function Dashboard() {
     }
         , []);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const games = await getUserGame();
-                const quizzes = await getCreatedQuiz();
-                setHistory(games.games);
-                setPublishedQuizzes(quizzes);
-            } catch (err) {
-                setError(true);
-                setErrorMessage(err.status + " " + err.message);
+    useFocusEffect(
+        useCallback(() => {
+            async function fetchData() {
+                try {
+                    const games = await getUserGame();
+                    const quizzes = await getCreatedQuiz();
+                    setHistory(games.games);
+                    setPublishedQuizzes(quizzes);
+                } catch (err) {
+                    setError(true);
+                    setErrorMessage(err.status + " " + err.message);
+                }
             }
 
-        }
-        fetchData();
-    }, []);
+            fetchData();
+        }, [])
+    );
 
 
     return (
@@ -85,7 +86,9 @@ export default function Dashboard() {
                         </ScrollView>
                     </View>
                 </View>
-                <Button title="Se déconnecter" onPress={handleLogout} />
+                <TouchableOpacity style={styles.touchableOpacity} onPress={handleLogout}>
+                    <Text>Déconnexion</Text>
+                </TouchableOpacity>
             </View>
         )
     );
@@ -93,6 +96,7 @@ export default function Dashboard() {
 
 const styles = StyleSheet.create({
     dashboardView: {
+        flex: 1,
         margin: 10,
         padding: 10,
         backgroundColor: '#f0f0f0',
@@ -108,5 +112,14 @@ const styles = StyleSheet.create({
     },
     dashboardSection: {
         width: '48%',
+        maxHeight: 700,
+    },
+    touchableOpacity: {
+        margin: 10,
+        backgroundColor: 'red',
+        padding: 10,
+        width: 120,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });

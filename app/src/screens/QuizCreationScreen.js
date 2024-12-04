@@ -1,12 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getQuizInfos } from '../utils/api';
 
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
 import DifficultyPicker from '../components/DifficultyPicker';
-import { LucideTrash } from 'lucide-react-native';
+import { Edit2, LucideTrash } from 'lucide-react-native';
+import ThemeSelector from '../components/ThemeList';
+
+const screenHeight = Dimensions.get('window').height;
 
 export default function QuizCreation() {
 
@@ -15,7 +19,7 @@ export default function QuizCreation() {
 
     const [quizId, setQuizId] = useState(null);
     const [title, setTitle] = useState('');
-    const [category, setCategory] = useState('none');
+    const [category, setCategory] = useState(null);
     const [difficulty, setDifficulty] = useState('easy');
     const [questions, setQuestions] = useState([]);
 
@@ -123,14 +127,20 @@ export default function QuizCreation() {
 
     const handlePublish = async () => {
         try {
-            await handleSave();
-            await publishQuiz(quizId);
+            if (title === '') {
+                throw new Error("Le titre du quiz ne peut pas être vide.");
+            } else if (questions.length === 0) {
+                throw new Error("Aucune question n'a été ajoutée au quiz.");
+            } else {
+                await handleSave();
+                await publishQuiz(quizId);
 
-            setQuizId(null);
-            setTitle('');
-            setCategory('none');
-            setDifficulty('easy');
-            setQuestions([]);
+                setQuizId(null);
+                setTitle('');
+                setCategory(null);
+                setDifficulty('easy');
+                setQuestions([]);
+            }
         }
         catch (error) {
             if (error.status && error.message) {
@@ -157,7 +167,7 @@ export default function QuizCreation() {
 
         handleRetrieveQuiz();
     }
-    , [route.params]);
+        , [route.params]);
 
     return (
         <View style={styles.quizCreationView}>
@@ -168,6 +178,7 @@ export default function QuizCreation() {
                         <View style={styles.quizTitleView}>
                             <TextInput style={styles.quizTitleText} placeholder='Titre du quiz' value={title} onChangeText={setTitle} />
                         </View>
+                        <ThemeSelector onValueChange={setCategory} />
                         <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
                         <View style={styles.quizCreationTopButtonsView}>
                             <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
@@ -188,26 +199,37 @@ export default function QuizCreation() {
                     </View>
                 </View>
 
-                <View style={styles.quizCreationRightView}>
-                    <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
-                    <View style={styles.questionsView}>
-                        {
-                            questions.length !== 0 ?
-                                questions.map((question, index) => (
-                                    <View style={styles.question} key={index}>
-                                        <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
-                                            <Text>{question.text}</Text>
-                                        </TouchableOpacity>
-
-                                        <TouchableOpacity onPress={() => handleDeleteQuestion(index)}>
-                                            <LucideTrash size={30} />
-                                        </TouchableOpacity>
-                                    </View>
-                                ))
-                                : <Text>Aucune question</Text>
-                        }
-                    </View>
-                </View>
+                <SafeAreaProvider>
+                    <SafeAreaView style={{ flex: 1 }}>
+                        <View style={{ flex: 1 }}>
+                            <View style={styles.quizCreationRightView}>
+                                <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
+                                <ScrollView
+                                    contentContainerStyle={styles.questionsView}
+                                    style={styles.scrollView}
+                                >
+                                    {
+                                        questions.length !== 0 ?
+                                            questions.map((question, index) => (
+                                                <View style={styles.question} key={index}>
+                                                    <Text>{question.text}</Text>
+                                                    <View style={styles.quizButtonTouchable}>
+                                                        <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
+                                                            <Edit2 size={30} />
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity onPress={() => handleDeleteQuestion(index)}>
+                                                            <LucideTrash size={30} />
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
+                                            ))
+                                            : <Text>Aucune question</Text>
+                                    }
+                                </ScrollView>
+                            </View>
+                        </View>
+                    </SafeAreaView>
+                </SafeAreaProvider>
             </View>
         </View>
     );
@@ -218,6 +240,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#EEF8FF',
     },
     titleText: {
         position: 'absolute',
@@ -244,6 +267,8 @@ const styles = StyleSheet.create({
     },
     quizCreationLeftView: {
         width: '40%',
+        marginRight: 20,
+        marginLeft: 20,
     },
     quizCreationTopButtonsView: {
         flexDirection: 'column',
@@ -257,23 +282,28 @@ const styles = StyleSheet.create({
     quizCreationRightView: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-around',
         backgroundColor: '#8fd3ff',
-        height: '100%',
         borderRadius: 20,
         padding: 20,
-        width: '40%',
-    },
-    quizCreationQuestionsTitle: {
-        backgroundColor: 'white',
-        padding: 5,
-        borderRadius: 20,
+        width: '100%',
+        maxHeight: screenHeight * 0.6,
     },
     questionsView: {
         backgroundColor: 'white',
         padding: 5,
         borderRadius: 20,
-        height: '80%'
+        flexGrow: 1,
+        paddingBottom: 10,
+    },
+    scrollView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+    },
+    quizCreationQuestionsTitle: {
+        backgroundColor: 'white',
+        padding: 5,
+        marginBottom: 10,
+        borderRadius: 20,
     },
     question: {
         display: 'flex',
@@ -315,4 +345,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
     },
+    quizButtonTouchable: {
+        flexDirection: 'row',
+    }
 });

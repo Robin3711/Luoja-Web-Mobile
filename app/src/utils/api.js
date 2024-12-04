@@ -27,7 +27,7 @@ export async function createQuiz(questionCount, theme, difficulty) {
     try {
         let url = `${await getPlatformAPI()}/quizFast?amount=${questionCount}`;
 
-        if (theme !== 'none') {
+        if (theme !== null) {
             url += `&category=${theme}`;
         }
 
@@ -300,7 +300,7 @@ export async function getQuestions(amount, category, difficulty) {
         const data = await response.json();
 
         if (data.response_code !== 0) throw new Error("Erreur lors de la récupération des questions");
-        
+
         data.results.forEach((item) => {
             item.question = decode(item.question);
             item.correct_answer = decode(item.correct_answer);
@@ -309,6 +309,7 @@ export async function getQuestions(amount, category, difficulty) {
 
         const questions = data.results.map((item) => ({
             text: item.question,
+            trueFalse: item.incorrect_answers.length === 1,
             correctAnswer: item.correct_answer,
             incorrectAnswers: item.incorrect_answers,
         }));
@@ -324,7 +325,7 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
     try {
         let url = `${await getPlatformAPI()}/quiz?title=${title}`;
 
-        if (category !== 'none') url += `&category=${category}`;
+        if (category !== null) url += `&category=${category}`;
 
         if (difficulty !== null) url += `&difficulty=${difficulty}`;
 
@@ -426,7 +427,7 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
 
         if (title) parameters += `title=${title}`;
 
-        if (theme !== 'none' && theme) parameters += `&category=${theme}`;
+        if (theme !== null && theme) parameters += `&category=${theme}`;
 
         if (difficulty) parameters += `&difficulty=${difficulty}`;
 

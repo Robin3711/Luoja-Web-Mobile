@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { getGameInfos } from '../utils/api';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { getGameInfos, restartGame } from '../utils/api';
 import { toast } from '../utils/utils';
 import { getThemeLabel, formatReadableDate } from '../utils/utils';
+import { useNavigation } from '@react-navigation/native';
 
 export default function HistoryQuizInformation({ partyId }) {
     const [loading, setLoading] = useState(true);
@@ -11,12 +12,18 @@ export default function HistoryQuizInformation({ partyId }) {
     const [difficulty, setDifficulty] = useState("any");
     const [title, setTitle] = useState("any");
     const [nbQuestions, setNbQuestions] = useState(0);
+    const [cursor, setCursor] = useState(0);
+    const [buttonText, setButtonText] = useState('Continuer');
+
+    const navigation = useNavigation();
 
     useEffect(() => {
         async function fetchParty() {
         try{
             const data = await getGameInfos(partyId);
+            console.log(data);
             setLoading(false);
+            setCursor(data.questionCursor);
             let scoreTemp = 0;
             for (let i = 0; i < data.results.length; i++) {
                 if (data.results[i] === true) {
@@ -37,6 +44,10 @@ export default function HistoryQuizInformation({ partyId }) {
             setDifficulty(difficultyTemp);
             setTitle(data.Title);
             setNbQuestions(data.numberOfQuestions);
+            console.log(cursor, nbQuestions);
+            if(data.numberOfQuestions === data.questionCursor){
+                setButtonText('Rejouer');
+            }
         }
         catch (error) {
             if (error.status && error.message) {
@@ -47,7 +58,19 @@ export default function HistoryQuizInformation({ partyId }) {
         }
     }
         fetchParty();
-    }, [partyId]);
+    }, [partyId, cursor, nbQuestions]);
+
+    const handleContinueGame = async() => {
+        if (cursor === nbQuestions) {
+            // on recrée une partie
+            const newGameId = await restartGame(partyId);
+            navigation.navigate('quizScreen', { gameId: newGameId.id });
+        }
+        else {
+            // on continue la partie
+            navigation.navigate('quizScreen', { gameId: partyId });
+        }
+    }
 
     if (loading) {
         return <Text>Chargement...</Text>;
@@ -59,6 +82,9 @@ export default function HistoryQuizInformation({ partyId }) {
                 <Text style={styles.titleText}>{title || `${partyId}`}</Text>
                 <Text style={styles.titleText}>{difficulty}</Text>
                 <Text style={styles.titleText}>{nbQuestions}</Text>
+                <TouchableOpacity style={styles.touchableOpacity} onPress={handleContinueGame}>
+                    <Text>{buttonText}</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.historySecondaryInformationsView}>
                 <Text style={styles.detailText}>Date : {date}</Text>
@@ -79,13 +105,14 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 2, // Ombre sur Android
+        elevation: 2, // Ombre sur Android,
+        backgroundColor: '#ffffff', // Fond blanc
     },
     historyPrincipalInformationsView: {
         display: 'flex',
         flexDirection: 'row',
         marginBottom: 8, // Espacement entre les éléments
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
     },
     historySecondaryInformationsView: {
         display: 'flex',
@@ -100,9 +127,19 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 4, // Espace sous le titre
+        width: '15%'
     },
     detailText: {
         fontSize: 12,
         color: '#666666', // Texte secondaire plus clair
+        width: '50%'
     },
+    touchableOpacity: {
+        backgroundColor: '#007bff', // Bleu Bootstrap
+        padding: 8, // Espacement interne
+        borderRadius: 4, // Coins arrondis
+        width: 100, // Largeur fixe
+        justifyContent: 'center', // Centrer le texte
+        alignItems: 'center', // Centrer le texte
+    }
 });

@@ -74,7 +74,7 @@ const MenuStack = () => {
     <stack.Navigator initialRouteName='menuDrawer'>
       <stack.Screen name="menuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
       <stack.Group screenOptions={{ presentation: 'modal' }}>
-        <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
+        <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz"}} />
         <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
         <stack.Screen name="login" component={Login} options={{ title: "Se connecter" }} />
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire" }} />
