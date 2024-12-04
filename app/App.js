@@ -60,11 +60,11 @@ const MenuDrawer = () => {
   return (
     <drawer.Navigator screenOptions={{ drawerPosition: 'left' }} initialRouteName='home'>
       <drawer.Screen name="home" component={HomeScreen} options={{ title: "Luoja", drawerLabel: "Accueil" }} />
-      <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Luoja", drawerLabel: "Créer un nouveau QUIZ" }} />
-      <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Luoja", drawerLabel: "Reprendre un QUIZ" }} />
-      <drawer.Screen name="search" component={SearchScreen} options={{ title: "Luoja", drawerLabel: "Rechercher un QUIZ" }} />
-      <drawer.Screen name="account" component={Account} options={{ title: "Luoja", drawerLabel: "Mon compte" }} />
-      {Platform.OS === 'web' ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Luoja", drawerLabel: "Créer un quiz" }} /> : null}
+      <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Luoja", drawerLabel: "Générer un QUIZ" }} />
+      <drawer.Screen name="search" component={SearchScreen} options={{ title: "Luoja", drawerLabel: "Quiz de la communauté" }} />
+      <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Luoja", drawerLabel: "Reprendre la partie" }} />
+      {Platform.OS === 'web' ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Luoja", drawerLabel: "Créer votre propre QUIZ" }} /> : null}
+      <drawer.Screen name="account" component={Account} options={{ title: "Luoja", drawerLabel: "Tableau de bord" }} />
     </drawer.Navigator>
   );
 };
