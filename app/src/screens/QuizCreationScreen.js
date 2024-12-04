@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getQuizInfos } from '../utils/api';
 
@@ -18,7 +18,7 @@ export default function QuizCreation() {
 
     const [quizId, setQuizId] = useState(null);
     const [title, setTitle] = useState('');
-    const [category, setCategory] = useState('none');
+    const [category, setCategory] = useState(null);
     const [difficulty, setDifficulty] = useState('easy');
     const [questions, setQuestions] = useState([]);
 
@@ -126,7 +126,7 @@ export default function QuizCreation() {
 
     const handlePublish = async () => {
         try {
-            if(title === '') {
+            if (title === '') {
                 throw new Error("Le titre du quiz ne peut pas être vide.");
             } else if (questions.length === 0) {
                 throw new Error("Aucune question n'a été ajoutée au quiz.");
@@ -136,7 +136,7 @@ export default function QuizCreation() {
 
                 setQuizId(null);
                 setTitle('');
-                setCategory('none');
+                setCategory(null);
                 setDifficulty('easy');
                 setQuestions([]);
             }
