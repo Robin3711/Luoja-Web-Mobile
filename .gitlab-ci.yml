@@ -82,6 +82,7 @@ deploy:
 
 
 test:  
+  when: always
   stage: tests
   image: node:latest
   script:    
@@ -102,6 +103,7 @@ test:
 
 
 lint:  
+  when: always
   stage: tests
   image: node:latest
   script:
