@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Text, View, Platform, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, Platform, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
@@ -50,9 +50,11 @@ export default function SearchScreen() {
             </View>
         ) : (
             <View style={styles.screen}>
-                <Text style={[styles.title, {width:'100%'}]}>Quiz de la communauté !</Text>
-
-                <View style={styles.searchParameterView}>
+                <View>
+                    <Text style={styles.title}>Quiz de la communauté !</Text>
+                </View>
+                <View style={styles.screen2}>
+                    <View style={styles.searchParameterView}>
 
                     <View style={styles.filterView}>
                         <Text style={styles.text}>Titre</Text>
@@ -67,11 +69,11 @@ export default function SearchScreen() {
                     <View style={styles.filterView}>
                         <Text style={styles.text}>Nombre de questions</Text>
                         <RangeCursor testID="range-cursor" value={tempQuestionCount}
-                            onValueChange={setTempQuestionCount}
-                            onSlidingComplete={(value) => setQuestionCount(value)} />
+                                onValueChange={setTempQuestionCount}
+                                onSlidingComplete={(value) => setQuestionCount(value)} />
                     </View>
                 </View>
-  
+    
                 <View style={styles.quizCreationRightView}>
                     <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
                     <ScrollView style={styles.questionsView}>
@@ -87,24 +89,32 @@ export default function SearchScreen() {
                     </ScrollView>
                 </View>
             </View>
-        )
-    );
-}
+        </View>
+    )
+);}
 
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        justifyContent: 'space-around',
         alignItems: 'center',
-        flexDirection: platform === 'web' ? 'row' : 'column',
+        flexDirection: 'column',
         backgroundColor: COLORS.background.blue,
+        paddingTop: 20,
+    },
+    screen2: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '90%',
+        height: '80%',
+        marginTop: 20,
     },
     title: {
         textAlign: 'center',
         color: COLORS.text.blue.dark,
         fontSize: 50,
-        fontWeight: 'bold',
         fontFamily: 'LobsterTwo_700Bold_Italic',
+        width: '100%',
     },
     text: {
         fontSize: 20,
@@ -114,21 +124,31 @@ const styles = StyleSheet.create({
     filterView: {
         marginBottom: 20,
     },
+    searchParameterView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        height: '60%',
+        borderRadius: 20,
+        padding: 20,
+        width: '40%',
+    },
     quizCreationRightView: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
         backgroundColor: '#8fd3ff',
-        height: '75%',
+        height: '80%',
         borderRadius: 20,
         padding: 20,
-        width: platform === 'web' ? '40%' : '100%',
-        ...platform !== 'web' && { height: '40%'},
+        width: '50%',
+        marginLeft: 20,
     },
     quizCreationQuestionsTitle: {
         backgroundColor: 'white',
         padding: 5,
         borderRadius: 20,
+        marginBottom: 20,
     },
     questionsView: {
         backgroundColor: 'white',
@@ -146,7 +166,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
     },
-    questionItem:{
+    questionItem: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
