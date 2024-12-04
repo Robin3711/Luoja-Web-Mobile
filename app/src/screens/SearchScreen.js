@@ -81,9 +81,7 @@ export default function SearchScreen() {
             </View>
         ) : (
             <View style={styles.screen}>
-                <View>
-                    <Text style={styles.title}>Quiz de la communauté !</Text>
-                </View>
+                <Text style={styles.title}>Quiz de la communauté !</Text>
                 <View style={styles.screen2}>
                     <View style={styles.searchParameterView}>
 
@@ -105,7 +103,7 @@ export default function SearchScreen() {
                 </View>
     
                 <View style={styles.quizCreationRightView}>
-                    <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
+                    <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>
                     <ScrollView style={styles.questionsView}>
                         {
                             data.length !== 0 ?
@@ -114,7 +112,7 @@ export default function SearchScreen() {
                                         <QuizInformation quiz={quiz} />
                                     </View>
                                 ))
-                                : <Text>Aucune question</Text>
+                                : <Text>Aucun quiz</Text>
                         }
                     </ScrollView>
                 </View>
@@ -129,15 +127,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'column',
         backgroundColor: COLORS.background.blue,
-        paddingTop: 20,
+        paddingTop: platform === 'web' ? 20 : 0,
     },
     screen2: {
-        flexDirection: 'row',
-        justifyContent: 'center',
+        flexDirection: platform === 'web' ? 'row' : 'column',
+        justifyContent: 'space-around',
         alignItems: 'center',
         width: '90%',
         height: '80%',
-        marginTop: 20,
+        marginTop: platform === 'web' ? 20 : 0,
     },
     title: {
         textAlign: 'center',
@@ -152,27 +150,27 @@ const styles = StyleSheet.create({
         fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     filterView: {
-        marginBottom: 20,
+        marginBottom: platform === 'web' ? 20 : 0,
     },
     searchParameterView: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
-        height: '60%',
+        height: platform === 'web' ? '60%' : '40%',
         borderRadius: 20,
-        padding: 20,
-        width: '40%',
+        padding: platform === 'web' ? 20 : 0,
+        width: platform === 'web' ? '40%' : '100%',
     },
     quizCreationRightView: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
         backgroundColor: '#8fd3ff',
-        height: '80%',
+        height: platform === 'web' ? '80%' : '60%',
         borderRadius: 20,
         padding: 20,
-        width: '50%',
-        marginLeft: 20,
+        width: platform === 'web' ? '50%' : '100%',
+        ...platform === 'web' && { marginLeft: 20 },
     },
     quizCreationQuestionsTitle: {
         backgroundColor: 'white',

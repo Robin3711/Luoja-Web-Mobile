@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         borderColor: '#4d65b4',
         borderRadius: 20,
         padding: 10,
-        margin: 10,
+        marginVertical: 5,
     },
     button: {
         flex: 1,
