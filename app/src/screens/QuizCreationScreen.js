@@ -125,6 +125,8 @@ export default function QuizCreation() {
         try {
             if(title === '') {
                 throw new Error("Le titre du quiz ne peut pas être vide.");
+            } else if (questions.length === 0) {
+                throw new Error("Aucune question n'a été ajoutée au quiz.");
             } else {
                 await handleSave();
                 await publishQuiz(quizId);
