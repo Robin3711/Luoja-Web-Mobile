@@ -168,7 +168,7 @@ export const toastConfig = {
             {...props}
             style={{
                 borderLeftColor: 'limegreen',
-                width: 400,
+                width: 600,
                 height: 100,
             }}
             contentContainerStyle={{
@@ -187,7 +187,7 @@ export const toastConfig = {
             {...props}
             style={{
                 borderLeftColor: 'crimson',
-                width: 400,
+                width: 600,
                 height: 100,
             }}
             contentContainerStyle={{
@@ -206,7 +206,7 @@ export const toastConfig = {
             {...props}
             style={{
                 borderLeftColor: 'deepskyblue',
-                width: 400,
+                width: 600,
                 height: 100,
             }}
             contentContainerStyle={{
