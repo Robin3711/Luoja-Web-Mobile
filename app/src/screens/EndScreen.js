@@ -84,7 +84,7 @@ export default function EndScreen() {
     ) : (
         <View style={styles.container}>
             <View style={styles.parentContainer}>
-                <Text style={styles.text}>Fin de partie !</Text>
+                <Text style={styles.title}>Fin de partie !</Text>
                 <Text style={styles.text}>Recapitulatif de la partie :</Text>
                 <Text style={styles.text}>Categorie : {category} | difficulté : {difficulty}</Text>
                 {score !== null && numberOfQuestions !== null ? (
@@ -97,7 +97,7 @@ export default function EndScreen() {
                                 progress={!loading ? progress : 0}
                                 size={120}
                                 showsText={!loading}
-                                color={COLORS.button.blue.basic}
+                                color={COLORS.text.blue.dark}
                                 borderWidth={!loading ? 0 : 10}
                                 thickness={15}
                                 unfilledColor={"#f0f0f0"}
@@ -149,9 +149,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin: 20,
     },
+    title: {
+        textAlign: 'center',
+        color: COLORS.text.blue.dark,
+        fontSize: 50,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        width: '100%',
+        marginBottom: '25%',
+    },
     text: {
         fontSize: 25,
-        fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
     },
     scoreTitle: {
