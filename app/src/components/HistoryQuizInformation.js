@@ -15,7 +15,7 @@ export default function HistoryQuizInformation({ partyId }) {
     const [cursor, setCursor] = useState(0);
     const [buttonText, setButtonText] = useState('Continuer');
 
-    navigation = useNavigation();
+    const navigation = useNavigation();
 
     useEffect(() => {
         async function fetchParty() {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         marginBottom: 8, // Espacement entre les éléments
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
     },
     historySecondaryInformationsView: {
         display: 'flex',
@@ -127,10 +127,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 4, // Espace sous le titre
+        width: '15%'
     },
     detailText: {
         fontSize: 12,
         color: '#666666', // Texte secondaire plus clair
+        width: '50%'
     },
     touchableOpacity: {
         backgroundColor: '#007bff', // Bleu Bootstrap
