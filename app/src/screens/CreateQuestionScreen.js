@@ -4,6 +4,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
+import { COLORS } from '../css/utils/color';
+
 export default function CreateQuestionScreen() {
 
     const route = useRoute();
@@ -173,6 +175,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         width: '100%',
         height: '100%',
+        backgroundColor: COLORS.background.blue,
     },
     createQuestionLeftView: {
         flexDirection: 'column',
