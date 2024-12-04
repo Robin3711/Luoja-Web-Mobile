@@ -76,7 +76,7 @@ export default function Dashboard() {
                         </ScrollView>
                     </View>
                     <View style={styles.dashboardSection}>
-                        <Text style={styles.dashboardText}>Vos quiz publié</Text>
+                        <Text style={styles.dashboardText}>Vos quiz publiés</Text>
                         <ScrollView>
                             {publishedQuizzes.map((item, index) => (
                                 <View key={index}>
