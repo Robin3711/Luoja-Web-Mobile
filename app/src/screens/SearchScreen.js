@@ -103,7 +103,7 @@ export default function SearchScreen() {
                 </View>
     
                 <View style={styles.quizCreationRightView}>
-                    <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>
+                    {platform === 'web' && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
                     <ScrollView style={styles.questionsView}>
                         {
                             data.length !== 0 ?
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-around',
         backgroundColor: '#8fd3ff',
-        height: platform === 'web' ? '80%' : '60%',
+        height: platform === 'web' ? '80%' : '65%',
         borderRadius: 20,
         padding: 20,
         width: platform === 'web' ? '50%' : '100%',
