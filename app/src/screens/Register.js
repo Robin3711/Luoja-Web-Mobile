@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 10,
+        padding: 10,
         backgroundColor: COLORS.background.blue,
     },
     pageTitle: {
