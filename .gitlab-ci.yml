@@ -1,9 +1,11 @@
-stages:
-  - pages
+stages:  
   - build
   - docker   
   - deploy   
   - tests
+  - pages
+
+
 
 build: 
   image: node:latest
@@ -24,6 +26,20 @@ build:
 
 
 
+
+apk:
+  image: node:latest
+  stage: build  
+  script :    
+  - cd app
+  - npm install  
+  - npm install eas-cli    
+  - npx eas-cli build --platform android  --profile production --non-interactive --no-wait
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
+
+
+
 docker:
   image: docker:latest
   stage: docker
@@ -40,16 +56,30 @@ docker:
   rules:
     - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
 
-apk:
-  image: node:latest
-  stage: build  
-  script :    
-  - cd app
-  - npm install  
-  - npm install eas-cli    
-  - npx eas-cli build --platform android  --profile production --non-interactive --no-wait
+
+
+deploy:
+  stage: deploy
+  needs:
+    - docker  
+  image: ubuntu:latest
+  variables:
+    SECURE_FILES_DOWNLOAD_PATH: ".ssh/"
+  script:
+    - cd /root
+    - apt update -y
+    - apt install -y curl openssh-client
+    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+    - chmod 600 /root/.ssh/id_rsa
+    - ssh-keyscan -H luoja.fr >> /root/.ssh/known_hosts
+    - ssh ubuntu@luoja.fr "sudo docker kill baldur || true"
+    - ssh ubuntu@luoja.fr "sudo docker rm baldur || true"
+    - ssh ubuntu@luoja.fr "sudo docker rmi docker.luoja.fr/baldur || true"
+    - ssh ubuntu@luoja.fr "sudo docker run -d --restart always --name baldur --network internal_network -e PROTOCOL=HTTPS -e DOMAIN=luoja.fr -e API=api.luoja.fr -v /etc/letsencrypt:/etc/letsencrypt:ro docker.luoja.fr/baldur"
   rules:
     - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
+
+
 
 test:  
   stage: tests
@@ -69,6 +99,8 @@ test:
   rules:
     - if: $CI_COMMIT_BRANCH == "dev"
 
+
+
 lint:  
   stage: tests
   image: node:latest
@@ -85,6 +117,8 @@ lint:
   allow_failure: true
   rules:
     - if: $CI_COMMIT_BRANCH == "dev"
+
+
 
 pages:  
   stage: pages
@@ -115,23 +149,3 @@ pages:
   rules:
   - if: $CI_COMMIT_BRANCH == "dev"
 
-deploy:
-  stage: deploy
-  needs:
-    - docker
-  rules:
-    - if: $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
-  image: ubuntu:latest
-  variables:
-    SECURE_FILES_DOWNLOAD_PATH: ".ssh/"
-  script:
-    - cd /root
-    - apt update -y
-    - apt install -y curl openssh-client
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - chmod 600 /root/.ssh/id_rsa
-    - ssh-keyscan -H luoja.fr >> /root/.ssh/known_hosts
-    - ssh ubuntu@luoja.fr "sudo docker kill baldur || true"
-    - ssh ubuntu@luoja.fr "sudo docker rm baldur || true"
-    - ssh ubuntu@luoja.fr "sudo docker rmi docker.luoja.fr/baldur || true"
-    - ssh ubuntu@luoja.fr "sudo docker run -d --restart always --name baldur --network internal_network -e PROTOCOL=HTTPS -e DOMAIN=luoja.fr -e API=api.luoja.fr -v /etc/letsencrypt:/etc/letsencrypt:ro docker.luoja.fr/baldur"
