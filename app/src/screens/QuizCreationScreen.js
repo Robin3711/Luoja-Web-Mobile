@@ -15,7 +15,7 @@ export default function QuizCreation() {
 
     const [quizId, setQuizId] = useState(null);
     const [title, setTitle] = useState('');
-    const [category, setCategory] = useState('none');
+    const [category, setCategory] = useState(null);
     const [difficulty, setDifficulty] = useState('easy');
     const [questions, setQuestions] = useState([]);
 
