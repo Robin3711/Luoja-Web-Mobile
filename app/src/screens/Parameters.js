@@ -78,26 +78,12 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontFamily: 'LobsterTwo_700Bold_Italic',
   },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#8fd3ff',
-    height: 50,
-    width: 250,
-    borderRadius: 15,
-    marginVertical: 20,
-  },
-  buttonText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
   list: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '50%',
+    width: platform === 'web' ? '50%' : '80%',
+    margin: 10,
   },
 });
