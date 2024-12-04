@@ -22,7 +22,7 @@ export default function SearchScreen() {
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
 
-    navigation = useNavigation();
+    const navigation = useNavigation();
 
     useFocusEffect(
         useCallback(() => {
@@ -175,7 +175,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
     },
-    questionItem: {
     questionItem: {
         display: 'flex',
         flexDirection: 'row',
