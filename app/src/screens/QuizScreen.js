@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'grey',
         height: 75,
-        width: "35%",
+        width: platform === 'web' ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
