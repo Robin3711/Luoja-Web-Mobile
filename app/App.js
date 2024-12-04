@@ -60,7 +60,7 @@ const MenuDrawer = () => {
   return (
     <drawer.Navigator screenOptions={{ drawerPosition: 'left' }} initialRouteName='home'>
       <drawer.Screen name="home" component={HomeScreen} options={{ title: "Luoja", drawerLabel: "Accueil" }} />
-      <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Luoja", drawerLabel: "Créer un nouveau QUIZ" }} />
+      <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Luoja", drawerLabel: "Créer un QUIZ rapide" }} />
       <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Luoja", drawerLabel: "Reprendre un QUIZ" }} />
       <drawer.Screen name="search" component={SearchScreen} options={{ title: "Luoja", drawerLabel: "Rechercher un QUIZ" }} />
       <drawer.Screen name="account" component={Account} options={{ title: "Luoja", drawerLabel: "Mon compte" }} />
