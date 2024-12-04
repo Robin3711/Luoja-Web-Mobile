@@ -26,7 +26,7 @@ export default function CreateQuestionScreen() {
     useEffect(() => {
         if (question) {
             setQuestionText(question.text);
-            if(question.trueFalse){
+            if (question.trueFalse) {
                 setShowFourAnswers(false);
                 setAnswers({
                     SQUARE: question.correctAnswer,
@@ -44,7 +44,7 @@ export default function CreateQuestionScreen() {
             }
         }
     }
-    , [question]);
+        , [question]);
 
     const shapes = ['SQUARE', 'TRIANGLE', ...(showFourAnswers ? ['CIRCLE', 'STAR'] : [])];
 
@@ -85,7 +85,7 @@ export default function CreateQuestionScreen() {
                 alert('Veuillez remplir toutes les réponses');
                 return;
             }
-            
+
             handleQuestion([
                 {
                     text: questionText,
@@ -95,7 +95,7 @@ export default function CreateQuestionScreen() {
                 },
             ], index);
         }
-        else{
+        else {
             if (!answers.SQUARE || !answers.TRIANGLE) {
                 alert('Veuillez remplir toutes les réponses');
                 return;
@@ -134,7 +134,7 @@ export default function CreateQuestionScreen() {
             />
         </View>
     );
-    
+
     return (
         <View style={styles.createQuestionView}>
             {/* Left Panel */}
@@ -143,6 +143,7 @@ export default function CreateQuestionScreen() {
                     <Text style={styles.createQuestionTitle}>Questions :</Text>
                     <TextInput
                         style={styles.createQuestionInput}
+                        multiline={true}
                         placeholder="Le texte de la question"
                         value={questionText}
                         onChangeText={setQuestionText}
