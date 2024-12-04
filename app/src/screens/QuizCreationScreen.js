@@ -5,7 +5,6 @@ import { getQuizInfos } from '../utils/api';
 
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
-import Toast from 'react-native-toast-message';
 import DifficultyPicker from '../components/DifficultyPicker';
 import { LucideTrash } from 'lucide-react-native';
 
@@ -26,9 +25,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -41,14 +40,14 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
 
-    const handleDeleteQuestion = (index) => { 
+    const handleDeleteQuestion = (index) => {
         try {
             const newQuestions = [...questions];
             newQuestions.splice(index, 1);
@@ -57,9 +56,9 @@ export default function QuizCreation() {
 
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -70,9 +69,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     };
@@ -83,9 +82,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -94,11 +93,11 @@ export default function QuizCreation() {
         try {
             navigation.navigate('createQuestion', { question, index, handleQuestion: handleUpdateQuestion });
         }
-        catch (error) { 
+        catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -115,9 +114,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     };
@@ -135,9 +134,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
@@ -162,7 +161,6 @@ export default function QuizCreation() {
 
     return (
         <View style={styles.quizCreationView}>
-            <Toast />
             <Text style={styles.titleText}>Créez votre propre quiz !</Text>
             <View style={styles.quizCreationChildVIew}>
                 <View style={styles.quizCreationLeftView}>
@@ -200,7 +198,7 @@ export default function QuizCreation() {
                                         <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
                                             <Text>{question.text}</Text>
                                         </TouchableOpacity>
-                                        
+
                                         <TouchableOpacity onPress={() => handleDeleteQuestion(index)}>
                                             <LucideTrash size={30} />
                                         </TouchableOpacity>

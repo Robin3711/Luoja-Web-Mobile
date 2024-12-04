@@ -1,17 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { getGameInfos } from '../utils/api';
-import { formatReadableDate } from '../utils/utils';
+import { toast } from '../utils/utils';
+import { getThemeLabel, formatReadableDate } from '../utils/utils';
 
-export default function HistoryQuizInformation({partyId}) {
+export default function HistoryQuizInformation({ partyId }) {
     const [loading, setLoading] = useState(true);
     const [score, setScore] = useState(0);
     const [date, setDate] = useState("any");
     const [difficulty, setDifficulty] = useState("any");
     const [title, setTitle] = useState("any");
     const [nbQuestions, setNbQuestions] = useState(0);
+
     useEffect(() => {
         async function fetchParty() {
+        try{
             const data = await getGameInfos(partyId);
             setLoading(false);
             let scoreTemp = 0;
@@ -35,6 +38,14 @@ export default function HistoryQuizInformation({partyId}) {
             setTitle(data.Title);
             setNbQuestions(data.numberOfQuestions);
         }
+        catch (error) {
+            if (error.status && error.message) {
+                toast('error', error.status, error.message, 3000, 'crimson');
+            } else {
+                toast('error', 'Erreur', error, 3000, 'crimson');
+            }
+        }
+    }
         fetchParty();
     }, [partyId]);
 
@@ -42,8 +53,6 @@ export default function HistoryQuizInformation({partyId}) {
         return <Text>Chargement...</Text>;
     }
 
-    
-    
     return (
         <View style={styles.historyQuizInformationView}>
             <View style={styles.historyPrincipalInformationsView}>

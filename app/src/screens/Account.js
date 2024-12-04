@@ -19,11 +19,6 @@ export default function Account() {
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
 
-    const handleLogout = async () => {
-        await removeToken();
-        setIsLogged(false);
-    }
-
     // Vérification du token à chaque fois que l'écran est focus
     useFocusEffect(
         useCallback(() => {
@@ -58,7 +53,7 @@ export default function Account() {
 
     if (isLogged && userInfos) {
 
-        return(
+        return (
             <View>
                 <Dashboard />
             </View>

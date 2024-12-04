@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
 
 import { getQuestions } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
@@ -26,16 +25,15 @@ export default function RetrieveQuestions() {
             navigation.goBack();
         } catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000);
+                toast('error', error.status, error.message, 3000, 'crimson');
             } else {
-                toast('error', "Erreur", error, 3000);
+                toast('error', "Erreur", error, 3000, 'crimson');
             }
         }
     }
 
     return (
         <View>
-            <Toast />
             <ThemeSelector onValueChange={setCategory} />
             <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
             <RangeCursor value={amount} onValueChange={setAmount} />
