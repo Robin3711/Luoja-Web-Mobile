@@ -33,8 +33,8 @@ const ThemeSelector = ({ onValueChange }) => {
                 <View style={styles.themeListModal}>
                     <TouchableOpacity
                         style={styles.themeButton}
-                        onPress={() => handleThemeSelection('none')}>
-                        <Text style={[styles.themeLabel, {fontWeight:'bold'}]}><Dices color="black" size={iconSize} /> Thème générale</Text>
+                        onPress={() => handleThemeSelection(null)}>
+                        <Text style={[styles.themeLabel, { fontWeight: 'bold' }]}><Dices color="black" size={iconSize} /> Thème générale</Text>
                     </TouchableOpacity>
                     <FlatList
                         data={themeOptions}

@@ -8,6 +8,7 @@ import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
 import DifficultyPicker from '../components/DifficultyPicker';
 import { Edit2, LucideTrash } from 'lucide-react-native';
+import ThemeSelector from '../components/ThemeList';
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -177,6 +178,7 @@ export default function QuizCreation() {
                         <View style={styles.quizTitleView}>
                             <TextInput style={styles.quizTitleText} placeholder='Titre du quiz' value={title} onChangeText={setTitle} />
                         </View>
+                        <ThemeSelector onValueChange={setCategory} />
                         <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
                         <View style={styles.quizCreationTopButtonsView}>
                             <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>

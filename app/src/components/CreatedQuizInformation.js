@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
@@ -16,15 +16,11 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
         async function fetchParty() {
             setLoading(false);
 
-            if (category !== 0 && category !== null) {
-                setThemeName(getThemeLabel(category));
-            }
- 
             getQuizAverage(quizId).then((data) => {
-                if (data.score === null){
+                if (data.score === null) {
                     data.score = "aucune donnée";
                 } else {
-                    setAverage(Math.trunc(data.score) + "%");                    
+                    setAverage(Math.trunc(data.score) + "%");
                 }
                 setNbPlayed(data.nombreDePartie);
             }).catch((error) => {
@@ -53,8 +49,8 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
 
     const handleCreationQuiz = () => {
         if (status === false && Platform.OS === 'web') {
-            navigation.navigate('quizCreation', {quizId: quizId});
-            
+            navigation.navigate('quizCreation', { quizId: quizId });
+
         }
     };
 
