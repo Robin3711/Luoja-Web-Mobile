@@ -1,27 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import Slider from '@react-native-community/slider';
+import Slider from '@react-native-assets/slider';
 
 const platform = Platform.OS;
 
-const RangeCursor = ({ testID, value, onValueChange, onSlidingComplete }) => {
+const RangeCursor = ({ value, onValueChange }) => {
+  const [sliderValue, setSliderValue] = useState(value);
+
+  const handleValueChange = (value) => {
+    setSliderValue(value);
+    onValueChange(value);
+  };
 
   return (
     <View style={styles.cursorContainer}>
-      <Text style={styles.cursorLabel}>Sélection : {value}</Text>
-      <View style={styles.cursorSliderView}>
-        <Slider
-          minimumValue={1}
-          maximumValue={50}
-          step={1}
-          onValueChange={onValueChange}
-          onSlidingComplete={onSlidingComplete}
-          minimumTrackTintColor="#1EB1FC"
-          maximumTrackTintColor="#d3d3d3"
-          thumbTintColor="#1EB1FC"
-          testID={testID}
-        />
-      </View>
+      <Text style={styles.cursorLabel}>Sélection : {sliderValue}</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={1}
+        maximumValue={50}
+        step={1}
+        value={sliderValue}
+        onValueChange={handleValueChange}
+        minimumTrackTintColor="#1EB1FC"
+        maximumTrackTintColor="#d3d3d3"
+        thumbTintColor="#1EB1FC"
+      />
     </View>
   );
 };
@@ -36,9 +40,11 @@ const styles = StyleSheet.create({
   cursorLabel: {
     fontSize: 20,
     fontWeight: 'bold',
+    margin: 10,
   },
-  cursorSliderView: {
-    width: '100%',
+  slider: {
+    width: Platform.OS === "web" ? 700 : 300,
+    height: 40,
   },
 });
 

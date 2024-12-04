@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { Text, View, Platform, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { createQuiz } from '../utils/api';
@@ -17,7 +17,6 @@ export default function Parameters() {
   const [difficulty, setDifficulty] = useState(null);
   const [theme, setTheme] = useState(null);
   const [questionCount, setQuestionCount] = useState(1);
-  const [tempQuestionCount, setTempQuestionCount] = useState(1);
   const [launch, setlaunch] = useState(false);
   const navigation = useNavigation();
 
@@ -52,9 +51,8 @@ export default function Parameters() {
 
         <View style={{ width: '100%' }}>
           <RangeCursor
-            testID="range-cursor" value={tempQuestionCount}
-            onValueChange={setTempQuestionCount}
-            onSlidingComplete={(value) => setQuestionCount(value)}
+            value={questionCount}
+            onValueChange={setQuestionCount}
           />
         </View>
 
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 250,
     borderRadius: 15,
-    marginVertical: 10,
+    marginVertical: 20,
   },
   buttonText: {
     fontSize: 20,
