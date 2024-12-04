@@ -5,13 +5,13 @@ import { toast } from '../utils/utils';
 import { getThemeLabel, formatReadableDate } from '../utils/utils';
 
 export default function HistoryQuizInformation({ partyId }) {
-    const [party, setParty] = useState(null);
     const [loading, setLoading] = useState(true);
     const [score, setScore] = useState(0);
     const [date, setDate] = useState("any");
     const [difficulty, setDifficulty] = useState("any");
     const [title, setTitle] = useState("any");
     const [nbQuestions, setNbQuestions] = useState(0);
+
     useEffect(() => {
         async function fetchParty() {
         try{
@@ -52,8 +52,6 @@ export default function HistoryQuizInformation({ partyId }) {
     if (loading) {
         return <Text>Chargement...</Text>;
     }
-
-
 
     return (
         <View style={styles.historyQuizInformationView}>

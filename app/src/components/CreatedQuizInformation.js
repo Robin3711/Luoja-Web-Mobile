@@ -35,12 +35,6 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                 }
             });
 
-            if (status === "true") {
-                setStatus("public");
-            }
-            let dateTemp = formatReadableDate(date);
-            setDate(dateTemp);
-
             setNbQuestions(nbQuestions);
         }
         fetchParty();
