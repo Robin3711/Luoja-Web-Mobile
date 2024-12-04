@@ -62,62 +62,49 @@ export default function ResumeScreen() {
 
     loadFont();
     return (
-        <View style={styles.screen}>
+        <View style={styles.container}>
             <Text style={styles.title}>Reprenez votre partie</Text>
-            <View style={styles.paste}>
+            <View style={styles.inputView}>
                 <TouchableOpacity onPress={handlePasteGameId}>
-                    <ClipboardPaste size={20} style={styles.pasteButton} />
+                    <ClipboardPaste size={30}  color="black"/>
                 </TouchableOpacity>
                 <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
             </View>
-            <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} style={styles.button} />
+            <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
         </View>
     );
 
 }
 
 const styles = StyleSheet.create({
-    screen: {
+    container: {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 10,
         backgroundColor: COLORS.background.blue,
-        padding: 20, 
     },
-    title: {        
+    title:{
+        fontSize: 50,
         textAlign: 'center',
-        color: COLORS.text.blue.dark,
-        fontSize: 60, 
         fontFamily: 'LobsterTwo_700Bold_Italic',
-        marginHorizontal: 20,
-        marginBottom: 150,
-        marginTop: -25,
+        color: COLORS.text.blue.dark,
     },
-    paste: {
+    inputView: {
+        width: platform === 'web' ? '20%' : '80%',
         flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 20, 
-        borderBottomWidth: 2,        
-        paddingHorizontal: 10,
-    },
-    pasteButton: {
-        padding: 10, 
+        backgroundColor: 'white',
+        borderRadius: 10,
+        marginVertical: 40,
     },
     input: {
-        flex: 1,
-        height: 40,
-        paddingHorizontal: 10,
-        fontSize: 30,
+        padding: 10,
+        fontSize: 20,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
-        borderRadius: 5,    
-        marginBottom: 20,    
     },
-    button: {
-        backgroundColor: COLORS.button.blue,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 5,        
-    },    
 });
