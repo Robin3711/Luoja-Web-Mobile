@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { Text, View, Platform, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { createQuiz } from '../utils/api';

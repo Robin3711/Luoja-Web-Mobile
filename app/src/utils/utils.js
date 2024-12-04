@@ -56,7 +56,7 @@ export async function getPlatformAPI() {
 
 export async function requireToken(navigation) {
     if (!await hasToken()) {
-        navigation.navigate('login');
+        navigation.navigate('account');
     }
 }
 
