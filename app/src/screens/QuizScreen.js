@@ -268,6 +268,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
+        padding: 10,
         backgroundColor: COLORS.background.blue,
     },
     gameId: {
