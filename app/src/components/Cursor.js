@@ -1,34 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import Slider from '@react-native-assets/slider';
 
 const platform = Platform.OS;
 
-const RangeCursor = ({ testID, value, onValueChange }) => {
+const RangeCursor = ({ value, onValueChange }) => {
+  const [sliderValue, setSliderValue] = useState(value);
 
-  const handleValueChange = (values) => {
-    const newValue = values[0];
-    onValueChange(newValue);
+  const handleValueChange = (value) => {
+    setSliderValue(value);
+    onValueChange(value);
   };
 
   return (
     <View style={styles.cursorContainer}>
-      <Text style={styles.cursorLabel}>Sélection : {value}</Text>
-      <View style={styles.cursorSliderView}>
-        <MultiSlider
-          values={[value]}
-          min={1}
-          max={50}
-          step={1}
-          onValuesChange={handleValueChange}
-          selectedStyle={{ backgroundColor: '#1EB1FC' }}
-          unselectedStyle={{ backgroundColor: '#d3d3d3' }}
-          trackStyle={styles.trackStyle}
-          markerStyle={styles.markerStyle}
-          sliderLength={800}
-          testID={testID}
-        />
-      </View>
+      <Text style={styles.cursorLabel}>Sélection : {sliderValue}</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={1}
+        maximumValue={50}
+        step={1}
+        value={sliderValue}
+        onValueChange={handleValueChange}
+        minimumTrackTintColor="#1EB1FC"
+        maximumTrackTintColor="#d3d3d3"
+        thumbTintColor="#1EB1FC"
+      />
     </View>
   );
 };
@@ -45,18 +42,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     margin: 10,
   },
-  cursorSliderView: {
-    width: '100%',
-    alignItems: 'center',
-  },
-  trackStyle: {
-    height: 4,
-  },
-  markerStyle: {
-    height: 20,
-    width: 20,
-    borderRadius: 10,
-    backgroundColor: '#1EB1FC', // Couleur du curseur
+  slider: {
+    width: Platform.OS === "web" ? 700 : 300,
+    height: 40,
   },
 });
 

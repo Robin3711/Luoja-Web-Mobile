@@ -100,7 +100,6 @@ export default function EndScreen() {
                                 indeterminate={loading}
                                 indeterminateAnimationDuration={1000}
                             />
-
                         </View>
                     </View>
                 ) : (

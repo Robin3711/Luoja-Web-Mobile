@@ -51,7 +51,7 @@ export default function Parameters() {
 
         <View style={{ width: '100%' }}>
           <RangeCursor
-            testID="range-cursor" value={questionCount}
+            value={questionCount}
             onValueChange={setQuestionCount}
           />
         </View>
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 250,
     borderRadius: 15,
-    marginVertical: 10,
+    marginVertical: 20,
   },
   buttonText: {
     fontSize: 20,
