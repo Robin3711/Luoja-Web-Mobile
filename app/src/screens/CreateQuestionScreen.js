@@ -106,7 +106,7 @@ export default function CreateQuestionScreen() {
                     text: questionText,
                     trueFalse: !showFourAnswers,
                     correctAnswer: answers[selectedShape],
-                    incorrectAnswers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
+                    incorrectAnswers: selectedShape === 'SQUARE' ? [answers.TRIANGLE] : [answers.SQUARE],
                 },
             ], index);
         }
