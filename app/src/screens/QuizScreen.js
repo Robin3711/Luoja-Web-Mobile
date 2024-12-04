@@ -190,12 +190,10 @@ export default function QuizScreen() {
             <View style={styles.quizScreenView}>
                 {currentQuestion ? (
                     <>
-                        <View style={styles.gameId}>
-                            <TouchableOpacity onPress={handleCopyGameId} style={{marginRight:10, marginTop:2}}>
-                                <Copy size={20} />
-                            </TouchableOpacity>
+                        <TouchableOpacity onPress={handleCopyGameId} style={styles.gameId}>
+                            <Copy size={24} color="black" />
                             <Text style={styles.gameIdText}>ID : {gameId} </Text>
-                        </View>
+                        </TouchableOpacity>
                         <View style={styles.mainView}>
                             <View style={styles.questionView}>
                                 <CountdownCircleTimer
@@ -211,16 +209,23 @@ export default function QuizScreen() {
                                 </CountdownCircleTimer>
                                 <Text style={styles.questionNumber}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
-                                    <Text style={styles.quizBarTextView}>1 </Text>
-                                    <Progress.Bar
-                                        borderRadius={0}
-                                        height={10}
-                                        progress={questionNumber / totalQuestion}
-                                        width={platform === 'web' ? 400 : 200}
-                                        indeterminate={loading}
-                                        indeterminateAnimationDuration={2000}
-                                    />
-                                    <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
+                                    
+                                    {platform == 'web' && 
+                                        <>
+                                            <Text style={styles.quizBarTextView}>1 </Text>
+
+                                            <Progress.Bar
+                                            borderRadius={0}
+                                            height={10}
+                                            progress={questionNumber / totalQuestion}
+                                            width={platform === 'web' ? 400 : 200}
+                                            indeterminate={loading}
+                                            indeterminateAnimationDuration={2000}
+                                            />
+
+                                            <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
+                                        </>
+                                    }
                                 </View>
                                 <Text style={styles.question}>{currentQuestion.question}</Text>
                                 {platform === 'web' && nextQuestionButton()}
@@ -268,7 +273,11 @@ const styles = StyleSheet.create({
     gameId: {
         position: 'absolute',
         top: 1,
-        flexDirection: "row",
+        marginRight: 10,
+        marginTop: 2,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     gameIdText: {
         fontSize: 20,
@@ -280,22 +289,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        gap: 20,
+        ...platform === 'web' && { gap: 20, },
     },
     questionView: {
         alignItems: 'center',
         width: platform === 'web' ? '50%' : '100%',
     },
     question: {
-        fontSize: 30,
+        fontSize: platform === 'web' ? 30 : 25,
         textAlign: 'center',
-        marginVertical: 100,
-        width: '80%',
+        width: platform === 'web' ? '80%' : '95%',
         fontWeight: 'bold',
-        color: COLORS.text.blue.dark
+        color: COLORS.text.blue.dark,
+        ...platform === 'web' && { marginVertical: 100, },
     },
     questionNumber: {
-        fontSize: 30,
+        fontSize: platform === 'web' ? 30 : 25,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
@@ -312,7 +321,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#8fd3ff',
         height: 75,
-        width: "35%",
+        width: platform === 'web' ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
