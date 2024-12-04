@@ -66,13 +66,14 @@ export default function ResumeScreen() {
             <Text style={styles.title}>Reprenez votre partie</Text>
             <View style={styles.paste}>
                 <TouchableOpacity onPress={handlePasteGameId}>
-                    <ClipboardPaste size={20} />
+                    <ClipboardPaste size={20} style={styles.pasteButton} />
                 </TouchableOpacity>
-                <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus />
+                <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
             </View>
-            <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
+            <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} style={styles.button} />
         </View>
     );
+
 }
 
 const styles = StyleSheet.create({
@@ -83,17 +84,40 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: COLORS.background.blue,
+        padding: 20, 
     },
-    title: {
+    title: {        
         textAlign: 'center',
         color: COLORS.text.blue.dark,
-        fontSize: 50,
+        fontSize: 60, 
         fontFamily: 'LobsterTwo_700Bold_Italic',
+        marginHorizontal: 20,
+        marginBottom: 150,
+        marginTop: -25,
     },
-    paste:{
-        display:'flex',
-        flexDirection:'row',
-        gap:10,
-    }
-
+    paste: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20, 
+        borderBottomWidth: 2,        
+        paddingHorizontal: 10,
+    },
+    pasteButton: {
+        padding: 10, 
+    },
+    input: {
+        flex: 1,
+        height: 40,
+        paddingHorizontal: 10,
+        fontSize: 30,
+        color: COLORS.text.blue.dark,
+        borderRadius: 5,    
+        marginBottom: 20,    
+    },
+    button: {
+        backgroundColor: COLORS.button.blue,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 5,        
+    },    
 });
