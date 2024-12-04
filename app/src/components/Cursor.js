@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
   cursorLabel: {
     fontSize: 20,
     fontWeight: 'bold',
+    margin: 10,
   },
   cursorSliderView: {
     width: '100%',
