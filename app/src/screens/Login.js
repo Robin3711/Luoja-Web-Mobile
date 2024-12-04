@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { COLORS } from '../css/utils/color';
 
 
 import { userLogin } from '../utils/api';
@@ -51,14 +52,14 @@ export default function Login() {
                 />
             </View>
 
-            <Text style={styles.inputTitle}>Password</Text>
+            <Text style={styles.inputTitle}>Mot de passe</Text>
             <View style={styles.passwordInputView}>
                 <TextInput
                     ref={passwordInputRef}
                     style={styles.loginInput}
                     onChangeText={setPassword}
                     value={password}
-                    placeholder="Password"
+                    placeholder="Mot de passe"
                     secureTextEntry={true}
                     returnKeyType="done"
                     onSubmitEditing={handleLogin}
@@ -78,6 +79,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        margin: 10,
+        backgroundColor: COLORS.background.blue,
     },
     pageTitle: {
         display: 'flex',
