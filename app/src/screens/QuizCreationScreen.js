@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions, Platform } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getQuizInfos } from '../utils/api';
@@ -10,7 +10,13 @@ import DifficultyPicker from '../components/DifficultyPicker';
 import { Edit2, LucideTrash } from 'lucide-react-native';
 import ThemeSelector from '../components/ThemeList';
 
+import { COLORS } from '../css/utils/color';
+import { loadFont } from '../utils/utils';
+import { SimpleButton } from '../components/SimpleButton';
+
 const screenHeight = Dimensions.get('window').height;
+const platform = Platform.OS;
+
 
 export default function QuizCreation() {
 
@@ -170,16 +176,20 @@ export default function QuizCreation() {
     }
         , [route.params]);
 
+    loadFont();
     return (
         <View style={styles.quizCreationView}>
-            <Text style={styles.titleText}>Créez votre propre quiz !</Text>
+            <Text style={styles.title}>Créez votre propre quiz !</Text>
             <View style={styles.quizCreationChildVIew}>
                 <View style={styles.quizCreationLeftView}>
                     <View>
+                        <Text style={styles.text}>Titre</Text>
                         <View style={styles.quizTitleView}>
                             <TextInput style={styles.quizTitleText} placeholder='Titre du quiz' value={title} onChangeText={setTitle} />
                         </View>
+                        <Text style={styles.text}>Thème</Text>
                         <ThemeSelector onValueChange={setCategory} />
+                        <Text style={styles.text}>Difficulté</Text>
                         <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
                         <View style={styles.quizCreationTopButtonsView}>
                             <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
@@ -190,17 +200,9 @@ export default function QuizCreation() {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={styles.quizCreationBottomButtonsView}>
-                        <TouchableOpacity style={styles.buttons} onPress={handleSave}>
-                            <Text style={styles.buttonText}>Enregistrer</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={quizId === null ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={quizId === null}>
-                            <Text style={styles.buttonText}>Publier</Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>
 
-                <SafeAreaProvider>
+                <SafeAreaProvider style={{marginRight:'5%', height:'100%'}}>
                     <SafeAreaView style={{ flex: 1 }}>
                         <View style={{ flex: 1 }}>
                             <View style={styles.quizCreationRightView}>
@@ -213,7 +215,7 @@ export default function QuizCreation() {
                                         questions.length !== 0 ?
                                             questions.map((question, index) => (
                                                 <View style={styles.question} key={index}>
-                                                    <Text>{question.text}</Text>
+                                                    <Text style={{marginLeft: 5, color: COLORS.text.blue.dark}}>{question.text}</Text>
                                                     <View style={styles.quizButtonTouchable}>
                                                         <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
                                                             <Edit2 size={30} />
@@ -232,6 +234,15 @@ export default function QuizCreation() {
                     </SafeAreaView>
                 </SafeAreaProvider>
             </View>
+
+            <View style={styles.quizCreationBottomButtonsView}>
+                        <TouchableOpacity style={styles.buttons} onPress={handleSave}>
+                            <Text style={styles.buttonText}>Enregistrer</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={quizId === null ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={quizId === null}>
+                            <Text style={styles.buttonText}>Publier</Text>
+                        </TouchableOpacity>
+                    </View> 
         </View>
     );
 }
@@ -239,14 +250,24 @@ export default function QuizCreation() {
 const styles = StyleSheet.create({
     quizCreationView: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         backgroundColor: '#EEF8FF',
+        flexDirection: 'column',
     },
-    titleText: {
-        position: 'absolute',
-        top: 60,
-        fontSize: 40,
+    title: {
+        marginTop: '3%',
+        marginBottom: '5%',
+        textAlign: 'center',
+        color: COLORS.text.blue.dark,
+        fontSize: 50,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+      },
+    text: {
+        fontSize: 20,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        marginTop: 5,
+        color: COLORS.text.blue.dark,
     },
     quizCreationChildVIew: {
         flexDirection: 'row',
@@ -268,17 +289,21 @@ const styles = StyleSheet.create({
     },
     quizCreationLeftView: {
         width: '40%',
-        marginRight: 20,
-        marginLeft: 20,
+        marginRight: '10%',
+        marginLeft: '5%',
     },
     quizCreationTopButtonsView: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    quizCreationBottomButtonsView: {
+        marginTop: '3%',
         flexDirection: 'row',
         justifyContent: 'center',
+        alignItems: 'center',
+        gap: '10%',
+    },
+    quizCreationBottomButtonsView: {
+        marginTop: '5%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        gap: '10%',
     },
     quizCreationRightView: {
         display: 'flex',
@@ -287,7 +312,9 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 20,
         width: '100%',
-        maxHeight: screenHeight * 0.6,
+        height: '100%',
+        marginRight: 200,
+        maxHeight: screenHeight * 0.4,
     },
     questionsView: {
         backgroundColor: 'white',
@@ -301,6 +328,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     quizCreationQuestionsTitle: {
+        coolor: COLORS.text.blue.dark,
         backgroundColor: 'white',
         padding: 5,
         marginBottom: 10,
@@ -313,38 +341,41 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: 5,
         padding: 5,
-        backgroundColor: '#58bdfe',
+        backgroundColor: COLORS.background.blue,
         borderRadius: 20,
     },
     buttons: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#8fd3ff',
-        height: 50,
-        width: 250,
+        position: 'relative', // Permet de positionner le texte absolument par rapport au bouton
+        backgroundColor: COLORS.button.blue.basic,
+        height: 75,
+        width: 350,
         borderRadius: 15,
         marginVertical: 10,
-        marginHorizontal: 10,
-        boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+        marginBottom: 25,
+        ...platform === 'web' ? { 
+            boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+        } : { elevation: 2 },
     },
     disabledButton: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#d3d3d3',
-        height: 50,
-        width: 250,
+        position: 'relative', // Permet de positionner le texte absolument par rapport au bouton
+        backgroundColor: "#d3d3d3",
+        height: 75,
+        width: 350,
         borderRadius: 15,
         marginVertical: 10,
-        marginHorizontal: 10,
-        boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+        marginBottom: 25,
+        ...platform === 'web' ? { 
+            boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+        } : { elevation: 2 },
     },
     buttonText: {
-        fontSize: 20,
+        fontSize: 25,
         fontWeight: 'bold',
+        color: COLORS.text.blue.dark,
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        fontFamily: 'LobsterTwo_700Bold',
+        marginVertical: 20,
     },
     quizButtonTouchable: {
         flexDirection: 'row',
