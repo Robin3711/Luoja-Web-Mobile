@@ -17,7 +17,6 @@ export default function Parameters() {
   const [difficulty, setDifficulty] = useState(null);
   const [theme, setTheme] = useState(null);
   const [questionCount, setQuestionCount] = useState(1);
-  const [tempQuestionCount, setTempQuestionCount] = useState(1);
   const [launch, setlaunch] = useState(false);
   const navigation = useNavigation();
 
@@ -52,9 +51,8 @@ export default function Parameters() {
 
         <View style={{ width: '100%' }}>
           <RangeCursor
-            testID="range-cursor" value={tempQuestionCount}
-            onValueChange={setTempQuestionCount}
-            onSlidingComplete={(value) => setQuestionCount(value)}
+            testID="range-cursor" value={questionCount}
+            onValueChange={setQuestionCount}
           />
         </View>
 
