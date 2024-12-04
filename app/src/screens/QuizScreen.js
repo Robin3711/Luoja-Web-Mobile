@@ -150,7 +150,7 @@ export default function QuizScreen() {
 
     const nextQuestionButton = () => (
         <TouchableOpacity
-            style={styles.buttons}
+            style={buttonDisabled || (!isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
             onPress={() =>
                 isAnswered
                     ? totalQuestion === questionNumber
@@ -311,6 +311,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#8fd3ff',
+        height: 75,
+        width: "35%",
+        borderRadius: 15,
+        marginVertical: 10,
+        elevation: 2,
+    },
+    disabledButtons: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'grey',
         height: 75,
         width: "35%",
         borderRadius: 15,
