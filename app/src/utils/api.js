@@ -309,6 +309,7 @@ export async function getQuestions(amount, category, difficulty) {
 
         const questions = data.results.map((item) => ({
             text: item.question,
+            trueFalse: item.incorrect_answers.length === 1,
             correctAnswer: item.correct_answer,
             incorrectAnswers: item.incorrect_answers,
         }));
