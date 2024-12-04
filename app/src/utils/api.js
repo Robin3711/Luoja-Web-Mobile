@@ -324,7 +324,7 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
     try {
         let url = `${await getPlatformAPI()}/quiz?title=${title}`;
 
-        if (category !== 'none') url += `&category=${category}`;
+        if (category !== null) url += `&category=${category}`;
 
         if (difficulty !== null) url += `&difficulty=${difficulty}`;
 
