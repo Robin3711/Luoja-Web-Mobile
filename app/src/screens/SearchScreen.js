@@ -1,9 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Text, View, Platform, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, Platform, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
-import RangeCursor from '../components/Cursor';
 import DifficultySelector from '../components/DifficultyPicker';
 import QuizInformation from '../components/QuizInformation';
 import { loadFont, requireToken } from '../utils/utils';
@@ -17,10 +16,9 @@ export default function SearchScreen() {
     const [theme, setTheme] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
     const [title, setTitle] = useState('');
-    const [questionCount, setQuestionCount] = useState(1);
-    const [tempQuestionCount, setTempQuestionCount] = useState(1);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
+    const [timer, setTimer] = useState(null);
 
     const navigation = useNavigation();
 
@@ -33,7 +31,7 @@ export default function SearchScreen() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await getQuizAutoComplete(title, theme, difficulty, questionCount);
+                const result = await getQuizAutoComplete(title, theme, difficulty);
                 setData(result);
             } catch (err) {
                 setError(true);
@@ -43,7 +41,31 @@ export default function SearchScreen() {
 
         fetchData();
 
-    }, [title, theme, difficulty, questionCount]);
+    }, [title, theme, difficulty]);
+
+    useEffect(() => {
+        return () => {
+            if (timer) {
+                clearTimeout(timer);
+            }
+        };
+    }, [timer]);
+
+    const handleSearchTitle = (currentTitle) => {
+
+
+
+        if (timer) {
+            clearTimeout(timer);
+        }
+
+        const newTimer = setTimeout(() => {
+            setTitle(currentTitle);
+        }, 500);
+
+        setTimer(newTimer);
+
+    }
 
     loadFont();
     return (
@@ -65,21 +87,20 @@ export default function SearchScreen() {
                 <View style={styles.screen2}>
                     <View style={styles.searchParameterView}>
 
+
                     <View style={styles.filterView}>
                         <Text style={styles.text}>Titre</Text>
+                        <View style={styles.quizTitleView}>
+                            <TextInput style={styles.quizTitleText} placeholder='Titre' onChangeText={(value) => handleSearchTitle(value)} />
+                        </View>
                     </View>
                     <View style={styles.filterView}>
+                        <Text style={styles.text}>Thème</Text>
                         <ThemeSelector onValueChange={setTheme} />
                     </View>
                     <View style={styles.filterView}>
                         <Text style={styles.text}>Difficulté</Text>
                         <DifficultySelector testID="difficultySelector" value={difficulty} onValueChange={setDifficulty} />
-                    </View>
-                    <View style={styles.filterView}>
-                        <Text style={styles.text}>Nombre de questions</Text>
-                        <RangeCursor testID="range-cursor" value={tempQuestionCount}
-                                onValueChange={setTempQuestionCount}
-                                onSlidingComplete={(value) => setQuestionCount(value)} />
                     </View>
                 </View>
     
@@ -158,6 +179,18 @@ const styles = StyleSheet.create({
         padding: 5,
         borderRadius: 20,
         marginBottom: 20,
+    },
+    quizTitleText: {
+        padding: 5,
+        textAlign: 'center',
+        backgroundColor: 'white',
+        borderRadius: 20,
+    },
+    quizTitleView: {
+        backgroundColor: '#58bdfe',
+        width: '100%',
+        padding: 10,
+        borderRadius: 20,
     },
     questionsView: {
         backgroundColor: 'white',

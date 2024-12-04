@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet } from 'react-native';
 import { Dices } from 'lucide-react-native';
-import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 
 import { themeOptions, iconSize } from '../utils/utils';

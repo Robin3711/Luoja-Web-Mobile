@@ -27,13 +27,12 @@ export default function QuizInformation({ quiz }) {
         return text;
     };
 
-    console.log(quiz.category);
     const themeName = getThemeLabel(parseInt(quiz.category));
     return (
         <View style={styles.QuizInformationView}>
-            <Text style={[styles.QuizInformationText, {flex:1.2}]}>{truncateText(quiz.title, 20)}</Text>
-            <Text style={[styles.QuizInformationText, {flex:0.8}]}>{themeName ?? "Thème général"}</Text>
-            <Text style={[styles.QuizInformationText, {flex:0.8}]}>{quiz.difficulty}</Text>
+            <Text style={[styles.QuizInformationText, { flex: 1.2 }]}>{truncateText(quiz.title, 20)}</Text>
+            <Text style={[styles.QuizInformationText, { flex: 0.8 }]}>{themeName ?? "Thème général"}</Text>
+            <Text style={[styles.QuizInformationText, { flex: 0.8 }]}>{quiz.difficulty}</Text>
             <TouchableOpacity style={styles.QuizInformationButton} onPress={handleStartQuiz}>
                 <Text style={[{ color: COLORS.text.blue.light }]}>Jouer</Text>
             </TouchableOpacity>
@@ -57,7 +56,7 @@ const styles = StyleSheet.create({
     QuizInformationText: {
         flex: 1,
         fontSize: 20,
-        },
+    },
     QuizInformationButton: {
         flex: 0.30,
         backgroundColor: COLORS.button.blue.circle.normal,

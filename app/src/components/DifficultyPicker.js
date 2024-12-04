@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, Platform, StyleSheet } from 'react-native';
-import { ButtonGroup } from 'react-native-elements';
+import { View, Text, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { COLORS } from '../css/utils/color';
 import { difficultyOptions } from '../utils/utils';
@@ -17,7 +16,7 @@ const DifficultySelector = ({ testID, value, onValueChange }) => {
             setSelectedIndex(null);
             onValueChange(null);
         }
-        else{
+        else {
             setSelectedIndex(index);
             onValueChange(difficultyOptions[index].value);
         }
@@ -29,50 +28,64 @@ const DifficultySelector = ({ testID, value, onValueChange }) => {
             setSelectedIndex(index);
         }
     }
-    , [value]);
+        , [value]);
 
     return (
-        <View style={styles.difficultyPickerView}>
-            <ButtonGroup
-                buttons={buttons}
-                selectedIndex={selectedIndex}
-                onPress={handleSelection}
-                containerStyle={styles.buttonContainer}
-                buttonStyle={styles.button}
-                selectedButtonStyle={styles.selectedButton}
-                textStyle={styles.text}
-            />
+        <View style={styles.container}>
+            {difficultyOptions.map((option, index) => (
+                <TouchableOpacity
+                    key={option.value}
+                    style={[
+                        styles.button,
+                        selectedIndex === index && styles.selectedButton,
+                    ]}
+                    onPress={() => handleSelection(index)}
+                >
+                    <Text
+                        style={[
+                            styles.buttonText,
+                            selectedIndex === index && styles.selectedText,
+                        ]}
+                    >
+                        {option.label}
+                    </Text>
+                </TouchableOpacity>
+            ))}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    difficultyPickerView: {
-        display: 'flex',
-        justifyContent: 'center',
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
         alignItems: 'center',
         width: '100%',
-    },
-    buttonContainer: {
-        height: 60,
-        width: '100%',
-        borderRadius: 20,
         backgroundColor: '#4d65b4',
         borderColor: '#4d65b4',
+        borderRadius: 20,
+        padding: 10,
+        margin: 10,
     },
     button: {
-        margin: 10,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10,
+        marginHorizontal: 5,
         borderRadius: 20,
         backgroundColor: '#eef8ff',
     },
     selectedButton: {
-        color: 'white',
-        backgroundColor: '#484a77'
+        backgroundColor: '#484a77',
     },
-    textStyle: {
-        textAlign: 'center',
-    }
-}
-);
+    buttonText: {
+        color: 'black',
+        fontSize: 18,
+    },
+    selectedText: {
+        color: 'white',
+    },
+});
 
 export default DifficultySelector;

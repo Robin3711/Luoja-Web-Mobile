@@ -115,6 +115,7 @@ export default function QuizCreation() {
             else {
                 await editQuiz(quizId, title, category, difficulty, questions);
             }
+            toast('info', 'Le quiz à bien était sauvegardé !', "", 1000, 'dodgerblue');
         }
         catch (error) {
             if (error.status && error.message) {
