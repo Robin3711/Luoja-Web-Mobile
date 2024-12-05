@@ -25,23 +25,18 @@ export default function SearchScreen() {
     useFocusEffect(
         useCallback(() => {
             requireToken(navigation);
-        }, [])
-    );
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await getQuizAutoComplete(title, theme, difficulty);
-                setData(result);
-            } catch (err) {
-                setError(true);
-                setErrorMessage(err.status + " " + err.message);
+            const fetchData = async () => {
+                try {
+                    const result = await getQuizAutoComplete(title, theme, difficulty);
+                    setData(result);
+                } catch (err) {
+                    setError(true);
+                    setErrorMessage(err.status + " " + err.message);
+                }
             }
-        }
-
-        fetchData();
-
-    }, [title, theme, difficulty]);
+            fetchData();
+        }, [title, theme, difficulty])
+    );
 
     useEffect(() => {
         return () => {
