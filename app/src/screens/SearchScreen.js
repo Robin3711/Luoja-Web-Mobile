@@ -166,10 +166,11 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-around',
         backgroundColor: '#8fd3ff',
-        height: platform === 'web' ? '80%' : '65%',
+        height: platform === 'web' ? '80%' : '60%',
         borderRadius: 20,
         padding: 20,
         width: platform === 'web' ? '50%' : '100%',
+        marginTop: platform === 'web' ? 0 : 20,
         ...platform === 'web' && { marginLeft: 20 },
     },
     quizCreationQuestionsTitle: {
