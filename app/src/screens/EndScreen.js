@@ -85,8 +85,8 @@ export default function EndScreen() {
         <View style={styles.container}>
             <View style={styles.parentContainer}>
                 <Text style={styles.title}>Fin de partie !</Text>
-                <Text style={styles.text}>Recapitulatif de la partie :</Text>
-                <Text style={styles.text}>Categorie : {category} | difficulté : {difficulty}</Text>
+                <Text style={styles.text}>Récapitulatif de la partie :</Text>
+                <Text style={styles.text}>Catégorie : {category} | difficulté : {difficulty}</Text>
                 {score !== null && numberOfQuestions !== null ? (
                     <View style={styles.scoreContainer}>
                         <Text style={styles.scoreTitle}>
@@ -100,7 +100,7 @@ export default function EndScreen() {
                                 color={COLORS.text.blue.dark}
                                 borderWidth={!loading ? 0 : 10}
                                 thickness={15}
-                                unfilledColor={"#f0f0f0"}
+                                unfilledColor={"#D8D8D8"}
                                 indeterminate={loading}
                                 indeterminateAnimationDuration={1000}
                             />
@@ -112,7 +112,7 @@ export default function EndScreen() {
             </View>
 
             <SimpleButton
-                text="Retourner au Menu"
+                text="Retourner au menu"
                 onPress={handleReturnHome}
             />
 

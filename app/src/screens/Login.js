@@ -19,7 +19,7 @@ export default function Login() {
     const handleLogin = async () => {
         try {
             await userLogin(name, password);
-            toast('success', "Connection réussi !", `Bienvenue ${name}`, 3000, 'seagreen');
+            toast('success', "Connexion réussie !", `Bienvenue ${name}`, 3000, 'seagreen');
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
         catch (error) {

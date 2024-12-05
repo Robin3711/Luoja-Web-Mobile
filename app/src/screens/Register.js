@@ -17,7 +17,7 @@ export default function Register() {
     const handleRegister = async () => {
         try {
             await userRegister(name, password);
-            toast('success', "Enregistrement réussi !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, 'seagreen');
+            toast('success', "Enregistrement réussie !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, 'seagreen');
             navigation.navigate('menuDrawer', { screen: 'account' });
         }
         catch (error) {
