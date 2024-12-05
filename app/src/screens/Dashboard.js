@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     dashboardSection: {
-        width: '48%',
+        width: platform === 'web' ? '48%' : '100%',
         maxHeight: 700,
     },
     touchableOpacity: {
