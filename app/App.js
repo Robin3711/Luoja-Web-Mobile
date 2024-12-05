@@ -43,9 +43,11 @@ const linking = {
         },
       },
       createQuestion: {
-        path: 'createQuestion/:handleAddQuestions',
+        path: 'createQuestion/:question/:index/:handleQuestion',
         stringify: {
-          handleAddQuestions: (handleAddQuestions) => "",
+          question: (question) => "",
+          index: (index) => "",
+          handleQuestion: (handleQuestion) => "",
         },
       },
       search: 'search',
