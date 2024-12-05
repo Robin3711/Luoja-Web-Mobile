@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'grey',
+        backgroundColor: '#d3d3d3',
         height: 75,
         width: platform === 'web' ? "35%" : "95%",
         borderRadius: 15,
