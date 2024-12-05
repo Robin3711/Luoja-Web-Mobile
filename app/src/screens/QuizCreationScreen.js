@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getQuizInfos } from '../utils/api';
 
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
-import { toast } from '../utils/utils';
+import { requireToken, toast } from '../utils/utils';
 import DifficultyPicker from '../components/DifficultyPicker';
 import { Edit2, LucideTrash } from 'lucide-react-native';
 import ThemeSelector from '../components/ThemeList';
@@ -151,6 +151,13 @@ export default function QuizCreation() {
             }
         }
     }
+
+    // Vérification du token à chaque fois que l'écran est focus
+    useFocusEffect(
+        useCallback(() => {
+            requireToken(navigation);
+        }, [])
+    );
 
     useEffect(() => {
         const handleRetrieveQuiz = async () => {
