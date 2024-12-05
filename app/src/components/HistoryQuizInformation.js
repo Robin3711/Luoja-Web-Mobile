@@ -5,6 +5,8 @@ import { toast } from '../utils/utils';
 import { getThemeLabel, formatReadableDate } from '../utils/utils';
 import { useNavigation } from '@react-navigation/native';
 
+import { COLORS } from '../css/utils/color';
+
 export default function HistoryQuizInformation({ partyId }) {
     const [loading, setLoading] = useState(true);
     const [score, setScore] = useState(0);
@@ -85,8 +87,8 @@ export default function HistoryQuizInformation({ partyId }) {
                 </TouchableOpacity>
             </View>
             <View style={styles.historySecondaryInformationsView}>
-                <Text style={styles.detailText}>Date : {date}</Text>
                 <Text style={styles.detailText}>Score : {score}</Text>
+                <Text style={styles.detailText}>Date : {date}</Text>
             </View>
         </View>
     );
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
     historySecondaryInformationsView: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
     },
     historyQuizInformationText: {
         fontSize: 14, // Taille plus petite pour correspondre
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
         width: '50%'
     },
     touchableOpacity: {
-        backgroundColor: '#007bff', // Bleu Bootstrap
+        backgroundColor: COLORS.button.blue.basic, // Bleu Bootstrap
         padding: 8, // Espacement interne
         borderRadius: 4, // Coins arrondis
         width: 100, // Largeur fixe

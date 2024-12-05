@@ -4,15 +4,16 @@ import { COLORS } from '../css/utils/color';
 
 const platform = Platform.OS;
 
-export default function SimpleButton({ text, onPress }) {
+export default function SimpleButton({ text, onPress, color = COLORS.button.blue.basic }) {
     loadFont();
     
     return (
-        <TouchableOpacity onPress={onPress} style={styles.button}>
+        <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: color }]} >
             <Text style={styles.text}>{text}</Text>
         </TouchableOpacity>
     );
 }
+
 
 const styles = StyleSheet.create({
     button: {
