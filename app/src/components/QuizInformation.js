@@ -33,7 +33,7 @@ export default function QuizInformation({ quiz }) {
     return (
         <View style={styles.QuizInformationView}>
             <Text style={[styles.QuizInformationText, { flex: 1.2 }]}>{truncateText(quiz.title, 20)}</Text>
-            <Text style={[styles.QuizInformationText, { flex: 0.8 }]}>{themeName ?? "Thème général"}</Text>
+            <Text style={[styles.QuizInformationText, { flex: 0.8 }]}>{themeName ?? "General Knowledge"}</Text>
             <Text style={[styles.QuizInformationText, { flex: 0.8 }]}>{quiz.difficulty}</Text>
             <TouchableOpacity style={styles.QuizInformationButton} onPress={handleStartQuiz}>
                 <Text style={[{ color: COLORS.text.blue.light }]}>Jouer</Text>
