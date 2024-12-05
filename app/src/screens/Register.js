@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { useNavigation } from '@react-navigation/native';
 import { userRegister } from '../utils/api';
 import { toast } from '../utils/utils';
+import { COLORS } from '../css/utils/color';
 
 export default function Register() {
 
@@ -49,14 +50,14 @@ export default function Register() {
                 />
             </View>
 
-            <Text style={styles.inputTitle}>Password</Text>
+            <Text style={styles.inputTitle}>Mot de passe</Text>
             <View style={styles.passwordInputView}>
                 <TextInput
                     ref={passwordInputRef}
                     style={styles.registerInput}
                     onChangeText={setPassword}
                     value={password}
-                    placeholder="Password"
+                    placeholder="Mot de passe"
                     secureTextEntry={true}
                     returnKeyType="done"
                     onSubmitEditing={handleRegister}
@@ -77,6 +78,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 10,
+        backgroundColor: COLORS.background.blue,
     },
     pageTitle: {
         display: 'flex',

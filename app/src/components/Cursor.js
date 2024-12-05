@@ -14,7 +14,7 @@ const RangeCursor = ({ value, onValueChange }) => {
 
   return (
     <View style={styles.cursorContainer}>
-      <Text style={styles.cursorLabel}>Sélection : {sliderValue}</Text>
+      <Text style={styles.cursorLabel}>Nombre de question : {sliderValue}</Text>
       <Slider
         style={styles.slider}
         minimumValue={1}

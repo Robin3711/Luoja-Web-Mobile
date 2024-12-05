@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Text, View, Platform, StyleSheet, ScrollView, TextInput } from 'react-native';
+import { Text, View, Platform, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
@@ -81,9 +81,9 @@ export default function SearchScreen() {
             </View>
         ) : (
             <View style={styles.screen}>
-                <Text style={[styles.title, { width: '100%' }]}>Quiz de la communauté !</Text>
-
-                <View style={styles.searchParameterView}>
+                <Text style={styles.title}>Quiz de la communauté !</Text>
+                <View style={styles.screen2}>
+                    <View style={styles.searchParameterView}>
 
 
                     <View style={styles.filterView}>
@@ -101,9 +101,9 @@ export default function SearchScreen() {
                         <DifficultySelector testID="difficultySelector" value={difficulty} onValueChange={setDifficulty} />
                     </View>
                 </View>
-
+    
                 <View style={styles.quizCreationRightView}>
-                    <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
+                    {platform === 'web' && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
                     <ScrollView style={styles.questionsView}>
                         {
                             data.length !== 0 ?
@@ -112,29 +112,37 @@ export default function SearchScreen() {
                                         <QuizInformation quiz={quiz} />
                                     </View>
                                 ))
-                                : <Text>Aucune question</Text>
+                                : <Text>Aucun quiz</Text>
                         }
                     </ScrollView>
                 </View>
             </View>
-        )
-    );
-}
+        </View>
+    )
+);}
 
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
+        alignItems: 'center',
+        flexDirection: 'column',
+        backgroundColor: COLORS.background.blue,
+        paddingTop: platform === 'web' ? 20 : 0,
+    },
+    screen2: {
+        flexDirection: platform === 'web' ? 'row' : 'column',
         justifyContent: 'space-around',
         alignItems: 'center',
-        flexDirection: platform === 'web' ? 'row' : 'column',
-        backgroundColor: COLORS.background.blue,
+        width: '90%',
+        height: '80%',
+        marginTop: platform === 'web' ? 20 : 0,
     },
     title: {
         textAlign: 'center',
         color: COLORS.text.blue.dark,
         fontSize: 50,
-        fontWeight: 'bold',
         fontFamily: 'LobsterTwo_700Bold_Italic',
+        width: '100%',
     },
     text: {
         fontSize: 20,
@@ -142,23 +150,34 @@ const styles = StyleSheet.create({
         fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     filterView: {
-        marginBottom: 20,
+        marginBottom: platform === 'web' ? 20 : 0,
+    },
+    searchParameterView: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        height: platform === 'web' ? '60%' : '40%',
+        borderRadius: 20,
+        padding: platform === 'web' ? 20 : 0,
+        width: platform === 'web' ? '40%' : '100%',
     },
     quizCreationRightView: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
         backgroundColor: '#8fd3ff',
-        height: '75%',
+        height: platform === 'web' ? '80%' : '60%',
         borderRadius: 20,
         padding: 20,
-        width: platform === 'web' ? '40%' : '100%',
-        ...platform !== 'web' && { height: '40%' },
+        width: platform === 'web' ? '50%' : '100%',
+        marginTop: platform === 'web' ? 0 : 20,
+        ...platform === 'web' && { marginLeft: 20 },
     },
     quizCreationQuestionsTitle: {
         backgroundColor: 'white',
         padding: 5,
         borderRadius: 20,
+        marginBottom: 20,
     },
     quizTitleText: {
         padding: 5,

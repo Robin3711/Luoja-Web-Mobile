@@ -139,5 +139,6 @@ const styles = StyleSheet.create({
         width: 100, // Largeur fixe
         justifyContent: 'center', // Centrer le texte
         alignItems: 'center', // Centrer le texte
+        height: 30, // Hauteur fixe
     }
 });

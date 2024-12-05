@@ -62,38 +62,49 @@ export default function ResumeScreen() {
 
     loadFont();
     return (
-        <View style={styles.screen}>
+        <View style={styles.container}>
             <Text style={styles.title}>Reprenez votre partie</Text>
-            <View style={styles.paste}>
+            <View style={styles.inputView}>
                 <TouchableOpacity onPress={handlePasteGameId}>
-                    <ClipboardPaste size={20} />
+                    <ClipboardPaste size={30}  color="black"/>
                 </TouchableOpacity>
-                <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus />
+                <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
             </View>
             <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
         </View>
     );
+
 }
 
 const styles = StyleSheet.create({
-    screen: {
+    container: {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 10,
         backgroundColor: COLORS.background.blue,
     },
-    title: {
-        textAlign: 'center',
-        color: COLORS.text.blue.dark,
+    title:{
         fontSize: 50,
+        textAlign: 'center',
         fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
     },
-    paste:{
-        display:'flex',
-        flexDirection:'row',
-        gap:10,
-    }
-
+    inputView: {
+        width: platform === 'web' ? '20%' : '80%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        marginVertical: 40,
+    },
+    input: {
+        padding: 10,
+        fontSize: 20,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+    },
 });

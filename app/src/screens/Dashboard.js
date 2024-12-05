@@ -1,11 +1,13 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { hasToken, removeToken, toast } from "../utils/utils";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useEffect, useState, useCallback } from "react";
 import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
 import CreatedQuizInformation from "../components/CreatedQuizInformation";
+import { COLORS } from "../css/utils/color";
 
+const platform = Platform.OS;
 
 export default function Dashboard() {
     const navigation = useNavigation();
@@ -76,7 +78,7 @@ export default function Dashboard() {
                         </ScrollView>
                     </View>
                     <View style={styles.dashboardSection}>
-                        <Text style={styles.dashboardText}>Vos quiz publié</Text>
+                        <Text style={styles.dashboardText}>Vos quiz publiés</Text>
                         <ScrollView>
                             {publishedQuizzes.map((item, index) => (
                                 <View key={index}>
@@ -97,29 +99,28 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
     dashboardView: {
         flex: 1,
-        margin: 10,
-        padding: 10,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 10,
+        width: '100%',
+        height: '100%',
+        backgroundColor: COLORS.background.blue,
     },
     dashboardText: {
         fontSize: 24,
     },
     dashboardContainer: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: platform === 'web' ? 'row' : 'column',
         justifyContent: 'space-between',
     },
     dashboardSection: {
-        width: '48%',
+        width: platform === 'web' ? '48%' : '100%',
         maxHeight: 700,
     },
     touchableOpacity: {
-        margin: 10,
         backgroundColor: 'red',
         padding: 10,
         width: 120,
         alignItems: 'center',
         justifyContent: 'center',
+        borderRadius: 10,
     },
 });

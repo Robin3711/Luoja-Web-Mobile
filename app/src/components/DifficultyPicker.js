@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, Text, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
+import { COLORS } from '../css/utils/color';
 import { difficultyOptions } from '../utils/utils';
 
 const platform = Platform.OS;
@@ -61,9 +62,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         backgroundColor: '#4d65b4',
+        borderColor: '#4d65b4',
         borderRadius: 20,
         padding: 10,
-        margin: 10,
+        marginVertical: 5,
     },
     button: {
         flex: 1,
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         marginHorizontal: 5,
         borderRadius: 20,
-        backgroundColor: '#eef8ff',
+        backgroundColor: 'white',
     },
     selectedButton: {
         backgroundColor: '#484a77',

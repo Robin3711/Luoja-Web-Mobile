@@ -19,7 +19,7 @@ export default function HomeScreen() {
                 {platform === 'web' && <Image style={styles.logo} source={require('../../assets/splash.png')} />}
 
                 <View style={styles.listButton}>
-                    <SimpleButton text="Générer un Quiz" onPress={() => navigation.navigate('newQuiz')}/>
+                    <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')}/>
 
                     <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
 
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 10,
         backgroundColor: COLORS.background.blue,
     },
     appTitle:{

@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Text, View, Platform, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { createQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
 import RangeCursor from '../components/Cursor';
-import ThemeSelector from '../components/ThemeList'
+import ThemeSelector from '../components/ThemeList';
 import DifficultySelector from '../components/DifficultyPicker';
 import SimpleButton from '../components/SimpleButton';
 
@@ -39,24 +39,22 @@ export default function Parameters() {
       });
   };
 
-
   return (
     <View style={styles.screen}>
       <Text style={styles.title}>Générer un nouveau quiz !</Text>
-
       <View style={styles.list}>
-        <ThemeSelector onValueChange={setTheme} />
-
-        <DifficultySelector testID="difficulty-picker" value={difficulty} onValueChange={setDifficulty} />
-
         <View style={{ width: '100%' }}>
-          <RangeCursor
-            value={questionCount}
-            onValueChange={setQuestionCount}
-          />
+          <Text style={styles.text}>Thème</Text>
+          <ThemeSelector onValueChange={setTheme} />
         </View>
-
-        <SimpleButton style={styles.buttons} text={launch ? (<Text>Création du quiz...</Text>) : (<Text>Créer le quiz</Text>)} disabled={launch} onPress={handleCreateQuiz} />
+        <View style={{ width: '100%' }}>
+          <Text style={styles.text}>Difficulté</Text>
+          <DifficultySelector value={difficulty} onValueChange={setDifficulty} />
+        </View>
+        <View style={{ width: '100%' }}>
+          <RangeCursor value={questionCount} onValueChange={setQuestionCount} />
+        </View>
+        <SimpleButton text={launch ? 'Création du quiz...' : 'Créer le quiz'} onPress={handleCreateQuiz} disabled={launch} />
       </View>
     </View>
   );
@@ -76,26 +74,37 @@ const styles = StyleSheet.create({
     color: COLORS.text.blue.dark,
     fontSize: 50,
     fontFamily: 'LobsterTwo_700Bold_Italic',
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#8fd3ff',
-    height: 50,
-    width: 250,
-    borderRadius: 15,
-    marginVertical: 20,
-  },
-  buttonText: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    marginBottom: 80,
   },
   list: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    width: platform === 'web' ? '40%' : '85%',
+    margin: 10,
+    gap: 30,
+  },
+  button: {
+    backgroundColor: '#8fd3ff',
+    height: 50,
+    width: 250,
+    borderRadius: 15,
+    marginVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+  },
+  buttonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.text.blue.dark,
+    textAlign: 'center',
+  },
+  text: {
+    fontSize: 20,
+    fontFamily: 'LobsterTwo_700Bold_Italic',
+    marginTop: 5,
+    color: COLORS.text.blue.dark,
   },
 });

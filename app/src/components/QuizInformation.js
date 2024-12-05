@@ -1,10 +1,12 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { createParty } from '../utils/api';
 import { getThemeLabel, toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+
+const platform = Platform.OS;
 
 export default function QuizInformation({ quiz }) {
     navigation = useNavigation();
@@ -58,10 +60,11 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     QuizInformationButton: {
-        flex: 0.30,
+        flex: platform === 'web' ? 0.3 : 0.6,
         backgroundColor: COLORS.button.blue.circle.normal,
         padding: 10,
         borderRadius: 10,
         alignItems: 'center',
+        ...platform !== 'web' && { height: 40 },
     },
 });

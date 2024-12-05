@@ -9,6 +9,10 @@ import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { toast } from '../utils/utils';
 
+import { SimpleButton } from '../components/SimpleButton';
+import { loadFont } from '../utils/utils';
+import { COLORS } from '../css/utils/color';
+
 
 const platform = Platform.OS;
 
@@ -146,7 +150,7 @@ export default function QuizScreen() {
 
     const nextQuestionButton = () => (
         <TouchableOpacity
-            style={styles.buttons}
+            style={buttonDisabled || (!isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
             onPress={() =>
                 isAnswered
                     ? totalQuestion === questionNumber
@@ -180,18 +184,16 @@ export default function QuizScreen() {
         toast('info', 'L\'id à bien été copier !', "", 2000, 'dodgerblue');
     };
 
-
+    loadFont();
     return (
         !error ? (
             <View style={styles.quizScreenView}>
                 {currentQuestion ? (
                     <>
-                        <View style={styles.gameId}>
+                        <TouchableOpacity onPress={handleCopyGameId} style={styles.gameId}>
+                            <Copy size={24} color="black" />
                             <Text style={styles.gameIdText}>ID : {gameId} </Text>
-                            <TouchableOpacity onPress={handleCopyGameId}>
-                                <Copy size={20} />
-                            </TouchableOpacity>
-                        </View>
+                        </TouchableOpacity>
                         <View style={styles.mainView}>
                             <View style={styles.questionView}>
                                 <CountdownCircleTimer
@@ -202,23 +204,30 @@ export default function QuizScreen() {
                                     colorsTime={[7, 5, 2, 0]}
                                 >
                                     {({ remainingTime }) => (
-                                        <Text>{questionNumber}</Text>
+                                        <Text style={styles.questionNumber}>{questionNumber}</Text>
                                     )}
                                 </CountdownCircleTimer>
+                                <Text style={styles.questionNumber}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
-                                    <Text style={styles.quizBarTextView}>1 </Text>
-                                    <Progress.Bar
-                                        borderRadius={0}
-                                        height={10}
-                                        progress={questionNumber / totalQuestion}
-                                        width={platform === 'web' ? 400 : 200}
-                                        indeterminate={loading}
-                                        indeterminateAnimationDuration={2000}
-                                    />
-                                    <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
+                                    
+                                    {platform == 'web' && 
+                                        <>
+                                            <Text style={styles.quizBarTextView}>1 </Text>
+
+                                            <Progress.Bar
+                                            borderRadius={0}
+                                            height={10}
+                                            progress={questionNumber / totalQuestion}
+                                            width={platform === 'web' ? 400 : 200}
+                                            indeterminate={loading}
+                                            indeterminateAnimationDuration={2000}
+                                            />
+
+                                            <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
+                                        </>
+                                    }
                                 </View>
-                                <Text>{currentQuestion.question}</Text>
-                                <Text>Score: {score}</Text>
+                                <Text style={styles.question}>{currentQuestion.question}</Text>
                                 {platform === 'web' && nextQuestionButton()}
                             </View>
 
@@ -230,7 +239,7 @@ export default function QuizScreen() {
                                         text={answer}
                                         onClick={handleAnswerSelection}
                                         filter={getAnswerFilter(answer)}
-
+                                    
                                     />
                                 ))}
                                 {platform !== 'web' && nextQuestionButton()}
@@ -238,18 +247,15 @@ export default function QuizScreen() {
                         </View>
                     </>
                 ) : (
-                    <Text>Chargement de la question...</Text>
+                    <Text>Chargement...</Text>
                 )}
             </View>
         ) : (
             <View style={styles.quizScreenView}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('menuDrawer', { screen: 'newQuiz' })
-                }
-                }>
-                    <Text style={styles.buttonText}>Retour au menu</Text>
-                </TouchableOpacity>
+
+                <SimpleButton title="Retour au menu" onPress={() => navigation.navigate('menuDrawer', { screen: 'newQuiz' })} />
+                
             </View>
         )
 
@@ -262,11 +268,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
+        padding: 10,
+        backgroundColor: COLORS.background.blue,
     },
     gameId: {
         position: 'absolute',
         top: 1,
-        flexDirection: "row",
+        marginRight: 10,
+        marginTop: 2,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     gameIdText: {
         fontSize: 20,
@@ -278,14 +290,30 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
+        ...platform === 'web' && { gap: 20, },
     },
     questionView: {
         alignItems: 'center',
         width: platform === 'web' ? '50%' : '100%',
     },
+    question: {
+        fontSize: platform === 'web' ? 30 : 25,
+        textAlign: 'center',
+        width: platform === 'web' ? '80%' : '95%',
+        fontWeight: 'bold',
+        color: COLORS.text.blue.dark,
+        ...platform === 'web' && { marginVertical: 100, },
+    },
+    questionNumber: {
+        fontSize: platform === 'web' ? 30 : 25,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+        fontWeight: 'bold',
+    },
     answersView: {
         width: platform === 'web' ? '50%' : '100%',
         alignItems: 'center',
+        
     },
     buttons: {
         display: 'flex',
@@ -293,8 +321,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#8fd3ff',
-        height: 50,
-        width: 250,
+        height: 75,
+        width: platform === 'web' ? "35%" : "95%",
+        borderRadius: 15,
+        marginVertical: 10,
+        elevation: 2,
+    },
+    disabledButtons: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#d3d3d3',
+        height: 75,
+        width: platform === 'web' ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
