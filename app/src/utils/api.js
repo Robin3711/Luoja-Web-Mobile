@@ -330,7 +330,7 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
         if (difficulty !== null) url += `&difficulty=${difficulty}`;
 
         const questions = quizQuestions.map((q) => ({
-            text: q.text,
+            text: q.text !== null ? q.question : q.text,
             correctAnswer: q.correctAnswer,
             incorrectAnswers: q.incorrectAnswers,
         }));
@@ -383,6 +383,31 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
         throw error;
     }
 }
+
+export async function cloneQuiz(quizId) {
+    try {
+        const headers = {};
+
+        if (await hasToken()) {
+            headers['token'] = await AsyncStorage.getItem('token');
+        }
+
+        let url = `${await getPlatformAPI()}/quiz/${quizId}/clone`;
+
+        const response = await fetch(url, { headers });
+
+        if (!response.ok) await handleResponseError(response);
+
+        const data = await response.json();
+
+        return data;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+
 
 export async function publishQuiz(quizId) {
     try {
