@@ -181,7 +181,7 @@ export default function QuizScreen() {
 
     const handleCopyGameId = async () => {
         await Clipboard.setStringAsync(gameId);
-        toast('info', 'L\'id à bien été copier !', "", 2000, 'dodgerblue');
+        toast('info', 'L\'id à bien été copié !', "", 2000, 'dodgerblue');
     };
 
     loadFont();
@@ -209,18 +209,18 @@ export default function QuizScreen() {
                                 </CountdownCircleTimer>
                                 <Text style={styles.questionNumber}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
-                                    
-                                    {platform == 'web' && 
+
+                                    {platform == 'web' &&
                                         <>
                                             <Text style={styles.quizBarTextView}>1 </Text>
 
                                             <Progress.Bar
-                                            borderRadius={0}
-                                            height={10}
-                                            progress={questionNumber / totalQuestion}
-                                            width={platform === 'web' ? 400 : 200}
-                                            indeterminate={loading}
-                                            indeterminateAnimationDuration={2000}
+                                                borderRadius={0}
+                                                height={10}
+                                                progress={questionNumber / totalQuestion}
+                                                width={platform === 'web' ? 400 : 200}
+                                                indeterminate={loading}
+                                                indeterminateAnimationDuration={2000}
                                             />
 
                                             <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
@@ -239,7 +239,7 @@ export default function QuizScreen() {
                                         text={answer}
                                         onClick={handleAnswerSelection}
                                         filter={getAnswerFilter(answer)}
-                                    
+
                                     />
                                 ))}
                                 {platform !== 'web' && nextQuestionButton()}
@@ -255,7 +255,7 @@ export default function QuizScreen() {
                 <Text style={styles.errorText}>{errorMessage}</Text>
 
                 <SimpleButton title="Retour au menu" onPress={() => navigation.navigate('menuDrawer', { screen: 'newQuiz' })} />
-                
+
             </View>
         )
 
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     answersView: {
         width: platform === 'web' ? '50%' : '100%',
         alignItems: 'center',
-        
+
     },
     buttons: {
         display: 'flex',
