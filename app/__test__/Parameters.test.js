@@ -23,18 +23,25 @@ describe('Parameters Component', () => {
         const { getByText } = setup();
         expect(getByText('Choisissez le nombre de question')).toBeTruthy();
         expect(getByText('Choisissez un thème')).toBeTruthy();
-        expect(getByText('Choisissez le difficulté')).toBeTruthy();
+        expect(getByText('Toute difficulté')).toBeTruthy();
         expect(getByText('Créer le quiz')).toBeTruthy();
     });
 
     it('updates question count when RangeCursor is changed', () => {
-        const { getByTestId } = setup();
+        const { getByTestId, getByText } = setup();
         const rangeCursor = getByTestId('range-cursor');
-        
-        fireEvent(rangeCursor, 'valueChange', 30);
-        
-        // Assuming we display question count somewhere or range cursor reflects value
-        expect(rangeCursor.props.value).toBe(30);
+    
+        // Simuler le changement de valeur du curseur
+        fireEvent(rangeCursor, 'valueChange', 10);
+    
+        // Vérifier que la nouvelle valeur est affichée correctement
+        expect(getByText('Sélection : 10')).toBeTruthy();
+
+        // Simuler le changement de valeur du curseur
+        fireEvent(rangeCursor, 'valueChange', 20);
+
+        // Vérifier que la nouvelle valeur est affichée correctement
+        expect(getByText('Sélection : 20')).toBeTruthy();
     });
   
 });

@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
+    "name": "Luoja",
+    "slug": "luoja",
+    "owner": "baldur-expo-account",
     "version": "1.0.0",
     "newArchEnabled": true,
     "orientation": "portrait",
@@ -15,14 +16,20 @@
     "ios": {
       "supportsTablet": true
     },
-    "android": {
+    "android": {      
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.baldurexpoaccount.luoja"  
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "004c9738-5b14-41f5-8806-ec53dcfbb4c6"
+      }
     }
   }
 }

@@ -1,87 +1,110 @@
-import { StatusBar } from 'expo-status-bar';
-import { Text, View, Button } from 'react-native';
 import { useState } from 'react';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import RNPickerSelect from 'react-native-picker-select';
+
 import { createQuiz } from '../utils/api';
+import { toast } from '../utils/utils';
 import RangeCursor from '../components/Cursor';
+import ThemeSelector from '../components/ThemeList';
+import DifficultySelector from '../components/DifficultyPicker';
+import SimpleButton from '../components/SimpleButton';
+
+import { COLORS } from '../css/utils/color';
+
+const platform = Platform.OS;
 
 export default function Parameters() {
-  const [difficulty, setDifficulty] = useState('none');
-  const [theme, setTheme] = useState('none');
-  const [questionCount, setQuestionCount] = useState(25);
+  const [difficulty, setDifficulty] = useState(null);
+  const [theme, setTheme] = useState(null);
+  const [questionCount, setQuestionCount] = useState(1);
+  const [launch, setlaunch] = useState(false);
   const navigation = useNavigation();
 
   const handleCreateQuiz = () => {
+    setlaunch(true);
     createQuiz(questionCount, theme, difficulty)
       .then(data => {
         navigation.navigate('menuDrawer');
-
+        setlaunch(false);
         setTimeout(() => {
-          navigation.navigate('quizScreen', { quizId: data.quizId });
+          navigation.navigate('quizScreen', { gameId: data.id });
         }, 0);
       })
       .catch(error => {
-        console.error(error);
+        if (error.status && error.message) {
+          toast('error', error.status, error.message, 3000, 'crimson');
+        } else {
+          toast('error', "Erreur", error, 3000, 'crimson');
+        }
       });
   };
 
-
-  const difficultyOptions = [
-    { label: 'Facile', value: 'easy' },
-    { label: 'Moyen', value: 'medium' },
-    { label: 'Difficile', value: 'hard' },
-  ];
-
-  const themeOptions = [
-    { label: 'General Knowledge', value: 9 },
-    { label: 'Entertainment: Books', value: 10 },
-    { label: 'Entertainment: Film', value: 11 },
-    { label: 'Entertainment: Music', value: 12 },
-    { label: 'Entertainment: Musicals & Theatres', value: 13 },
-    { label: 'Entertainment: Television', value: 14 },
-    { label: 'Entertainment: Video Games', value: 15 },
-    { label: 'Entertainment: Board Games', value: 16 },
-    { label: 'Science & Nature', value: 17 },
-    { label: 'Science: Computers', value: 18 },
-    { label: 'Science: Mathematics', value: 19 },
-    { label: 'Mythology', value: 20 },
-    { label: 'Sports', value: 21 },
-    { label: 'Geography', value: 22 },
-    { label: 'History', value: 23 },
-    { label: 'Politics', value: 24 },
-    { label: 'Art', value: 25 },
-    { label: 'Celebrities', value: 26 },
-    { label: 'Animals', value: 27 },
-    { label: 'Vehicles', value: 28 },
-    { label: 'Entertainment: Comics', value: 29 },
-    { label: 'Science: Gadgets', value: 30 },
-    { label: 'Entertainment: Japanese Anime & Manga', value: 31 },
-    { label: 'Entertainment: Cartoon & Animations', value: 32 },
-  ]
-
   return (
-    <View>
-      <Text>Choisissez le nombre de question</Text>
-      <RangeCursor testID="range-cursor" value={questionCount} onValueChange={setQuestionCount} />
-      <Text>Choisissez un thème</Text>
-      <RNPickerSelect
-        onValueChange={(value) => setTheme(value)}
-        items={themeOptions}
-        value={theme}
-        placeholder={{ label: 'Sélectionner un thème', value: null }}
-        accessibilityLabel="Sélecteur de thème"
-      />
-      <Text>Choisissez le difficulté</Text>
-      <RNPickerSelect
-        onValueChange={(value) => setDifficulty(value)}
-        items={difficultyOptions}
-        value={difficulty}
-        placeholder={{ label: 'Sélectionner une difficulté', value: null }}
-        accessibilityLabel="Sélecteur de difficulté"
-      />
-      <Button title="Créer le quiz" onPress={handleCreateQuiz} />
-      <StatusBar style="auto" />
+    <View style={styles.screen}>
+      <Text style={styles.title}>Générer un nouveau quiz !</Text>
+      <View style={styles.list}>
+        <View style={{ width: '100%' }}>
+          <Text style={styles.text}>Thème</Text>
+          <ThemeSelector onValueChange={setTheme} />
+        </View>
+        <View style={{ width: '100%' }}>
+          <Text style={styles.text}>Difficulté</Text>
+          <DifficultySelector value={difficulty} onValueChange={setDifficulty} />
+        </View>
+        <View style={{ width: '100%' }}>
+          <RangeCursor value={questionCount} onValueChange={setQuestionCount} />
+        </View>
+        <SimpleButton text={launch ? 'Création du quiz...' : 'Créer le quiz'} onPress={handleCreateQuiz} disabled={launch} />
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.background.blue,
+  },
+  title: {
+    textAlign: 'center',
+    color: COLORS.text.blue.dark,
+    fontSize: 50,
+    fontFamily: 'LobsterTwo_700Bold_Italic',
+    marginBottom: 80,
+  },
+  list: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: platform === 'web' ? '40%' : '85%',
+    margin: 10,
+    gap: 30,
+  },
+  button: {
+    backgroundColor: '#8fd3ff',
+    height: 50,
+    width: 250,
+    borderRadius: 15,
+    marginVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+  },
+  buttonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.text.blue.dark,
+    textAlign: 'center',
+  },
+  text: {
+    fontSize: 20,
+    fontFamily: 'LobsterTwo_700Bold_Italic',
+    marginTop: 5,
+    color: COLORS.text.blue.dark,
+  },
+});
