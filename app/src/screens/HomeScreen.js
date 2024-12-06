@@ -10,28 +10,8 @@ const platform = Platform.OS;
 
 export default function HomeScreen() {
     const navigation = useNavigation();
-    const [connexion, setConnexion] = useState(false);
 
-    useFocusEffect(
-        useCallback(() => {
-            const checkToken = async () => {
-                const tokenExists = await hasToken();
-                setConnexion(tokenExists);
-            };
-            checkToken();
-        }, [])
-    );
     loadFont();
-
-    const handleAuthPress = async () => {
-        if (connexion) {
-            await removeToken();
-            setConnexion(false);
-        } else {
-            navigation.navigate('login');
-        }
-    };
-
 
     return (
         <View style={styles.homeView}>
@@ -47,8 +27,6 @@ export default function HomeScreen() {
                     <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
 
                     <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
-
-                    <SimpleButton text={!connexion ? "Se connecter" : "Se déconnecter"} onPress={handleAuthPress} />
                 </View>
 
                 {platform === 'web' && <Image style={styles.logo} source={require('../../assets/splash.png')} />}
