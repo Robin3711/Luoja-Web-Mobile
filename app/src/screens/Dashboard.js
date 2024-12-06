@@ -6,6 +6,8 @@ import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
 import CreatedQuizInformation from "../components/CreatedQuizInformation";
 import { COLORS } from "../css/utils/color";
+import { loadFont } from "../utils/utils";
+import SimpleButton from "../components/SimpleButton";
 
 const platform = Platform.OS;
 
@@ -52,6 +54,7 @@ export default function Dashboard() {
     );
 
 
+    loadFont();
     return (
         error ? (
             <View style={styles.quizScreenView}>
@@ -65,7 +68,7 @@ export default function Dashboard() {
             </View>
         ) : (
             <View style={styles.dashboardView}>
-                <Text style={styles.dashboardText}>Tableau de bord</Text>
+                <Text style={styles.title}>Tableau de bord</Text>
                 <View style={styles.dashboardContainer}>
                     <View style={styles.dashboardSection}>
                         <Text style={styles.dashboardText}>Historique</Text>
@@ -88,9 +91,7 @@ export default function Dashboard() {
                         </ScrollView>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.touchableOpacity} onPress={handleLogout}>
-                    <Text>Déconnexion</Text>
-                </TouchableOpacity>
+                <SimpleButton text="Déconnexion" onPress={handleLogout} color={'red'}/>
             </View>
         )
     );
@@ -99,21 +100,39 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
     dashboardView: {
         flex: 1,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start', // Aligner les éléments en haut
         width: '100%',
         height: '100%',
         backgroundColor: COLORS.background.blue,
+        paddingVertical: 10, // Espacement pour éviter de toucher les bords de l'écran
+    },
+    title: {
+        fontSize: platform === 'web' ? 75 : 30, // Réduction de la taille sur mobile
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        textAlign: 'center',
+        marginBottom: 10, // Espacement sous le titre
     },
     dashboardText: {
-        fontSize: 24,
+        marginTop: 10,
+        fontSize: platform === 'web' ? 40 : 20, // Réduction de la taille sur mobile
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        textAlign: 'center',
     },
     dashboardContainer: {
-        display: 'flex',
+        flex: 1, // Prendre tout l'espace disponible
         flexDirection: platform === 'web' ? 'row' : 'column',
-        justifyContent: 'space-between',
+        justifyContent: platform === 'web' ? 'space-between' : 'flex-start',
+        width: '90%',
     },
     dashboardSection: {
-        width: platform === 'web' ? '48%' : '100%',
-        maxHeight: 700,
+        flex: 1, // Prendre tout l'espace disponible par section
+        marginBottom: platform === 'web' ? 0 : 10, // Ajouter un espacement entre les sections sur mobile
+        padding: 10,
+        backgroundColor: COLORS.background.lightBlue, // Ajouter une couleur de fond pour délimiter chaque section
+        borderRadius: 8, // Amélioration visuelle
+        maxHeight: platform === 'web' ? '100%' : '45%', // Limiter la hauteur sur mobile
     },
     touchableOpacity: {
         backgroundColor: 'red',
@@ -122,5 +141,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 10,
+        marginTop: 10, // Espacement sous les listes
+    },
+    errorText: {
+        color: COLORS.text.red,
+        fontSize: 18,
+        textAlign: 'center',
+        marginBottom: 20,
     },
 });
