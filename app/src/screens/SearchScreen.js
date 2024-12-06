@@ -98,16 +98,17 @@ export default function SearchScreen() {
                     <View style={styles.quizCreationRightView}>
                         {platform === 'web' && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
                         <ScrollView style={styles.questionsView}>
-                            {
-                                data.length !== 0 ?
-                                    data.map((quiz, index) => (
-                                        <View key={index} style={styles.questionItem}>
-                                            <QuizInformation quiz={quiz} />
-                                        </View>
-                                    ))
-                                    : <Text>Aucun quiz</Text>
-                            }
+                            {data.length !== 0 ? (
+                                [...data].reverse().map((quiz, index) => (
+                                    <View key={index} style={styles.questionItem}>
+                                        <QuizInformation quiz={quiz} />
+                                    </View>
+                                ))
+                            ) : (
+                                <Text>Aucun quiz</Text>
+                            )}
                         </ScrollView>
+
                     </View>
                 </View>
             </View>
