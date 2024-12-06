@@ -31,6 +31,13 @@ const ThemeSelector = ({ onValueChange }) => {
                 onRequestClose={() => setModalVisible(false)}>
                 <View style={styles.themeListModal}>
 
+                    <TouchableOpacity
+                        style={styles.themeButton}
+                        onPress={() => handleThemeSelection(null)}>
+                        <Text style={[styles.themeLabel, { fontWeight: 'bold' }]}><Dices color="black" size={iconSize} /> Thème aléatoire</Text>
+                    </TouchableOpacity>
+
+
                     <FlatList
                         data={themeOptions}
                         keyExtractor={(item) => item.label}
