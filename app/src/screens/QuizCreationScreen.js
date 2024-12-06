@@ -200,7 +200,7 @@ export default function QuizCreation() {
                         <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
                         <View style={styles.quizCreationTopButtonsView}>
                             <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
-                                <Text style={styles.buttonText}>Récupérer des questions</Text>
+                                <Text style={styles.buttonText}>Importer des questions</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.buttons} onPress={handleClickCreateQuestion}>
                                 <Text style={styles.buttonText}>Rédiger une question</Text>
