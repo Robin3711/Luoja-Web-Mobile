@@ -146,6 +146,7 @@ export default function QuizCreation() {
                 setCategory(null);
                 setDifficulty('easy');
                 setQuestions([]);
+                navigation.navigate('account');
             }
         }
         catch (error) {
@@ -208,7 +209,7 @@ export default function QuizCreation() {
                     </View>
                 </View>
 
-                <SafeAreaProvider style={{marginRight:'5%', height:'100%'}}>
+                <SafeAreaProvider style={{ marginRight: '5%', height: '100%' }}>
                     <SafeAreaView style={{ flex: 1 }}>
                         <View style={{ flex: 1 }}>
                             <View style={styles.quizCreationRightView}>
@@ -221,7 +222,7 @@ export default function QuizCreation() {
                                         questions.length !== 0 ?
                                             questions.map((question, index) => (
                                                 <View style={styles.question} key={index}>
-                                                    <Text style={{marginLeft: 5, color: COLORS.text.blue.dark}}>{question.text}</Text>
+                                                    <Text style={{ marginLeft: 5, color: COLORS.text.blue.dark }}>{question.text}</Text>
                                                     <View style={styles.quizButtonTouchable}>
                                                         <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
                                                             <Edit2 size={30} />
@@ -242,13 +243,13 @@ export default function QuizCreation() {
             </View>
 
             <View style={styles.quizCreationBottomButtonsView}>
-                        <TouchableOpacity style={styles.buttons} onPress={handleSave}>
-                            <Text style={styles.buttonText}>Enregistrer</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={quizId === null ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={quizId === null}>
-                            <Text style={styles.buttonText}>Publier</Text>
-                        </TouchableOpacity>
-                    </View> 
+                <TouchableOpacity style={styles.buttons} onPress={handleSave}>
+                    <Text style={styles.buttonText}>Enregistrer</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={quizId === null ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={quizId === null}>
+                    <Text style={styles.buttonText}>Publier</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -268,7 +269,7 @@ const styles = StyleSheet.create({
         color: COLORS.text.blue.dark,
         fontSize: 50,
         fontFamily: 'LobsterTwo_700Bold_Italic',
-      },
+    },
     text: {
         fontSize: 20,
         fontFamily: 'LobsterTwo_700Bold_Italic',
@@ -358,7 +359,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
-        ...platform === 'web' ? { 
+        ...platform === 'web' ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },
@@ -370,7 +371,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
-        ...platform === 'web' ? { 
+        ...platform === 'web' ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },
