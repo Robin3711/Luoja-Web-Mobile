@@ -168,7 +168,7 @@ export default function QuizScreen() {
                         buttonDisabled ? 'Chargement de la question...' : 'Question suivante'
                     )
                 ) : (
-                    buttonDisabled ? 'Vérification...' : 'Vérifier ma réponse'
+                    buttonDisabled ? 'Vérification...' : 'Valider'
                 )}
             </Text>
 
@@ -204,28 +204,11 @@ export default function QuizScreen() {
                                     colorsTime={[7, 5, 2, 0]}
                                 >
                                     {({ remainingTime }) => (
-                                        <Text style={styles.questionNumber}>{questionNumber}</Text>
+                                        <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                     )}
                                 </CountdownCircleTimer>
                                 <Text style={styles.questionNumber}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
-
-                                    {platform == 'web' &&
-                                        <>
-                                            <Text style={styles.quizBarTextView}>1 </Text>
-
-                                            <Progress.Bar
-                                                borderRadius={0}
-                                                height={10}
-                                                progress={questionNumber / totalQuestion}
-                                                width={platform === 'web' ? 400 : 200}
-                                                indeterminate={loading}
-                                                indeterminateAnimationDuration={2000}
-                                            />
-
-                                            <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
-                                        </>
-                                    }
                                 </View>
                                 <Text style={styles.question}>{currentQuestion.question}</Text>
                                 {platform === 'web' && nextQuestionButton()}
