@@ -24,7 +24,7 @@ export default function Parameters() {
     setlaunch(true);
     createQuiz(questionCount, theme, difficulty)
       .then(data => {
-        navigation.navigate('menuDrawer');
+        navigation.navigate('initMenu');
         setlaunch(false);
         setTimeout(() => {
           navigation.navigate('quizScreen', { gameId: data.id });

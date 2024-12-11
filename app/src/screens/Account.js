@@ -68,7 +68,7 @@ export default function Account() {
                 <View style={styles.quizScreenView}>
                     <Text style={styles.errorText}>{errorMessage}</Text>
                     <TouchableOpacity onPress={() => {
-                        navigation.navigate('menuDrawer', { screen: 'account' })
+                        navigation.navigate('initMenu', { screen: 'account' })
                     }
                     }>
                         <Text style={styles.buttonText}>Retour au menu</Text>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: COLORS.background.blue,
     },
-    appTitle:{
+    appTitle: {
         height: platform === 'web' ? '10%' : '25%',
         fontSize: 150,
         fontFamily: 'LobsterTwo_700Bold_Italic',

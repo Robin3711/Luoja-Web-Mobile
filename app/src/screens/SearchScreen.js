@@ -66,7 +66,7 @@ export default function SearchScreen() {
             <View style={styles.screen}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
                 <TouchableOpacity onPress={() => {
-                    navigation.navigate('menuDrawer', { screen: 'account' })
+                    navigation.navigate('initMenu', { screen: 'account' })
                 }
                 }>
                     <Text style={styles.buttonText}>Retour au menu</Text>
