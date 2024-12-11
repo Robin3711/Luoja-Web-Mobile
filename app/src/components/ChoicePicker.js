@@ -1,38 +1,40 @@
 import { useEffect, useState } from 'react';
 import { View, Text, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { COLORS } from '../css/utils/color';
 import { difficultyOptions } from '../utils/utils';
 
 const platform = Platform.OS;
 
-const DifficultySelector = ({ testID, value, onValueChange }) => {
-    const [selectedIndex, setSelectedIndex] = useState(null);
-
-    const buttons = difficultyOptions.map(option => option.label);
+const ChoiseSelector = ({ testID, value, onValueChange, parameters = difficultyOptions, defaultValue = false }) => {
+    const [selectedIndex, setSelectedIndex] = useState(defaultValue ? 0 : null);
 
     const handleSelection = index => {
-        if (index === selectedIndex) {
-            setSelectedIndex(null);
-            onValueChange(null);
-        }
-        else {
+        if (defaultValue) {
+
             setSelectedIndex(index);
-            onValueChange(difficultyOptions[index].value);
+            onValueChange(parameters[index].value);
+        } else {
+
+            if (index === selectedIndex) {
+                setSelectedIndex(null);
+                onValueChange(null);
+            } else {
+                setSelectedIndex(index);
+                onValueChange(parameters[index].value);
+            }
         }
     };
 
     useEffect(() => {
-        if (value) {
-            const index = difficultyOptions.findIndex(option => option.value === value);
-            setSelectedIndex(index);
+        if (value !== undefined) {
+            const index = parameters.findIndex(option => option.value === value);
+            setSelectedIndex(index >= 0 ? index : (defaultValue ? 0 : null));
         }
-    }
-        , [value]);
+    }, [value, parameters, defaultValue]);
 
     return (
         <View style={styles.container}>
-            {difficultyOptions.map((option, index) => (
+            {parameters.map((option, index) => (
                 <TouchableOpacity
                     key={option.value}
                     style={[
@@ -88,4 +90,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default DifficultySelector;
+export default ChoiseSelector;

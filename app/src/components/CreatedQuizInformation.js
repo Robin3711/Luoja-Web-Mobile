@@ -56,10 +56,11 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
         }
     };
 
-    const handlePlayQuiz = () => {
+    const handlePlayQuiz = async () => {
         if (status === true && Platform.OS === 'web') {
-            data = createParty(quizId);
-            navigation.navigate('quizScreen', { partyId: data.partyId });
+            console.log(quizId);
+            const data = await createParty(quizId);
+            navigation.navigate('quizScreen', { gameId: data.id });
         }
     };
 

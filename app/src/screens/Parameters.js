@@ -6,7 +6,7 @@ import { createQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
 import RangeCursor from '../components/Cursor';
 import ThemeSelector from '../components/ThemeList';
-import DifficultySelector from '../components/DifficultyPicker';
+import ChoiseSelector from '../components/ChoicePicker';
 import SimpleButton from '../components/SimpleButton';
 
 import { COLORS } from '../css/utils/color';
@@ -49,7 +49,7 @@ export default function Parameters() {
         </View>
         <View style={{ width: '100%' }}>
           <Text style={styles.text}>Difficulté</Text>
-          <DifficultySelector value={difficulty} onValueChange={setDifficulty} />
+          <ChoiseSelector value={difficulty} onValueChange={setDifficulty} />
         </View>
         <View style={{ width: '100%' }}>
           <RangeCursor value={questionCount} onValueChange={setQuestionCount} />
