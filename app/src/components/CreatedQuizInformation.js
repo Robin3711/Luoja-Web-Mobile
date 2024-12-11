@@ -71,11 +71,11 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
                     <TouchableOpacity style={styles.touchableOpacity} onPress={handleCreationQuiz}>
-                        <Text>Créer</Text>
+                        <Text>Modifier</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.SecondaryInformationsView}>
-                     <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
+                    <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
                     <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
                 </View>
             </View>

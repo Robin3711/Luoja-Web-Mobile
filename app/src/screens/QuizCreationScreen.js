@@ -27,10 +27,13 @@ export default function QuizCreation() {
     const [category, setCategory] = useState(null);
     const [difficulty, setDifficulty] = useState('easy');
     const [questions, setQuestions] = useState([]);
+    const [saveButton, setSaveButton] = useState(true);
+    const [publishButton, setPublishButton] = useState(true);
 
     const handleAddQuestions = (newQuestions) => {
         try {
             setQuestions([...questions, ...newQuestions]);
+            setSaveButton(false);
         }
         catch (error) {
             if (error.status && error.message) {
@@ -46,6 +49,7 @@ export default function QuizCreation() {
             const newQuestions = [...questions];
             newQuestions[index] = question[0];
             setQuestions(newQuestions);
+            setSaveButton(false);
         }
         catch (error) {
             if (error.status && error.message) {
@@ -61,6 +65,7 @@ export default function QuizCreation() {
             const newQuestions = [...questions];
             newQuestions.splice(index, 1);
             setQuestions(newQuestions);
+            setSaveButton(false);
         }
 
         catch (error) {
@@ -120,6 +125,8 @@ export default function QuizCreation() {
             else {
                 await editQuiz(quizId, title, category, difficulty, questions);
             }
+            setPublishButton(false);
+            setSaveButton(true);
             toast('info', 'Le quiz à bien était sauvegardé !', "", 1000, 'dodgerblue');
         }
         catch (error) {
@@ -183,6 +190,15 @@ export default function QuizCreation() {
     }
         , [route.params]);
 
+    useEffect(() => {
+
+        if (title !== '' || category !== null || difficulty !== 'easy') {
+            setSaveButton(false);
+        } else {
+            setSaveButton(true);
+        }
+    }, [title, category, difficulty]);
+
     loadFont();
     return (
         <View style={styles.quizCreationView}>
@@ -243,10 +259,10 @@ export default function QuizCreation() {
             </View>
 
             <View style={styles.quizCreationBottomButtonsView}>
-                <TouchableOpacity style={styles.buttons} onPress={handleSave}>
+                <TouchableOpacity style={saveButton ? styles.disabledButton : styles.buttons} onPress={handleSave} disabled={saveButton}>
                     <Text style={styles.buttonText}>Enregistrer</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={quizId === null ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={quizId === null}>
+                <TouchableOpacity style={publishButton ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={publishButton}>
                     <Text style={styles.buttonText}>Publier</Text>
                 </TouchableOpacity>
             </View>
