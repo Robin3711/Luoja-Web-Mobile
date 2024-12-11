@@ -137,6 +137,7 @@ export default function CreateQuestionScreen() {
                 text={answers[shape]}
                 onTextChange={(text) => handleTextChange(shape, text)}
                 onShapeClick={handleShapeClick}
+                type={type}
             />
         </View>
     );
