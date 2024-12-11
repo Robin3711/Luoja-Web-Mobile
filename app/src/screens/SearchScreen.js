@@ -3,7 +3,7 @@ import { Text, View, Platform, StyleSheet, ScrollView, TouchableOpacity, TextInp
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
-import DifficultySelector from '../components/DifficultyPicker';
+import ChoiseSelector from '../components/ChoicePicker';
 import QuizInformation from '../components/QuizInformation';
 import { loadFont, requireToken } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
@@ -91,7 +91,7 @@ export default function SearchScreen() {
                         </View>
                         <View style={styles.filterView}>
                             <Text style={styles.text}>Difficulté</Text>
-                            <DifficultySelector testID="difficultySelector" value={difficulty} onValueChange={setDifficulty} />
+                            <ChoiseSelector testID="ChoiseSelector" value={difficulty} onValueChange={setDifficulty} />
                         </View>
                     </View>
 
