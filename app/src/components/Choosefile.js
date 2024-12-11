@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet, Image } from 'react-native';
 import { Dices } from 'lucide-react-native';
 import { COLORS } from '../css/utils/color';
 import icon from '../../assets/icon.png';
@@ -11,15 +11,20 @@ const platform = Platform.OS;
 const ChooseFile = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [file, setFile] = useState(null);
+    const [images, setImages] = useState([]);
+
     const handleOpenModal = () => {
         setModalVisible(true);
     }
 
 
     const selectFile = async () => {
-        const result = await DocumentPicker.getDocumentAsync({});
+        const object = await DocumentPicker.getDocumentAsync({});
+        console.log(object);
+        const result = object.assets[0].uri;
         console.log(result);
         setFile(result);
+        setImages([...images, result]);
     };
 
 
@@ -38,9 +43,14 @@ const ChooseFile = ({ onValueChange }) => {
                         onPress={selectFile}>
                         <Text style={[styles.themeLabel, { fontWeight: 'bold' }]}><Dices color="black" size={iconSize} /> Choisir l'image</Text>
                     </TouchableOpacity>
-
-
                     
+                    <FlatList
+                        data={images}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <Image source={{ uri: item }} style={{ width: 200, height: 200 }} />
+                        )}
+                    />
                 </View>
             </Modal>
         </View>
