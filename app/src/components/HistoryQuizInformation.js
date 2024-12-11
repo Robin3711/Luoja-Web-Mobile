@@ -82,7 +82,7 @@ export default function HistoryQuizInformation({ partyId }) {
                 <Text style={styles.titleText}>{title || `${partyId}`}</Text>
                 <Text style={styles.titleText}>{difficulty}</Text>
                 <Text style={styles.titleText}>{nbQuestions}</Text>
-                <TouchableOpacity style={styles.touchableOpacity} onPress={handleContinueGame}>
+                <TouchableOpacity style={[styles.touchableOpacity, { backgroundColor: buttonText === 'Rejouer' ? COLORS.button.blue.darkBasic : COLORS.button.blue.basic }]} onPress={handleContinueGame}>
                     <Text>{buttonText}</Text>
                 </TouchableOpacity>
             </View>
@@ -135,7 +135,6 @@ const styles = StyleSheet.create({
         width: '50%'
     },
     touchableOpacity: {
-        backgroundColor: COLORS.button.blue.basic, // Bleu Bootstrap
         padding: 8, // Espacement interne
         borderRadius: 4, // Coins arrondis
         width: 100, // Largeur fixe

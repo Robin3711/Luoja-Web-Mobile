@@ -70,12 +70,12 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                    <TouchableOpacity style={styles.touchableOpacity} onPress={handleCreationQuiz}>
-                        <Text>Créer</Text>
+                    <TouchableOpacity style={[styles.touchableOpacity, { backgroundColor: COLORS.button.blue.basic }]} onPress={handleCreationQuiz}>
+                        <Text>Modifier</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.SecondaryInformationsView}>
-                     <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
+                    <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
                     <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
                 </View>
             </View>
@@ -88,7 +88,7 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                <TouchableOpacity style={styles.touchableOpacity} onPress={handlePlayQuiz}>
+                <TouchableOpacity style={[styles.touchableOpacity, { backgroundColor: COLORS.button.blue.darkBasic }]} onPress={handlePlayQuiz}>
                     <Text>Jouer</Text>
                 </TouchableOpacity>
             </View>
@@ -144,7 +144,6 @@ const styles = StyleSheet.create({
         color: '#aaaaaa', // Texte grisé
     },
     touchableOpacity: {
-        backgroundColor: COLORS.button.blue.basic, // Bleu Bootstrap
         padding: 8, // Espacement interne
         borderRadius: 4, // Coins arrondis
         width: 100, // Largeur fixe
