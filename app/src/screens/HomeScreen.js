@@ -19,7 +19,7 @@ export default function HomeScreen() {
             <Text style={styles.appTitle}>Luoja</Text>
 
             <View style={styles.childView}>
-                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/splash.png')} />}
+                {platform === 'web' && <Image style={styles.logo} source={"https://static.vecteezy.com/system/resources/previews/033/529/199/non_2x/christmas-tree-with-gifts-ai-generative-free-png.png"} />}
 
                 <View style={styles.listButton}>
                     <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')} />
@@ -29,7 +29,7 @@ export default function HomeScreen() {
                     <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
                 </View>
 
-                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/splash.png')} />}
+                {platform === 'web' && <Image style={styles.logo} source={"https://static.vecteezy.com/system/resources/previews/033/529/199/non_2x/christmas-tree-with-gifts-ai-generative-free-png.png"} />}
             </View>
         </View>
     );
