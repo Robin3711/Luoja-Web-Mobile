@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, Switch } from 'rea
 import { MaterialIcons } from '@expo/vector-icons';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
-
+import RNPickerSelect from 'react-native-picker-select';
 import { COLORS } from '../css/utils/color';
 
 export default function CreateQuestionScreen() {
@@ -16,7 +16,7 @@ export default function CreateQuestionScreen() {
     const [questionText, setQuestionText] = useState('');
     const [selectedShape, setSelectedShape] = useState('');
     const [showFourAnswers, setShowFourAnswers] = useState(true);
-
+    const [type, setType] = useState('text');
     // Answers state
     const [answers, setAnswers] = useState({
         SQUARE: '',
@@ -150,6 +150,11 @@ export default function CreateQuestionScreen() {
                         value={questionText}
                         onChangeText={setQuestionText}
                     />
+                    <RNPickerSelect onValueChange={(value) => setType(value)} items={[
+                            { label: 'Texte', value: 'text' },
+                            { label: 'Image', value: 'image' },
+                            { label: 'Audio', value: 'audio' },
+                        ]} value={type} />
                     <View style={styles.toggleContainer}>
                         <Text style={styles.toggleLabel}>2 réponses</Text>
                         <Switch value={showFourAnswers} onValueChange={handleToggleFourAnswers} />
