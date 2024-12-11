@@ -36,7 +36,7 @@ const AnswerButton = ({ shape, onClick, text, filter }) => {
     };
 
     const filters = {
-        GREEN: 'rgba(65, 105, 225, 1)',
+        GREEN: 'rgba(60, 200, 107, 1)',
         BLUE: 'rgba(0, 0, 255, 1)',
         RED: 'rgba(240, 30, 80, 1)',
     };

@@ -127,7 +127,7 @@ export default function CreateQuestionScreen() {
             {selectedShape === shape && (
                 <MaterialIcons
                     name="check"
-                    size={24}
+                    size={34}
                     color="green"
                     style={styles.checkmarkIcon}
                 />
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     },
     checkmarkIcon: {
         position: 'absolute',
-        left: -30,
+        left: -35,
         top: '50%',
         transform: [{ translateY: -12 }],
     },
