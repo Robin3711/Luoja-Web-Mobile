@@ -73,7 +73,7 @@ export default function Dashboard() {
                     <View style={styles.dashboardSection}>
                         <Text style={styles.dashboardText}>Historique</Text>
                         <ScrollView>
-                            {history.map((item, index) => (
+                            {[...history].reverse().map((item, index) => (
                                 <View key={index}>
                                     <HistoryQuizInformation partyId={item.id} />
                                 </View>
@@ -83,15 +83,23 @@ export default function Dashboard() {
                     <View style={styles.dashboardSection}>
                         <Text style={styles.dashboardText}>Vos quiz publiés</Text>
                         <ScrollView>
-                            {publishedQuizzes.map((item, index) => (
+                            {[...publishedQuizzes].reverse().map((item, index) => (
                                 <View key={index}>
-                                    <CreatedQuizInformation quizId={item.id} category={item.category} difficulty={item.difficulty} date={item.createdAt} status={item.public} title={item.title} nbQuestions={item.numberOfQuestions} />
+                                    <CreatedQuizInformation
+                                        quizId={item.id}
+                                        category={item.category}
+                                        difficulty={item.difficulty}
+                                        date={item.createdAt}
+                                        status={item.public}
+                                        title={item.title}
+                                        nbQuestions={item.numberOfQuestions}
+                                    />
                                 </View>
                             ))}
                         </ScrollView>
                     </View>
                 </View>
-                <SimpleButton text="Déconnexion" onPress={handleLogout} color={'red'}/>
+                <SimpleButton text="Déconnexion" onPress={handleLogout} color={'red'} />
             </View>
         )
     );

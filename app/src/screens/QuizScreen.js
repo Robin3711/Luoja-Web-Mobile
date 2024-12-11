@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
-import * as Progress from 'react-native-progress';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Clipboard as Copy } from 'lucide-react-native';
@@ -168,20 +167,16 @@ export default function QuizScreen() {
                         buttonDisabled ? 'Chargement de la question...' : 'Question suivante'
                     )
                 ) : (
-                    buttonDisabled ? 'Vérification...' : 'Vérifier ma réponse'
+                    buttonDisabled ? 'Vérification...' : 'Valider'
                 )}
             </Text>
 
         </TouchableOpacity>
     );
 
-    console.log('questionNumber', questionNumber);
-    console.log('totalQuestion', totalQuestion);
-    console.log('progress', questionNumber / totalQuestion);
-
     const handleCopyGameId = async () => {
         await Clipboard.setStringAsync(gameId);
-        toast('info', 'L\'id à bien été copier !', "", 2000, 'dodgerblue');
+        toast('info', 'L\'id à bien été copié !', "", 2000, 'dodgerblue');
     };
 
     loadFont();
@@ -198,34 +193,17 @@ export default function QuizScreen() {
                             <View style={styles.questionView}>
                                 <CountdownCircleTimer
                                     duration={7}
-                                    size={100}
-                                    strokeWidth={10}
+                                    size={Platform.OS === 'web' ? 150 : 110}
+                                    strokeWidth={Platform.OS === 'web' ? 15 : 10}
                                     colors={['#004777', '#F7B801', '#A30000', '#A30000']}
                                     colorsTime={[7, 5, 2, 0]}
                                 >
                                     {({ remainingTime }) => (
-                                        <Text style={styles.questionNumber}>{questionNumber}</Text>
+                                        <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                     )}
                                 </CountdownCircleTimer>
                                 <Text style={styles.questionNumber}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
-                                    
-                                    {platform == 'web' && 
-                                        <>
-                                            <Text style={styles.quizBarTextView}>1 </Text>
-
-                                            <Progress.Bar
-                                            borderRadius={0}
-                                            height={10}
-                                            progress={questionNumber / totalQuestion}
-                                            width={platform === 'web' ? 400 : 200}
-                                            indeterminate={loading}
-                                            indeterminateAnimationDuration={2000}
-                                            />
-
-                                            <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
-                                        </>
-                                    }
                                 </View>
                                 <Text style={styles.question}>{currentQuestion.question}</Text>
                                 {platform === 'web' && nextQuestionButton()}
@@ -239,7 +217,6 @@ export default function QuizScreen() {
                                         text={answer}
                                         onClick={handleAnswerSelection}
                                         filter={getAnswerFilter(answer)}
-                                    
                                     />
                                 ))}
                                 {platform !== 'web' && nextQuestionButton()}
@@ -255,7 +232,7 @@ export default function QuizScreen() {
                 <Text style={styles.errorText}>{errorMessage}</Text>
 
                 <SimpleButton title="Retour au menu" onPress={() => navigation.navigate('menuDrawer', { screen: 'newQuiz' })} />
-                
+
             </View>
         )
 
@@ -313,7 +290,7 @@ const styles = StyleSheet.create({
     answersView: {
         width: platform === 'web' ? '50%' : '100%',
         alignItems: 'center',
-        
+
     },
     buttons: {
         display: 'flex',
