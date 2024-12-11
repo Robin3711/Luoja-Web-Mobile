@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import ChooseFile from './Choosefile';
+import icon from '../../assets/icon.png';
 
 const Star = () => (
     <Svg width="75" height="75" viewBox="-2 -2 28 28" fill="none">
@@ -23,7 +25,7 @@ const Triangle = () => (
     </Svg>
 );
 
-const AnswerInput = ({ shape, text, onTextChange, onShapeClick }) => {
+const AnswerInput = ({ shape, text, onTextChange, onShapeClick, type }) => {
     const backgroundColors = {
         SQUARE: '#58bdfe',
         CIRCLE: '#484a77',
@@ -46,6 +48,8 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick }) => {
         }
     };
 
+    const [file, setFile] = useState(null);
+
     return (
         <View
             style={[
@@ -56,12 +60,22 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick }) => {
             <Pressable style={styles.shapeContainer} onPress={() => onShapeClick(shape)}>
                 {renderShape()}
             </Pressable>
-            <TextInput
-                style={styles.textInput}
-                placeholder="Réponse"
-                onChangeText={onTextChange}
-                value={text}
-            />
+
+            {type === 'text' && (
+                <TextInput
+                    style={styles.textInput}
+                    placeholder="Réponse"
+                    onChangeText={onTextChange}
+                    value={text}
+                />
+            )}
+            {type === 'image' && (
+                <ChooseFile
+                    onFileSelected={(file) => {
+                        console.log(file);
+                    }}
+                />
+            )}
         </View>
     );
 };
