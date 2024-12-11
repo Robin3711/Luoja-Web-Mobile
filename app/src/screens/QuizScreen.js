@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
-import * as Progress from 'react-native-progress';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Clipboard as Copy } from 'lucide-react-native';
@@ -175,10 +174,6 @@ export default function QuizScreen() {
         </TouchableOpacity>
     );
 
-    console.log('questionNumber', questionNumber);
-    console.log('totalQuestion', totalQuestion);
-    console.log('progress', questionNumber / totalQuestion);
-
     const handleCopyGameId = async () => {
         await Clipboard.setStringAsync(gameId);
         toast('info', 'L\'id à bien été copié !', "", 2000, 'dodgerblue');
@@ -198,8 +193,8 @@ export default function QuizScreen() {
                             <View style={styles.questionView}>
                                 <CountdownCircleTimer
                                     duration={7}
-                                    size={100}
-                                    strokeWidth={10}
+                                    size={Platform.OS === 'web' ? 150 : 110}
+                                    strokeWidth={Platform.OS === 'web' ? 15 : 10}
                                     colors={['#004777', '#F7B801', '#A30000', '#A30000']}
                                     colorsTime={[7, 5, 2, 0]}
                                 >
@@ -222,7 +217,6 @@ export default function QuizScreen() {
                                         text={answer}
                                         onClick={handleAnswerSelection}
                                         filter={getAnswerFilter(answer)}
-
                                     />
                                 ))}
                                 {platform !== 'web' && nextQuestionButton()}
