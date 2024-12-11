@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Switch } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Switch } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
 import { COLORS } from '../css/utils/color';
+import SimpleButton from '../components/SimpleButton';
+import { loadFont } from '../utils/utils';
 
 export default function CreateQuestionScreen() {
+
+    loadFont();
 
     const route = useRoute();
     const navigation = useNavigation();
@@ -151,19 +155,17 @@ export default function CreateQuestionScreen() {
                         onChangeText={setQuestionText}
                     />
                     <RNPickerSelect onValueChange={(value) => setType(value)} items={[
-                            { label: 'Texte', value: 'text' },
-                            { label: 'Image', value: 'image' },
-                            { label: 'Audio', value: 'audio' },
-                        ]} value={type} />
+                        { label: 'Texte', value: 'text' },
+                        { label: 'Image', value: 'image' },
+                        { label: 'Audio', value: 'audio' },
+                    ]} value={type} />
                     <View style={styles.toggleContainer}>
                         <Text style={styles.toggleLabel}>2 réponses</Text>
                         <Switch value={showFourAnswers} onValueChange={handleToggleFourAnswers} />
                         <Text style={styles.toggleLabel}>4 réponses</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.createQuestionSubmit} onPress={handleSubmit}>
-                    <Text>Valider</Text>
-                </TouchableOpacity>
+                <SimpleButton text="Valider" onPress={handleSubmit} />
             </View>
 
             {/* Right Panel */}
@@ -201,6 +203,8 @@ const styles = StyleSheet.create({
     },
     createQuestionTitle: {
         display: 'flex',
+        fontFamily: 'LobsterTwo_400Regular',
+        fontSize: 25,
         justifyContent: 'center',
         alignItems: 'center',
         width: '50%',

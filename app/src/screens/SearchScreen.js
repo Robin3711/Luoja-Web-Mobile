@@ -169,6 +169,8 @@ const styles = StyleSheet.create({
         ...platform === 'web' && { marginLeft: 20 },
     },
     quizCreationQuestionsTitle: {
+        fontFamily: 'LobsterTwo_400Regular',
+        fontSize: 20,
         backgroundColor: 'white',
         padding: 5,
         borderRadius: 20,

@@ -353,6 +353,8 @@ const styles = StyleSheet.create({
     quizCreationQuestionsTitle: {
         coolor: COLORS.text.blue.dark,
         backgroundColor: 'white',
+        fontFamily: 'LobsterTwo_400Regular',
+        fontSize: 20,
         padding: 5,
         marginBottom: 10,
         borderRadius: 20,
