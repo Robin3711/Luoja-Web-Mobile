@@ -26,7 +26,7 @@ export default function QuizScreen() {
                 <Text style={styles.quizQuestionText}>
                     Une erreur est survenue lors de la récupération de la partie.
                 </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('menuDrawer', { screen: 'newQuiz' })}>
+                <TouchableOpacity onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })}>
                     <Text style={styles.buttonText}>Retour</Text>
                 </TouchableOpacity>
             </View>
@@ -231,7 +231,7 @@ export default function QuizScreen() {
             <View style={styles.quizScreenView}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
 
-                <SimpleButton title="Retour au menu" onPress={() => navigation.navigate('menuDrawer', { screen: 'newQuiz' })} />
+                <SimpleButton title="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
 
             </View>
         )
