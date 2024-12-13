@@ -456,13 +456,33 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
 
         if (difficulty) parameters += `&difficulty=${difficulty}`;
 
-        const response = await fetch(`https://api.luoja.fr/quiz/list?${parameters}`);
+        const response = await fetch(`${await getPlatformAPI()}/quiz/list?${parameters}`);
 
         if (!response.ok) await handleResponseError(response);
 
         return (await response.json()).quizs;
     }
     catch (error) {
+        throw error;
+    }
+}
+
+export async function uploadImage(file) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/uploads`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "multipart/form-data",
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: file,
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+
+    } catch (error) {
         throw error;
     }
 }
