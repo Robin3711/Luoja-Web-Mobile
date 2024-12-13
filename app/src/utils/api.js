@@ -478,9 +478,7 @@ export async function uploadImage(file) {
             body: file,
         });
 
-        if (!response.ok) await handleResponseError(response);
-
-        return await response.json();
+        return await response;
 
     } catch (error) {
         throw error;
