@@ -5,6 +5,7 @@ import { COLORS } from '../css/utils/color';
 import icon from '../../assets/icon.png';
 import { iconSize } from '../utils/utils';
 import * as DocumentPicker from 'expo-document-picker';
+import { uploadImage } from '../utils/api';
 
 const platform = Platform.OS;
 
@@ -12,6 +13,10 @@ const ChooseFile = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [file, setFile] = useState(null);
     const [images, setImages] = useState([]);
+    const [fileUri, setFileUri] = useState(icon.uri);
+    const [fileName, setFileName] = useState("icon");
+    const [fileType, setFileType] = useState("image/png");
+    const [fileData, setFileData] = useState(null);
 
     const handleOpenModal = () => {
         setModalVisible(true);
@@ -25,6 +30,21 @@ const ChooseFile = ({ onValueChange }) => {
         console.log(result);
         setFile(result);
         setImages([...images, result]);
+        setFileUri(object.assets[0].uri);
+        setFileName(object.assets[0].name);
+        setFileType(object.assets[0].mimeType)
+
+        const fileContent = new FormData();
+        fileContent.append('file', {
+            name: fileName,
+            type: fileType,
+            uri: fileUri,
+        });
+
+        setFileData(fileContent);
+
+        const response = await uploadImage(fileData);
+        console.log(response);
     };
 
 
