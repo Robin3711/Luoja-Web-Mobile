@@ -18,7 +18,7 @@ export default function Register() {
         try {
             await userRegister(name, password);
             toast('success', "Enregistrement réussie !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, 'seagreen');
-            navigation.navigate('menuDrawer', { screen: 'account' });
+            navigation.navigate('initMenu', { screen: 'account' });
         }
         catch (error) {
             if (error.status && error.message) {

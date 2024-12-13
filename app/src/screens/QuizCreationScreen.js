@@ -6,7 +6,7 @@ import { getQuizInfos } from '../utils/api';
 
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 import { requireToken, toast } from '../utils/utils';
-import DifficultyPicker from '../components/DifficultyPicker';
+import ChoicePicker from '../components/ChoicePicker';
 import { Edit2, LucideTrash } from 'lucide-react-native';
 import ThemeSelector from '../components/ThemeList';
 
@@ -213,7 +213,7 @@ export default function QuizCreation() {
                         <Text style={styles.text}>Thème</Text>
                         <ThemeSelector onValueChange={setCategory} />
                         <Text style={styles.text}>Difficulté</Text>
-                        <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
+                        <ChoicePicker value={difficulty} onValueChange={setDifficulty} />
                         <View style={styles.quizCreationTopButtonsView}>
                             <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
                                 <Text style={styles.buttonText}>Importer des questions</Text>

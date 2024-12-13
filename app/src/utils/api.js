@@ -330,7 +330,7 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
         if (difficulty !== null) url += `&difficulty=${difficulty}`;
 
         const questions = quizQuestions.map((q) => ({
-            text: q.text !== null ? q.question : q.text,
+            text: q.text,
             correctAnswer: q.correctAnswer,
             incorrectAnswers: q.incorrectAnswers,
         }));

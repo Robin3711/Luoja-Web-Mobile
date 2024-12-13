@@ -20,7 +20,7 @@ export default function Login() {
         try {
             await userLogin(name, password);
             toast('success', "Connexion réussie !", `Bienvenue ${name}`, 3000, 'seagreen');
-            navigation.navigate('menuDrawer', { screen: 'account' });
+            navigation.navigate('initMenu', { screen: 'account' });
         }
         catch (error) {
             if (error.status && error.message) {

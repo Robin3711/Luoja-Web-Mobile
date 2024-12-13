@@ -6,8 +6,9 @@ import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
 import CreatedQuizInformation from "../components/CreatedQuizInformation";
 import { COLORS } from "../css/utils/color";
-import { loadFont } from "../utils/utils";
+import { loadFont, publishSortOptions, historySortOptions } from "../utils/utils";
 import SimpleButton from "../components/SimpleButton";
+import ChoiseSelector from "../components/ChoicePicker";
 
 const platform = Platform.OS;
 
@@ -17,6 +18,12 @@ export default function Dashboard() {
     const [publishedQuizzes, setPublishedQuizzes] = useState([]);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
+    const [sortPublishedQuizzes, setSortPublishedQuizzes] = useState(null);
+    const [historyStatus, setHistoryStatus] = useState({});
+    const [historyTitle, setHistoryTitle] = useState({})
+    const [sortHistory, setSortHistory] = useState(null);
+    const [showFastQuizOnly, setShowFastQuizOnly] = useState(false);
+
 
     if (!hasToken()) {
         navigation.navigate('login');
@@ -53,6 +60,42 @@ export default function Dashboard() {
         }, [])
     );
 
+    const handleSortQuizzes = (quizzes, sortOrder) => {
+        if (sortOrder === true) {
+            return quizzes.filter(item => (item.public === true));
+        } else if (sortOrder === false) {
+            return quizzes.filter(item => (item.public === false));
+        }
+        return quizzes;
+    };
+
+    const handleStatusChange = (partyId, status, title) => {
+        setHistoryStatus(prev => ({ ...prev, [partyId]: status }));
+        setHistoryTitle(prev => ({ ...prev, [partyId]: title }));
+    };
+
+    const handleSortHistoryItems = (history, sortOrder) => {
+        let sortedItems = [...history];
+
+        if (showFastQuizOnly) {
+            sortedItems = sortedItems.filter(item =>
+                historyTitle[item.id] !== "Fast Quiz"
+            );
+        }
+
+        if (sortOrder === true) {
+            sortedItems = sortedItems.filter(item =>
+                historyStatus[item.id] === 'Rejouer'
+            );
+        } else if (sortOrder === false) {
+            sortedItems = sortedItems.filter(item =>
+                historyStatus[item.id] === 'Continuer'
+            );
+        }
+
+        return sortedItems;
+    };
+
 
     loadFont();
     return (
@@ -60,7 +103,7 @@ export default function Dashboard() {
             <View style={styles.quizScreenView}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
                 <TouchableOpacity onPress={() => {
-                    navigation.navigate('menuDrawer', { screen: 'account' })
+                    navigation.navigate('initMenu', { screen: 'account' })
                 }
                 }>
                     <Text style={styles.buttonText}>Retour au menu</Text>
@@ -72,18 +115,36 @@ export default function Dashboard() {
                 <View style={styles.dashboardContainer}>
                     <View style={styles.dashboardSection}>
                         <Text style={styles.dashboardText}>Historique</Text>
+                        <View style={styles.buttonContainer}>
+                            <ChoiseSelector value={sortHistory} onValueChange={setSortHistory} parameters={historySortOptions} defaultValue={true} />
+                            <TouchableOpacity
+                                style={[
+                                    styles.filterButton,
+                                    showFastQuizOnly && styles.activeFilterButton
+                                ]}
+                                onPress={() => setShowFastQuizOnly(!showFastQuizOnly)}
+                            >
+                                <Text style={styles.filterButtonText}>
+                                    {showFastQuizOnly ? "Afficher Tout" : "Enlever Fast Quiz"}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
                         <ScrollView>
-                            {[...history].reverse().map((item, index) => (
+                            {handleSortHistoryItems([...history].reverse(), sortHistory).map((item, index) => (
                                 <View key={index}>
-                                    <HistoryQuizInformation partyId={item.id} />
+                                    <HistoryQuizInformation partyId={item.id} onStatusChange={handleStatusChange} />
                                 </View>
                             ))}
                         </ScrollView>
                     </View>
                     <View style={styles.dashboardSection}>
                         <Text style={styles.dashboardText}>Vos quiz publiés</Text>
+                        <View style={styles.buttonContainer}>
+                            <ChoiseSelector value={sortPublishedQuizzes} onValueChange={setSortPublishedQuizzes} parameters={publishSortOptions} defaultValue={true} />
+                        </View>
                         <ScrollView>
-                            {[...publishedQuizzes].reverse().map((item, index) => (
+                            {handleSortQuizzes([...publishedQuizzes].reverse(), sortPublishedQuizzes).map((item, index) => (
                                 <View key={index}>
                                     <CreatedQuizInformation
                                         quizId={item.id}
@@ -157,4 +218,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 20,
     },
+    filterButton: {
+        backgroundColor: COLORS.button.blue.basic,
+        padding: 10,
+        borderRadius: 8,
+        marginTop: 10,
+        alignItems: 'center',
+    },
+    activeFilterButton: {
+        backgroundColor: COLORS.button.blue.darkBasic, // Active state
+    },
+    filterButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+
 });

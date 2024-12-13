@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { COLORS } from '../css/utils/color';
 
-export default function HistoryQuizInformation({ partyId }) {
+export default function HistoryQuizInformation({ partyId, onStatusChange }) {
     const [loading, setLoading] = useState(true);
     const [score, setScore] = useState(0);
     const [date, setDate] = useState("any");
@@ -45,9 +45,10 @@ export default function HistoryQuizInformation({ partyId }) {
                 setDifficulty(difficultyTemp);
                 setTitle(data.Title);
                 setNbQuestions(data.numberOfQuestions);
-                if (data.numberOfQuestions === data.questionCursor) {
-                    setButtonText('Rejouer');
-                }
+                const status = data.numberOfQuestions === data.questionCursor ? 'Rejouer' : 'Continuer';
+                setButtonText(status);
+
+                onStatusChange(partyId, status, data.Title);
             }
             catch (error) {
                 if (error.status && error.message) {

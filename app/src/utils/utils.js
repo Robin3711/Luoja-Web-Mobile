@@ -133,6 +133,18 @@ export const difficultyOptions = [
     { label: 'Difficile', value: 'hard' },
 ];
 
+export const publishSortOptions = [
+    { label: 'Auncun', value: null },
+    { label: 'Publier', value: true },
+    { label: 'Incomplet', value: false },
+];
+
+export const historySortOptions = [
+    { label: 'Auncun', value: null },
+    { label: 'Finit', value: true },
+    { label: 'En cours', value: false },
+];
+
 export function loadFont() {
     let [fontsLoaded] = useFonts({
         LobsterTwo_400Regular,

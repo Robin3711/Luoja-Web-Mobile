@@ -58,7 +58,7 @@ export default function EndScreen() {
     }, [gameId]);
 
     const handleReturnHome = async () => {
-        navigation.navigate("menuDrawer");
+        navigation.navigate("initMenu");
     };
 
     const handleReplay = async () => {
@@ -75,7 +75,7 @@ export default function EndScreen() {
         <View style={styles.container}>
             <Text style={styles.errorText}>{errorMessage}</Text>
             <TouchableOpacity style={styles.button} onPress={() => {
-                navigation.navigate('menuDrawer')
+                navigation.navigate('initMenu')
             }
             }>
                 <Text style={styles.buttonText}>Retour au menu</Text>
