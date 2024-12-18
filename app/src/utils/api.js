@@ -469,10 +469,11 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
 
 export async function uploadImage(file) {
     try {
+
+        console.log(file);
         const response = await fetch(`${await getPlatformAPI()}/uploads`, {
             method: 'POST',
             headers: {
-                "Content-Type": "multipart/form-data",
                 'token': await AsyncStorage.getItem('token'),
             },
             body: file,
