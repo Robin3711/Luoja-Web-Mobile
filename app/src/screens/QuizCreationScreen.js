@@ -362,23 +362,11 @@ const styles = StyleSheet.create({
         marginRight: 200,
         flex: 1,
     },
-
-    questionsView: {
-        backgroundColor: 'white',
-        padding: 5,
-        borderRadius: 20,
-        flexGrow: 1,
-        paddingBottom: 10,
-    },
     dragListContainer: {
         maxHeight: '35vh',
         backgroundColor: 'white',
         borderRadius: 20,
         overflow: 'hidden',
-    },
-    scrollView: {
-        backgroundColor: 'white',
-        borderRadius: 20,
     },
     quizCreationQuestionsTitle: {
         coolor: COLORS.text.blue.dark,
