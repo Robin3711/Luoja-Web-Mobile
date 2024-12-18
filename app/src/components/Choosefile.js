@@ -4,7 +4,6 @@ import { Dices } from 'lucide-react-native';
 import { COLORS } from '../css/utils/color';
 import icon from '../../assets/icon.png';
 import { iconSize } from '../utils/utils';
-import * as DocumentPicker from 'expo-document-picker';
 import { uploadImage } from '../utils/api';
 
 const platform = Platform.OS;
@@ -18,33 +17,27 @@ const ChooseFile = ({ onValueChange }) => {
     const [fileType, setFileType] = useState("image/png");
     const [fileData, setFileData] = useState(null);
 
+
     const handleOpenModal = () => {
         setModalVisible(true);
     }
 
 
     const selectFile = async () => {
-        const object = await DocumentPicker.getDocumentAsync({});
-        console.log(object);
-        const result = object.assets[0].uri;
-        console.log(result);
-        setFile(result);
-        setImages([...images, result]);
-        setFileUri(object.assets[0].uri);
-        setFileName(object.assets[0].name);
-        setFileType(object.assets[0].mimeType)
+        const file = document.getElementById('file').files[0];
+        const formData = new FormData();
+        formData.append('file', file);
 
-        const fileContent = new FormData();
-        fileContent.append('file', {
-            name: fileName,
-            type: fileType,
-            uri: fileUri,
-        });
-
-        setFileData(fileContent);
-
-        const response = await uploadImage(fileData);
-        console.log(response);
+        uploadImage(formData).then((response) => {
+            if (response.status === 200) {
+                setImages([...images, URL.createObjectURL(file)]);
+            }
+        }
+        ).catch((error) => {
+            console.log(error);
+        }
+        );
+        
     };
 
 
@@ -58,11 +51,9 @@ const ChooseFile = ({ onValueChange }) => {
                 onRequestClose={() => setModalVisible(false)}>
                 <View style={styles.themeListModal}>
 
-                    <TouchableOpacity
-                        style={styles.themeButton}
-                        onPress={selectFile}>
-                        <Text style={[styles.themeLabel, { fontWeight: 'bold' }]}><Dices color="black" size={iconSize} /> Choisir l'image</Text>
-                    </TouchableOpacity>
+
+                    <input type="file" id="file" name="file" accept="image/*" onChange={selectFile} />
+
                     
                     <FlatList
                         data={images}
