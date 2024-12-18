@@ -8,7 +8,7 @@ import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { toast } from '../utils/utils';
 
-import { SimpleButton } from '../components/SimpleButton';
+import SimpleButton from '../components/SimpleButton';
 import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 
@@ -231,7 +231,7 @@ export default function QuizScreen() {
             <View style={styles.quizScreenView}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
 
-                <SimpleButton title="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
+                <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
 
             </View>
         )
