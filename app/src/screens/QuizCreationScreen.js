@@ -1,19 +1,19 @@
 import { useEffect, useState, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getQuizInfos } from '../utils/api';
+import DragList from 'react-native-draglist';
 
 import { publishQuiz, saveQuiz, editQuiz } from '../utils/api';
 import { requireToken, toast } from '../utils/utils';
 import ChoicePicker from '../components/ChoicePicker';
-import { Edit2, LucideTrash } from 'lucide-react-native';
+import { Edit2, GripVertical, LucideTrash } from 'lucide-react-native';
 import ThemeSelector from '../components/ThemeList';
 
 import { COLORS } from '../css/utils/color';
 import { loadFont } from '../utils/utils';
 
-const screenHeight = Dimensions.get('window').height;
 const platform = Platform.OS;
 
 
@@ -187,11 +187,9 @@ export default function QuizCreation() {
         }
 
         handleRetrieveQuiz();
-    }
-        , [route.params]);
+    }, [route.params]);
 
     useEffect(() => {
-
         if (title !== '' || category !== null || difficulty !== 'easy') {
             setSaveButton(false);
         } else {
@@ -199,7 +197,48 @@ export default function QuizCreation() {
         }
     }, [title, category, difficulty]);
 
+    useEffect(() => {
+        setSaveButton(true);
+        setPublishButton(true)
+    }, [quizId]);
+
+    // Fonction pour extraire les clés
+    const keyExtractor = (item, index) => item.id || index.toString();
+
+    // Fonction pour réorganiser les questions
+    const handleReordered = (fromIndex, toIndex) => {
+        const updatedQuestions = [...questions];
+        const [movedItem] = updatedQuestions.splice(fromIndex, 1);
+        updatedQuestions.splice(toIndex, 0, movedItem);
+        setQuestions(updatedQuestions);
+        setSaveButton(false);
+    };
+
+    // Fonction pour rendre les items de la liste
+    const renderQuestionItem = ({ item, index, onDragStart, isActive }) => {
+        return (
+            <View
+                key={item.id}
+                style={[styles.question, isActive ? { backgroundColor: '#D3EFFF' } : {}]}
+            >
+                <Text style={{ marginLeft: 5, color: COLORS.text.blue.dark }}>{item.text}</Text>
+                <View style={styles.quizButtonTouchable}>
+                    <TouchableOpacity onPress={() => handleClickEditQuestion(item, index)}>
+                        <Edit2 size={30} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleDeleteQuestion(index)}>
+                        <LucideTrash size={30} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ marginLeft: 15 }} onPressIn={onDragStart}>
+                        <GripVertical size={30} />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+    };
+
     loadFont();
+
     return (
         <View style={styles.quizCreationView}>
             <Text style={styles.title}>Créez votre propre quiz !</Text>
@@ -226,33 +265,17 @@ export default function QuizCreation() {
                 </View>
 
                 <SafeAreaProvider style={{ marginRight: '5%', height: '100%' }}>
-                    <SafeAreaView style={{ flex: 1 }}>
-                        <View style={{ flex: 1 }}>
-                            <View style={styles.quizCreationRightView}>
-                                <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
-                                <ScrollView
-                                    contentContainerStyle={styles.questionsView}
-                                    style={styles.scrollView}
-                                >
-                                    {
-                                        questions.length !== 0 ?
-                                            questions.map((question, index) => (
-                                                <View style={styles.question} key={index}>
-                                                    <Text style={{ marginLeft: 5, color: COLORS.text.blue.dark }}>{question.text}</Text>
-                                                    <View style={styles.quizButtonTouchable}>
-                                                        <TouchableOpacity onPress={() => handleClickEditQuestion(question, index)}>
-                                                            <Edit2 size={30} />
-                                                        </TouchableOpacity>
-                                                        <TouchableOpacity onPress={() => handleDeleteQuestion(index)}>
-                                                            <LucideTrash size={30} />
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                </View>
-                                            ))
-                                            : <Text>Aucune question</Text>
-                                    }
-                                </ScrollView>
-                            </View>
+                    <SafeAreaView>
+                        <View style={styles.quizCreationRightView}>
+                            <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
+                            <DragList
+                                data={questions}
+                                keyExtractor={keyExtractor}
+                                onReordered={handleReordered}
+                                renderItem={renderQuestionItem}
+                                containerStyle={styles.dragListContainer}
+                            />
+
                         </View>
                     </SafeAreaView>
                 </SafeAreaProvider>
@@ -335,16 +358,23 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 20,
         width: '100%',
-        height: '100%',
+        maxHeight: '45vh',
         marginRight: 200,
-        maxHeight: screenHeight * 0.4,
+        flex: 1,
     },
+
     questionsView: {
         backgroundColor: 'white',
         padding: 5,
         borderRadius: 20,
         flexGrow: 1,
         paddingBottom: 10,
+    },
+    dragListContainer: {
+        maxHeight: '35vh',
+        backgroundColor: 'white',
+        borderRadius: 20,
+        overflow: 'hidden',
     },
     scrollView: {
         backgroundColor: 'white',
@@ -361,6 +391,7 @@ const styles = StyleSheet.create({
     },
     question: {
         display: 'flex',
+        flexGrow: 3,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -368,9 +399,14 @@ const styles = StyleSheet.create({
         padding: 5,
         backgroundColor: COLORS.background.blue,
         borderRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        elevation: 5,
     },
     buttons: {
-        position: 'relative', // Permet de positionner le texte absolument par rapport au bouton
+        position: 'relative',
         backgroundColor: COLORS.button.blue.basic,
         height: 75,
         width: 350,
@@ -382,7 +418,7 @@ const styles = StyleSheet.create({
         } : { elevation: 2 },
     },
     disabledButton: {
-        position: 'relative', // Permet de positionner le texte absolument par rapport au bouton
+        position: 'relative',
         backgroundColor: "#d3d3d3",
         height: 75,
         width: 350,
