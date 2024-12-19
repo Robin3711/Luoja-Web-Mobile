@@ -10,12 +10,8 @@ const platform = Platform.OS;
 
 const ChooseFile = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
-    const [file, setFile] = useState(null);
     const [images, setImages] = useState([]);
-    const [fileUri, setFileUri] = useState(icon.uri);
-    const [fileName, setFileName] = useState("icon");
-    const [fileType, setFileType] = useState("image/png");
-    const [fileData, setFileData] = useState(null);
+
 
 
     const handleOpenModal = () => {
