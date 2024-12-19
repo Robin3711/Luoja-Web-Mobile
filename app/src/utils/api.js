@@ -166,7 +166,7 @@ export async function getQuizAverage(quizId) {
     }
 }
 
-export async function createParty(quizId) {
+export async function createGame(quizId, gameMode, difficulty) {
     try {
         const headers = {};
 
@@ -176,6 +176,9 @@ export async function createParty(quizId) {
 
         let url = `${await getPlatformAPI()}/quiz/${quizId}/play`;
 
+        if (gameMode && difficulty) {
+            url += `?gameMode=${gameMode}&difficulty=${difficulty}`;
+        }
         const response = await fetch(url, { headers });
 
         if (!response.ok) await handleResponseError(response);
