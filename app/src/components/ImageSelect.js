@@ -1,10 +1,10 @@
 import React from 'react';
 import { Image, View, StyleSheet, TouchableOpacity } from 'react-native';
 
-const ImageSelect = ({ uri, onImageSelect }) => {
+const ImageSelect = ({ uri, onImageSelect, id }) => {
     return (
-        <TouchableOpacity style={styles.container} onPress={() => onImageSelect(uri)}>
-            <Image source={{ uri }} style={styles.image} />
+        <TouchableOpacity style={styles.container} onPress={() => onImageSelect(uri, id)}>
+            <Image key={id} source={{ uri }} style={styles.image} />
         </TouchableOpacity>
     );
 };

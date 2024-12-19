@@ -13,17 +13,20 @@ const ChooseFile = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [images, setImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [ids, setIds] = useState([]);
+    const [selectedId, setSelectedId] = useState(null);
 
 
     const handleOpenModal = () => {
         setModalVisible(true);
     }
 
-    const handleImageSelect = (uri) => {
+    const handleImageSelect = (uri, id) => {
         setSelectedImage(uri);
+        setSelectedId(id);
         setModalVisible(false); // Fermer le modal après la sélection
         if (onValueChange) {
-            onValueChange(uri); // Envoie l'image sélectionnée au parent
+            onValueChange(uri, id); // Envoie l'image sélectionnée au parent
         }
     };
 
@@ -67,6 +70,7 @@ const ChooseFile = ({ onValueChange }) => {
                     const response = await downloadAllImages();
                     if (response.files && Array.isArray(response.files)) {
                         const files = response.files;
+                        setIds(files.map((file) => file.fileName));
     
                         // Traiter chaque `fileName` pour télécharger les images
                         const imagePromises = files.map(async (file) => {
@@ -127,8 +131,8 @@ const ChooseFile = ({ onValueChange }) => {
                         horizontal={true}
                         data={images}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <ImageSelect uri={item} onImageSelect={handleImageSelect} />
+                        renderItem={({ item, index }) => (
+                            <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]}/>
                         )}
                     />
                 </View>

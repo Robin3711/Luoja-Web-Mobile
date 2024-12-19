@@ -49,6 +49,12 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, type }) => {
     };
 
     const [file, setFile] = useState(null);
+    const [fileName, setFileName] = useState(null);
+
+    const handleValueChange = (uri, id) => {
+        setFile(uri);
+        setFileName(id);
+    }
 
     return (
         <View
@@ -71,7 +77,7 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, type }) => {
             )}
             {type === 'image' && (
                 <ChooseFile
-                    onValueChange={(uri) => setFile(uri)}
+                    onValueChange={handleValueChange}
                 />
             )}
             {file && (
