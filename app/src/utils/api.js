@@ -485,3 +485,35 @@ export async function uploadImage(file) {
         throw error;
     }
 }
+
+export async function downloadAllImages() {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/downloadall`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadImage(id) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/download/${id}`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.blob();
+    } catch (error) {
+        throw error;
+    }
+}

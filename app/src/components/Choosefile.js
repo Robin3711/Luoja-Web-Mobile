@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet, Image } from 'react-native';
 import { Dices } from 'lucide-react-native';
 import { COLORS } from '../css/utils/color';
 import icon from '../../assets/icon.png';
 import { iconSize } from '../utils/utils';
-import { uploadImage } from '../utils/api';
+import { uploadImage, downloadAllImages, downloadImage } from '../utils/api';
+import { useFocusEffect } from '@react-navigation/native';
 
 const platform = Platform.OS;
 
 const ChooseFile = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [images, setImages] = useState([]);
+    const [imagesId, setImagesId] = useState([]);
 
 
 
@@ -36,6 +38,57 @@ const ChooseFile = ({ onValueChange }) => {
         
     };
 
+    const setImagesFromIds = async () => {
+        const imagePromises = ids.map(async (id) => {
+            console.log(id);
+            const imageResponse = await downloadImage(id);
+            console.log(imageResponse);
+            if (imageResponse.status === 200) {
+                return imageResponse.data;
+            }
+            return null;
+        });
+
+        const fetchedImages = await Promise.all(imagePromises);
+        setImages((prevImages) => [...prevImages, ...fetchedImages.filter(Boolean)]);
+    };
+
+
+    useFocusEffect(
+        useCallback(() => {
+            const fetchImages = async () => {
+                try {
+                    const response = await downloadAllImages();
+                    if (response.files && Array.isArray(response.files)) {
+                        const files = response.files;
+    
+                        // Traiter chaque `fileName` pour télécharger les images
+                        const imagePromises = files.map(async (file) => {
+                            const { fileName } = file;
+                            const imageBlob = await downloadImage(fileName);
+                            
+                            // Convertir le blob en URL locale
+                            const imageURL = URL.createObjectURL(imageBlob);
+                            return imageURL;
+                        });
+    
+                        // Résoudre toutes les promesses
+                        const fetchedImages = await Promise.all(imagePromises);
+    
+                        // Mettre à jour l'état des images
+                        setImages((prevImages) => [...prevImages, ...fetchedImages]);
+                    } else {
+                        console.error("La réponse de `downloadAllImages` n'est pas valide.");
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des images :", error);
+                }
+            };
+    
+            fetchImages();
+        }, [])
+    );
+    
 
     return (
         <View style={styles.themeListView}>
@@ -52,6 +105,7 @@ const ChooseFile = ({ onValueChange }) => {
 
                     
                     <FlatList
+                        horizontal={true}
                         data={images}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
