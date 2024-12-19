@@ -125,7 +125,7 @@ export default function Dashboard() {
                                 onPress={() => setShowFastQuizOnly(!showFastQuizOnly)}
                             >
                                 <Text style={styles.filterButtonText}>
-                                    {showFastQuizOnly ? "Afficher Tout" : "Enlever Fast Quiz"}
+                                    {showFastQuizOnly ? "Afficher Tout" : "Enlever les quizs rapides"}
                                 </Text>
                             </TouchableOpacity>
                         </View>
