@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
-
+import { FONT } from '../css/utils/font';
 import { themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
 
@@ -13,7 +12,6 @@ import * as Progress from 'react-native-progress';
 export default function EndScreen() {
     const route = useRoute();
     const navigation = useNavigation();
-    loadFont();
 
     const { score, numberOfQuestions, gameId } = route.params;
 
@@ -84,7 +82,7 @@ export default function EndScreen() {
     ) : (
         <View style={styles.container}>
             <View style={styles.parentContainer}>
-                <Text style={styles.title}>Fin de partie !</Text>
+                <Text style={FONT.title}>Fin de partie !</Text>
                 <Text style={styles.text}>Récapitulatif de la partie :</Text>
                 <Text style={styles.text}>Catégorie : {category} | difficulté : {difficulty}</Text>
                 {score !== null && numberOfQuestions !== null ? (

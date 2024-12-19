@@ -8,7 +8,6 @@ import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 
 import { COLORS } from '../css/utils/color';
-import { loadFont } from '../utils/utils';
 import SimpleButton from '../components/SimpleButton';
 
 const platform = Platform.OS;
@@ -60,7 +59,6 @@ export default function ResumeScreen() {
         setGameId(idOfGame);
     };
 
-    loadFont();
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Reprenez votre partie</Text>

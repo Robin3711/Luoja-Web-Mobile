@@ -9,7 +9,6 @@ import * as Clipboard from 'expo-clipboard';
 import { toast } from '../utils/utils';
 
 import { SimpleButton } from '../components/SimpleButton';
-import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 
 
@@ -179,7 +178,6 @@ export default function QuizScreen() {
         toast('info', 'L\'id à bien été copié !', "", 2000, 'dodgerblue');
     };
 
-    loadFont();
     return (
         !error ? (
             <View style={styles.quizScreenView}>

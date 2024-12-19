@@ -1,15 +1,13 @@
 import { Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 
 const platform = Platform.OS;
 
-export default function SimpleButton({ text, onPress, color = COLORS.button.blue.basic }) {
-    loadFont();
-    
+export default function SimpleButton({ text, onPress, color = COLORS.button.blue.basic }) { 
     return (
         <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: color }]} >
-            <Text style={styles.text}>{text}</Text>
+            <Text style={FONT.button}>{text}</Text>
         </TouchableOpacity>
     );
 }
@@ -27,16 +25,5 @@ const styles = StyleSheet.create({
         ...platform === 'web' ? { 
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
-    },
-    text: {
-        position: 'absolute', // Positionne le texte absolument par rapport au bouton
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)', // Centre le texte horizontalement et verticalement
-        width: '100%',
-        fontSize: 32,
-        fontFamily: 'LobsterTwo_700Bold',
-        textAlign: 'center', // Centre le texte horizontalement
-        color: COLORS.text.blue.dark,
     },
 });

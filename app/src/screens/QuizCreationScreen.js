@@ -11,7 +11,6 @@ import { Edit2, LucideTrash } from 'lucide-react-native';
 import ThemeSelector from '../components/ThemeList';
 
 import { COLORS } from '../css/utils/color';
-import { loadFont } from '../utils/utils';
 
 const screenHeight = Dimensions.get('window').height;
 const platform = Platform.OS;
@@ -199,7 +198,6 @@ export default function QuizCreation() {
         }
     }, [title, category, difficulty]);
 
-    loadFont();
     return (
         <View style={styles.quizCreationView}>
             <Text style={styles.title}>Créez votre propre quiz !</Text>

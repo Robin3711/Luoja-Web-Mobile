@@ -1,22 +1,21 @@
 import { View, Text, Platform, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SimpleButton from '../components/SimpleButton';
-import { hasToken, loadFont, removeToken } from '../utils/utils';
+import { hasToken, removeToken } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import { useCallback, useEffect, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { FONT } from '../css/utils/font';
 
 const platform = Platform.OS;
 
 export default function HomeScreen() {
     const navigation = useNavigation();
 
-    loadFont();
-
     return (
         <View style={styles.homeView}>
 
-            <Text style={styles.appTitle}>Luoja</Text>
+            <Text style={FONT.luoja}>Luoja</Text>
 
             <View style={styles.childView}>
                 {platform === 'web' && <Image style={styles.logo} source={"https://static.vecteezy.com/system/resources/previews/033/529/199/non_2x/christmas-tree-with-gifts-ai-generative-free-png.png"} />}

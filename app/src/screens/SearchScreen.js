@@ -5,7 +5,7 @@ import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
 import ChoiseSelector from '../components/ChoicePicker';
 import QuizInformation from '../components/QuizInformation';
-import { loadFont, requireToken } from '../utils/utils';
+import { requireToken } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
@@ -60,7 +60,6 @@ export default function SearchScreen() {
 
     }
 
-    loadFont();
     return (
         error ? (
             <View style={styles.screen}>

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import { getUserInfos } from '../utils/api';
-import { hasToken, loadFont } from '../utils/utils';
+import { hasToken } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import { Platform } from 'react-native';
 import Dashboard from './Dashboard';
@@ -13,7 +13,6 @@ const platform = Platform.OS;
 
 export default function Account() {
     const navigation = useNavigation();
-    loadFont();
 
     const [isLogged, setIsLogged] = useState(false);
     const [userInfos, setUserInfos] = useState(null);

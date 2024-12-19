@@ -6,9 +6,10 @@ import { getUserGame, getCreatedQuiz } from "../utils/api";
 import HistoryQuizInformation from "../components/HistoryQuizInformation";
 import CreatedQuizInformation from "../components/CreatedQuizInformation";
 import { COLORS } from "../css/utils/color";
-import { loadFont, publishSortOptions, historySortOptions } from "../utils/utils";
+import { publishSortOptions, historySortOptions } from "../utils/utils";
 import SimpleButton from "../components/SimpleButton";
 import ChoiseSelector from "../components/ChoicePicker";
+import { FONT } from "../css/utils/font";
 
 const platform = Platform.OS;
 
@@ -96,8 +97,6 @@ export default function Dashboard() {
         return sortedItems;
     };
 
-
-    loadFont();
     return (
         error ? (
             <View style={styles.quizScreenView}>
@@ -111,7 +110,7 @@ export default function Dashboard() {
             </View>
         ) : (
             <View style={styles.dashboardView}>
-                <Text style={styles.title}>Tableau de bord</Text>
+                <Text style={FONT.title}>Tableau de bord</Text>
                 <View style={styles.dashboardContainer}>
                     <View style={styles.dashboardSection}>
                         <Text style={styles.dashboardText}>Historique</Text>

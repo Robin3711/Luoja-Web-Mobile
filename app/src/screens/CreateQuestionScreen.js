@@ -6,12 +6,8 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
-import { loadFont } from '../utils/utils';
 
 export default function CreateQuestionScreen() {
-
-    loadFont();
-
     const route = useRoute();
     const navigation = useNavigation();
 
