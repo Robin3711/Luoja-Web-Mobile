@@ -6,20 +6,26 @@ import icon from '../../assets/icon.png';
 import { iconSize } from '../utils/utils';
 import { uploadImage, downloadAllImages, downloadImage } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';
-
+import ImageSelect from './ImageSelect';
 const platform = Platform.OS;
 
 const ChooseFile = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [images, setImages] = useState([]);
-    const [imagesId, setImagesId] = useState([]);
-
+    const [selectedImage, setSelectedImage] = useState(null);
 
 
     const handleOpenModal = () => {
         setModalVisible(true);
     }
 
+    const handleImageSelect = (uri) => {
+        setSelectedImage(uri);
+        setModalVisible(false); // Fermer le modal après la sélection
+        if (onValueChange) {
+            onValueChange(uri); // Envoie l'image sélectionnée au parent
+        }
+    };
 
     const selectFile = async () => {
         const file = document.getElementById('file').files[0];
@@ -92,24 +98,37 @@ const ChooseFile = ({ onValueChange }) => {
 
     return (
         <View style={styles.themeListView}>
-            <TouchableOpacity style={styles.paramButton} onPress={handleOpenModal}><Text style={styles.paramButtonText}>Ajouter une image</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.paramButton} onPress={() => setModalVisible(true)}>
+                <Text style={styles.paramButtonText}>
+                    {selectedImage ? "Modifier l'image" : "Ajouter une image"}
+                </Text>
+            </TouchableOpacity>
+
+            {selectedImage && (
+                <Image source={{ uri: selectedImage }} style={styles.selectedImage} />
+            )}
+
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}>
+                onRequestClose={() => setModalVisible(false)}
+            >
                 <View style={styles.themeListModal}>
+                    <input
+                        type="file"
+                        id="file"
+                        name="file"
+                        accept="image/*"
+                        onChange={selectFile}
+                    />
 
-
-                    <input type="file" id="file" name="file" accept="image/*" onChange={selectFile} />
-
-                    
                     <FlatList
                         horizontal={true}
                         data={images}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
-                            <Image source={{ uri: item }} style={{ width: 200, height: 200 }} />
+                            <ImageSelect uri={item} onImageSelect={handleImageSelect} />
                         )}
                     />
                 </View>

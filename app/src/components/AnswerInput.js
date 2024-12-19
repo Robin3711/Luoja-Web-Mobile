@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Pressable } from 'react-native';
+import { View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import ChooseFile from './Choosefile';
 import icon from '../../assets/icon.png';
@@ -71,11 +71,13 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, type }) => {
             )}
             {type === 'image' && (
                 <ChooseFile
-                    onFileSelected={(file) => {
-                        console.log(file);
-                    }}
+                    onValueChange={(uri) => setFile(uri)}
                 />
             )}
+            {file && (
+                <Image source={{ uri: file }} style={styles.selectedImage} />
+            )}
+            
         </View>
     );
 };
@@ -122,6 +124,11 @@ const styles = StyleSheet.create({
             borderWidth: 5,
             borderColor: '#212248',
         },
+    },
+    selectedImage: {
+        width: 100,
+        height: 100,
+        resizeMode: 'cover',
     },
 });
 
