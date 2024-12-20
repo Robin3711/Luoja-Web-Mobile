@@ -459,7 +459,7 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
 
         if (difficulty) parameters += `&difficulty=${difficulty}`;
 
-        const response = await fetch(`https://api.luoja.fr/quiz/list?${parameters}`);
+        const response = await fetch(`${await getPlatformAPI()}/quiz/list?${parameters}`);
 
         if (!response.ok) await handleResponseError(response);
 
