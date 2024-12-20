@@ -469,3 +469,26 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
         throw error;
     }
 }
+
+export async function listenTimer(gameId, setRemainingTime) {
+    try{
+        const eventSource = new EventSource(`${await getPlatformAPI()}/game/${gameId}/timer?token=${await AsyncStorage.getItem('token')}`);
+
+        eventSource.onmessage = (event) => {
+            let data = JSON.parse(event.data);
+            let time = data.time;
+            setRemainingTime(time);
+
+            if(time == 0) {
+                eventSource.close();
+            }
+        }
+
+        eventSource.onerror = () => {
+            eventSource.close();
+        };
+    }
+    catch (error) {
+        throw error;
+    }
+}
