@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import ChooseFile from './Choosefile';
+import ChooseAudio from './ChooseAudio';
 import { COLORS } from '../css/utils/color';
 import { useFocusEffect } from '@react-navigation/native';
 import { downloadImage } from '../utils/api';
@@ -95,8 +96,16 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, onValueChange, t
                     onValueChange={handleValueChange}
                 />
             )}
-            {file && (
+            {type === 'audio' && (
+                <ChooseAudio
+                    onValueChange={handleValueChange}
+                />
+            )}
+            { type === 'image' && file && (
                 <Image source={{ uri: file }} style={styles.selectedImage} />
+            )}
+            { type === 'audio' && fileName && (
+                <audio controls src={file} type="audio/mp3" />
             )}
             
         </View>
