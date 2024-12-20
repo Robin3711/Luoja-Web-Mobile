@@ -12,7 +12,7 @@ export default function LaunchGameMode() {
 
     const navigation = useNavigation();
     const route = useRoute();
-    
+
     const quizId = route.params.quizId;
     const [difficulty, setDifficulty] = useState("easy");
 
@@ -34,10 +34,10 @@ export default function LaunchGameMode() {
 
             <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
             <SimpleButton text="Compte à rebourd" onPress={() => handleStartQuiz("timed")} />
-            <ChoiseSelector value={difficulty} onValueChange={setDifficulty} />
+            <ChoiseSelector value={difficulty} onValueChange={setDifficulty} defaultValue={true} />
             <SimpleButton text="SCRUM" onPress={() => handleStartQuiz("scrum")} />
             <SimpleButton text="TEAM" onPress={() => handleStartQuiz("team")} />
-        
+
         </View>
     );
 }
