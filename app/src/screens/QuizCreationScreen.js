@@ -33,9 +33,7 @@ export default function QuizCreation() {
 
     const handleAddQuestions = (newQuestions) => {
         try {
-            console.log(newQuestions);
             setQuestions([...questions, ...newQuestions]);
-            console.log(newQuestions[0]?.type);
             setSaveButton(false);
             setResetForm(false);
         }

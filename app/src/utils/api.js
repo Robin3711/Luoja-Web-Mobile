@@ -471,8 +471,6 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
 
 export async function uploadImage(file) {
     try {
-
-        console.log(file);
         const response = await fetch(`${await getPlatformAPI()}/uploads`, {
             method: 'POST',
             headers: {

@@ -94,8 +94,6 @@ export default function CreateQuestionScreen() {
                 alert('Veuillez remplir toutes les réponses');
                 return;
             }
-            console.log(typeQuestion);
-
             handleQuestion([
                 {
                     text: questionText,
@@ -130,7 +128,6 @@ export default function CreateQuestionScreen() {
 
     const handleValueChange = (shape, id) => {
         setAnswers((prev) => ({ ...prev, [shape]: id }));
-        console.log(id);
         setFileName(id);
     }
 
@@ -163,7 +160,6 @@ export default function CreateQuestionScreen() {
                     />
                     <RNPickerSelect 
                         onValueChange={(value) => {
-                            console.log('Valeur sélectionnée :', value);
                             setType(value);}} 
                         value={typeQuestion}
                         placeholder={{ label: 'Sélectionnez un type', value: null }}
