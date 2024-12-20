@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { cloneQuiz, createParty, saveQuiz } from '../utils/api';
+import { cloneQuiz, saveQuiz } from '../utils/api';
 import { getThemeLabel, toast, themeOptions } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 
@@ -10,16 +10,9 @@ const platform = Platform.OS;
 
 export default function QuizInformation({ quiz }) {
     const navigation = useNavigation();
-    const handleStartQuiz = () => {
-        createParty(quiz.id).then((party) => {
-            navigation.navigate('quizScreen', { gameId: party.id });
-        }).catch((error) => {
-            if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
-            } else {
-                toast('error', 'Erreur', error, 3000, 'crimson');
-            }
-        });
+
+    const handleLaunchGameMode = () => {
+        navigation.navigate('launchGameMode', { quizId: quiz.id });
     }
 
     const truncateText = (text, maxLength) => {
@@ -62,7 +55,7 @@ export default function QuizInformation({ quiz }) {
             <TouchableOpacity style={styles.QuizInformationButton} onPress={handleSave}>
                 <Text style={[{ color: COLORS.text.blue.light }]}>Cloner</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.QuizInformationButton} onPress={handleStartQuiz}>
+            <TouchableOpacity style={styles.QuizInformationButton} onPress={handleLaunchGameMode}>
                 <Text style={[{ color: COLORS.text.blue.light }]}>Jouer</Text>
             </TouchableOpacity>
         </View>

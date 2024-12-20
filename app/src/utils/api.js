@@ -166,7 +166,7 @@ export async function getQuizAverage(quizId) {
     }
 }
 
-export async function createParty(quizId) {
+export async function createGame(quizId, gameMode, difficulty) {
     try {
         const headers = {};
 
@@ -176,6 +176,9 @@ export async function createParty(quizId) {
 
         let url = `${await getPlatformAPI()}/quiz/${quizId}/play`;
 
+        if (gameMode && difficulty) {
+            url += `?gameMode=${gameMode}&difficulty=${difficulty}`;
+        }
         const response = await fetch(url, { headers });
 
         if (!response.ok) await handleResponseError(response);
@@ -514,6 +517,29 @@ export async function downloadImage(id) {
 
         return await response.blob();
     } catch (error) {
+        throw error;
+    }
+}
+
+export async function listenTimer(gameId, setRemainingTime) {
+    try{
+        const eventSource = new EventSource(`${await getPlatformAPI()}/game/${gameId}/timer?token=${await AsyncStorage.getItem('token')}`);
+
+        eventSource.onmessage = (event) => {
+            let data = JSON.parse(event.data);
+            let time = data.time;
+            setRemainingTime(time);
+
+            if(time == 0) {
+                eventSource.close();
+            }
+        }
+
+        eventSource.onerror = () => {
+            eventSource.close();
+        };
+    }
+    catch (error) {
         throw error;
     }
 }

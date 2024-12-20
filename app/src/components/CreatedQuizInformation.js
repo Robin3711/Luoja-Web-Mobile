@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
-import { createParty, getQuizAverage } from '../utils/api';
+import { createGame, getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
@@ -58,7 +58,7 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
     const handlePlayQuiz = async () => {
         if (status === true && Platform.OS === 'web') {
             console.log(quizId);
-            const data = await createParty(quizId);
+            const data = await createGame(quizId);
             navigation.navigate('quizScreen', { gameId: data.id });
         }
     };
