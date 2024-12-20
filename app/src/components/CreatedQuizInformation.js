@@ -52,7 +52,6 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
     const handleCreationQuiz = () => {
         if (status === false && Platform.OS === 'web') {
             navigation.navigate('quizCreation', { quizId: quizId });
-
         }
     };
 
