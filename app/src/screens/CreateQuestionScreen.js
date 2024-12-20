@@ -39,6 +39,7 @@ export default function CreateQuestionScreen() {
                     SQUARE: question.correctAnswer,
                     TRIANGLE: question.incorrectAnswers[0],
                 });
+                setType(question.type)
                 setSelectedShape('SQUARE');
             } else {
                 setAnswers({
@@ -47,6 +48,7 @@ export default function CreateQuestionScreen() {
                     CIRCLE: question.incorrectAnswers[1],
                     STAR: question.incorrectAnswers[2],
                 });
+                setType(question.type)
                 setSelectedShape('SQUARE');
             }
         }

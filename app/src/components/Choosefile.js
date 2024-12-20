@@ -47,21 +47,6 @@ const ChooseFile = ({ onValueChange }) => {
         
     };
 
-    const setImagesFromIds = async () => {
-        const imagePromises = ids.map(async (id) => {
-            console.log(id);
-            const imageResponse = await downloadImage(id);
-            console.log(imageResponse);
-            if (imageResponse.status === 200) {
-                return imageResponse.data;
-            }
-            return null;
-        });
-
-        const fetchedImages = await Promise.all(imagePromises);
-        setImages((prevImages) => [...prevImages, ...fetchedImages.filter(Boolean)]);
-    };
-
 
     useFocusEffect(
         useCallback(() => {
