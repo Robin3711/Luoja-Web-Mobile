@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Switch } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -135,14 +134,6 @@ export default function CreateQuestionScreen() {
 
     const renderWithCheckmark = (shape) => (
         <View style={styles.answerInputContainer} key={shape}>
-            {selectedShape === shape && (
-                <MaterialIcons
-                    name="check"
-                    size={34}
-                    color="green"
-                    style={styles.checkmarkIcon}
-                />
-            )}
             <AnswerInput
                 shape={shape}
                 text={answers[shape]}
@@ -150,6 +141,7 @@ export default function CreateQuestionScreen() {
                 onShapeClick={handleShapeClick}
                 onValueChange={(id) => handleValueChange(shape, id)}
                 type={typeQuestion}
+                selectedShape={selectedShape}
             />
         </View>
     );

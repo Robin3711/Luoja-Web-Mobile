@@ -29,6 +29,7 @@ export default function QuizCreation() {
     const [questions, setQuestions] = useState([]);
     const [saveButton, setSaveButton] = useState(true);
     const [publishButton, setPublishButton] = useState(true);
+    const [resetForm, setResetForm] = useState(true);
 
     const handleAddQuestions = (newQuestions) => {
         try {
@@ -36,6 +37,7 @@ export default function QuizCreation() {
             setQuestions([...questions, ...newQuestions]);
             console.log(newQuestions[0]?.type);
             setSaveButton(false);
+            setResetForm(false);
         }
         catch (error) {
             if (error.status && error.message) {
@@ -52,6 +54,7 @@ export default function QuizCreation() {
             newQuestions[index] = question[0];
             setQuestions(newQuestions);
             setSaveButton(false);
+            setResetForm(false);
         }
         catch (error) {
             if (error.status && error.message) {
@@ -68,6 +71,7 @@ export default function QuizCreation() {
             newQuestions.splice(index, 1);
             setQuestions(newQuestions);
             setSaveButton(false);
+            setResetForm(false);
         }
 
         catch (error) {
@@ -123,12 +127,17 @@ export default function QuizCreation() {
             if (quizId === null) {
                 const data = await saveQuiz(title, category, difficulty, questions);
                 setQuizId(data.quizId);
+
+                if (Platform.OS === 'web') {
+                    navigation.navigate('quizCreation', { quizId: data.quizId });
+                }
             }
             else {
                 await editQuiz(quizId, title, category, difficulty, questions);
             }
             setPublishButton(false);
             setSaveButton(true);
+            setResetForm(false);
             toast('info', 'Le quiz à bien était sauvegardé !', "", 1000, 'dodgerblue');
         }
         catch (error) {
@@ -167,6 +176,25 @@ export default function QuizCreation() {
         }
     }
 
+    const handleReset = () => {
+        // Réinitialisation des états du formulaire
+        setQuizId(null);
+        setTitle('');
+        setCategory(null);
+        setDifficulty('easy');
+        setQuestions([]);
+        setPublishButton(true);
+        setSaveButton(true)
+        setResetForm(true);
+
+        // Modification de l'URL pour supprimer les paramètres
+        if (Platform.OS === 'web') {
+            navigation.navigate('quizCreation');
+        }
+
+        toast('info', 'Le formulaire a été réinitialisé.', '', 1000, 'dodgerblue');
+    };
+
     // Vérification du token à chaque fois que l'écran est focus
     useFocusEffect(
         useCallback(() => {
@@ -185,23 +213,25 @@ export default function QuizCreation() {
                 setCategory(quiz.category);
                 setDifficulty(quiz.difficulty);
                 setQuestions(quiz.questions);
+                setResetForm(false);
             }
         }
-
         handleRetrieveQuiz();
     }, [route.params]);
 
     useEffect(() => {
         if (title !== '' || category !== null || difficulty !== 'easy') {
             setSaveButton(false);
+            setResetForm(false);
         } else {
             setSaveButton(true);
+            setResetForm(true);
         }
     }, [title, category, difficulty]);
 
     useEffect(() => {
         setSaveButton(true);
-        setPublishButton(true)
+        setPublishButton(true);
     }, [quizId]);
 
     // Fonction pour extraire les clés
@@ -214,6 +244,7 @@ export default function QuizCreation() {
         updatedQuestions.splice(toIndex, 0, movedItem);
         setQuestions(updatedQuestions);
         setSaveButton(false);
+        setResetForm(false);
     };
 
     // Fonction pour rendre les items de la liste
@@ -289,6 +320,9 @@ export default function QuizCreation() {
                 </TouchableOpacity>
                 <TouchableOpacity style={publishButton ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={publishButton}>
                     <Text style={styles.buttonText}>Publier</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={resetForm ? styles.disabledButton : styles.buttons} onPress={handleReset} disabled={resetForm}>
+                    <Text style={styles.buttonText}>{!quizId ? "Réinitialiser" : "Nouveau quiz"}</Text>
                 </TouchableOpacity>
             </View>
         </View>
