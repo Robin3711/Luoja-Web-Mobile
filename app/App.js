@@ -22,6 +22,7 @@ import SearchScreen from './src/screens/SearchScreen';
 import Account from './src/screens/Account';
 import QuizCreation from './src/screens/QuizCreationScreen';
 import CreateQuestionScreen from './src/screens/CreateQuestionScreen';
+import LaunchGameMode from './src/screens/LaunchGameMode';
 
 import '@expo/metro-runtime';
 
@@ -88,6 +89,7 @@ const MenuStack = () => {
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire" }} />
         {width >= 775 ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Importer des questions" }} /> : null}
         {width >= 775 ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
+        {width >= 775 ? <stack.Screen name="launchGameMode" component={LaunchGameMode} options={{ title: "Créer une question" }} /> : null}
       </stack.Group>
     </stack.Navigator>
   );

@@ -134,14 +134,14 @@ export const difficultyOptions = [
 ];
 
 export const publishSortOptions = [
-    { label: 'Auncun', value: null },
+    { label: 'Tout', value: null },
     { label: 'Publier', value: true },
     { label: 'Incomplet', value: false },
 ];
 
 export const historySortOptions = [
-    { label: 'Auncun', value: null },
-    { label: 'Finit', value: true },
+    { label: 'Tout', value: null },
+    { label: 'Finis', value: true },
     { label: 'En cours', value: false },
 ];
 
