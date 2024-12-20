@@ -1,4 +1,4 @@
-import { Platform, Text } from 'react-native';
+import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -21,6 +21,7 @@ import SearchScreen from './src/screens/SearchScreen';
 import Account from './src/screens/Account';
 import QuizCreation from './src/screens/QuizCreationScreen';
 import CreateQuestionScreen from './src/screens/CreateQuestionScreen';
+import LaunchGameMode from './src/screens/LaunchGameMode';
 
 import '@expo/metro-runtime'
 
@@ -85,6 +86,7 @@ const MenuStack = () => {
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire" }} />
         {Platform.OS === 'web' ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Importer des questions" }} /> : null}
         {Platform.OS === 'web' ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
+        {Platform.OS === 'web' ? <stack.Screen name="launchGameMode" component={LaunchGameMode} options={{ title: "Créer une question" }} /> : null}
       </stack.Group>
     </stack.Navigator>
   );

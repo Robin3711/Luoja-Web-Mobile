@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
-import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
+import { getCurrentQuestion, getCurrentAnswer, getGameInfos, listenTimer } from '../utils/api';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
@@ -18,7 +18,7 @@ const platform = Platform.OS;
 export default function QuizScreen() {
     const route = useRoute();
     const navigation = useNavigation();
-    const { gameId } = route.params;
+    const { gameId, gameMode } = route.params;
 
     if (!gameId) {
         return (
@@ -41,6 +41,7 @@ export default function QuizScreen() {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
+    const [remainingTime, setRemainingTime] = useState(0);
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
@@ -65,6 +66,8 @@ export default function QuizScreen() {
         try {
             const data = await getCurrentQuestion(gameId);
 
+            await handleListenTimer();
+
             if (infos.questionCursor === infos.numberOfQuestions) {
                 setQuestionNumber(infos.questionCursor);
             } else {
@@ -87,6 +90,9 @@ export default function QuizScreen() {
             setCorrect(null);
 
             const data = await getCurrentQuestion(gameId);
+
+            await handleListenTimer();
+
             setCurrentQuestion(data);
             setIsAnswered(false);
             setQuestionNumber(questionNumber + 1);
@@ -99,8 +105,10 @@ export default function QuizScreen() {
     };
 
     const handleAnswerSelection = (answer) => {
-        if (!isAnswered) {
-            setSelectedAnswer(answer);
+        if (gameMode !== 'timed' || remainingTime > 0) {
+            if (!isAnswered) {
+                setSelectedAnswer(answer);
+            }
         }
     };
 
@@ -145,22 +153,42 @@ export default function QuizScreen() {
         });
     };
 
+    const handleListenTimer = async () => {
+        if(gameMode){
+            switch (gameMode) {
+                case 'timed':
+                    await listenTimer(gameId, setRemainingTime);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
 
     const nextQuestionButton = () => (
         <TouchableOpacity
-            style={buttonDisabled || (!isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
-            onPress={() =>
-                isAnswered
-                    ? totalQuestion === questionNumber
-                        ? handleEnd()
-                        : handleNewQuestion()
-                    : handleGetAnswer()
-            }
-            disabled={buttonDisabled || (!isAnswered && !selectedAnswer)}
+            style={buttonDisabled || (gameMode === 'timed' && remainingTime > 0 && !isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
+            onPress={() => {
+                if (gameMode === 'timed' && remainingTime === 0) {
+                    // If game is timed and remaining time is 0, show the next question
+                    totalQuestion === questionNumber ? handleEnd() : handleNewQuestion();
+                } else {
+                    // For other cases, handle the usual button actions
+                    isAnswered
+                        ? totalQuestion === questionNumber
+                            ? handleEnd()
+                            : handleNewQuestion()
+                        : handleGetAnswer();
+                }
+            }}
+            disabled={buttonDisabled || (gameMode === 'timed' && remainingTime > 0 && !isAnswered && !selectedAnswer)}
         >
             <Text style={styles.buttonText}>
-                {isAnswered ? (
+                {gameMode === 'timed' && remainingTime === 0 ? (
+                    buttonDisabled ? 'Chargement de la question suivante...' : 'Question suivante'
+                ) : isAnswered ? (
                     totalQuestion === questionNumber ? (
                         buttonDisabled ? 'Chargement des résultats...' : 'Voir les résultats'
                     ) : (
@@ -170,7 +198,6 @@ export default function QuizScreen() {
                     buttonDisabled ? 'Vérification...' : 'Valider'
                 )}
             </Text>
-
         </TouchableOpacity>
     );
 
@@ -198,10 +225,11 @@ export default function QuizScreen() {
                                     colors={['#004777', '#F7B801', '#A30000', '#A30000']}
                                     colorsTime={[7, 5, 2, 0]}
                                 >
-                                    {({ remainingTime }) => (
+                                    {() => (
                                         <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                     )}
                                 </CountdownCircleTimer>
+                                <Text style={styles.questionNumber}>{remainingTime}</Text>
                                 <Text style={styles.questionNumber}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
                                 </View>
@@ -215,8 +243,9 @@ export default function QuizScreen() {
                                         key={index}
                                         shape={shapes[index]}
                                         text={answer}
-                                        onClick={handleAnswerSelection}
+                                        onClick={() => handleAnswerSelection(answer)}
                                         filter={getAnswerFilter(answer)}
+                                        disabled={gameMode === 'timed' && remainingTime === 0}
                                     />
                                 ))}
                                 {platform !== 'web' && nextQuestionButton()}
