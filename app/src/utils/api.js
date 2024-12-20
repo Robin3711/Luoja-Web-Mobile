@@ -333,6 +333,7 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
             text: q.text,
             correctAnswer: q.correctAnswer,
             incorrectAnswers: q.incorrectAnswers,
+            type: q.type,
         }));
 
         const response = await fetch(url, {
@@ -365,6 +366,7 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
             text: q.text,
             correctAnswer: q.correctAnswer,
             incorrectAnswers: q.incorrectAnswers,
+            type: q.type,
         }));
 
         const response = await fetch(url, {

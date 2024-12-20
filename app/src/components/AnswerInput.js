@@ -25,7 +25,7 @@ const Triangle = () => (
     </Svg>
 );
 
-const AnswerInput = ({ shape, text, onTextChange, onShapeClick, type }) => {
+const AnswerInput = ({ shape, text, onTextChange, onShapeClick, onValueChange, type }) => {
     const backgroundColors = {
         SQUARE: '#58bdfe',
         CIRCLE: '#484a77',
@@ -54,6 +54,7 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, type }) => {
     const handleValueChange = (uri, id) => {
         setFile(uri);
         setFileName(id);
+        onValueChange(id);
     }
 
     return (
