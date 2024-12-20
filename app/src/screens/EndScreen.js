@@ -33,8 +33,8 @@ export default function EndScreen() {
 
                 const infos = await getGameInfos(gameId);
 
-                setCategory(infos.Category !== 0 ? themeOptions.find(option => option.value === infos.Category)?.label : "any");
-                setDifficulty(infos.Difficulty);
+                setCategory(infos.quizCategory !== 0 ? themeOptions.find(option => option.value === infos.quizCategory)?.label : "any");
+                setDifficulty(infos.quizDifficulty);
                 setLoading(false);
 
                 let animationProgress = 0;

@@ -34,7 +34,7 @@ export default function HistoryQuizInformation({ partyId, onStatusChange }) {
                 setScore(scoreTemp);
                 let dateTemp = formatReadableDate(data.CreateDate);
                 setDate(dateTemp);
-                let difficultyTemp = data.Difficulty;
+                let difficultyTemp = data.quizDifficulty;
                 if (difficultyTemp === "easy") {
                     setDifficulty("Facile");
                 } else if (difficultyTemp === "medium") {
