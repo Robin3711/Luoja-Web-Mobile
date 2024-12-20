@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Platform, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { COLORS } from '../css/utils/color';
+import { downloadImage } from '../utils/api';
 
 const platform = Platform.OS;
 
@@ -28,7 +29,7 @@ const Triangle = ({ shapeColor, borderColor }) => (
     </Svg>
 );
 
-const AnswerButton = ({ shape, onClick, text, filter }) => {
+const AnswerButton = ({ shape, onClick, text, filter, type}) => {
     const backgroundColors = {
         SQUARE: '#58bdfe',
         CIRCLE: '#484a77',
@@ -68,6 +69,17 @@ const AnswerButton = ({ shape, onClick, text, filter }) => {
         }
     };
 
+    const [file, setFile] = useState(null);
+
+    useEffect(() => {
+        if(type === 'image' && text !== '') {
+            downloadImage(text).then((file) => {
+                const uri = URL.createObjectURL(file);
+                setFile(uri);
+            });
+        }
+    }, [text, type]);
+
     return (
         <TouchableOpacity
             onPress={() => onClick(text)}
@@ -83,7 +95,15 @@ const AnswerButton = ({ shape, onClick, text, filter }) => {
             ]}
         >
             {renderShape()}
-            <Text style={styles.text}>{text}</Text>
+            {type ==="text" &&(
+                 <Text style={styles.text}>{text}</Text>
+            )}
+            {type === "image" && (
+                <Image
+                    source={{ uri: file }}
+                    style={styles.Image}
+                />
+            )}
         </TouchableOpacity>
     );
 };
@@ -120,6 +140,11 @@ const styles = StyleSheet.create({
             borderRadius: platform === 'web' ? 70 : 45,
             borderWidth: platform === 'web' ? 7 : 5,
         },
+    },
+    Image: {
+        width: 100,
+        height: 100,
+        resizeMode: 'cover',
     },
 });
 

@@ -34,6 +34,7 @@ export default function QuizScreen() {
     }
 
     const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [currentType, setCurrentType] = useState(null);
     const [questionNumber, setQuestionNumber] = useState(null);
     const [totalQuestion, setTotalQuestion] = useState(null);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -41,6 +42,7 @@ export default function QuizScreen() {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
+    const [imagesUri, setImagesUri] = useState([]);
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
@@ -64,6 +66,7 @@ export default function QuizScreen() {
     const refreshData = async (infos) => {
         try {
             const data = await getCurrentQuestion(gameId);
+            setCurrentType(data.type);
 
             if (infos.questionCursor === infos.numberOfQuestions) {
                 setQuestionNumber(infos.questionCursor);
@@ -179,6 +182,7 @@ export default function QuizScreen() {
         toast('info', 'L\'id à bien été copié !', "", 2000, 'dodgerblue');
     };
 
+
     loadFont();
     return (
         !error ? (
@@ -217,6 +221,7 @@ export default function QuizScreen() {
                                         text={answer}
                                         onClick={handleAnswerSelection}
                                         filter={getAnswerFilter(answer)}
+                                        type={currentType}
                                     />
                                 ))}
                                 {platform !== 'web' && nextQuestionButton()}
