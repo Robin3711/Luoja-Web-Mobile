@@ -18,7 +18,7 @@ export default function LaunchGameMode() {
 
     const handleStartQuiz = (gameMode) => {
         createGame(quizId, gameMode, difficulty).then((game) => {
-            navigation.navigate('quizScreen', { gameId: game.id });
+            navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
         }).catch((error) => {
             if (error.status && error.message) {
                 toast('error', error.status, error.message, 3000, 'crimson');
