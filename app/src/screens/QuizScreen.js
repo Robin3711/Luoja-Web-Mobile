@@ -42,25 +42,57 @@ export default function QuizScreen() {
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
     const [remainingTime, setRemainingTime] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
-
+    const [gameTime, setGameTime] = useState(0);
+    const [timerInitialized, setTimerInitialized] = useState(false);
+    const [timerKey, setTimerKey] = useState(0);
+    const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
 
     useEffect(() => {
         (async () => {
             try {
                 setLoading(true);
                 const infos = await getGameInfos(gameId);
+
                 refreshData(infos);
             } catch (err) {
                 setError(true);
                 setErrorMessage(err.status + " " + err.message);
-            } finally {
-                setLoading(false);
             }
         })();
     }, [gameId]);
+
+    useEffect(() => {
+        if (remainingTime > 0 && !timerInitialized) {
+            setGameTime(remainingTime);
+            setTimerInitialized(true);
+        }
+    }, [remainingTime]);
+
+    useEffect(() => {
+        let timer;
+        if (remainingTime === 1) {
+
+            timer = setTimeout(() => {
+                setTimeStuckAtOne(true);
+            }, 1000);
+        } else {
+
+            setTimeStuckAtOne(false);
+        }
+
+        return () => clearTimeout(timer);
+    }, [remainingTime]);
+
+
+    useEffect(() => {
+        if (timeStuckAtOne && remainingTime === 1) {
+            setRemainingTime(0);
+            setSelectedAnswer(true);
+        }
+    }, [timeStuckAtOne, remainingTime]);
 
     const refreshData = async (infos) => {
         try {
@@ -80,6 +112,8 @@ export default function QuizScreen() {
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -96,6 +130,9 @@ export default function QuizScreen() {
             setCurrentQuestion(data);
             setIsAnswered(false);
             setQuestionNumber(questionNumber + 1);
+            setTimerInitialized(false);
+            setLoading(false);
+            setTimerKey(prevKey => prevKey + 1);
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -129,6 +166,7 @@ export default function QuizScreen() {
                 setIsAnswered(true);
                 if (correctAnswerFromApi === selectedAnswer) updateScore();
             }
+            setTimerInitialized(false);
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -154,10 +192,10 @@ export default function QuizScreen() {
     };
 
     const handleListenTimer = async () => {
-        if(gameMode){
+        if (gameMode) {
             switch (gameMode) {
                 case 'timed':
-                    await listenTimer(gameId, setRemainingTime);
+                    await listenTimer(gameId, setRemainingTime, setSelectedAnswer, setLoading);
                     break;
                 default:
                     break;
@@ -169,7 +207,7 @@ export default function QuizScreen() {
 
     const nextQuestionButton = () => (
         <TouchableOpacity
-            style={buttonDisabled || (gameMode === 'timed' && remainingTime > 0 && !isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
+            style={buttonDisabled || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
             onPress={() => {
                 if (gameMode === 'timed' && remainingTime === 0) {
                     // If game is timed and remaining time is 0, show the next question
@@ -183,11 +221,11 @@ export default function QuizScreen() {
                         : handleGetAnswer();
                 }
             }}
-            disabled={buttonDisabled || (gameMode === 'timed' && remainingTime > 0 && !isAnswered && !selectedAnswer)}
+            disabled={buttonDisabled || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer)}
         >
             <Text style={styles.buttonText}>
                 {gameMode === 'timed' && remainingTime === 0 ? (
-                    buttonDisabled ? 'Chargement de la question suivante...' : 'Question suivante'
+                    buttonDisabled ? 'Chargement de la question suivante...' : (loading ? ('Question suivante') : ('Chargement...'))
                 ) : isAnswered ? (
                     totalQuestion === questionNumber ? (
                         buttonDisabled ? 'Chargement des résultats...' : 'Voir les résultats'
@@ -219,17 +257,28 @@ export default function QuizScreen() {
                         <View style={styles.mainView}>
                             <View style={styles.questionView}>
                                 <CountdownCircleTimer
-                                    duration={7}
+                                    key={timerKey}
+                                    isPlaying={timerInitialized}
+                                    duration={gameTime}
                                     size={Platform.OS === 'web' ? 150 : 110}
                                     strokeWidth={Platform.OS === 'web' ? 15 : 10}
-                                    colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-                                    colorsTime={[7, 5, 2, 0]}
+                                    colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
+                                    colorsTime={[
+                                        (gameTime * 4) / 5,
+                                        (gameTime * 3) / 5,
+                                        (gameTime * 2) / 5,
+                                        (gameTime * 1) / 5,
+                                        (gameTime * 0) / 5,
+                                    ]}
                                 >
                                     {() => (
-                                        <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                        <>
+                                            <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                            <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                        </>
                                     )}
                                 </CountdownCircleTimer>
-                                <Text style={styles.questionNumber}>{remainingTime}</Text>
+
                                 <Text style={styles.questionNumber}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
                                 </View>

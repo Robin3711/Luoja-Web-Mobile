@@ -410,8 +410,6 @@ export async function cloneQuiz(quizId) {
     }
 }
 
-
-
 export async function publishQuiz(quizId) {
     try {
         const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/publish`, {
@@ -470,8 +468,8 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
     }
 }
 
-export async function listenTimer(gameId, setRemainingTime) {
-    try{
+export async function listenTimer(gameId, setRemainingTime, setSelectedAnswer, setLoading) {
+    try {
         const eventSource = new EventSource(`${await getPlatformAPI()}/game/${gameId}/timer?token=${await AsyncStorage.getItem('token')}`);
 
         eventSource.onmessage = (event) => {
@@ -479,9 +477,16 @@ export async function listenTimer(gameId, setRemainingTime) {
             let time = data.time;
             setRemainingTime(time);
 
-            if(time == 0) {
+            if (time === 0) {
+                setSelectedAnswer(true);
+                setLoading(true);
                 eventSource.close();
+            } else if (time === 1) {
+                setLoading(true);
+            } else {
+                setLoading(false);
             }
+
         }
 
         eventSource.onerror = () => {
