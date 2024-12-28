@@ -206,8 +206,9 @@ export default function QuizScreen() {
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
 
     const nextQuestionButton = () => (
+
         <TouchableOpacity
-            style={buttonDisabled || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
+            style={buttonDisabled || selectedAnswer === null || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
             onPress={() => {
                 if (gameMode === 'timed' && remainingTime === 0) {
                     // If game is timed and remaining time is 0, show the next question
@@ -221,7 +222,7 @@ export default function QuizScreen() {
                         : handleGetAnswer();
                 }
             }}
-            disabled={buttonDisabled || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer)}
+            disabled={buttonDisabled || selectedAnswer === null || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer)}
         >
             <Text style={styles.buttonText}>
                 {gameMode === 'timed' && remainingTime === 0 ? (
@@ -273,7 +274,10 @@ export default function QuizScreen() {
                                 >
                                     {() => (
                                         <>
-                                            <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                            {gameMode === "timed" ? (
+                                                <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                            ) : (<Text style={styles.questionNumber}></Text>)}
+
                                             <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                         </>
                                     )}
