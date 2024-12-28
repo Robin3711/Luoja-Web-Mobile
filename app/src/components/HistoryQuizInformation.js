@@ -16,6 +16,7 @@ export default function HistoryQuizInformation({ partyId, onStatusChange }) {
     const [nbQuestions, setNbQuestions] = useState(0);
     const [cursor, setCursor] = useState(0);
     const [buttonText, setButtonText] = useState('Continuer');
+    const [gameMode, setGameMode] = useState("any");
 
     const navigation = useNavigation();
 
@@ -31,6 +32,7 @@ export default function HistoryQuizInformation({ partyId, onStatusChange }) {
                         scoreTemp++;
                     }
                 }
+                setGameMode(data.gameMode);
                 setScore(scoreTemp);
                 let dateTemp = formatReadableDate(data.CreateDate);
                 setDate(dateTemp);
@@ -65,11 +67,11 @@ export default function HistoryQuizInformation({ partyId, onStatusChange }) {
         if (cursor === nbQuestions) {
             // on recrée une partie
             const newGameId = await restartGame(partyId);
-            navigation.navigate('quizScreen', { gameId: newGameId.id });
+            navigation.navigate('quizScreen', { gameId: newGameId.id, gameMode: gameMode });
         }
         else {
             // on continue la partie
-            navigation.navigate('quizScreen', { gameId: partyId });
+            navigation.navigate('quizScreen', { gameId: partyId, gameMode: gameMode });
         }
     }
 
