@@ -229,7 +229,11 @@ export default function QuizCreation() {
 
     useEffect(() => {
         setSaveButton(true);
-        setPublishButton(true);
+        if (quizId) {
+            setPublishButton(false);
+        } else {
+            setPublishButton(true);
+        }
     }, [quizId]);
 
     // Fonction pour extraire les clés
