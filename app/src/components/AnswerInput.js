@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Pressable } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import ChooseFile from './Choosefile';
+import ChooseAudio from './ChooseAudio';
 import { COLORS } from '../css/utils/color';
+import { useFocusEffect } from '@react-navigation/native';
+import { downloadImage } from '../utils/api';
 
 const Star = ({ shapeColor, borderColor }) => (
     <Svg width="75" height="75" viewBox="-2 -2 28 28" fill="none">
@@ -27,7 +30,7 @@ const Triangle = ({ shapeColor, borderColor }) => (
     </Svg>
 );
 
-const AnswerInput = ({ shape, text, onTextChange, onShapeClick, type, selectedShape }) => {
+const AnswerInput = ({ shape, text, onTextChange, onShapeClick, onValueChange, type, selectedShape }) => {
     const backgroundColors = {
         SQUARE: '#58bdfe',
         CIRCLE: '#484a77',
@@ -51,6 +54,23 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, type, selectedSh
     };
 
     const [file, setFile] = useState(null);
+    const [fileName, setFileName] = useState(null);
+
+    const handleValueChange = (uri, id) => {
+        setFile(uri);
+        setFileName(id);
+        onValueChange(id);
+    }
+
+    useEffect(() => {
+        if(type === 'image' && text !== '') {
+            downloadImage(text).then((file) => {
+                const uri = URL.createObjectURL(file);
+                setFile(uri);
+            });
+        }
+    } , [text, type]);
+
 
     return (
         <View
@@ -73,11 +93,21 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, type, selectedSh
             )}
             {type === 'image' && (
                 <ChooseFile
-                    onFileSelected={(file) => {
-                        console.log(file);
-                    }}
+                    onValueChange={handleValueChange}
                 />
             )}
+            {type === 'audio' && (
+                <ChooseAudio
+                    onValueChange={handleValueChange}
+                />
+            )}
+            { type === 'image' && file && (
+                <Image source={{ uri: file }} style={styles.selectedImage} />
+            )}
+            { type === 'audio' && fileName && (
+                <audio controls src={file} type="audio/mp3" />
+            )}
+            
         </View>
     );
 };
@@ -120,6 +150,11 @@ const styles = StyleSheet.create({
             borderRadius: 45,
             borderWidth: 5,
         },
+    },
+    selectedImage: {
+        width: 100,
+        height: 100,
+        resizeMode: 'cover',
     },
 });
 

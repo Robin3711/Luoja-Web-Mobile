@@ -19,7 +19,9 @@ export default function CreateQuestionScreen() {
     const [questionText, setQuestionText] = useState('');
     const [selectedShape, setSelectedShape] = useState('');
     const [showFourAnswers, setShowFourAnswers] = useState(true);
-    const [type, setType] = useState('text');
+    const [typeQuestion, setType] = useState('text');
+    const [fileName, setFileName] = useState(null);
+
     // Answers state
     const [answers, setAnswers] = useState({
         SQUARE: '',
@@ -37,6 +39,7 @@ export default function CreateQuestionScreen() {
                     SQUARE: question.correctAnswer,
                     TRIANGLE: question.incorrectAnswers[0],
                 });
+                setType(question.type)
                 setSelectedShape('SQUARE');
             } else {
                 setAnswers({
@@ -45,6 +48,7 @@ export default function CreateQuestionScreen() {
                     CIRCLE: question.incorrectAnswers[1],
                     STAR: question.incorrectAnswers[2],
                 });
+                setType(question.type)
                 setSelectedShape('SQUARE');
             }
         }
@@ -90,13 +94,13 @@ export default function CreateQuestionScreen() {
                 alert('Veuillez remplir toutes les réponses');
                 return;
             }
-
             handleQuestion([
                 {
                     text: questionText,
                     trueFalse: !showFourAnswers,
                     correctAnswer: answers[selectedShape],
                     incorrectAnswers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
+                    type: typeQuestion,
                 },
             ], index);
         }
@@ -112,6 +116,7 @@ export default function CreateQuestionScreen() {
                     trueFalse: !showFourAnswers,
                     correctAnswer: answers[selectedShape],
                     incorrectAnswers: selectedShape === 'SQUARE' ? [answers.TRIANGLE] : [answers.SQUARE],
+                    type: typeQuestion,
                 },
             ], index);
         }
@@ -121,6 +126,11 @@ export default function CreateQuestionScreen() {
         navigation.goBack();
     };
 
+    const handleValueChange = (shape, id) => {
+        setAnswers((prev) => ({ ...prev, [shape]: id }));
+        setFileName(id);
+    }
+
     const renderWithCheckmark = (shape) => (
         <View style={styles.answerInputContainer} key={shape}>
             <AnswerInput
@@ -128,7 +138,8 @@ export default function CreateQuestionScreen() {
                 text={answers[shape]}
                 onTextChange={(text) => handleTextChange(shape, text)}
                 onShapeClick={handleShapeClick}
-                type={type}
+                onValueChange={(id) => handleValueChange(shape, id)}
+                type={typeQuestion}
                 selectedShape={selectedShape}
             />
         </View>
@@ -147,11 +158,16 @@ export default function CreateQuestionScreen() {
                         value={questionText}
                         onChangeText={setQuestionText}
                     />
-                    <RNPickerSelect onValueChange={(value) => setType(value)} items={[
+                    <RNPickerSelect 
+                        onValueChange={(value) => {
+                            setType(value);}} 
+                        value={typeQuestion}
+                        placeholder={{ label: 'Sélectionnez un type', value: null }}
+                        items={[
                         { label: 'Texte', value: 'text' },
                         { label: 'Image', value: 'image' },
                         { label: 'Audio', value: 'audio' },
-                    ]} value={type} />
+                    ]} />
                     <View style={styles.toggleContainer}>
                         <Text style={styles.toggleLabel}>2 réponses</Text>
                         <Switch value={showFourAnswers} onValueChange={handleToggleFourAnswers} />
