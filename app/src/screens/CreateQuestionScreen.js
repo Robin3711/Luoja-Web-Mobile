@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Switch } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TextInput, Switch } from 'react-native';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
-
+import RNPickerSelect from 'react-native-picker-select';
 import { COLORS } from '../css/utils/color';
+import SimpleButton from '../components/SimpleButton';
+import { loadFont } from '../utils/utils';
 
 export default function CreateQuestionScreen() {
+
+    loadFont();
 
     const route = useRoute();
     const navigation = useNavigation();
@@ -16,6 +19,8 @@ export default function CreateQuestionScreen() {
     const [questionText, setQuestionText] = useState('');
     const [selectedShape, setSelectedShape] = useState('');
     const [showFourAnswers, setShowFourAnswers] = useState(true);
+    const [typeQuestion, setType] = useState('text');
+    const [fileName, setFileName] = useState(null);
 
     // Answers state
     const [answers, setAnswers] = useState({
@@ -34,6 +39,7 @@ export default function CreateQuestionScreen() {
                     SQUARE: question.correctAnswer,
                     TRIANGLE: question.incorrectAnswers[0],
                 });
+                setType(question.type)
                 setSelectedShape('SQUARE');
             } else {
                 setAnswers({
@@ -42,6 +48,7 @@ export default function CreateQuestionScreen() {
                     CIRCLE: question.incorrectAnswers[1],
                     STAR: question.incorrectAnswers[2],
                 });
+                setType(question.type)
                 setSelectedShape('SQUARE');
             }
         }
@@ -87,13 +94,13 @@ export default function CreateQuestionScreen() {
                 alert('Veuillez remplir toutes les réponses');
                 return;
             }
-
             handleQuestion([
                 {
                     text: questionText,
                     trueFalse: !showFourAnswers,
                     correctAnswer: answers[selectedShape],
                     incorrectAnswers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
+                    type: typeQuestion,
                 },
             ], index);
         }
@@ -109,6 +116,7 @@ export default function CreateQuestionScreen() {
                     trueFalse: !showFourAnswers,
                     correctAnswer: answers[selectedShape],
                     incorrectAnswers: selectedShape === 'SQUARE' ? [answers.TRIANGLE] : [answers.SQUARE],
+                    type: typeQuestion,
                 },
             ], index);
         }
@@ -118,21 +126,21 @@ export default function CreateQuestionScreen() {
         navigation.goBack();
     };
 
+    const handleValueChange = (shape, id) => {
+        setAnswers((prev) => ({ ...prev, [shape]: id }));
+        setFileName(id);
+    }
+
     const renderWithCheckmark = (shape) => (
         <View style={styles.answerInputContainer} key={shape}>
-            {selectedShape === shape && (
-                <MaterialIcons
-                    name="check"
-                    size={24}
-                    color="green"
-                    style={styles.checkmarkIcon}
-                />
-            )}
             <AnswerInput
                 shape={shape}
                 text={answers[shape]}
                 onTextChange={(text) => handleTextChange(shape, text)}
                 onShapeClick={handleShapeClick}
+                onValueChange={(id) => handleValueChange(shape, id)}
+                type={typeQuestion}
+                selectedShape={selectedShape}
             />
         </View>
     );
@@ -150,15 +158,23 @@ export default function CreateQuestionScreen() {
                         value={questionText}
                         onChangeText={setQuestionText}
                     />
+                    <RNPickerSelect 
+                        onValueChange={(value) => {
+                            setType(value);}} 
+                        value={typeQuestion}
+                        placeholder={{ label: 'Sélectionnez un type', value: null }}
+                        items={[
+                        { label: 'Texte', value: 'text' },
+                        { label: 'Image', value: 'image' },
+                        { label: 'Audio', value: 'audio' },
+                    ]} />
                     <View style={styles.toggleContainer}>
                         <Text style={styles.toggleLabel}>2 réponses</Text>
                         <Switch value={showFourAnswers} onValueChange={handleToggleFourAnswers} />
                         <Text style={styles.toggleLabel}>4 réponses</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.createQuestionSubmit} onPress={handleSubmit}>
-                    <Text>Valider</Text>
-                </TouchableOpacity>
+                <SimpleButton text="Valider" onPress={handleSubmit} />
             </View>
 
             {/* Right Panel */}
@@ -196,6 +212,8 @@ const styles = StyleSheet.create({
     },
     createQuestionTitle: {
         display: 'flex',
+        fontFamily: 'LobsterTwo_400Regular',
+        fontSize: 25,
         justifyContent: 'center',
         alignItems: 'center',
         width: '50%',
@@ -230,7 +248,7 @@ const styles = StyleSheet.create({
     },
     checkmarkIcon: {
         position: 'absolute',
-        left: -30,
+        left: -35,
         top: '50%',
         transform: [{ translateY: -12 }],
     },

@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { COLORS } from '../css/utils/color';
 
-export default function HistoryQuizInformation({ partyId }) {
+export default function HistoryQuizInformation({ partyId, onStatusChange }) {
     const [loading, setLoading] = useState(true);
     const [score, setScore] = useState(0);
     const [date, setDate] = useState("any");
@@ -45,9 +45,10 @@ export default function HistoryQuizInformation({ partyId }) {
                 setDifficulty(difficultyTemp);
                 setTitle(data.Title);
                 setNbQuestions(data.numberOfQuestions);
-                if (data.numberOfQuestions === data.questionCursor) {
-                    setButtonText('Rejouer');
-                }
+                const status = data.numberOfQuestions === data.questionCursor ? 'Rejouer' : 'Continuer';
+                setButtonText(status);
+
+                onStatusChange(partyId, status, data.Title);
             }
             catch (error) {
                 if (error.status && error.message) {
@@ -82,7 +83,7 @@ export default function HistoryQuizInformation({ partyId }) {
                 <Text style={styles.titleText}>{title || `${partyId}`}</Text>
                 <Text style={styles.titleText}>{difficulty}</Text>
                 <Text style={styles.titleText}>{nbQuestions}</Text>
-                <TouchableOpacity style={styles.touchableOpacity} onPress={handleContinueGame}>
+                <TouchableOpacity style={[styles.touchableOpacity, { backgroundColor: buttonText === 'Rejouer' ? COLORS.button.blue.darkBasic : COLORS.button.blue.basic }]} onPress={handleContinueGame}>
                     <Text>{buttonText}</Text>
                 </TouchableOpacity>
             </View>
@@ -135,7 +136,6 @@ const styles = StyleSheet.create({
         width: '50%'
     },
     touchableOpacity: {
-        backgroundColor: COLORS.button.blue.basic, // Bleu Bootstrap
         padding: 8, // Espacement interne
         borderRadius: 4, // Coins arrondis
         width: 100, // Largeur fixe

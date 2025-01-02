@@ -129,8 +129,20 @@ export const themeOptions = [
 
 export const difficultyOptions = [
     { label: 'Facile', value: 'easy' },
-    { label: 'Moyen', value: 'medium' },
+    { label: 'Moyenne', value: 'medium' },
     { label: 'Difficile', value: 'hard' },
+];
+
+export const publishSortOptions = [
+    { label: 'Tout', value: null },
+    { label: 'Publier', value: true },
+    { label: 'Incomplet', value: false },
+];
+
+export const historySortOptions = [
+    { label: 'Tout', value: null },
+    { label: 'Finis', value: true },
+    { label: 'En cours', value: false },
 ];
 
 export function loadFont() {

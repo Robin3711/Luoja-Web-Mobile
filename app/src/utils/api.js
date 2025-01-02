@@ -166,7 +166,7 @@ export async function getQuizAverage(quizId) {
     }
 }
 
-export async function createParty(quizId) {
+export async function createGame(quizId, gameMode, difficulty) {
     try {
         const headers = {};
 
@@ -176,6 +176,9 @@ export async function createParty(quizId) {
 
         let url = `${await getPlatformAPI()}/quiz/${quizId}/play`;
 
+        if (gameMode && difficulty) {
+            url += `?gameMode=${gameMode}&difficulty=${difficulty}`;
+        }
         const response = await fetch(url, { headers });
 
         if (!response.ok) await handleResponseError(response);
@@ -333,6 +336,7 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
             text: q.text,
             correctAnswer: q.correctAnswer,
             incorrectAnswers: q.incorrectAnswers,
+            type: q.type,
         }));
 
         const response = await fetch(url, {
@@ -365,6 +369,7 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
             text: q.text,
             correctAnswer: q.correctAnswer,
             incorrectAnswers: q.incorrectAnswers,
+            type: q.type,
         }));
 
         const response = await fetch(url, {
@@ -383,6 +388,31 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
         throw error;
     }
 }
+
+export async function cloneQuiz(quizId) {
+    try {
+        const headers = {};
+
+        if (await hasToken()) {
+            headers['token'] = await AsyncStorage.getItem('token');
+        }
+
+        let url = `${await getPlatformAPI()}/quiz/${quizId}/clone`;
+
+        const response = await fetch(url, { headers });
+
+        if (!response.ok) await handleResponseError(response);
+
+        const data = await response.json();
+
+        return data;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+
 
 export async function publishQuiz(quizId) {
     try {
@@ -431,11 +461,83 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
 
         if (difficulty) parameters += `&difficulty=${difficulty}`;
 
-        const response = await fetch(`https://api.luoja.fr/quiz/list?${parameters}`);
+        const response = await fetch(`${await getPlatformAPI()}/quiz/list?${parameters}`);
 
         if (!response.ok) await handleResponseError(response);
 
         return (await response.json()).quizs;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function uploadImage(file) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/uploads`, {
+            method: 'POST',
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: file,
+        });
+
+        return await response;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadAllImages() {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/downloadall`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadImage(id) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/download/${id}`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.blob();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function listenTimer(gameId, setRemainingTime) {
+    try{
+        const eventSource = new EventSource(`${await getPlatformAPI()}/game/${gameId}/timer?token=${await AsyncStorage.getItem('token')}`);
+
+        eventSource.onmessage = (event) => {
+            let data = JSON.parse(event.data);
+            let time = data.time;
+            setRemainingTime(time);
+
+            if(time == 0) {
+                eventSource.close();
+            }
+        }
+
+        eventSource.onerror = () => {
+            eventSource.close();
+        };
     }
     catch (error) {
         throw error;
