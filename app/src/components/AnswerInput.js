@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import ChooseFile from './Choosefile';
 import ChooseAudio from './ChooseAudio';
 import { COLORS } from '../css/utils/color';
 import { useFocusEffect } from '@react-navigation/native';
-import { downloadImage } from '../utils/api';
+import { downloadImage, downloadAudio } from '../utils/api';
 
 const Star = ({ shapeColor, borderColor }) => (
     <Svg width="75" height="75" viewBox="-2 -2 28 28" fill="none">
@@ -62,14 +62,20 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, onValueChange, t
         onValueChange(id);
     }
 
-    useEffect(() => {
-        if(type === 'image' && text !== '') {
+    useFocusEffect( useCallback(() => {
+        if (type === 'image' && text) {
             downloadImage(text).then((file) => {
                 const uri = URL.createObjectURL(file);
                 setFile(uri);
             });
         }
-    } , [text, type]);
+        if (type === 'audio' && text) {
+            downloadAudio(text).then((file) => {
+                const uri = URL.createObjectURL(file);
+                setFile(uri);
+            });
+        }
+    }, [text, type]));
 
 
     return (
@@ -104,8 +110,10 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, onValueChange, t
             { type === 'image' && file && (
                 <Image source={{ uri: file }} style={styles.selectedImage} />
             )}
-            { type === 'audio' && fileName && (
-                <audio controls src={file} type="audio/mp3" />
+            { type === 'audio' && file && (
+                <audio controls src={file} type="audio/mp3">
+                    <track kind="captions" />
+                </audio>
             )}
             
         </View>
