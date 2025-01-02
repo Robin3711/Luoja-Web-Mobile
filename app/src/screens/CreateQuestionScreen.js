@@ -51,6 +51,9 @@ export default function CreateQuestionScreen() {
                 setType(question.type)
                 setSelectedShape('SQUARE');
             }
+        } else {
+            setType("text");
+            setFileName(null);
         }
     }
         , [question]);
@@ -94,6 +97,7 @@ export default function CreateQuestionScreen() {
                 alert('Veuillez remplir toutes les réponses');
                 return;
             }
+            console.log("typeQuestion", typeQuestion);
             handleQuestion([
                 {
                     text: questionText,
