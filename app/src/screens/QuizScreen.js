@@ -93,7 +93,7 @@ export default function QuizScreen() {
             setCorrect(null);
 
             const data = await getCurrentQuestion(gameId);
-
+            setCurrentType(data.type);
             await handleListenTimer();
 
             setCurrentQuestion(data);

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Platform, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { COLORS } from '../css/utils/color';
-import { downloadImage } from '../utils/api';
+import { downloadImage, downloadAudio } from '../utils/api';
+import { useAudioPlayer } from 'expo-audio';
 
 const platform = Platform.OS;
 
@@ -69,13 +70,25 @@ const AnswerButton = ({ shape, onClick, text, filter, type}) => {
         }
     };
 
+
+
     const [file, setFile] = useState(null);
 
+    const player = useAudioPlayer();
+
     useEffect(() => {
+        console.log("type", type);
         if(type === 'image' && text !== '') {
             downloadImage(text).then((file) => {
                 const uri = URL.createObjectURL(file);
                 setFile(uri);
+            });
+        }
+        if(type === 'audio' && text !== '') {
+            downloadAudio(text).then((file) => {
+                const uri = URL.createObjectURL(file);
+                setFile(uri);
+                player.replace(uri);
             });
         }
     }, [text, type]);
@@ -103,6 +116,11 @@ const AnswerButton = ({ shape, onClick, text, filter, type}) => {
                     source={{ uri: file }}
                     style={styles.Image}
                 />
+            )}
+            {type === "audio" && (
+                <TouchableOpacity onPress={() => player.play()} style={styles.button}>
+                    <Text style={styles.text}>Play</Text>
+                </TouchableOpacity>
             )}
         </TouchableOpacity>
     );
@@ -146,6 +164,20 @@ const styles = StyleSheet.create({
         height: 100,
         resizeMode: 'cover',
     },
+    button: {
+            position: 'relative', // Permet de positionner le texte absolument par rapport au bouton
+            backgroundColor: COLORS.button.blue.basic,
+            height: 50,
+            width: 100,
+            borderRadius: 15,
+            marginVertical: 10,
+            marginBottom: 25,
+            alignItems: 'center',
+            justifyContent: 'center',
+            ...platform === 'web' ? { 
+                boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+            } : { elevation: 2 },
+        },
 });
 
 export default AnswerButton;
