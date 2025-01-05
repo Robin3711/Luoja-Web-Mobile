@@ -7,6 +7,7 @@ import { iconSize } from '../utils/utils';
 import { uploadImage, downloadAllImages, downloadImage } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';
 import ImageSelect from './ImageSelect';
+
 const platform = Platform.OS;
 
 const ChooseFile = ({ onValueChange }) => {
@@ -39,6 +40,9 @@ const ChooseFile = ({ onValueChange }) => {
             if (response.status === 200) {
                 setImages([...images, URL.createObjectURL(file)]);
             }
+        }).catch((error) => {
+            console.log(error);
+            
         }
         ).catch((error) => {
             console.log(error);
