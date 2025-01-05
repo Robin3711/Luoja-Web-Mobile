@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import ChoiseSelector from '../components/ChoicePicker';
 import { useRoute } from '@react-navigation/native';
-import { createGame } from '../utils/api';
+import { createGame, createRoom } from '../utils/api';
 
 
 export default function LaunchGameMode() {
@@ -15,16 +15,23 @@ export default function LaunchGameMode() {
     
     const quizId = route.params.quizId;
     const [difficulty, setDifficulty] = useState("easy");
+    const [playerCount, setPlayerCount] = useState("");
 
     const handleStartQuiz = (gameMode) => {
         createGame(quizId, gameMode, difficulty).then((game) => {
-            navigation.navigate('quizScreen', { gameId: game.id });
+            navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
         }).catch((error) => {
             if (error.status && error.message) {
                 toast('error', error.status, error.message, 3000, 'crimson');
             } else {
                 toast('error', 'Erreur', error, 3000, 'crimson');
             }
+        });
+    }
+
+    const handleStartRoom = () => {
+        createRoom(quizId, playerCount).then((room) => {
+            navigation.navigate('room', { roomId: room.id });
         });
     }
 
@@ -35,7 +42,14 @@ export default function LaunchGameMode() {
             <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
             <SimpleButton text="Compte à rebourd" onPress={() => handleStartQuiz("timed")} />
             <ChoiseSelector value={difficulty} onValueChange={setDifficulty} />
-            <SimpleButton text="SCRUM" onPress={() => handleStartQuiz("scrum")} />
+
+            <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
+            <TextInput
+                    placeholder="Nombre de joueurs"
+                    keyboardType="numeric"
+                    onChangeText={(text) => setPlayerCount(text)}
+                />
+
             <SimpleButton text="TEAM" onPress={() => handleStartQuiz("team")} />
         
         </View>

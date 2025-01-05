@@ -2,11 +2,8 @@ import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
-import { getCurrentQuestion, getCurrentAnswer, getGameInfos, listenTimer } from '../utils/api';
+import { getCurrentRoomQuestion, getCurrentRoomAnswer } from '../utils/api';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
-import { Clipboard as Copy } from 'lucide-react-native';
-import * as Clipboard from 'expo-clipboard';
-import { toast } from '../utils/utils';
 
 import SimpleButton from '../components/SimpleButton';
 import { loadFont } from '../utils/utils';
@@ -18,9 +15,10 @@ const platform = Platform.OS;
 export default function QuizScreen() {
     const route = useRoute();
     const navigation = useNavigation();
-    const { gameId, gameMode } = route.params;
 
-    if (!gameId) {
+    const { roomId, eventSource } = route.params;
+
+    if (!roomId) {
         return (
             <View style={styles.quizContainer}>
                 <Text style={styles.quizQuestionText}>
@@ -33,109 +31,100 @@ export default function QuizScreen() {
         );
     }
 
-    const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [questionNumber, setQuestionNumber] = useState(null);
     const [totalQuestion, setTotalQuestion] = useState(null);
+    const [questionNumber, setQuestionNumber] = useState(0);
+
+    const [currentQuestion, setCurrentQuestion] = useState(null);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
+
     const [isAnswered, setIsAnswered] = useState(false);
-    const [buttonDisabled, setButtonDisabled] = useState(false);
+
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
-    const [remainingTime, setRemainingTime] = useState(0);
-    const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
 
+    const [message, setMessage] = useState("Question en cours...");
 
     useEffect(() => {
         (async () => {
             try {
-                setLoading(true);
-                const infos = await getGameInfos(gameId);
-                refreshData(infos);
+                eventSource.onmessage = handleEvent;
+
+                const data = await getCurrentRoomQuestion(roomId);
+
+                setCurrentQuestion(data);
+                setQuestionNumber(1);
             } catch (err) {
                 setError(true);
                 setErrorMessage(err.status + " " + err.message);
-            } finally {
-                setLoading(false);
             }
         })();
-    }, [gameId]);
+    }, [roomId]);
 
-    const refreshData = async (infos) => {
-        try {
-            const data = await getCurrentQuestion(gameId);
+    const handleEvent = (event) => {
+        const data = JSON.parse(event.data);
 
-            await handleListenTimer();
+        switch (data.eventType) {
+            case "quizInfos":
+                setTotalQuestion(data.totalQuestion);
+                break;
+            case "nextQuestion":
+                handleNewQuestion();
+                setMessage("Question en cours...");
+                break;
+            case "correctAnswerFound":
+                const { user, correctAnswer } = data;
 
-            if (infos.questionCursor === infos.numberOfQuestions) {
-                setQuestionNumber(infos.questionCursor);
-            } else {
-                setQuestionNumber(infos.questionCursor + 1);
-            }
+                setMessage(`${user} a trouvé la bonne réponse !`);
 
-            setTotalQuestion(infos.numberOfQuestions);
-            setScore(infos.results.filter(Boolean).length);
-            setCurrentQuestion(data);
-        } catch (err) {
-            setError(true);
-            setErrorMessage(err.status + " " + err.message);
+                setCorrect(correctAnswer);
+                setIsAnswered(true);
+                break;
+            case "gameEnd":
+                handleEnd();
+                break;
+            default:
+                break;
         }
     }
 
     const handleNewQuestion = async () => {
         try {
-            setButtonDisabled(true);
             setSelectedAnswer(null);
             setCorrect(null);
-
-            const data = await getCurrentQuestion(gameId);
-
-            await handleListenTimer();
-
+    
+            const data = await getCurrentRoomQuestion(roomId);
+    
             setCurrentQuestion(data);
             setIsAnswered(false);
-            setQuestionNumber(questionNumber + 1);
+            setQuestionNumber((prevQuestionNumber) => prevQuestionNumber + 1); // Use functional update
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
-        } finally {
-            setButtonDisabled(false);
         }
     };
+    
 
     const handleAnswerSelection = (answer) => {
-        if (gameMode !== 'timed' || remainingTime > 0) {
-            if (!isAnswered) {
-                setSelectedAnswer(answer);
-            }
+        if (!isAnswered) {
+            setSelectedAnswer(answer);
         }
     };
 
     const handleGetAnswer = async () => {
         try {
-            setButtonDisabled(true);
+            const { correctAnswer: correctAnswerFromApi } = await getCurrentRoomAnswer(selectedAnswer ,roomId);
 
-            const infos = await getGameInfos(gameId);
-            if (infos.questionCursor + 1 !== questionNumber) {
-                refreshData(infos);
-            } else {
-                const { correctAnswer: correctAnswerFromApi } = await getCurrentAnswer(
-                    { answer: selectedAnswer },
-                    gameId
-                );
-
-                setCorrect(correctAnswerFromApi);
-                setIsAnswered(true);
-                if (correctAnswerFromApi === selectedAnswer) updateScore();
-            }
+            setCorrect(correctAnswerFromApi);
+            setIsAnswered(true);
+            if (correctAnswerFromApi === selectedAnswer) updateScore();
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
-        } finally {
-            setButtonDisabled(false);
         }
     };
+
     const updateScore = () => setScore(score + 1);
 
     const getAnswerFilter = (answer) => {
@@ -146,65 +135,34 @@ export default function QuizScreen() {
     };
 
     const handleEnd = () => {
-        navigation.navigate('endScreen', {
-            score,
-            numberOfQuestions: totalQuestion,
-            gameId,
+        navigation.navigate('roomEndScreen', {
+            roomId
         });
     };
 
-    const handleListenTimer = async () => {
-        if(gameMode){
-            switch (gameMode) {
-                case 'timed':
-                    await listenTimer(gameId, setRemainingTime);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
 
-    const nextQuestionButton = () => (
-        <TouchableOpacity
-            style={buttonDisabled || (gameMode === 'timed' && remainingTime > 0 && !isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
-            onPress={() => {
-                if (gameMode === 'timed' && remainingTime === 0) {
-                    // If game is timed and remaining time is 0, show the next question
-                    totalQuestion === questionNumber ? handleEnd() : handleNewQuestion();
-                } else {
-                    // For other cases, handle the usual button actions
-                    isAnswered
-                        ? totalQuestion === questionNumber
-                            ? handleEnd()
-                            : handleNewQuestion()
-                        : handleGetAnswer();
-                }
-            }}
-            disabled={buttonDisabled || (gameMode === 'timed' && remainingTime > 0 && !isAnswered && !selectedAnswer)}
-        >
-            <Text style={styles.buttonText}>
-                {gameMode === 'timed' && remainingTime === 0 ? (
-                    buttonDisabled ? 'Chargement de la question suivante...' : 'Question suivante'
-                ) : isAnswered ? (
-                    totalQuestion === questionNumber ? (
-                        buttonDisabled ? 'Chargement des résultats...' : 'Voir les résultats'
-                    ) : (
-                        buttonDisabled ? 'Chargement de la question...' : 'Question suivante'
-                    )
-                ) : (
-                    buttonDisabled ? 'Vérification...' : 'Valider'
-                )}
-            </Text>
-        </TouchableOpacity>
-    );
-
-    const handleCopyGameId = async () => {
-        await Clipboard.setStringAsync(gameId);
-        toast('info', 'L\'id à bien été copié !', "", 2000, 'dodgerblue');
-    };
+    const validateAnswerButton = () => {
+        if (selectedAnswer && !isAnswered) {
+            return (
+                <TouchableOpacity
+                    style={styles.buttons}
+                    onPress={handleGetAnswer}
+                >
+                    <Text style={styles.buttonText}>Valider</Text>
+                </TouchableOpacity>
+            );
+        } else {
+            return (
+                <TouchableOpacity
+                    style={styles.disabledButtons}
+                    disabled={true}
+                >
+                    <Text style={styles.buttonText}>Valider</Text>
+                </TouchableOpacity>
+            );
+        }
+    }
 
     loadFont();
     return (
@@ -212,12 +170,10 @@ export default function QuizScreen() {
             <View style={styles.quizScreenView}>
                 {currentQuestion ? (
                     <>
-                        <TouchableOpacity onPress={handleCopyGameId} style={styles.gameId}>
-                            <Copy size={24} color="black" />
-                            <Text style={styles.gameIdText}>ID : {gameId} </Text>
-                        </TouchableOpacity>
                         <View style={styles.mainView}>
                             <View style={styles.questionView}>
+                                <Text>{message}</Text>
+
                                 <CountdownCircleTimer
                                     duration={7}
                                     size={Platform.OS === 'web' ? 150 : 110}
@@ -229,12 +185,11 @@ export default function QuizScreen() {
                                         <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                     )}
                                 </CountdownCircleTimer>
-                                <Text style={styles.questionNumber}>{remainingTime}</Text>
                                 <Text style={styles.questionNumber}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
                                 </View>
                                 <Text style={styles.question}>{currentQuestion.question}</Text>
-                                {platform === 'web' && nextQuestionButton()}
+                                {platform === 'web' && validateAnswerButton()}
                             </View>
 
                             <View style={styles.answersView}>
@@ -245,10 +200,10 @@ export default function QuizScreen() {
                                         text={answer}
                                         onClick={() => handleAnswerSelection(answer)}
                                         filter={getAnswerFilter(answer)}
-                                        disabled={gameMode === 'timed' && remainingTime === 0}
+                                        disabled={isAnswered}
                                     />
                                 ))}
-                                {platform !== 'web' && nextQuestionButton()}
+                                {platform !== 'web' && validateAnswerButton()}
                             </View>
                         </View>
                     </>
@@ -276,20 +231,6 @@ const styles = StyleSheet.create({
         width: '100%',
         padding: 10,
         backgroundColor: COLORS.background.blue,
-    },
-    gameId: {
-        position: 'absolute',
-        top: 1,
-        marginRight: 10,
-        marginTop: 2,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    gameIdText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
     },
     mainView: {
         flexDirection: platform === 'web' ? 'row' : 'column',
