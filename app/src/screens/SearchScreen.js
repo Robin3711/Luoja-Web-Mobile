@@ -3,7 +3,7 @@ import { Text, View, Platform, StyleSheet, ScrollView, TouchableOpacity, TextInp
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
-import DifficultySelector from '../components/DifficultyPicker';
+import ChoiseSelector from '../components/ChoicePicker';
 import QuizInformation from '../components/QuizInformation';
 import { loadFont, requireToken } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
@@ -48,8 +48,6 @@ export default function SearchScreen() {
 
     const handleSearchTitle = (currentTitle) => {
 
-
-
         if (timer) {
             clearTimeout(timer);
         }
@@ -68,7 +66,7 @@ export default function SearchScreen() {
             <View style={styles.screen}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
                 <TouchableOpacity onPress={() => {
-                    navigation.navigate('menuDrawer', { screen: 'account' })
+                    navigation.navigate('initMenu', { screen: 'account' })
                 }
                 }>
                     <Text style={styles.buttonText}>Retour au menu</Text>
@@ -81,40 +79,42 @@ export default function SearchScreen() {
                     <View style={styles.searchParameterView}>
 
 
-                    <View style={styles.filterView}>
-                        <Text style={styles.text}>Titre</Text>
-                        <View style={styles.quizTitleView}>
-                            <TextInput style={styles.quizTitleText} placeholder='Titre' onChangeText={(value) => handleSearchTitle(value)} />
+                        <View style={styles.filterView}>
+                            <Text style={styles.text}>Titre</Text>
+                            <View style={styles.quizTitleView}>
+                                <TextInput style={styles.quizTitleText} placeholder='Titre' onChangeText={(value) => handleSearchTitle(value)} />
+                            </View>
+                        </View>
+                        <View style={styles.filterView}>
+                            <Text style={styles.text}>Thème</Text>
+                            <ThemeSelector onValueChange={setTheme} />
+                        </View>
+                        <View style={styles.filterView}>
+                            <Text style={styles.text}>Difficulté</Text>
+                            <ChoiseSelector testID="ChoiseSelector" value={difficulty} onValueChange={setDifficulty} />
                         </View>
                     </View>
-                    <View style={styles.filterView}>
-                        <Text style={styles.text}>Thème</Text>
-                        <ThemeSelector onValueChange={setTheme} />
-                    </View>
-                    <View style={styles.filterView}>
-                        <Text style={styles.text}>Difficulté</Text>
-                        <DifficultySelector testID="difficultySelector" value={difficulty} onValueChange={setDifficulty} />
-                    </View>
-                </View>
-    
-                <View style={styles.quizCreationRightView}>
-                    {platform === 'web' && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
-                    <ScrollView style={styles.questionsView}>
-                        {
-                            data.length !== 0 ?
-                                data.map((quiz, index) => (
+
+                    <View style={styles.quizCreationRightView}>
+                        {platform === 'web' && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
+                        <ScrollView style={styles.questionsView}>
+                            {data.length !== 0 ? (
+                                [...data].reverse().map((quiz, index) => (
                                     <View key={index} style={styles.questionItem}>
                                         <QuizInformation quiz={quiz} />
                                     </View>
                                 ))
-                                : <Text>Aucun quiz</Text>
-                        }
-                    </ScrollView>
+                            ) : (
+                                <Text>Aucun quiz</Text>
+                            )}
+                        </ScrollView>
+
+                    </View>
                 </View>
             </View>
-        </View>
-    )
-);}
+        )
+    );
+}
 
 const styles = StyleSheet.create({
     screen: {
@@ -169,6 +169,8 @@ const styles = StyleSheet.create({
         ...platform === 'web' && { marginLeft: 20 },
     },
     quizCreationQuestionsTitle: {
+        fontFamily: 'LobsterTwo_400Regular',
+        fontSize: 20,
         backgroundColor: 'white',
         padding: 5,
         borderRadius: 20,

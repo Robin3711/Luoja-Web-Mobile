@@ -7,6 +7,8 @@ import Toast from 'react-native-toast-message';
 
 import { toastConfig } from './src/utils/utils';
 
+import MenuTab from './src/components/MenuTab';
+
 import Parameters from './src/screens/Parameters';
 import HomeScreen from './src/screens/HomeScreen';
 import QuizScreen from './src/screens/QuizScreen';
@@ -19,6 +21,7 @@ import SearchScreen from './src/screens/SearchScreen';
 import Account from './src/screens/Account';
 import QuizCreation from './src/screens/QuizCreationScreen';
 import CreateQuestionScreen from './src/screens/CreateQuestionScreen';
+import LaunchGameMode from './src/screens/LaunchGameMode';
 
 import '@expo/metro-runtime'
 
@@ -32,7 +35,7 @@ const linking = {
       resumeQuiz: 'resumeQuiz',
       quizScreen: 'game',
       endScreen: 'endScreen',
-      menuDrawer: 'menu',
+      initMenu: 'menu',
       userInfos: 'userInfos',
       login: 'login',
       register: 'register',
@@ -58,30 +61,32 @@ const linking = {
 const drawer = createDrawerNavigator();
 const stack = createStackNavigator()
 
+
 const MenuDrawer = () => {
   return (
     <drawer.Navigator screenOptions={{ drawerPosition: 'left' }} initialRouteName='home'>
       <drawer.Screen name="home" component={HomeScreen} options={{ title: "Luoja", drawerLabel: "Accueil" }} />
-      <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Luoja", drawerLabel: "Quiz rapide" }} />
+      <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Luoja", drawerLabel: "Partie rapide" }} />
       <drawer.Screen name="search" component={SearchScreen} options={{ title: "Luoja", drawerLabel: "Quiz de la communauté" }} />
-      <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Luoja", drawerLabel: "Reprendre la partie" }} />
+      <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Luoja", drawerLabel: "Reprendre une partie" }} />
       {Platform.OS === 'web' ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Luoja", drawerLabel: "Créer votre propre quiz" }} /> : null}
-      <drawer.Screen name="account" component={Account} options={{ title: "Luoja", drawerLabel: "Tableau de bord" }} />
+      <drawer.Screen name="account" component={Account} options={{ title: "Luoja", drawerLabel: "Votre compte" }} />
     </drawer.Navigator>
   );
 };
 
 const MenuStack = () => {
   return (
-    <stack.Navigator initialRouteName='menuDrawer'>
-      <stack.Screen name="menuDrawer" component={MenuDrawer} options={{ headerShown: false }} />
+    <stack.Navigator initialRouteName='initMenu'>
+      {Platform.OS === 'web' ? <stack.Screen name="initMenu" component={MenuTab} options={{ headerShown: false }} /> : <stack.Screen name="initMenu" component={MenuDrawer} options={{ headerShown: false }} />}
       <stack.Group screenOptions={{ presentation: 'modal' }}>
-        <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz"}} />
+        <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz" }} />
         <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
         <stack.Screen name="login" component={Login} options={{ title: "Se connecter" }} />
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire" }} />
-        {Platform.OS === 'web' ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Récupérer des questions" }} /> : null}
+        {Platform.OS === 'web' ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Importer des questions" }} /> : null}
         {Platform.OS === 'web' ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
+        {Platform.OS === 'web' ? <stack.Screen name="launchGameMode" component={LaunchGameMode} options={{ title: "Créer une question" }} /> : null}
       </stack.Group>
     </stack.Navigator>
   );
