@@ -22,6 +22,9 @@ import Account from './src/screens/Account';
 import QuizCreation from './src/screens/QuizCreationScreen';
 import CreateQuestionScreen from './src/screens/CreateQuestionScreen';
 import LaunchGameMode from './src/screens/LaunchGameMode';
+import Room from './src/screens/Room';
+import RoomQuizScreen from './src/screens/RoomQuizScreen';
+import RoomEndScreen from './src/screens/RoomEndScreen';
 
 import '@expo/metro-runtime'
 
@@ -54,9 +57,16 @@ const linking = {
         },
       },
       search: 'search',
+      room: {
+        path: 'room',
+        parse: {
+          roomId: (roomId) => roomId, // Parse the query parameter
+        },
+      },
     },
   },
 };
+
 
 const drawer = createDrawerNavigator();
 const stack = createStackNavigator()
@@ -86,7 +96,10 @@ const MenuStack = () => {
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire" }} />
         {Platform.OS === 'web' ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Importer des questions" }} /> : null}
         {Platform.OS === 'web' ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
-        {Platform.OS === 'web' ? <stack.Screen name="launchGameMode" component={LaunchGameMode} options={{ title: "Créer une question" }} /> : null}
+        <stack.Screen name="launchGameMode" component={LaunchGameMode} options={{ title: "Lancer un mode de jeu" }} />
+        <stack.Screen name="room" component={Room} options={{ title: "Partie multijoueur" }} />
+        <stack.Screen name="roomQuizScreen" component={RoomQuizScreen} options={{ title: "Quiz" }} />
+        <stack.Screen name="roomEndScreen" component={RoomEndScreen} options={{ title: "Fin de partie multijoueur" }} />
       </stack.Group>
     </stack.Navigator>
   );

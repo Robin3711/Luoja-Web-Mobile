@@ -34,6 +34,7 @@ export default function QuizScreen() {
     }
 
     const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [currentType, setCurrentType] = useState(null);
     const [questionNumber, setQuestionNumber] = useState(null);
     const [totalQuestion, setTotalQuestion] = useState(null);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -41,6 +42,7 @@ export default function QuizScreen() {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
+    const [imagesUri, setImagesUri] = useState([]);
     const [remainingTime, setRemainingTime] = useState(0);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -97,6 +99,7 @@ export default function QuizScreen() {
     const refreshData = async (infos) => {
         try {
             const data = await getCurrentQuestion(gameId);
+            setCurrentType(data.type);
 
             await handleListenTimer();
 
@@ -124,7 +127,7 @@ export default function QuizScreen() {
             setCorrect(null);
 
             const data = await getCurrentQuestion(gameId);
-
+            setCurrentType(data.type);
             await handleListenTimer();
 
             setCurrentQuestion(data);
@@ -245,6 +248,7 @@ export default function QuizScreen() {
         toast('info', 'L\'id à bien été copié !', "", 2000, 'dodgerblue');
     };
 
+
     loadFont();
     return (
         !error ? (
@@ -298,6 +302,7 @@ export default function QuizScreen() {
                                         text={answer}
                                         onClick={() => handleAnswerSelection(answer)}
                                         filter={getAnswerFilter(answer)}
+                                        type={currentType}
                                         disabled={gameMode === 'timed' && remainingTime === 0}
                                     />
                                 ))}
