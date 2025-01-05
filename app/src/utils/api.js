@@ -492,3 +492,89 @@ export async function listenTimer(gameId, setRemainingTime) {
         throw error;
     }
 }
+
+export async function createRoom(quizId, playerCount){
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${quizId}/create?playerCount=${playerCount}`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function joinRoom(roomId){
+    try{
+        const eventSource = new EventSource(`${await getPlatformAPI()}/room/${roomId}/join?token=${await AsyncStorage.getItem('token')}`);
+
+        eventSource.onerror = () => {
+            eventSource.close();
+        };
+
+        return eventSource;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function getCurrentRoomQuestion(roomId){
+    try{
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/question`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function getCurrentRoomAnswer(answer, roomId){
+    try{
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/answer`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: JSON.stringify({ answer }),
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function getRoomScores(roomId){
+    try{
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/scores`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
