@@ -4,7 +4,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 
 import { getQuestions } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
-import DifficultyPicker from '../components/DifficultyPicker';
+import ChoicePicker from '../components/ChoicePicker';
 import RangeCursor from '../components/Cursor';
 import { toast } from '../utils/utils';
 
@@ -37,17 +37,17 @@ export default function RetrieveQuestions() {
 
     return (
         <View style={styles.screen}>
-            <Text style={styles.title}>Récupérer des questions</Text>
+            <Text style={styles.title}>Importer des questions</Text>
             <View style={styles.list}>
-                <View style={{width:'100%'}}>
+                <View style={{ width: '100%' }}>
                     <Text style={styles.text}>Thème</Text>
                     <ThemeSelector onValueChange={setCategory} />
                 </View>
-                <View style={{width:'100%'}}>
+                <View style={{ width: '100%' }}>
                     <Text style={styles.text}>Difficulté</Text>
-                    <DifficultyPicker value={difficulty} onValueChange={setDifficulty} />
+                    <ChoicePicker value={difficulty} onValueChange={setDifficulty} />
                 </View>
-                <View style={{width:'100%'}}>
+                <View style={{ width: '100%' }}>
                     <RangeCursor value={amount} onValueChange={setAmount} />
                 </View>
                 <SimpleButton text='Valider' onPress={handleRetrieveQuestions} />

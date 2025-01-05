@@ -2,28 +2,30 @@ import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet } from 'react-native';
 import { Dices } from 'lucide-react-native';
 import { COLORS } from '../css/utils/color';
-
-import { themeOptions, iconSize } from '../utils/utils';
+import icon from '../../assets/icon.png';
+import { iconSize } from '../utils/utils';
+import * as DocumentPicker from 'expo-document-picker';
 
 const platform = Platform.OS;
 
-const ThemeSelector = ({ onValueChange }) => {
+const ChooseFile = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
-    const [theme, setTheme] = useState("Choisir un thème");
-
+    const [file, setFile] = useState(null);
     const handleOpenModal = () => {
         setModalVisible(true);
     }
 
-    const handleThemeSelection = (theme) => {
-        setModalVisible(false);
-        onValueChange(theme);
+
+    const selectFile = async () => {
+        const result = await DocumentPicker.getDocumentAsync({});
+        console.log(result);
+        setFile(result);
     };
 
 
     return (
         <View style={styles.themeListView}>
-            <TouchableOpacity style={styles.paramButton} onPress={handleOpenModal}><Text style={styles.paramButtonText}>{theme}</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.paramButton} onPress={handleOpenModal}><Text style={styles.paramButtonText}>Ajouter une image</Text></TouchableOpacity>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -33,25 +35,12 @@ const ThemeSelector = ({ onValueChange }) => {
 
                     <TouchableOpacity
                         style={styles.themeButton}
-                        onPress={() => handleThemeSelection(null)}>
-                        <Text style={[styles.themeLabel, { fontWeight: 'bold' }]}><Dices color="black" size={iconSize} /> Thème aléatoire</Text>
+                        onPress={selectFile}>
+                        <Text style={[styles.themeLabel, { fontWeight: 'bold' }]}><Dices color="black" size={iconSize} /> Choisir l'image</Text>
                     </TouchableOpacity>
 
 
-                    <FlatList
-                        data={themeOptions}
-                        keyExtractor={(item) => item.label}
-                        numColumns={platform === 'web' ? 3 : 1}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                style={styles.themeButton}
-                                onPress={() => { handleThemeSelection(item.value), setTheme(item.label) }}
-                            >
-                                <Text style={styles.themeLabel}>{item.icon}{item.label}</Text>
-                            </TouchableOpacity>
-                        )}
-                        contentContainerStyle={styles.themeList}
-                    />
+                    
                 </View>
             </Modal>
         </View>
@@ -130,4 +119,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ThemeSelector;
+export default ChooseFile;
