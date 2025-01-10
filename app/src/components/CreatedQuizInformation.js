@@ -57,7 +57,6 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
 
     const handlePlayQuiz = async () => {
         if (status === true && Platform.OS === 'web') {
-            console.log(quizId);
             const data = await createGame(quizId);
             navigation.navigate('quizScreen', { gameId: data.id });
         }

@@ -97,7 +97,6 @@ export default function CreateQuestionScreen() {
                 alert('Veuillez remplir toutes les réponses');
                 return;
             }
-            console.log("typeQuestion", typeQuestion);
             handleQuestion([
                 {
                     text: questionText,
@@ -162,16 +161,17 @@ export default function CreateQuestionScreen() {
                         value={questionText}
                         onChangeText={setQuestionText}
                     />
-                    <RNPickerSelect 
+                    <RNPickerSelect
                         onValueChange={(value) => {
-                            setType(value);}} 
+                            setType(value);
+                        }}
                         value={typeQuestion}
                         placeholder={{ label: 'Sélectionnez un type', value: null }}
                         items={[
-                        { label: 'Texte', value: 'text' },
-                        { label: 'Image', value: 'image' },
-                        { label: 'Audio', value: 'audio' },
-                    ]} />
+                            { label: 'Texte', value: 'text' },
+                            { label: 'Image', value: 'image' },
+                            { label: 'Audio', value: 'audio' },
+                        ]} />
                     <View style={styles.toggleContainer}>
                         <Text style={styles.toggleLabel}>2 réponses</Text>
                         <Switch value={showFourAnswers} onValueChange={handleToggleFourAnswers} />

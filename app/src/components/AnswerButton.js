@@ -30,7 +30,7 @@ const Triangle = ({ shapeColor, borderColor }) => (
     </Svg>
 );
 
-const AnswerButton = ({ shape, onClick, text, filter, type}) => {
+const AnswerButton = ({ shape, onClick, text, filter, type }) => {
     const backgroundColors = {
         SQUARE: '#58bdfe',
         CIRCLE: '#484a77',
@@ -77,14 +77,13 @@ const AnswerButton = ({ shape, onClick, text, filter, type}) => {
     const player = useAudioPlayer();
 
     useEffect(() => {
-        console.log("type", type);
-        if(type === 'image' && text !== '') {
+        if (type === 'image' && text !== '') {
             downloadImage(text).then((file) => {
                 const uri = URL.createObjectURL(file);
                 setFile(uri);
             });
         }
-        if(type === 'audio' && text !== '') {
+        if (type === 'audio' && text !== '') {
             downloadAudio(text).then((file) => {
                 const uri = URL.createObjectURL(file);
                 setFile(uri);
@@ -108,8 +107,8 @@ const AnswerButton = ({ shape, onClick, text, filter, type}) => {
             ]}
         >
             {renderShape()}
-            {type ==="text" &&(
-                 <Text style={styles.text}>{text}</Text>
+            {type === "text" && (
+                <Text style={styles.text}>{text}</Text>
             )}
             {type === "image" && (
                 <Image
@@ -165,19 +164,19 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
     },
     button: {
-            position: 'relative', // Permet de positionner le texte absolument par rapport au bouton
-            backgroundColor: COLORS.button.blue.basic,
-            height: 50,
-            width: 100,
-            borderRadius: 15,
-            marginVertical: 10,
-            marginBottom: 25,
-            alignItems: 'center',
-            justifyContent: 'center',
-            ...platform === 'web' ? { 
-                boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
-            } : { elevation: 2 },
-        },
+        position: 'relative', // Permet de positionner le texte absolument par rapport au bouton
+        backgroundColor: COLORS.button.blue.basic,
+        height: 50,
+        width: 100,
+        borderRadius: 15,
+        marginVertical: 10,
+        marginBottom: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        ...platform === 'web' ? {
+            boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+        } : { elevation: 2 },
+    },
 });
 
 export default AnswerButton;

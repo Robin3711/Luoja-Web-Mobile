@@ -90,7 +90,6 @@ export async function getCurrentQuestion(quizId) {
         return data;
     }
     catch (error) {
-        console.error(error);
         throw error;
     }
 }
@@ -117,7 +116,6 @@ export async function getCurrentAnswer(answer, quizId) {
         return await response.json();
     }
     catch (error) {
-        console.error(error);
         throw error;
     }
 }

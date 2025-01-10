@@ -38,7 +38,6 @@ export default function EndScreen() {
                 setCategory(infos.quizCategory !== 0 ? themeOptions.find(option => option.value === infos.quizCategory)?.label : "any");
                 setDifficulty(infos.quizDifficulty);
                 setLoading(false);
-                console.log(infos.gameMode);
                 setGameMode(infos.gameMode);
 
                 let animationProgress = 0;

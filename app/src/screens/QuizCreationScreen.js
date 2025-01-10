@@ -36,7 +36,6 @@ export default function QuizCreation() {
             setQuestions([...questions, ...newQuestions]);
             setSaveButton(false);
             setResetForm(false);
-            console.log(questions);
         }
         catch (error) {
             if (error.status && error.message) {
