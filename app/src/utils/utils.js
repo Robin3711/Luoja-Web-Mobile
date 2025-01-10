@@ -145,6 +145,12 @@ export const historySortOptions = [
     { label: 'En cours', value: false },
 ];
 
+export const mediaType = [
+    { label: 'Texte', value: 'text' },
+    { label: 'Image', value: 'image' },
+    { label: 'Audio', value: 'audio' }
+];
+
 export function loadFont() {
     let [fontsLoaded] = useFonts({
         LobsterTwo_400Regular,

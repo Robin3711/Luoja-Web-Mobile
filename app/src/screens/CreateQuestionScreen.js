@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Switch } from 'react-native';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import RNPickerSelect from 'react-native-picker-select';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
-import { loadFont } from '../utils/utils';
+import { loadFont, mediaType } from '../utils/utils';
+import ChoiseSelector from '../components/ChoicePicker';
 
 export default function CreateQuestionScreen() {
 
@@ -97,7 +97,6 @@ export default function CreateQuestionScreen() {
                 alert('Veuillez remplir toutes les réponses');
                 return;
             }
-            console.log("typeQuestion", typeQuestion);
             handleQuestion([
                 {
                     text: questionText,
@@ -162,16 +161,13 @@ export default function CreateQuestionScreen() {
                         value={questionText}
                         onChangeText={setQuestionText}
                     />
-                    <RNPickerSelect 
-                        onValueChange={(value) => {
-                            setType(value);}} 
+                    <ChoiseSelector
                         value={typeQuestion}
-                        placeholder={{ label: 'Sélectionnez un type', value: null }}
-                        items={[
-                        { label: 'Texte', value: 'text' },
-                        { label: 'Image', value: 'image' },
-                        { label: 'Audio', value: 'audio' },
-                    ]} />
+                        onValueChange={setType}
+                        parameters={mediaType}
+                        defaultValue={true}
+                        style={styles.choiceSelector}
+                    />
                     <View style={styles.toggleContainer}>
                         <Text style={styles.toggleLabel}>2 réponses</Text>
                         <Switch value={showFourAnswers} onValueChange={handleToggleFourAnswers} />
@@ -224,6 +220,7 @@ const styles = StyleSheet.create({
         height: '10%',
         backgroundColor: 'white',
         borderRadius: 25,
+        marginBottom: 25,
     },
     createQuestionInput: {
         width: '90%',
@@ -264,5 +261,8 @@ const styles = StyleSheet.create({
     toggleLabel: {
         fontSize: 16,
         marginHorizontal: 10,
+    },
+    choiceSelector: {
+        marginTop: 20,
     },
 });

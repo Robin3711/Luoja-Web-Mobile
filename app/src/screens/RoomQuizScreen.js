@@ -93,9 +93,9 @@ export default function QuizScreen() {
         try {
             setSelectedAnswer(null);
             setCorrect(null);
-    
+
             const data = await getCurrentRoomQuestion(roomId);
-    
+
             setCurrentQuestion(data);
             setIsAnswered(false);
             setQuestionNumber((prevQuestionNumber) => prevQuestionNumber + 1); // Use functional update
@@ -104,7 +104,7 @@ export default function QuizScreen() {
             setErrorMessage(err.status + " " + err.message);
         }
     };
-    
+
 
     const handleAnswerSelection = (answer) => {
         if (!isAnswered) {
@@ -114,7 +114,7 @@ export default function QuizScreen() {
 
     const handleGetAnswer = async () => {
         try {
-            const { correctAnswer: correctAnswerFromApi } = await getCurrentRoomAnswer(selectedAnswer ,roomId);
+            const { correctAnswer: correctAnswerFromApi } = await getCurrentRoomAnswer(selectedAnswer, roomId);
 
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);

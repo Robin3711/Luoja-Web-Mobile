@@ -32,7 +32,6 @@ export default function QuizInformation({ quiz }) {
         try {
             const value = getValueByLabel(themeName);
             const questions = await cloneQuiz(quiz.id);
-            console.log(questions);
             await saveQuiz(quiz.title, value, quiz.difficulty, questions.questions);
             navigation.navigate('account');
         }

@@ -18,7 +18,7 @@ export default function Room() {
     const [players, setPlayers] = useState([]);
 
     let eventSource = null;
-    
+
     const handleEvent = (event) => {
         const data = JSON.parse(event.data);
 
@@ -48,7 +48,7 @@ export default function Room() {
                 getPlatformAPI().then((url) => setApiUrl(url));
             });
         };
-        
+
         connect();
     }, []);
 
@@ -61,10 +61,10 @@ export default function Room() {
                     <Text key={player}>{player}</Text>
                 ))}
             </View>
-            <QRCode 
-                value={`${apiUrl}/room/${roomId}/join`} 
-                size={200} 
-                color="black" 
+            <QRCode
+                value={`${apiUrl}/room/${roomId}/join`}
+                size={200}
+                color="black"
                 backgroundColor="white"
             />
         </View>

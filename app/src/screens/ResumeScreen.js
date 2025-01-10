@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TextInput, Button, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 
 import { getGameInfos } from '../utils/api';
 import { toast } from '../utils/utils';
@@ -66,7 +66,7 @@ export default function ResumeScreen() {
             <Text style={styles.title}>Reprenez votre partie</Text>
             <View style={styles.inputView}>
                 <TouchableOpacity onPress={handlePasteGameId}>
-                    <ClipboardPaste size={30}  color="black"/>
+                    <ClipboardPaste size={30} color="black" />
                 </TouchableOpacity>
                 <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
             </View>
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: COLORS.background.blue,
     },
-    title:{
+    title: {
         fontSize: 50,
         textAlign: 'center',
         fontFamily: 'LobsterTwo_700Bold_Italic',

@@ -90,7 +90,6 @@ export async function getCurrentQuestion(quizId) {
         return data;
     }
     catch (error) {
-        console.error(error);
         throw error;
     }
 }
@@ -117,7 +116,6 @@ export async function getCurrentAnswer(answer, quizId) {
         return await response.json();
     }
     catch (error) {
-        console.error(error);
         throw error;
     }
 }
@@ -413,8 +411,6 @@ export async function cloneQuiz(quizId) {
     }
 }
 
-
-
 export async function publishQuiz(quizId) {
     try {
         const response = await fetch(`${await getPlatformAPI()}/quiz/${quizId}/publish`, {
@@ -522,8 +518,8 @@ export async function downloadImage(id) {
     }
 }
 
-export async function listenTimer(gameId, setRemainingTime) {
-    try{
+export async function listenTimer(gameId, setRemainingTime, setSelectedAnswer, setLoading) {
+    try {
         const eventSource = new EventSource(`${await getPlatformAPI()}/game/${gameId}/timer?token=${await AsyncStorage.getItem('token')}`);
 
         eventSource.onmessage = (event) => {
@@ -531,9 +527,16 @@ export async function listenTimer(gameId, setRemainingTime) {
             let time = data.time;
             setRemainingTime(time);
 
-            if(time == 0) {
+            if (time === 0) {
+                setSelectedAnswer(true);
+                setLoading(true);
                 eventSource.close();
+            } else if (time === 1) {
+                setLoading(true);
+            } else {
+                setLoading(false);
             }
+
         }
 
         eventSource.onerror = () => {
@@ -545,7 +548,7 @@ export async function listenTimer(gameId, setRemainingTime) {
     }
 }
 
-export async function createRoom(quizId, playerCount){
+export async function createRoom(quizId, playerCount) {
     try {
         const response = await fetch(`${await getPlatformAPI()}/room/${quizId}/create?playerCount=${playerCount}`, {
             headers: {
@@ -562,8 +565,8 @@ export async function createRoom(quizId, playerCount){
     }
 }
 
-export async function joinRoom(roomId){
-    try{
+export async function joinRoom(roomId) {
+    try {
         const eventSource = new EventSource(`${await getPlatformAPI()}/room/${roomId}/join?token=${await AsyncStorage.getItem('token')}`);
 
         eventSource.onerror = () => {
@@ -577,8 +580,8 @@ export async function joinRoom(roomId){
     }
 }
 
-export async function getCurrentRoomQuestion(roomId){
-    try{
+export async function getCurrentRoomQuestion(roomId) {
+    try {
         const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/question`, {
             headers: {
                 'token': await AsyncStorage.getItem('token'),
@@ -594,8 +597,8 @@ export async function getCurrentRoomQuestion(roomId){
     }
 }
 
-export async function getCurrentRoomAnswer(answer, roomId){
-    try{
+export async function getCurrentRoomAnswer(answer, roomId) {
+    try {
         const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/answer`, {
             method: 'POST',
             headers: {
@@ -614,8 +617,8 @@ export async function getCurrentRoomAnswer(answer, roomId){
     }
 }
 
-export async function getRoomScores(roomId){
-    try{
+export async function getRoomScores(roomId) {
+    try {
         const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/scores`, {
             headers: {
                 'token': await AsyncStorage.getItem('token'),

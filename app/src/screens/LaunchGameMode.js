@@ -12,13 +12,14 @@ export default function LaunchGameMode() {
 
     const navigation = useNavigation();
     const route = useRoute();
-    
+
     const quizId = route.params.quizId;
-    const [difficulty, setDifficulty] = useState("easy");
+    const [timerDifficulty, setTimerDifficulty] = useState("easy");
+    const [scrumDifficulty, setScrumDifficulty] = useState("easy");
     const [playerCount, setPlayerCount] = useState("");
 
     const handleStartQuiz = (gameMode) => {
-        createGame(quizId, gameMode, difficulty).then((game) => {
+        createGame(quizId, gameMode, gameMode === "timed" ? timerDifficulty : scrumDifficulty).then((game) => {
             navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
         }).catch((error) => {
             if (error.status && error.message) {
@@ -41,17 +42,19 @@ export default function LaunchGameMode() {
 
             <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
             <SimpleButton text="Compte à rebourd" onPress={() => handleStartQuiz("timed")} />
-            <ChoiseSelector value={difficulty} onValueChange={setDifficulty} />
+            <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
+            <SimpleButton text="SCRUM" onPress={() => handleStartQuiz("scrum")} />
+            <ChoiseSelector value={scrumDifficulty} onValueChange={setScrumDifficulty} />
 
             <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
             <TextInput
-                    placeholder="Nombre de joueurs"
-                    keyboardType="numeric"
-                    onChangeText={(text) => setPlayerCount(text)}
-                />
+                placeholder="Nombre de joueurs"
+                keyboardType="numeric"
+                onChangeText={(text) => setPlayerCount(text)}
+            />
 
             <SimpleButton text="TEAM" onPress={() => handleStartQuiz("team")} />
-        
+
         </View>
     );
 }

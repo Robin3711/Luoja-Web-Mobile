@@ -6,7 +6,7 @@ const platform = Platform.OS;
 
 export default function SimpleButton({ text, onPress, color = COLORS.button.blue.basic }) {
     loadFont();
-    
+
     return (
         <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: color }]} >
             <Text style={styles.text}>{text}</Text>
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
-        ...platform === 'web' ? { 
+        ...platform === 'web' ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },

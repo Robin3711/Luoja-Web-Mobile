@@ -1,10 +1,8 @@
 import { View, Text, Platform, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SimpleButton from '../components/SimpleButton';
-import { hasToken, loadFont, removeToken } from '../utils/utils';
+import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
-import { useCallback, useEffect, useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 
 const platform = Platform.OS;
 

@@ -88,5 +88,15 @@ export const COLORS = {
                 dark: '#0C0D25',
             }
         }
+    },
+
+    timer: {
+        blue: {
+            lighter: '#C0E6FF',
+            light: '#58BDFE',
+            normal: '#4D65B4',
+            dark: '#484A77',
+            darker: '#323353',
+        },
     }
 }

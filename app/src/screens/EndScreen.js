@@ -23,6 +23,8 @@ export default function EndScreen() {
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
+    const [gameMode, setGameMode] = useState("any");
+
 
     useEffect(() => {
         const loadGameData = async () => {
@@ -33,9 +35,10 @@ export default function EndScreen() {
 
                 const infos = await getGameInfos(gameId);
 
-                setCategory(infos.Category !== 0 ? themeOptions.find(option => option.value === infos.Category)?.label : "any");
-                setDifficulty(infos.Difficulty);
+                setCategory(infos.quizCategory !== 0 ? themeOptions.find(option => option.value === infos.quizCategory)?.label : "any");
+                setDifficulty(infos.quizDifficulty);
                 setLoading(false);
+                setGameMode(infos.gameMode);
 
                 let animationProgress = 0;
                 const targetProgress = score / numberOfQuestions;
@@ -64,7 +67,7 @@ export default function EndScreen() {
     const handleReplay = async () => {
         try {
             const newGameId = await restartGame(gameId);
-            navigation.navigate('quizScreen', { gameId: newGameId.id });
+            navigation.navigate('quizScreen', { gameId: newGameId.id, gameMode: gameMode });
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);

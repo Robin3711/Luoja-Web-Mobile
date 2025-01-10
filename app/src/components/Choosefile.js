@@ -1,9 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet, Image } from 'react-native';
-import { Dices } from 'lucide-react-native';
 import { COLORS } from '../css/utils/color';
-import icon from '../../assets/icon.png';
-import { iconSize } from '../utils/utils';
 import { uploadImage, downloadAllImages, downloadImage } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';
 import ImageSelect from './ImageSelect';
@@ -42,13 +39,13 @@ const ChooseFile = ({ onValueChange }) => {
             }
         }).catch((error) => {
             console.log(error);
-            
+
         }
         ).catch((error) => {
             console.log(error);
         }
         );
-        
+
     };
 
 
@@ -60,20 +57,20 @@ const ChooseFile = ({ onValueChange }) => {
                     if (response.files && Array.isArray(response.files)) {
                         const files = response.files;
                         setIds(files.map((file) => file.fileName));
-    
+
                         // Traiter chaque `fileName` pour télécharger les images
                         const imagePromises = files.map(async (file) => {
                             const { fileName } = file;
                             const imageBlob = await downloadImage(fileName);
-                            
+
                             // Convertir le blob en URL locale
                             const imageURL = URL.createObjectURL(imageBlob);
                             return imageURL;
                         });
-    
+
                         // Résoudre toutes les promesses
                         const fetchedImages = await Promise.all(imagePromises);
-    
+
                         // Mettre à jour l'état des images
                         setImages((prevImages) => [...prevImages, ...fetchedImages]);
                     } else {
@@ -83,11 +80,11 @@ const ChooseFile = ({ onValueChange }) => {
                     console.error("Erreur lors de la récupération des images :", error);
                 }
             };
-    
+
             fetchImages();
         }, [])
     );
-    
+
 
     return (
         <View style={styles.themeListView}>
@@ -121,7 +118,7 @@ const ChooseFile = ({ onValueChange }) => {
                         data={images}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item, index }) => (
-                            <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]}/>
+                            <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]} />
                         )}
                     />
                 </View>
@@ -142,7 +139,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#58BDFE',
+        backgroundColor: COLORS.button.blue.basic,
         width: '100%',
         padding: 15,
         borderRadius: 20,
