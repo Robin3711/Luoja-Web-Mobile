@@ -62,7 +62,7 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, onValueChange, t
         onValueChange(id);
     }
 
-    useFocusEffect( useCallback(() => {
+    useFocusEffect(useCallback(() => {
         if (type === 'image' && text) {
             downloadImage(text).then((file) => {
                 const uri = URL.createObjectURL(file);
@@ -107,15 +107,15 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, onValueChange, t
                     onValueChange={handleValueChange}
                 />
             )}
-            { type === 'image' && file && (
+            {type === 'image' && file && (
                 <Image source={{ uri: file }} style={styles.selectedImage} />
             )}
-            { type === 'audio' && file && (
+            {type === 'audio' && file && (
                 <audio controls src={file} type="audio/mp3">
                     <track kind="captions" />
                 </audio>
             )}
-            
+
         </View>
     );
 };

@@ -3,9 +3,8 @@ import { View, Text, Platform, StyleSheet, TouchableOpacity } from 'react-native
 
 import { difficultyOptions } from '../utils/utils';
 
-const platform = Platform.OS;
 
-const ChoiseSelector = ({ testID, value, onValueChange, parameters = difficultyOptions, defaultValue = false }) => {
+const ChoiseSelector = ({ value, onValueChange, parameters = difficultyOptions, defaultValue = false, style = null }) => {
     const [selectedIndex, setSelectedIndex] = useState(defaultValue ? 0 : null);
 
     const handleSelection = index => {
@@ -33,7 +32,7 @@ const ChoiseSelector = ({ testID, value, onValueChange, parameters = difficultyO
     }, [value, parameters, defaultValue]);
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             {parameters.map((option, index) => (
                 <TouchableOpacity
                     key={option.value}

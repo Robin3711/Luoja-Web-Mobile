@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { uploadAudio, downloadAllAudios, downloadAudio } from '../utils/api'; // Assurez-vous de créer ces fonctions API
+import { COLORS } from '../css/utils/color';
+import { uploadAudio, downloadAllAudios, downloadAudio } from '../utils/api';
 
 const platform = Platform.OS;
 
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#58BDFE',
+        backgroundColor: COLORS.button.blue.basic,
         width: '100%',
         padding: 15,
         borderRadius: 20,

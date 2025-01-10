@@ -1,12 +1,12 @@
 import { COLORS } from "./color";
 
 
-export const FONT={
-    typeFace:{
+export const FONT = {
+    typeFace: {
         arial: "'Arial', sans-serif"
     },
 
-    title:{
+    title: {
         color: COLORS.text.blue.dark,
         position: 'absolute',
         top: 15,
