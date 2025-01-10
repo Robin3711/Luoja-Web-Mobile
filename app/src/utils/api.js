@@ -315,6 +315,7 @@ export async function getQuestions(amount, category, difficulty) {
             trueFalse: item.incorrect_answers.length === 1,
             correctAnswer: item.correct_answer,
             incorrectAnswers: item.incorrect_answers,
+            type: "text",
         }));
 
         return questions;
