@@ -548,7 +548,7 @@ export async function listenTimer(gameId, setRemainingTime, setSelectedAnswer, s
     }
 }
 
-export async function createRoom({quizId, playerCount, teams, gameMode}) {
+export async function createRoom({quizId, playerCount, teams, gameMode, difficulty}) {
     try {
 
         let response;
@@ -564,7 +564,7 @@ export async function createRoom({quizId, playerCount, teams, gameMode}) {
                 });
                 break;
             case "team":
-                response = await fetch(`${await getPlatformAPI()}/room/${quizId}/create?playerCount=${playerCount}&gameMode=${gameMode}`, {
+                response = await fetch(`${await getPlatformAPI()}/room/${quizId}/create?playerCount=${playerCount}&gameMode=${gameMode}&difficulty=${difficulty}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -595,6 +595,36 @@ export async function joinRoom(roomId) {
         };
 
         return eventSource;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function joinTeam(roomId, teamName) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/joinTeam?teamName=${teamName}&token=${await AsyncStorage.getItem('token')}`);
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function startRoom(roomId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/start`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
     }
     catch (error) {
         throw error;
