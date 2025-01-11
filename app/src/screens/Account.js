@@ -5,6 +5,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getUserInfos } from '../utils/api';
 import { hasToken } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 import { Platform } from 'react-native';
 import Dashboard from './Dashboard';
 import SimpleButton from '../components/SimpleButton';
@@ -50,7 +51,7 @@ export default function Account() {
     }, [isLogged]);
 
     if (loading) {
-        return <Text>Chargement...</Text>;
+        return <Text style={FONT.text}>Chargement...</Text>;
     }
 
     if (isLogged && userInfos) {
@@ -65,19 +66,19 @@ export default function Account() {
         return (
             error ? (
                 <View style={styles.quizScreenView}>
-                    <Text style={styles.errorText}>{errorMessage}</Text>
+                    <Text style={FONT.error}>{errorMessage}</Text>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('initMenu', { screen: 'account' })
                     }
                     }>
-                        <Text style={styles.buttonText}>Retour au menu</Text>
+                        <Text style={FONT.button}>Retour au menu</Text>
                     </TouchableOpacity>
                 </View>
             ) : (
                 <View style={styles.container}>
-                    <Text style={styles.appTitle}>Luoja</Text>
+                    <Text style={FONT.luoja}>Luoja</Text>
                     <View style={styles.childView}>
-                        <Text style={styles.optionTitle}>Cette fonctionnalité nécessite un compte</Text>
+                        <Text style={FONT.text}>Cette fonctionnalité nécessite un compte</Text>
                         <SimpleButton text="Se connecter" onPress={() => navigation.navigate('login')} />
                         <SimpleButton text="Créer un compte" onPress={() => navigation.navigate('register')} />
                     </View>

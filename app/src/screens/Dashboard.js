@@ -132,7 +132,7 @@ export default function Dashboard() {
                         <ScrollView>
                             {handleSortHistoryItems([...history].reverse(), sortHistory).map((item, index) => (
                                 <View key={index}>
-                                    <HistoryQuizInformation partyId={item.id} onStatusChange={handleStatusChange} />
+                                    <HistoryQuizInformation partyId={item.id} quizId={item.quizId} onStatusChange={handleStatusChange} />
                                 </View>
                             ))}
                         </ScrollView>

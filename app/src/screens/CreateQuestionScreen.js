@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Switch } from 'react-native';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import RNPickerSelect from 'react-native-picker-select';
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 import SimpleButton from '../components/SimpleButton';
+import { mediaType } from '../utils/utils';
+import ChoiseSelector from '../components/ChoicePicker';
 
 export default function CreateQuestionScreen() {
     const route = useRoute();
@@ -15,7 +17,9 @@ export default function CreateQuestionScreen() {
     const [questionText, setQuestionText] = useState('');
     const [selectedShape, setSelectedShape] = useState('');
     const [showFourAnswers, setShowFourAnswers] = useState(true);
-    const [type, setType] = useState('text');
+    const [typeQuestion, setType] = useState('text');
+    const [fileName, setFileName] = useState(null);
+
     // Answers state
     const [answers, setAnswers] = useState({
         SQUARE: '',
@@ -33,6 +37,7 @@ export default function CreateQuestionScreen() {
                     SQUARE: question.correctAnswer,
                     TRIANGLE: question.incorrectAnswers[0],
                 });
+                setType(question.type)
                 setSelectedShape('SQUARE');
             } else {
                 setAnswers({
@@ -41,8 +46,12 @@ export default function CreateQuestionScreen() {
                     CIRCLE: question.incorrectAnswers[1],
                     STAR: question.incorrectAnswers[2],
                 });
+                setType(question.type)
                 setSelectedShape('SQUARE');
             }
+        } else {
+            setType("text");
+            setFileName(null);
         }
     }
         , [question]);
@@ -86,13 +95,13 @@ export default function CreateQuestionScreen() {
                 alert('Veuillez remplir toutes les réponses');
                 return;
             }
-
             handleQuestion([
                 {
                     text: questionText,
                     trueFalse: !showFourAnswers,
                     correctAnswer: answers[selectedShape],
                     incorrectAnswers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
+                    type: typeQuestion,
                 },
             ], index);
         }
@@ -108,6 +117,7 @@ export default function CreateQuestionScreen() {
                     trueFalse: !showFourAnswers,
                     correctAnswer: answers[selectedShape],
                     incorrectAnswers: selectedShape === 'SQUARE' ? [answers.TRIANGLE] : [answers.SQUARE],
+                    type: typeQuestion,
                 },
             ], index);
         }
@@ -117,6 +127,11 @@ export default function CreateQuestionScreen() {
         navigation.goBack();
     };
 
+    const handleValueChange = (shape, id) => {
+        setAnswers((prev) => ({ ...prev, [shape]: id }));
+        setFileName(id);
+    }
+
     const renderWithCheckmark = (shape) => (
         <View style={styles.answerInputContainer} key={shape}>
             <AnswerInput
@@ -124,7 +139,8 @@ export default function CreateQuestionScreen() {
                 text={answers[shape]}
                 onTextChange={(text) => handleTextChange(shape, text)}
                 onShapeClick={handleShapeClick}
-                type={type}
+                onValueChange={(id) => handleValueChange(shape, id)}
+                type={typeQuestion}
                 selectedShape={selectedShape}
             />
         </View>
@@ -135,7 +151,7 @@ export default function CreateQuestionScreen() {
             {/* Left Panel */}
             <View style={styles.createQuestionLeftView}>
                 <View style={styles.createQuestionInputView}>
-                    <Text style={styles.createQuestionTitle}>Questions :</Text>
+                    <Text style={FONT.title}>Question :</Text>
                     <TextInput
                         style={styles.createQuestionInput}
                         multiline={true}
@@ -143,15 +159,17 @@ export default function CreateQuestionScreen() {
                         value={questionText}
                         onChangeText={setQuestionText}
                     />
-                    <RNPickerSelect onValueChange={(value) => setType(value)} items={[
-                        { label: 'Texte', value: 'text' },
-                        { label: 'Image', value: 'image' },
-                        { label: 'Audio', value: 'audio' },
-                    ]} value={type} />
+                    <ChoiseSelector
+                        value={typeQuestion}
+                        onValueChange={setType}
+                        parameters={mediaType}
+                        defaultValue={true}
+                        style={styles.choiceSelector}
+                    />
                     <View style={styles.toggleContainer}>
-                        <Text style={styles.toggleLabel}>2 réponses</Text>
+                        <Text style={FONT.text}>2 réponses</Text>
                         <Switch value={showFourAnswers} onValueChange={handleToggleFourAnswers} />
-                        <Text style={styles.toggleLabel}>4 réponses</Text>
+                        <Text style={FONT.text}>4 réponses</Text>
                     </View>
                 </View>
                 <SimpleButton text="Valider" onPress={handleSubmit} />
@@ -200,6 +218,7 @@ const styles = StyleSheet.create({
         height: '10%',
         backgroundColor: 'white',
         borderRadius: 25,
+        marginBottom: 25,
     },
     createQuestionInput: {
         width: '90%',
@@ -236,9 +255,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 10,
+        gap: 20,
     },
     toggleLabel: {
         fontSize: 16,
         marginHorizontal: 10,
+    },
+    choiceSelector: {
+        marginTop: 20,
     },
 });

@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import Slider from '@react-native-assets/slider';
 
-const platform = Platform.OS;
-
 const RangeCursor = ({ value, onValueChange }) => {
   const [sliderValue, setSliderValue] = useState(value);
 

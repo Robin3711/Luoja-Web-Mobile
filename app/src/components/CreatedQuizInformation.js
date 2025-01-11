@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { Text, View, StyleSheet, Platform } from 'react-native';
 import { createGame, getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
-
+import SimpleButton from './SimpleButton';
+import { FONT } from '../css/utils/font';
 
 export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions }) {
     const [loading, setLoading] = useState(true);
@@ -39,7 +40,7 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
     }, [category, status, quizId, date, nbQuestions]);
 
     if (loading) {
-        return <Text>Chargement...</Text>;
+        return <Text style={FONT.button}>Chargement...</Text>;
     }
 
     const isDraft = status === false;
@@ -57,7 +58,6 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
 
     const handlePlayQuiz = async () => {
         if (status === true && Platform.OS === 'web') {
-            console.log(quizId);
             const data = await createGame(quizId);
             navigation.navigate('quizScreen', { gameId: data.id });
         }
@@ -70,9 +70,14 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                    <TouchableOpacity style={[styles.touchableOpacity, { backgroundColor: COLORS.button.blue.basic }]} onPress={handleCreationQuiz}>
-                        <Text>Modifier</Text>
-                    </TouchableOpacity>
+                    <SimpleButton 
+                        text="Modifier" 
+                        onPress={handleCreationQuiz} 
+                        color={COLORS.button.blue.basic} 
+                        height={30}
+                        width={100}
+                        textStyle={{ fontSize: 20 }}
+                    />
                 </View>
                 <View style={styles.SecondaryInformationsView}>
                     <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
@@ -88,9 +93,14 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                <TouchableOpacity style={[styles.touchableOpacity, { backgroundColor: COLORS.button.blue.darkBasic }]} onPress={handlePlayQuiz}>
-                    <Text>Jouer</Text>
-                </TouchableOpacity>
+                <SimpleButton 
+                    text="Jouer" 
+                    onPress={handlePlayQuiz} 
+                    color={COLORS.button.blue.darkBasic} 
+                    height={30}
+                    width={100}
+                    textStyle={{ fontSize: 20 }}
+                />
             </View>
             <View style={styles.SecondaryInformationsView}>
                 <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>

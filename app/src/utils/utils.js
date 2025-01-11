@@ -145,6 +145,24 @@ export const historySortOptions = [
     { label: 'En cours', value: false },
 ];
 
+export const mediaType = [
+    { label: 'Texte', value: 'text' },
+    { label: 'Image', value: 'image' },
+    { label: 'Audio', value: 'audio' }
+];
+
+export function loadFont() {
+    let [fontsLoaded] = useFonts({
+        LobsterTwo_400Regular,
+        LobsterTwo_700Bold,
+        LobsterTwo_700Bold_Italic,
+    });
+
+    if (!fontsLoaded) {
+        return null;
+    }
+}
+
 export const toast = (type, text1, text2, visibilityTime, color) => {
     Toast.show({
         type: type,

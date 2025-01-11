@@ -34,7 +34,7 @@ export const COLORS = {
 
         blue: {
             basic: '#8fd3ff',
-            darkBasic: '#02bbdb',
+            darkBasic: '#96A9E4',
 
             square: {
                 light: '#C0E6FF',
@@ -97,6 +97,6 @@ export const COLORS = {
             normal: '#4D65B4',
             dark: '#484A77',
             darker: '#323353',
-        },
+        }
     }
 }

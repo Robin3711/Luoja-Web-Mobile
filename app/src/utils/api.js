@@ -90,7 +90,6 @@ export async function getCurrentQuestion(quizId) {
         return data;
     }
     catch (error) {
-        console.error(error);
         throw error;
     }
 }
@@ -117,7 +116,6 @@ export async function getCurrentAnswer(answer, quizId) {
         return await response.json();
     }
     catch (error) {
-        console.error(error);
         throw error;
     }
 }
@@ -315,6 +313,7 @@ export async function getQuestions(amount, category, difficulty) {
             trueFalse: item.incorrect_answers.length === 1,
             correctAnswer: item.correct_answer,
             incorrectAnswers: item.incorrect_answers,
+            type: "text",
         }));
 
         return questions;
@@ -333,9 +332,10 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
         if (difficulty !== null) url += `&difficulty=${difficulty}`;
 
         const questions = quizQuestions.map((q) => ({
-            text: q.text === undefined ? q.question : q.text,
+            text: q.text,
             correctAnswer: q.correctAnswer,
             incorrectAnswers: q.incorrectAnswers,
+            type: q.type,
         }));
 
         const response = await fetch(url, {
@@ -368,6 +368,7 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
             text: q.text,
             correctAnswer: q.correctAnswer,
             incorrectAnswers: q.incorrectAnswers,
+            type: q.type,
         }));
 
         const response = await fetch(url, {
@@ -409,8 +410,6 @@ export async function cloneQuiz(quizId) {
         throw error;
     }
 }
-
-
 
 export async function publishQuiz(quizId) {
     try {
@@ -470,8 +469,57 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
     }
 }
 
-export async function listenTimer(gameId, setRemainingTime) {
-    try{
+export async function uploadImage(file) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/uploads`, {
+            method: 'POST',
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: file,
+        });
+
+        return await response;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadAllImages() {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/downloadall`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadImage(id) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/download/${id}`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.blob();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function listenTimer(gameId, setRemainingTime, setSelectedAnswer, setLoading) {
+    try {
         const eventSource = new EventSource(`${await getPlatformAPI()}/game/${gameId}/timer?token=${await AsyncStorage.getItem('token')}`);
 
         eventSource.onmessage = (event) => {
@@ -479,9 +527,16 @@ export async function listenTimer(gameId, setRemainingTime) {
             let time = data.time;
             setRemainingTime(time);
 
-            if(time == 0) {
+            if (time === 0) {
+                setSelectedAnswer(true);
+                setLoading(true);
                 eventSource.close();
+            } else if (time === 1) {
+                setLoading(true);
+            } else {
+                setLoading(false);
             }
+
         }
 
         eventSource.onerror = () => {
@@ -489,6 +544,142 @@ export async function listenTimer(gameId, setRemainingTime) {
         };
     }
     catch (error) {
+        throw error;
+    }
+}
+
+export async function createRoom(quizId, playerCount) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${quizId}/create?playerCount=${playerCount}`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function joinRoom(roomId) {
+    try {
+        const eventSource = new EventSource(`${await getPlatformAPI()}/room/${roomId}/join?token=${await AsyncStorage.getItem('token')}`);
+
+        eventSource.onerror = () => {
+            eventSource.close();
+        };
+
+        return eventSource;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function getCurrentRoomQuestion(roomId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/question`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function getCurrentRoomAnswer(answer, roomId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/answer`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: JSON.stringify({ answer }),
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function getRoomScores(roomId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/scores`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function uploadAudio(file) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/uploads`, {
+            method: 'POST',
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: file,
+        });
+
+        return await response;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadAllAudios() {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/downloadall`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadAudio(id) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/download/${id}`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.blob();
+    } catch (error) {
         throw error;
     }
 }
