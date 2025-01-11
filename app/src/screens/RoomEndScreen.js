@@ -11,7 +11,7 @@ export default function EndScreen() {
     const navigation = useNavigation();
     loadFont();
 
-    const { roomId } = route.params;
+    const { roomId, gameMode } = route.params;
 
     const [scores, setScores] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -61,9 +61,22 @@ export default function EndScreen() {
                     <View style={styles.scoreContainer}>
                         <Text style={styles.scoreTitle}>Scores :</Text>
                         {scores.map((score, index) => (
-                            <Text key={index} style={styles.text}>
-                                {score.userName} : {score.score}
-                            </Text>
+                            gameMode === "scrum" ? (
+                                <Text key={index} style={styles.text}>
+                                    {score.userName} : {score.score}
+                                </Text>
+                            ) : (
+                                <Text key={index} style={styles.text}>
+                                    {score.teamName} : {score.averageScore}
+                                    {
+                                        score.players.map((player, index) => (
+                                            <Text key={index} style={styles.text}>
+                                                {player.userName} : {player.score}
+                                            </Text>
+                                        ))
+                                    }
+                                </Text>
+                            )
                         ))}
                     </View>
                 ) : (

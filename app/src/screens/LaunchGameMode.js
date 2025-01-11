@@ -30,10 +30,23 @@ export default function LaunchGameMode() {
         });
     }
 
-    const handleStartRoom = () => {
-        createRoom(quizId, playerCount).then((room) => {
-            navigation.navigate('room', { roomId: room.id });
-        });
+    const handleStartRoom = (gameMode) => {
+        switch (gameMode) {
+            case "scrum":
+                createRoom({quizId: quizId, playerCount: playerCount, gameMode: gameMode}).then((room) => {
+                    navigation.navigate('room', { roomId: room.id });
+                });
+
+                break;
+            case "team":
+                createRoom({quizId: quizId,playerCount: playerCount, teams: ["Uno","Dos"], gameMode: gameMode}).then((room) => {
+                    navigation.navigate('room', { roomId: room.id });
+                });
+
+                break;
+            default:
+                break;
+            }
     }
 
     return (
@@ -43,7 +56,6 @@ export default function LaunchGameMode() {
             <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
             <SimpleButton text="Compte à rebourd" onPress={() => handleStartQuiz("timed")} />
             <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
-            <SimpleButton text="SCRUM" onPress={() => handleStartQuiz("scrum")} />
             <ChoiseSelector value={scrumDifficulty} onValueChange={setScrumDifficulty} />
 
             <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
@@ -53,7 +65,7 @@ export default function LaunchGameMode() {
                 onChangeText={(text) => setPlayerCount(text)}
             />
 
-            <SimpleButton text="TEAM" onPress={() => handleStartQuiz("team")} />
+            <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
 
         </View>
     );
