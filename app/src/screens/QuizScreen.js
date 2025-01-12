@@ -247,7 +247,6 @@ export default function QuizScreen() {
         toast('info', 'L\'id à bien été copié !', "", 2000, 'dodgerblue');
     };
 
-    loadFont();
     return (
         !error ? (
             <View style={styles.quizScreenView}>
