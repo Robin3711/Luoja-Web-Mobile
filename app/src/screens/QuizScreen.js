@@ -296,7 +296,6 @@ export default function QuizScreen() {
 
                             <View style={styles.answersView}>
                                 {currentQuestion.answers.map((answer, index) => {
-                                    console.log('Answer:', answer); // Ajout du console.log
                                     return (
                                         answer === null ? null : (
                                             <AnswerButton
@@ -313,8 +312,6 @@ export default function QuizScreen() {
                                 })}
                                 {platform !== 'web' && nextQuestionButton()}
                             </View>
-
-
                         </View>
                     </>
                 ) : (
