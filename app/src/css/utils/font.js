@@ -21,9 +21,9 @@ export const FONT = StyleSheet.create({
     luoja: {
         fontFamily: fontFamily.lobster.cursive,
         color: COLORS.text.blue.dark,
-        position: 'fixed',
-        top: '2vh',
-        fontSize: 36, 
+        position: 'relative',
+        top: '10vh',
+        fontSize: 144, 
         fontWeight: 'bold',
     },
     title: {
@@ -35,7 +35,7 @@ export const FONT = StyleSheet.create({
     },
     button: {
         fontFamily: fontFamily.lobster.cursive,
-        fontSize: 20, // Taille en nombre
+        fontSize: 30, // Taille en nombre
         color: COLORS.text.blue.dark,
         ...center,
     },
