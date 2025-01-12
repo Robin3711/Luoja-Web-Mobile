@@ -57,6 +57,13 @@ export default function LaunchGameMode() {
         }
     }
 
+    const handleTeamNameChange = (index, name) => {
+        const newTeams = [...teams];
+        newTeams[index] = name;
+        setTeams(newTeams);
+    };
+
+
     return (
         <View style={styles.view}>
             <Text style={styles.pageTitle}>Choisissez un mode de jeu</Text>
