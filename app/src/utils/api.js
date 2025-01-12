@@ -1,6 +1,7 @@
 import { decode } from 'html-entities';
 import { getPlatformAPI, setToken, hasToken } from "./utils";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNEventSource from 'react-native-event-source';
 
 const handleResponseError = async (response) => {
     let errorMessage = 'Une erreur est survenue';
@@ -597,6 +598,22 @@ export async function joinRoom(roomId) {
         return eventSource;
     }
     catch (error) {
+        throw error;
+    }
+}
+
+export async function joinRoomMobile(roomId) {
+    try {
+        const url = `${await getPlatformAPI()}/room/${roomId}/join?token=${await AsyncStorage.getItem('token')}`;
+
+        const eventSource = new RNEventSource(url);
+
+        eventSource.addEventListener('error', () => {
+            eventSource.close();
+        });
+
+        return eventSource;
+    } catch (error) {
         throw error;
     }
 }
