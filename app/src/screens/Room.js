@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
-import { joinRoom, joinTeam, startRoom } from "../utils/api";
+import { joinRoom, joinTeam, startRoom, joinRoomMobile } from "../utils/api";
 import { getPlatformAPI } from "../utils/utils";
 
 import QRCode from "react-native-qrcode-svg";
@@ -17,9 +17,11 @@ export default function Room() {
 
     const [players, setPlayers] = useState([]);
 
-    const [gameMode, setGameMode] = useState(null);
-
     const [teams, setTeams] = useState([]);
+
+    const [gameMode, setGameMode] = useState("");
+
+    let gameCopy = null;
 
     let eventSource = null;
 
@@ -28,7 +30,7 @@ export default function Room() {
 
         switch (data.eventType) {
             case "connectionEstablished":
-                console.log("Connection established");
+                gameCopy = data.gameMode;
                 setGameMode(data.gameMode);
                 break;
             case "playerJoined":
@@ -38,7 +40,7 @@ export default function Room() {
                 setTeams(data.teams);
                 break;
             case "gameStart":
-                navigation.navigate("roomQuizScreen", { roomId: roomId, eventSource: eventSource, gameMode: gameMode });
+                navigation.navigate("roomQuizScreen", { roomId: roomId, eventSource: eventSource, gameMode: gameCopy });
                 break;
             default:
                 break;
@@ -47,11 +49,10 @@ export default function Room() {
 
     useEffect(() => {
         const connect = async () => {
-
             joinRoom(roomId).then((source) => {
                 eventSource = source;
 
-                eventSource.onmessage = handleEvent;
+                eventSource.addEventListener('message', handleEvent);
 
                 getPlatformAPI().then((url) => setApiUrl(url));
             });

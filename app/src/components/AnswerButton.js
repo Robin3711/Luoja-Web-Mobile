@@ -3,8 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity, Platform, Image } from 'react
 import Svg, { Path } from 'react-native-svg';
 import { COLORS } from '../css/utils/color';
 import { downloadImage, downloadAudio } from '../utils/api';
-import { useAudioPlayer } from 'expo-audio';
-
+import { Audio } from 'expo-av';
 const platform = Platform.OS;
 
 const Star = ({ shapeColor, borderColor }) => (
@@ -74,22 +73,59 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
 
     const [file, setFile] = useState(null);
 
-    const player = useAudioPlayer();
+    const [sound, setSound] = useState(null); 
+
+    // Fonction pour lire l'audio
+    const playSound = async () => {
+        if (sound) {
+        await sound.playAsync();
+        }
+    };
+
+    // Fonction pour mettre l'audio en pause
+    const pauseSound = async () => {
+        if (sound) {
+        await sound.pauseAsync();
+        }
+    };
+
+    // Fonction pour arrêter l'audio
+    const stopSound = async () => {
+        if (sound) {
+        await sound.stopAsync();
+        }
+    };
 
     useEffect(() => {
-        if (type === 'image' && text !== '') {
-            downloadImage(text).then((file) => {
-                const uri = URL.createObjectURL(file);
-                setFile(uri);
-            });
+        async function loadSound() {
+          if (type === 'audio' && file) {
+            const { sound } = await Audio.Sound.createAsync({ uri: file });
+            setSound(sound);
+          }
         }
-        if (type === 'audio' && text !== '') {
-            downloadAudio(text).then((file) => {
-                const uri = URL.createObjectURL(file);
-                setFile(uri);
-                player.replace(uri);
-            });
-        }
+        loadSound();
+    
+        // Libérer les ressources lorsque le composant est démonté ou lorsque le son change
+        return sound
+          ? () => {
+              sound.unloadAsync();
+            }
+          : undefined;
+      }, [file]);
+
+    useEffect(() => {
+        async function handleMedia() {
+            if (type === 'image' && text) {
+              const file = await downloadImage(text);
+              setFile(file);
+            }
+      
+            if (type === 'audio' && text) {
+              const file = await downloadAudio(text);
+              setFile(file);
+            }
+          }
+          handleMedia();
     }, [text, type]);
 
     return (
@@ -117,9 +153,17 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
                 />
             )}
             {type === "audio" && (
-                <TouchableOpacity onPress={() => player.play()} style={styles.button}>
-                    <Text style={styles.text}>Play</Text>
-                </TouchableOpacity>
+                <>
+                    <TouchableOpacity onPress={() => playSound} style={styles.button}>
+                        <Text style={styles.text}>Play</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => pauseSound} style={styles.button}>
+                        <Text style={styles.text}>Pause</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => stopSound} style={styles.button}>
+                        <Text style={styles.text}>Stop</Text>
+                    </TouchableOpacity>
+                </>
             )}
         </TouchableOpacity>
     );

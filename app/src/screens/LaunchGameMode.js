@@ -23,15 +23,14 @@ export default function LaunchGameMode() {
             navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
         }).catch((error) => {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', 'Erreur', error, 3000, 'crimson');
+                toast('error', 'Erreur', error, 3000, COLORS.toast.red);
             }
         });
     };
 
-    const handleStartRoom = (gameMode) => {                 
-
+    const handleStartRoom = (gameMode) => {
         let roomTeams;
         if(teams.length > 0){
             roomTeams = teams;
@@ -40,22 +39,23 @@ export default function LaunchGameMode() {
             roomTeams = ["Terroristes", "Contre-terroristes"];
         }
 
-        createRoom({ quizId, playerCount , teams : roomTeams , gameMode, difficulty: scrumDifficulty }).then((room) => {
-            navigation.navigate('room', { roomId: room.id });
-        }).catch((error) => {
-            if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
-            } else {
-                toast('error', 'Erreur', error, 3000, 'crimson');
-            }
-        });
-    };    
+        switch (gameMode) {
+            case "scrum":
+                createRoom({ quizId: quizId, playerCount: playerCount, gameMode: gameMode }).then((room) => {
+                    navigation.navigate('room', { roomId: room.id });
+                });
 
-    const handleTeamNameChange = (index, name) => {
-        const newTeams = [...teams];
-        newTeams[index] = name;
-        setTeams(newTeams);
-    };
+                break;
+            case "team":
+                createRoom({ quizId: quizId, playerCount: playerCount, teams: roomTeams, gameMode: gameMode }).then((room) => {
+                    navigation.navigate('room', { roomId: room.id });
+                });
+
+                break;
+            default:
+                break;
+        }
+    }
 
     return (
         <View style={styles.view}>
