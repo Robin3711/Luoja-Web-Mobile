@@ -141,7 +141,6 @@ export default function QuizScreen() {
     };
 
     const handleEnd = () => {
-        eventSource.close();
         navigation.navigate('roomEndScreen', {
             roomId: roomId,
             gameMode: gameMode,
