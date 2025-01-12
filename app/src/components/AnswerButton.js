@@ -76,6 +76,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
     const sound = new Audio.Sound();
 
     const playSound = async () => {
+        await sound.unloadAsync();
         await sound.loadAsync({ uri: file });
         await sound.playAsync();
     }
