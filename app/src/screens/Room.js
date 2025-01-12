@@ -17,18 +17,19 @@ export default function Room() {
 
     const [apiUrl, setApiUrl] = useState(null);
     const [players, setPlayers] = useState([]);
-    const [gameMode, setGameMode] = useState(null);
+
     const [teams, setTeams] = useState([]);
 
     let eventSource = null;
+
+    let gameMode = null;
 
     const handleEvent = (event) => {
         const data = JSON.parse(event.data);
 
         switch (data.eventType) {
             case "connectionEstablished":
-                console.log("Connection established");
-                setGameMode(data.gameMode);
+                gameMode = data.gameMode;
                 break;
             case "playerJoined":
                 setPlayers(data.players);
@@ -45,6 +46,9 @@ export default function Room() {
     }
 
     useEffect(() => {
+        if (eventSource) {
+            eventSource.close();
+        };
         const connect = async () => {
             joinRoom(roomId).then((source) => {
                 eventSource = source;

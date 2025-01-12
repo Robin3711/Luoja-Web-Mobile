@@ -48,10 +48,10 @@ export default function JoinGame() {
 
   };
 
-  if (hasPermission === null) {
+  if (hasPermission === null && Platform.OS === "android") {
     return <Text>Requesting for camera permission</Text>;
   }
-  if (hasPermission === false) {
+  if (hasPermission === false && Platform.OS === "android") {
     return <Text>No access to camera</Text>;
   }
 
@@ -68,9 +68,9 @@ export default function JoinGame() {
       
     )}
     {Platform.OS === "web" && (
-      <TextInput placeholder="Enter Room ID" onSubmitEditing={(e) => handleConnect(e.nativeEvent.text)} />
+      <TextInput placeholder="Enter Room ID" onSubmitEditing={(e) => handleConnect(e.nativeEvent.text)} style={styles.input} />
     )}
-    {scanned && (
+    {scanned && Platform.OS ==="web" && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
       )}
 
@@ -84,4 +84,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
   },
+  input : {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    margin: 10,
+    padding: 10,
+  }
 });
