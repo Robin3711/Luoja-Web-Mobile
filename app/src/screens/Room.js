@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
-import { joinRoom, joinTeam, startRoom } from "../utils/api";
+import { joinRoom, joinTeam, startRoom, joinRoomMobile } from "../utils/api";
 import { getPlatformAPI } from "../utils/utils";
 
 import QRCode from "react-native-qrcode-svg";
@@ -46,12 +46,14 @@ export default function Room() {
     }
 
     useEffect(() => {
+        if (eventSource) {
+            eventSource.close();
+        };
         const connect = async () => {
-
             joinRoom(roomId).then((source) => {
                 eventSource = source;
 
-                eventSource.onmessage = handleEvent;
+                eventSource.addEventListener("message", handleEvent);
 
                 getPlatformAPI().then((url) => setApiUrl(url));
             });

@@ -235,3 +235,11 @@ export const toastConfig = {
         />
     ),
 };
+
+export function getRoomId(url) {
+    const segments = url.split("/"); // Divise l'URL en segments
+    const id = segments[segments.length - 2]; // Récupère l'avant-dernier segment
+    id.trim(); // Supprime les espaces
+    return id;
+
+}
