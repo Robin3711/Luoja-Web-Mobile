@@ -16,7 +16,7 @@ export default function QuizScreen() {
     const route = useRoute();
     const navigation = useNavigation();
 
-    const { roomId, eventSource } = route.params;
+    const { roomId, eventSource, gameMode } = route.params;
 
     if (!roomId) {
         return (
@@ -84,6 +84,11 @@ export default function QuizScreen() {
             case "gameEnd":
                 handleEnd();
                 break;
+            case "timer":
+                setMessage(`Temps restant : ${data.remainingTime} secondes`);
+                if (data.remainingTime === 0) {
+                    setIsAnswered(true);
+                }
             default:
                 break;
         }
@@ -136,7 +141,8 @@ export default function QuizScreen() {
 
     const handleEnd = () => {
         navigation.navigate('roomEndScreen', {
-            roomId
+            roomId,
+            gameMode,
         });
     };
 
@@ -198,6 +204,7 @@ export default function QuizScreen() {
                                         key={index}
                                         shape={shapes[index]}
                                         text={answer}
+                                        type={currentQuestion.type}
                                         onClick={() => handleAnswerSelection(answer)}
                                         filter={getAnswerFilter(answer)}
                                         disabled={isAnswered}
