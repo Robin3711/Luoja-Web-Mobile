@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Alert } from "react-native";
+import { Text, View, StyleSheet, Button, Alert, Platform, TextInput } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import { getRoomId, hasToken } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
+import { joinRoom } from "../utils/api";
 
-export default function joinGame() {
+export default function JoinGame() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -19,8 +20,16 @@ export default function joinGame() {
       setHasPermission(status === "granted");
     };
 
-    getCameraPermissions();
+    if(Platform.OS ==="android")
+    {
+      getCameraPermissions();
+    }
   }, []);
+
+  const handleConnect = async (roomId) => {
+    navigation.navigate('room', { roomId: roomId });
+  }
+
 
   const handleBarcodeScanned = ({ type, data }) => {
     setScanned(true);
@@ -32,7 +41,7 @@ export default function joinGame() {
                 `Voulez-vous rejoindre cette partie ?\n${roomId}`,
                 [
                 { text: "Annuler", style: "cancel", onPress: () => setScanned(false) },
-                { text: "Ouvrir", onPress: () =>  navigation.navigate("room", { roomId : roomId }) },
+                { text: "Ouvrir", onPress: () =>  handleConnect(roomId) },
                 ]
             );
         }
@@ -48,16 +57,23 @@ export default function joinGame() {
 
   return (
     <View style={styles.container}>
-      <CameraView
+      {Platform.OS === "android" && ( 
+        <CameraView
         onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
         barcodeScannerSettings={{
           barcodeTypes: ["qr", "pdf417"],
         }}
         style={StyleSheet.absoluteFillObject}
       />
-      {scanned && (
+      
+    )}
+    {Platform.OS === "web" && (
+      <TextInput placeholder="Enter Room ID" onSubmitEditing={(e) => handleConnect(e.nativeEvent.text)} />
+    )}
+    {scanned && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
       )}
+
     </View>
   );
 }
