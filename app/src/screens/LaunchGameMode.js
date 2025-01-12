@@ -70,7 +70,7 @@ export default function LaunchGameMode() {
                             <Text style={FONT.paragraphe}>Le joueur dispose d’un temps illimité pour répondre à chaque question.</Text>
                         </>,
                         <>
-                            <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />,
+                            <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
                             <Text style={FONT.paragraphe}>Le joueur dispose d’un temps limité pour répondre à chaque question : 30s (facile), 15s (moyen), ou 5s (difficile).</Text>
                         </>,
                         <>

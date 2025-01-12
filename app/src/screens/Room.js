@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Platform, Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
-import { joinRoom, joinTeam, startRoom, joinRoomMobile } from "../utils/api";
+import { joinRoom, joinTeam, startRoom } from "../utils/api";
 import { getPlatformAPI } from "../utils/utils";
 
 import QRCode from "react-native-qrcode-svg";
@@ -16,11 +16,8 @@ export default function Room() {
     const roomId = route.params.roomId;
 
     const [apiUrl, setApiUrl] = useState(null);
-
     const [players, setPlayers] = useState([]);
-
     const [gameMode, setGameMode] = useState(null);
-
     const [teams, setTeams] = useState([]);
 
     let eventSource = null;
@@ -62,43 +59,36 @@ export default function Room() {
     }, []);
 
     return (
-        <View>
-            <Text>Room {roomId}</Text>
-            <Text>Game mode : {gameMode}</Text>
-            <Text>Players :</Text>
+        <View style={styles.container}>
+            <Text style={[FONT.title, styles.title]}>Room {roomId}</Text>
+            <Text style={FONT.text}>Game mode: {gameMode}</Text>
+            <Text style={FONT.text}>Players:</Text>
             <View>
                 {players.map((player) => (
-                    <Text key={player}>{player}</Text>
+                    <Text key={player} style={FONT.text}>{player}</Text>
                 ))}
             </View>
-            {
-                gameMode === "team" &&
-                teams.map((team, index) => (
-                    <View key={index}>
-                        <Text>Team {team.name}</Text>
-                        <TouchableOpacity onPress={() => joinTeam(roomId, team.name)}>
-                            <Text>Join Team</Text>
-                        </TouchableOpacity>
-                        <View>
-                            {team.players.map((player) => (
-                                <Text key={player}>{player}</Text>
-                            ))}
-                        </View>
+            {gameMode === "team" && teams.map((team, index) => (
+                <View key={index}>
+                    <Text style={FONT.text}>Team {team.name}</Text>
+                    <TouchableOpacity onPress={() => joinTeam(roomId, team.name)}>
+                        <Text style={FONT.text}>Join Team</Text>
+                    </TouchableOpacity>
+                    <View>
+                        {team.players.map((player) => (
+                            <Text key={player} style={FONT.text}>{player}</Text>
+                        ))}
                     </View>
-                ))
-            }
-            {
-                gameMode === "team" &&
-                <TouchableOpacity onPress={() => startRoom(roomId)}>
-                    <Text>Start Game</Text>
-                </TouchableOpacity>
-            }
-            <QRCode
-                value={`${apiUrl}/room/${roomId}/join`}
-                size={200}
-                color="black"
-                backgroundColor="white"
-            />
+                </View>
+            ))}
+            <View style={{ borderWidth: 10, borderColor: COLORS.palette.blue.darker, borderRadius: 30, padding: 10, backgroundColor: 'white' }}>
+                <QRCode
+                    value={`${apiUrl}/room/${roomId}/join`}
+                    size={200}
+                    color={COLORS.palette.blue.darker}
+                    backgroundColor="white"
+                />
+            </View>
         </View>
     );
 }
