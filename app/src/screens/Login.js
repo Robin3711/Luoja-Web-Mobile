@@ -19,14 +19,14 @@ export default function Login() {
     const handleLogin = async () => {
         try {
             await userLogin(name, password);
-            toast('success', "Connexion réussie !", `Bienvenue ${name}`, 3000, 'seagreen');
+            toast('success', "Connexion réussie !", `Bienvenue ${name}`, 3000, COLORS.toast.green);
             navigation.navigate('initMenu', { screen: 'account' });
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', 'Erreur', error, 3000, 'crimson');
+                toast('error', 'Erreur', error, 3000, COLORS.toast.red);
             }
         }
     };
