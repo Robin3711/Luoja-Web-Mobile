@@ -157,9 +157,9 @@ export default function CreateQuestionScreen() {
                             }}
                             style={styles.picker}
                         >
-                            <Picker.Item label="2 réponses" value={2} />
-                            <Picker.Item label="3 réponses" value={3} />
-                            <Picker.Item label="4 réponses" value={4} />
+                            <Picker.Item style={FONT.text} label="2 réponses" value={2} />
+                            <Picker.Item style={FONT.text} label="3 réponses" value={3} />
+                            <Picker.Item  style={FONT.text} label="4 réponses" value={4} />
                         </Picker>
                     </View>
                 </View>

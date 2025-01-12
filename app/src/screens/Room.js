@@ -110,4 +110,19 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 50,
     },
+    teamsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+    },
+    team: {
+        alignItems: 'center',
+        margin: 10,
+    },
+    qrCodeContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+    },
 });

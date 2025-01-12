@@ -26,7 +26,7 @@ import Room from './src/screens/Room';
 import RoomQuizScreen from './src/screens/RoomQuizScreen';
 import RoomEndScreen from './src/screens/RoomEndScreen';
 import JoinGame from './src/screens/JoinRoom';
-import '@expo/metro-runtime'
+import '@expo/metro-runtime';
 
 
 const linking = {
