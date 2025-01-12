@@ -73,59 +73,51 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
 
     const [file, setFile] = useState(null);
 
-    const [sound, setSound] = useState(null); 
+    const sound = new Audio.Sound();
 
-    // Fonction pour lire l'audio
     const playSound = async () => {
-        if (sound) {
+        await sound.unloadAsync();
+        await sound.loadAsync({ uri: file });
         await sound.playAsync();
-        }
-    };
-
-    // Fonction pour mettre l'audio en pause
-    const pauseSound = async () => {
-        if (sound) {
-        await sound.pauseAsync();
-        }
-    };
-
-    // Fonction pour arrêter l'audio
-    const stopSound = async () => {
-        if (sound) {
-        await sound.stopAsync();
-        }
-    };
+    }
 
     useEffect(() => {
-        async function loadSound() {
-          if (type === 'audio' && file) {
-            const { sound } = await Audio.Sound.createAsync({ uri: file });
-            setSound(sound);
-          }
-        }
-        loadSound();
-    
-        // Libérer les ressources lorsque le composant est démonté ou lorsque le son change
-        return sound
-          ? () => {
-              sound.unloadAsync();
+        async function requestPermission() {
+            const { status } = await Audio.requestPermissionsAsync();
+            if (status !== 'granted') {
+                console.warn('Permission audio non accordée');
             }
-          : undefined;
-      }, [file]);
-
-    useEffect(() => {
+        }
+        requestPermission();
         async function handleMedia() {
             if (type === 'image' && text) {
               const file = await downloadImage(text);
-              setFile(file);
+              const url = URL.createObjectURL(file);
+              setFile(url);
             }
       
             if (type === 'audio' && text) {
               const file = await downloadAudio(text);
-              setFile(file);
+              console.log(file);
+              let url;
+              if (Platform.OS ==="web"){
+                url = URL.createObjectURL(file);
+                setFile(url);
+              } else {
+                url = file;
+                setFile(url);
+              }
+              
+
+              await sound.loadAsync({ uri: url });
+
+                }
             }
-          }
-          handleMedia();
+            handleMedia();
+
+            return () => {
+                sound.unloadAsync();
+            };
     }, [text, type]);
 
     return (
@@ -154,13 +146,13 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
             )}
             {type === "audio" && (
                 <>
-                    <TouchableOpacity onPress={() => playSound} style={styles.button}>
+                    <TouchableOpacity onPress={playSound} style={styles.button}>
                         <Text style={styles.text}>Play</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => pauseSound} style={styles.button}>
+                    <TouchableOpacity onPress={async () => {sound.pauseAsync()}} style={styles.button}>
                         <Text style={styles.text}>Pause</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => stopSound} style={styles.button}>
+                    <TouchableOpacity onPress={async () => {sound.stopAsync()}} style={styles.button}>
                         <Text style={styles.text}>Stop</Text>
                     </TouchableOpacity>
                 </>

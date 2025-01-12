@@ -141,10 +141,9 @@ export default function QuizScreen() {
     };
 
     const handleEnd = () => {
-        eventSource.close();
         navigation.navigate('roomEndScreen', {
-            roomId : roomId,
-            gameMode : gameMode,
+            roomId: roomId,
+            gameMode: gameMode,
         });
     };
 
@@ -201,18 +200,22 @@ export default function QuizScreen() {
                             </View>
 
                             <View style={styles.answersView}>
-                                {currentQuestion.answers.map((answer, index) => (
-                                    <AnswerButton
-                                        key={index}
-                                        shape={shapes[index]}
-                                        text={answer}
-                                        type={currentQuestion.type}
-                                        onClick={() => handleAnswerSelection(answer)}
-                                        filter={getAnswerFilter(answer)}
-                                        disabled={isAnswered}
-                                    />
-                                ))}
-                                {platform !== 'web' && validateAnswerButton()}
+                                {currentQuestion.answers.map((answer, index) => {
+                                    return (
+                                        answer === null ? null : (
+                                            <AnswerButton
+                                                key={index}
+                                                shape={shapes[index]}
+                                                text={answer}
+                                                onClick={() => handleAnswerSelection(answer)}
+                                                filter={getAnswerFilter(answer)}
+                                                type={currentQuestion.type}
+                                                disabled={isAnswered}
+                                            />
+                                        )
+                                    );
+                                })}
+                                {platform !== 'web' && nextQuestionButton()}
                             </View>
                         </View>
                     </>
