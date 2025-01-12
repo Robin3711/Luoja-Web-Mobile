@@ -85,6 +85,11 @@ export default function Room() {
                     </View>
                 </View>
             ))}
+            {gameMode === "team" && (
+                <TouchableOpacity onPress={() => startRoom(roomId)}>
+                    <Text style={FONT.text}>Start Game</Text>
+                </TouchableOpacity>
+            )}
             <View style={{ borderWidth: 10, borderColor: COLORS.palette.blue.darker, borderRadius: 30, padding: 10, backgroundColor: 'white' }}>
                 <QRCode
                     value={`${apiUrl}/room/${roomId}/join`}

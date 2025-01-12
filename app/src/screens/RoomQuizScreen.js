@@ -215,7 +215,7 @@ export default function QuizScreen() {
                                         )
                                     );
                                 })}
-                                {platform !== 'web' && nextQuestionButton()}
+                                {platform !== 'web' && validateAnswerButton()}
                             </View>
                         </View>
                     </>
