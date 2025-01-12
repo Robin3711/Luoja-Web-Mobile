@@ -46,6 +46,9 @@ export default function Room() {
     }
 
     useEffect(() => {
+        if (eventSource) {
+            eventSource.close();
+        };
         const connect = async () => {
             joinRoom(roomId).then((source) => {
                 eventSource = source;
