@@ -35,17 +35,20 @@ const ChooseFile = ({ onValueChange }) => {
 
         uploadImage(formData).then((response) => {
             if (response.status === 200) {
-                setImages([...images, URL.createObjectURL(file)]);
+                const addimage = async (response) => {
+                    console.log(response.filePath);
+                    const imageBlob = await downloadImage(response.filePath);
+                    const imageURL = URL.createObjectURL(imageBlob);
+                    setImages([...images, imageURL]);
+                    setIds([...ids, response.filePath]);
+                };
+                addimage(response);
             }
         }).catch((error) => {
             console.log(error);
 
         }
-        ).catch((error) => {
-            console.log(error);
-        }
         );
-
     };
 
 

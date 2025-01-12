@@ -21,14 +21,14 @@ export default function Room() {
 
     let eventSource = null;
 
-    let gameMode = null;
+    const [gameMode, setGameMode] = useState(null);
 
     const handleEvent = (event) => {
         const data = JSON.parse(event.data);
 
         switch (data.eventType) {
             case "connectionEstablished":
-                gameMode = data.gameMode;
+                setGameMode(data.gameMode);
                 break;
             case "playerJoined":
                 setPlayers(data.players);
@@ -45,9 +45,6 @@ export default function Room() {
     }
 
     useEffect(() => {
-        if (eventSource) {
-            eventSource.close();
-        };
         const connect = async () => {
             joinRoom(roomId).then((source) => {
                 eventSource = source;
