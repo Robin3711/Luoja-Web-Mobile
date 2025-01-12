@@ -32,7 +32,7 @@ export default function Dashboard() {
 
     const handleLogout = async () => {
         await removeToken();
-        toast('success', "Déconnexion réussie !", `Au revoir et à bientôt :-(`, 3000, 'seagreen');
+        toast('success', "Déconnexion réussie !", `Au revoir et à bientôt :-(`, 3000, COLORS.toast.green);
         navigation.navigate('login');
     }
 

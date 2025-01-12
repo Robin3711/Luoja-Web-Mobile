@@ -1,10 +1,10 @@
 import { decode } from 'html-entities';
 import { getPlatformAPI, setToken, hasToken } from "./utils";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import EventSource from "react-native-sse";
 
 const handleResponseError = async (response) => {
     let errorMessage = 'Une erreur est survenue';
-
 
     try {
         const errorData = await response.json();
@@ -520,41 +520,76 @@ export async function downloadImage(id) {
 
 export async function listenTimer(gameId, setRemainingTime, setSelectedAnswer, setLoading) {
     try {
-        const eventSource = new EventSource(`${await getPlatformAPI()}/game/${gameId}/timer?token=${await AsyncStorage.getItem('token')}`);
+        const apiBaseUrl = await getPlatformAPI();
+        const token = await AsyncStorage.getItem('token');
 
-        eventSource.onmessage = (event) => {
-            let data = JSON.parse(event.data);
-            let time = data.time;
-            setRemainingTime(time);
+        // Create an EventSource instance
+        const eventSource = new EventSource(`${apiBaseUrl}/game/${gameId}/timer?token=${token}`);
 
-            if (time === 0) {
-                setSelectedAnswer(true);
-                setLoading(true);
+        // Handle the 'message' event
+        eventSource.addEventListener('message', (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                const time = data.time;
+
+                setRemainingTime(time);
+
+                if (time === 0) {
+                    setSelectedAnswer(true);
+                    setLoading(true);
+                    eventSource.close(); // Close the connection
+                } else if (time === 1) {
+                    setLoading(true);
+                } else {
+                    setLoading(false);
+                }
+            } catch (parseError) {
+                console.error('Error parsing event data:', parseError);
                 eventSource.close();
-            } else if (time === 1) {
-                setLoading(true);
-            } else {
-                setLoading(false);
             }
+        });
 
-        }
-
-        eventSource.onerror = () => {
+        // Handle errors
+        eventSource.addEventListener('error', (error) => {
+            console.error('EventSource error:', error);
             eventSource.close();
-        };
-    }
-    catch (error) {
+        });
+
+        // Optionally return the event source if needed elsewhere
+        return eventSource;
+    } catch (error) {
+        console.error('Error setting up EventSource:', error);
         throw error;
     }
 }
 
-export async function createRoom(quizId, playerCount) {
+export async function createRoom({quizId, playerCount, teams, gameMode, difficulty}) {
     try {
-        const response = await fetch(`${await getPlatformAPI()}/room/${quizId}/create?playerCount=${playerCount}`, {
-            headers: {
-                'token': await AsyncStorage.getItem('token'),
-            },
-        });
+        let response;
+
+        switch (gameMode) {
+            case "scrum":
+                response = await fetch(`${await getPlatformAPI()}/room/${quizId}/create?playerCount=${playerCount}&gameMode=${gameMode}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'token': await AsyncStorage.getItem('token'),
+                    },
+                });
+                break;
+            case "team":
+                response = await fetch(`${await getPlatformAPI()}/room/${quizId}/create?playerCount=${playerCount}&gameMode=${gameMode}&difficulty=${difficulty}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'token': await AsyncStorage.getItem('token'),
+                    },
+                    body: JSON.stringify({ teams }),
+                });
+                break;
+            default:
+                break;
+            }
 
         if (!response.ok) await handleResponseError(response);
 
@@ -563,17 +598,63 @@ export async function createRoom(quizId, playerCount) {
     catch (error) {
         throw error;
     }
+
 }
 
 export async function joinRoom(roomId) {
     try {
-        const eventSource = new EventSource(`${await getPlatformAPI()}/room/${roomId}/join?token=${await AsyncStorage.getItem('token')}`);
+        const apiBaseUrl = await getPlatformAPI();
+        const token = await AsyncStorage.getItem('token');
 
-        eventSource.onerror = () => {
+        // Create an EventSource instance
+        const eventSource = new EventSource(`${apiBaseUrl}/room/${roomId}/join?token=${token}`);
+
+        // Event listeners
+        eventSource.addEventListener('open', () => {
+            console.log('Connected to room:', roomId);
+        });
+
+        eventSource.addEventListener('message', (event) => {
+            console.log('New message:', event.data);
+        });
+
+        eventSource.addEventListener('error', (error) => {
+            console.error('EventSource error:', error);
             eventSource.close();
-        };
+        });
 
         return eventSource;
+    } catch (error) {
+        console.error('Error joining room:', error);
+        throw error;
+    }
+}
+
+export async function joinTeam(roomId, teamName) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/joinTeam?teamName=${teamName}&token=${await AsyncStorage.getItem('token')}`);
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+
+}
+
+export async function startRoom(roomId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/start`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
     }
     catch (error) {
         throw error;

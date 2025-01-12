@@ -39,9 +39,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     }
@@ -56,9 +56,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     }
@@ -74,9 +74,9 @@ export default function QuizCreation() {
 
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     }
@@ -87,9 +87,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     };
@@ -100,9 +100,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     }
@@ -113,9 +113,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     }
@@ -136,13 +136,13 @@ export default function QuizCreation() {
             setPublishButton(false);
             setSaveButton(true);
             setResetForm(false);
-            toast('info', 'Le quiz à bien était sauvegardé !', "", 1000, 'dodgerblue');
+            toast('info', 'Le quiz à bien était sauvegardé !', "", 1000, COLORS.toast.blue);
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     };
@@ -167,9 +167,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     }
@@ -190,7 +190,7 @@ export default function QuizCreation() {
             navigation.navigate('quizCreation');
         }
 
-        toast('info', 'Le formulaire a été réinitialisé.', '', 1000, 'dodgerblue');
+        toast('info', 'Le formulaire a été réinitialisé.', '', 1000, COLORS.toast.blue);
     };
 
     // Vérification du token à chaque fois que l'écran est focus
