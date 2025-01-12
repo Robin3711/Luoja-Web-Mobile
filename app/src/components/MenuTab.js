@@ -6,6 +6,7 @@ import SearchScreen from '../screens/SearchScreen';
 import ResumeScreen from '../screens/ResumeScreen';
 import QuizCreation from '../screens/QuizCreationScreen';
 import Account from '../screens/Account';
+import joinGame from '../screens/JoinRoom';
 
 const Tab = createBottomTabNavigator();
 
@@ -70,6 +71,23 @@ const MenuTab = () => {
                             ]}
                         >
                             Quiz de la communauté
+                        </Text>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="joinGame"
+                component={joinGame}
+                options={{
+                    tabBarLabel: ({ focused, color }) => (
+                        <Text
+                            style={[
+                                styles.tabBarLabel,
+                                focused && styles.tabBarLabelFocused,
+                                { color }
+                            ]}
+                        >
+                            Rejoindre une partie
                         </Text>
                     ),
                 }}

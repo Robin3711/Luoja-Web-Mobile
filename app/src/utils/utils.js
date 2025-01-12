@@ -235,3 +235,8 @@ export const toastConfig = {
         />
     ),
 };
+
+export function getRoomId(URL) {
+    const url = new URL(URL);
+    return url.searchParams.get('roomId');
+}
