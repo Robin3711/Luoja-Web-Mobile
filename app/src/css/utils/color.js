@@ -115,6 +115,12 @@ export const COLORS = {
             normal: '#4D65B4',
             dark: '#484A77',
             darker: '#323353',
-        }
+        },
+    },
+
+    toast: {
+        red: 'crimson',
+        green: 'limegreen',
+        blue: 'deepskyblue'
     }
 }

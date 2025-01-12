@@ -21,14 +21,14 @@ export default function ResumeScreen() {
         try {
             setSearch(true);
             if (!gameId) {
-                toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, 'crimson');
+                toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, COLORS.toast.red);
                 setSearch(false);
                 return;
             }
             let infos = getGameInfos(gameId.toLowerCase());
             infos.then(data => {
                 if (data.error) {
-                    toast('error', 'Erreur', 'Aucune partie trouvée avec cet identifiant', 3000, 'crimson');
+                    toast('error', 'Erreur', 'Aucune partie trouvée avec cet identifiant', 3000, COLORS.toast.red);
                     setSearch(false);
                     return;
                 }
@@ -39,17 +39,17 @@ export default function ResumeScreen() {
             })
                 .catch(error => {
                     if (error.status && error.message) {
-                        toast('error', error.status, error.message, 3000, 'crimson');
+                        toast('error', error.status, error.message, 3000, COLORS.toast.red);
                     } else {
-                        toast('error', "Erreur", error, 3000, 'crimson');
+                        toast('error', "Erreur", error, 3000, COLORS.toast.red);
                     }
                 });
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     }
