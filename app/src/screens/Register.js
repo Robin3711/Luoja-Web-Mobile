@@ -17,14 +17,14 @@ export default function Register() {
     const handleRegister = async () => {
         try {
             await userRegister(name, password);
-            toast('success', "Enregistrement réussie !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, 'seagreen');
+            toast('success', "Enregistrement réussie !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, COLORS.toast.green);
             navigation.navigate('initMenu', { screen: 'account' });
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     };
