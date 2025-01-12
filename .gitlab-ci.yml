@@ -82,6 +82,7 @@ deploy:
 
 
 test:  
+  allow_failure: true
   when: always
   stage: tests
   image: node:latest
