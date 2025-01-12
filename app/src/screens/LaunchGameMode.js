@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import ChoiseSelector from '../components/ChoicePicker';
-import { useRoute } from '@react-navigation/native';
 import { createGame, createRoom } from '../utils/api';
-
+import { toast } from '../utils/utils';
 
 export default function LaunchGameMode() {
-
     const navigation = useNavigation();
     const route = useRoute();
 
@@ -17,6 +15,8 @@ export default function LaunchGameMode() {
     const [timerDifficulty, setTimerDifficulty] = useState("easy");
     const [scrumDifficulty, setScrumDifficulty] = useState("easy");
     const [playerCount, setPlayerCount] = useState("");
+    const [teamCount, setTeamCount] = useState("");
+    const [teams, setTeams] = useState([]);
 
     const handleStartQuiz = (gameMode) => {
         createGame(quizId, gameMode, gameMode === "timed" ? timerDifficulty : scrumDifficulty).then((game) => {
@@ -28,9 +28,17 @@ export default function LaunchGameMode() {
                 toast('error', 'Erreur', error, 3000, COLORS.toast.red);
             }
         });
-    }
+    };
 
     const handleStartRoom = (gameMode) => {
+        let roomTeams;
+        if(teams.length > 0){
+            roomTeams = teams;
+        }
+        else{
+            roomTeams = ["Terroristes", "Contre-terroristes"];
+        }
+
         switch (gameMode) {
             case "scrum":
                 createRoom({ quizId: quizId, playerCount: playerCount, gameMode: gameMode }).then((room) => {
@@ -39,7 +47,7 @@ export default function LaunchGameMode() {
 
                 break;
             case "team":
-                createRoom({ quizId: quizId, playerCount: playerCount, teams: ["Uno", "Dos"], gameMode: gameMode }).then((room) => {
+                createRoom({ quizId: quizId, playerCount: playerCount, teams: roomTeams, gameMode: gameMode }).then((room) => {
                     navigation.navigate('room', { roomId: room.id });
                 });
 
@@ -59,33 +67,65 @@ export default function LaunchGameMode() {
             <ChoiseSelector value={scrumDifficulty} onValueChange={setScrumDifficulty} />
 
             <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
-            <TextInput
-                placeholder="Nombre de joueurs"
-                keyboardType="numeric"
-                onChangeText={(text) => setPlayerCount(text)}
-            />
 
-            <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
+<TextInput
+    placeholder="Nombre de joueurs"
+    keyboardType="numeric"
+    onChangeText={(text) => {
+        const number = parseInt(text, 10);
+        if (isNaN(number)) {
+            setPlayerCount("");
+        } else {
+            setPlayerCount(number);
+        }
+    }}
+    value={playerCount.toString()}
+/>
 
-        </View>
-    );
+<TextInput
+    placeholder="Nombre d'équipes"
+    keyboardType="numeric"
+    onChangeText={(text) => {
+        const number = parseInt(text, 10);
+        if (isNaN(number)) {
+            setTeamCount("");
+            setTeams([]);
+        } else {
+            setTeamCount(number);
+            setTeams(Array.from({ length: number }, (_, i) => `Team ${i + 1}`));
+        }
+    }}
+    value={teamCount.toString()}
+/>
+
+{teams.map((team, index) => (
+    <TextInput
+        key={index}
+        placeholder={`Nom de l'équipe ${index + 1}`}
+        value={team}
+        onChangeText={(text) => handleTeamNameChange(index, text)}
+    />
+))}
+
+<SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
+</View>
+);
 }
 
 const styles = StyleSheet.create({
-    view: {
-        flex: 1,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: COLORS.background.blue,
-    },
-    pageTitle: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        fontSize: 40,
-        fontWeight: 'bold',
+view: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: COLORS.background.blue,
+},
+pageTitle: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    fontSize: 40,
     },
     inputTitle: {
         fontSize: 20,
@@ -99,37 +139,5 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 20,
         backgroundColor: 'white',
-    },
-    nameInputView: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 20,
-        backgroundColor: '#58bdfe',
-    },
-    passwordInputView: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 1,
-        borderRadius: 20,
-        backgroundColor: '#4d65b4',
-    },
-    buttons: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#8fd3ff',
-        height: 50,
-        width: 250,
-        borderRadius: 15,
-        marginVertical: 10,
-    },
-    buttonText: {
-        fontSize: 20,
-        fontWeight: 'bold',
     },
 });
