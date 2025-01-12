@@ -1,69 +1,70 @@
-import { COLORS } from "./color";
+import { StyleSheet } from 'react-native';
+import { COLORS } from './color';
 
+const fontFamily = {
+    arial: 'Arial',
+    lobster: {
+        cursive: 'LobsterTwo_400Regular',
+        italic: 'LobsterTwo_700Bold_Italic',
+    }
+};
+
+// Fonction utilitaire pour centrer
 const center = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-}
+};
 
-const fontFamily={
-    arial: "'Arial', sans-serif",
-    lobster: {
-        cursive : "'LobsterTwo_400Regular'",
-        italic : "'LobsterTwo_700Bold_Italic'",
-    }
-}
-
-//mix max pour les tailles : 'clamp(16px, 10vw, 48px)'
-export const FONT={
-    luoja:{
-        fontFamily: fontFamily.lobster.italic,
+// Styles des polices
+export const FONT = StyleSheet.create({
+    luoja: {
+        fontFamily: fontFamily.lobster.cursive,
         color: COLORS.text.blue.dark,
-        position: 'absolute',
+        position: 'fixed',
         top: '2vh',
-        fontSize: 150,
+        fontSize: 36, 
         fontWeight: 'bold',
     },
-    title:{
+    title: {
         fontFamily: fontFamily.lobster.italic,
         textAlign: 'center',
-        marginBottom: "10px",
+        marginBottom: 10,
         color: COLORS.text.blue.dark,
-        fontSize: 75,
+        fontSize: 24,
     },
-    button:{
+    button: {
         fontFamily: fontFamily.lobster.cursive,
-        fontSize: '200%',
+        fontSize: 20, // Taille en nombre
         color: COLORS.text.blue.dark,
-        height: '100vh',
-        ...center
+        ...center,
     },
-    text:{
+    text: {
         fontFamily: fontFamily.lobster.cursive,
-        fontSize: 30,
+        fontSize: 16,
         color: COLORS.text.blue.dark,
-        ...center
+        ...center,
     },
-    paragraphe:{
+    paragraph: {
         fontFamily: fontFamily.arial,
-        fontSize: 17,
+        fontSize: 14,
         color: COLORS.text.blue.dark,
         textAlign: 'center',
-        ...center
+        ...center,
     },
-    TextInput:{
+    textInput: {
         flex: 1,
-        height: '70%',
+        height: 50,
         borderWidth: 1,
         borderColor: '#ccc',
         padding: 10,
         borderRadius: 20,
         backgroundColor: '#fff',
-        ...center
+        ...center,
     },
-    error:{
-        fontSize: 18,
+    error: {
+        fontSize: 14,
         color: 'red',
-        ...center
-    }
-}
+        ...center,
+    },
+});
