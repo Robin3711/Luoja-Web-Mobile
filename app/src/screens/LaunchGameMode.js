@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import ChoiseSelector from '../components/ChoicePicker';
 import { createGame, createRoom } from '../utils/api';
-import Grid from 'react-native-grid-component';
 import { toast } from '../utils/utils';
 import { FONT } from '../css/utils/font';
+
+const { width } = Dimensions.get('window');
+const isMobile = width < 775;
 
 export default function LaunchGameMode() {
     const navigation = useNavigation();
@@ -34,10 +36,9 @@ export default function LaunchGameMode() {
 
     const handleStartRoom = (gameMode) => {
         let roomTeams;
-        if(teams.length > 0){
+        if (teams.length > 0) {
             roomTeams = teams;
-        }
-        else{
+        } else {
             roomTeams = ["Terroristes", "Contre-terroristes"];
         }
 
@@ -46,18 +47,16 @@ export default function LaunchGameMode() {
                 createRoom({ quizId: quizId, playerCount: playerCount, gameMode: gameMode }).then((room) => {
                     navigation.navigate('room', { roomId: room.id });
                 });
-
                 break;
             case "team":
-                createRoom({ quizId: quizId, playerCount: playerCount, teams: roomTeams, gameMode: gameMode, difficulty : scrumDifficulty }).then((room) => {
+                createRoom({ quizId: quizId, playerCount: playerCount, teams: roomTeams, gameMode: gameMode, difficulty: scrumDifficulty }).then((room) => {
                     navigation.navigate('room', { roomId: room.id });
                 });
-
                 break;
             default:
                 break;
         }
-    }
+    };
 
     const handleTeamNameChange = (index, name) => {
         const newTeams = [...teams];
@@ -65,82 +64,69 @@ export default function LaunchGameMode() {
         setTeams(newTeams);
     };
 
-
-    const renderItem = (item, index) => (
-        <View style={styles.gridItem}>
-            {item}
-        </View>
-    );
-
     return (
-        <View style={styles.view}>
-            <Text style={FONT.title}>Choisissez un mode de jeu</Text>
-            <View style={{ flex: 1, width: '100%', height: '100%' }}>
-                <Grid
-                    style={styles.grid}
-                    renderItem={renderItem}
-                    data={[
-                        <>
-                            <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
-                            <Text style={FONT.paragraphe}>Le joueur dispose d’un temps illimité pour répondre à chaque question.</Text>
-                        </>,
-                        <>
-                            <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
-                            <Text style={FONT.paragraphe}>Le joueur dispose d’un temps limité pour répondre à chaque question : 30s (facile), 15s (moyen), ou 5s (difficile).</Text>
-                        </>,
-                        <>
-                            <SimpleButton text="Compte à rebourd" onPress={() => handleStartQuiz("timed")} />
-                            <Text style={FONT.paragraphe}>Plusieurs joueurs jouent simultanément au même quiz. Le premier à répondre correctement gagne les points et déclenche la question suivante. Chaque joueur ne peut répondre qu'une fois par question.</Text>
-                            <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
-                        </>,
-
-            <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
-
-<TextInput
-    placeholder="Nombre de joueurs"
-    keyboardType="numeric"
-    onChangeText={(text) => {
-        const number = parseInt(text, 10);
-        if (isNaN(number)) {
-            setPlayerCount("");
-        } else {
-            setPlayerCount(number);
-        }
-    }}
-    value={playerCount.toString()}
-/>
-
-<TextInput
-    placeholder="Nombre d'équipes"
-    keyboardType="numeric"
-    onChangeText={(text) => {
-        const number = parseInt(text, 10);
-        if (isNaN(number)) {
-            setTeamCount("");
-            setTeams([]);
-        } else {
-            setTeamCount(number);
-            setTeams(Array.from({ length: number }, (_, i) => `Team ${i + 1}`));
-        }
-    }}
-    value={teamCount.toString()}
-/>
-
-{teams.map((team, index) => (
-    <TextInput
-        key={index}
-        placeholder={`Nom de l'équipe ${index + 1}`}
-        value={team}
-        onChangeText={(text) => handleTeamNameChange(index, text)}
-    />
-))}
-
-<SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
-</View>
-);
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.view}>
+                <Text style={FONT.title}>Choisissez un mode de jeu</Text>
+                <View style={styles.container}>
+                    <View style={styles.item}>
+                        <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
+                        <Text style={FONT.paragraphe}>Le joueur dispose d’un temps illimité pour répondre à chaque question.</Text>
+                    </View>
+                    <View style={styles.item}>
+                        <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
+                        <Text style={FONT.paragraphe}>Le joueur dispose d’un temps limité pour répondre à chaque question : 30s (facile), 15s (moyen), ou 5s (difficile).</Text>
+                    </View>
+                    <View style={styles.item}>
+                        <SimpleButton text="Compte à rebourd" onPress={() => handleStartQuiz("timed")} />
+                        <Text style={FONT.paragraphe}>Plusieurs joueurs jouent simultanément au même quiz. Le premier à répondre correctement gagne les points et déclenche la question suivante. Chaque joueur ne peut répondre qu'une fois par question.</Text>
+                        <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
+                    </View>
+                    <View style={styles.item}>
+                        <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
+                        <Text style={FONT.paragraphe}>Les joueurs forment des équipes et répondent aux questions avec un temps limité, configurable par niveau de difficulté. Le score final de chaque équipe est la moyenne des scores de ses membres.</Text>
+                        <TextInput
+                            placeholder="Nombre de joueurs"
+                            keyboardType="numeric"
+                            onChangeText={(text) => setPlayerCount(text)}
+                            value={playerCount.toString()}
+                        />
+                        <TextInput
+                            placeholder="Nombre d'équipes"
+                            keyboardType="numeric"
+                            onChangeText={(text) => {
+                                const number = parseInt(text, 10);
+                                if (isNaN(number)) {
+                                    setTeamCount("");
+                                    setTeams([]);
+                                } else {
+                                    setTeamCount(number);
+                                    setTeams(Array.from({ length: number }, (_, i) => `Team ${i + 1}`));
+                                }
+                            }}
+                            value={teamCount.toString()}
+                        />
+                        {teams.map((team, index) => (
+                            <TextInput
+                                key={index}
+                                placeholder={`Nom de l'équipe ${index + 1}`}
+                                value={team}
+                                onChangeText={(text) => handleTeamNameChange(index, text)}
+                            />
+                        ))}
+                    </View>
+                </View>
+            </View>
+        </ScrollView>
+    );
 }
 
 const styles = StyleSheet.create({
+    scrollViewContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     view: {
         flex: 1,
         justifyContent: 'center',
@@ -148,19 +134,16 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: COLORS.background.blue,
         width: '100%',
-        height: '100%',
     },
-    pageTitle: {
-        fontSize: 40,
-        fontWeight: 'bold',
-        marginBottom: 20,
-    },
-    grid: {
+    container: {
         flex: 1,
         width: '100%',
-        height: '100%',
+        flexDirection: isMobile ? 'column' : 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        alignItems: 'center',
     },
-    gridItem: {
+    item: {
         flex: 1,
         margin: 10,
         padding: 25,
@@ -168,21 +151,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 10,
         borderWidth: 5,
-        borderColor: COLORS.palette.blue.normal, // Appliquer la couleur de la bordure
-    },
-    inputTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    loginInput: {
-        height: 40,
-        width: 250,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10,
-        borderRadius: 20,
-        backgroundColor: 'white',
+        borderColor: COLORS.palette.blue.normal,
+        width: isMobile ? '90%' : '40%',
     },
 });
