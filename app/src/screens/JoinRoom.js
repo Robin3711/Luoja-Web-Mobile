@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Button, Alert, Platform, TextInput } from "reac
 import { CameraView, Camera } from "expo-camera";
 import { getRoomId, hasToken } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
-import { joinRoom } from "../utils/api";
+
 
 export default function JoinGame() {
   const [hasPermission, setHasPermission] = useState(null);

@@ -49,7 +49,11 @@ export default function QuizScreen() {
     useEffect(() => {
         (async () => {
             try {
-                eventSource.onmessage = handleEvent;
+                if (Platform.OS === 'web') {
+                    eventSource.onmessage = handleEvent;
+                } else {
+                    eventSource.addEventListener('message', handleEvent);
+                }
 
                 const data = await getCurrentRoomQuestion(roomId);
 
