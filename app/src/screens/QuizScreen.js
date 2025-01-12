@@ -10,6 +10,7 @@ import { toast } from '../utils/utils';
 
 import { SimpleButton } from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 
 
 const platform = Platform.OS;
@@ -254,40 +255,41 @@ export default function QuizScreen() {
                     <>
                         <TouchableOpacity onPress={handleCopyGameId} style={styles.gameId}>
                             <Copy size={24} color="black" />
-                            <Text style={styles.gameIdText}>ID : {gameId} </Text>
+                            <Text style={FONT.text}>ID : {gameId} </Text>
                         </TouchableOpacity>
                         <View style={styles.mainView}>
                             <View style={styles.questionView}>
-                                <CountdownCircleTimer
-                                    key={timerKey}
-                                    isPlaying={timerInitialized}
-                                    duration={gameTime}
-                                    size={Platform.OS === 'web' ? 150 : 110}
-                                    strokeWidth={Platform.OS === 'web' ? 15 : 10}
-                                    colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
-                                    colorsTime={[
-                                        (gameTime * 4) / 5,
-                                        (gameTime * 3) / 5,
-                                        (gameTime * 2) / 5,
-                                        (gameTime * 1) / 5,
-                                        (gameTime * 0) / 5,
-                                    ]}
-                                >
-                                    {() => (
-                                        <>
-                                            {gameMode === "timed" ? (
-                                                <Text style={styles.questionNumber}>{remainingTime}</Text>
-                                            ) : (<Text style={styles.questionNumber}></Text>)}
+                            <CountdownCircleTimer
+                                key={timerKey}
+                                isPlaying={timerInitialized}
+                                duration={gameTime}
+                                size={Platform.OS === 'web' ? 150 : 110}
+                                strokeWidth={Platform.OS === 'web' ? 15 : 10}
+                                colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
+                                colorsTime={[
+                                    (gameTime * 4) / 5,
+                                    (gameTime * 3) / 5,
+                                    (gameTime * 2) / 5,
+                                    (gameTime * 1) / 5,
+                                    (gameTime * 0) / 5,
+                                ]}
+                                style={{ marginTop: 5 }} // Baisse le cercle de 5 pixels
+                            >
+                                {() => (
+                                    <>
+                                        {gameMode === "timed" ? (
+                                            <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                        ) : (<Text style={styles.questionNumber}></Text>)}
 
-                                            <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
-                                        </>
-                                    )}
-                                </CountdownCircleTimer>
+                                        <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                    </>
+                                )}
+                            </CountdownCircleTimer>
 
-                                <Text style={styles.questionNumber}>Score: {score}</Text>
+                                <Text style={[styles.questionNumber, {marginTop:5}]}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
                                 </View>
-                                <Text style={styles.question}>{currentQuestion.question}</Text>
+                                <Text style={FONT.paragraphe}>{currentQuestion.question}</Text>
                                 {platform === 'web' && nextQuestionButton()}
                             </View>
 
@@ -329,7 +331,7 @@ export default function QuizScreen() {
 
     );
 }
-
+// ...existing code...
 const styles = StyleSheet.create({
     quizScreenView: {
         flex: 1,
@@ -359,10 +361,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...platform === 'web' && { gap: 20, },
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     questionView: {
         alignItems: 'center',
+        top: 20,
         width: platform === 'web' ? '50%' : '100%',
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     question: {
         fontSize: platform === 'web' ? 30 : 25,
@@ -371,17 +376,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: COLORS.text.blue.dark,
         ...platform === 'web' && { marginVertical: 100, },
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     questionNumber: {
+        marginTop: -20,
         fontSize: platform === 'web' ? 30 : 25,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     answersView: {
         width: platform === 'web' ? '50%' : '100%',
         alignItems: 'center',
-
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     buttons: {
         display: 'flex',
@@ -394,6 +402,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     disabledButtons: {
         display: 'flex',
@@ -406,23 +415,28 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     quizBarView: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     quizBarTextView: {
         fontSize: 22,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     errorText: {
         fontSize: 18,
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
 });

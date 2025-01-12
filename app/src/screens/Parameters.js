@@ -10,6 +10,7 @@ import ChoiseSelector from '../components/ChoicePicker';
 import SimpleButton from '../components/SimpleButton';
 
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 
 const platform = Platform.OS;
 
@@ -41,7 +42,7 @@ export default function Parameters() {
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.title}>Générer un nouveau quiz !</Text>
+      <Text style={FONT.title}>Générer un nouveau quiz !</Text>
       <View style={styles.list}>
         <View style={{ width: '100%' }}>
           <Text style={styles.text}>Thème</Text>
