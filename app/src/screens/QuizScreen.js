@@ -245,7 +245,7 @@ export default function QuizScreen() {
 
     const handleCopyGameId = async () => {
         await Clipboard.setStringAsync(gameId);
-        toast('info', 'L\'id à bien été copié !', "", 2000, 'dodgerblue');
+        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.blue);
     };
 
 
@@ -295,19 +295,26 @@ export default function QuizScreen() {
                             </View>
 
                             <View style={styles.answersView}>
-                                {currentQuestion.answers.map((answer, index) => (
-                                    <AnswerButton
-                                        key={index}
-                                        shape={shapes[index]}
-                                        text={answer}
-                                        onClick={() => handleAnswerSelection(answer)}
-                                        filter={getAnswerFilter(answer)}
-                                        type={currentType}
-                                        disabled={gameMode === 'timed' && remainingTime === 0}
-                                    />
-                                ))}
+                                {currentQuestion.answers.map((answer, index) => {
+                                    console.log('Answer:', answer); // Ajout du console.log
+                                    return (
+                                        answer === null ? null : (
+                                            <AnswerButton
+                                                key={index}
+                                                shape={shapes[index]}
+                                                text={answer}
+                                                onClick={() => handleAnswerSelection(answer)}
+                                                filter={getAnswerFilter(answer)}
+                                                type={currentType}
+                                                disabled={gameMode === 'timed' && remainingTime === 0}
+                                            />
+                                        )
+                                    );
+                                })}
                                 {platform !== 'web' && nextQuestionButton()}
                             </View>
+
+
                         </View>
                     </>
                 ) : (
