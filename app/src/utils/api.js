@@ -521,9 +521,9 @@ export async function downloadImage(id) {
 
 export async function listenTimer(gameId, setRemainingTime, setSelectedAnswer, setLoading) {
     try {
-        const eventSource = new EventSource(`${await getPlatformAPI()}/game/${gameId}/timer?token=${await AsyncStorage.getItem('token')}`);
+        const eventSource = new RNEventSource(`${await getPlatformAPI()}/game/${gameId}/timer?token=${await AsyncStorage.getItem('token')}`);
 
-        eventSource.onmessage = (event) => {
+        eventSource.addEventListener('message', (event)  => {
             let data = JSON.parse(event.data);
             let time = data.time;
             setRemainingTime(time);
@@ -538,7 +538,7 @@ export async function listenTimer(gameId, setRemainingTime, setSelectedAnswer, s
                 setLoading(false);
             }
 
-        }
+        });
 
         eventSource.onerror = () => {
             eventSource.close();
@@ -588,21 +588,6 @@ export async function createRoom({quizId, playerCount, teams, gameMode, difficul
 }
 
 export async function joinRoom(roomId) {
-    try {
-        const eventSource = new EventSource(`${await getPlatformAPI()}/room/${roomId}/join?token=${await AsyncStorage.getItem('token')}`);
-
-        eventSource.onerror = () => {
-            eventSource.close();
-        };
-
-        return eventSource;
-    }
-    catch (error) {
-        throw error;
-    }
-}
-
-export async function joinRoomMobile(roomId) {
     try {
         const url = `${await getPlatformAPI()}/room/${roomId}/join?token=${await AsyncStorage.getItem('token')}`;
 

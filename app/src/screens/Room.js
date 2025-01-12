@@ -47,23 +47,13 @@ export default function Room() {
 
     useEffect(() => {
         const connect = async () => {
-            if(Platform.OS === "web"){
-                joinRoom(roomId).then((source) => {
-                    eventSource = source;
+            joinRoom(roomId).then((source) => {
+                eventSource = source;
 
-                    eventSource.onmessage = handleEvent;
+                eventSource.addEventListener("message", handleEvent);
 
-                    getPlatformAPI().then((url) => setApiUrl(url));
-                });
-            } else {
-                joinRoomMobile(roomId).then((source) => {
-                    eventSource = source;
-
-                    eventSource.addEventListener("message", handleEvent);
-
-                    getPlatformAPI().then((url) => setApiUrl(url));
-                });
-            }
+                getPlatformAPI().then((url) => setApiUrl(url));
+            });
         };
 
         connect();

@@ -49,11 +49,8 @@ export default function QuizScreen() {
     useEffect(() => {
         (async () => {
             try {
-                if (Platform.OS === 'web') {
-                    eventSource.onmessage = handleEvent;
-                } else {
-                    eventSource.addEventListener('message', handleEvent);
-                }
+
+                eventSource.addEventListener('message', handleEvent);
 
                 const data = await getCurrentRoomQuestion(roomId);
 
@@ -68,9 +65,9 @@ export default function QuizScreen() {
 
     const handleEvent = (event) => {
         const data = JSON.parse(event.data);
-
         switch (data.eventType) {
             case "quizInfos":
+                console.log(data);
                 setTotalQuestion(data.totalQuestion);
                 break;
             case "nextQuestion":
