@@ -30,6 +30,7 @@ import {
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { ErrorToast, InfoToast, SuccessToast } from 'react-native-toast-message';
+import { COLORS } from '../css/utils/color';
 
 export const iconSize = Platform.OS === 'web' ? 30 : 18;
 
@@ -185,7 +186,7 @@ export const toastConfig = {
         <SuccessToast
             {...props}
             style={{
-                borderLeftColor: 'limegreen',
+                borderLeftColor: COLORS.toast.green,
                 width: 600,
                 height: 100,
             }}
@@ -204,7 +205,7 @@ export const toastConfig = {
         <ErrorToast
             {...props}
             style={{
-                borderLeftColor: 'crimson',
+                borderLeftColor: COLORS.toast.red,
                 width: 600,
                 height: 100,
             }}
@@ -223,7 +224,7 @@ export const toastConfig = {
         <InfoToast
             {...props}
             style={{
-                borderLeftColor: 'deepskyblue',
+                borderLeftColor: COLORS.toast.blue,
                 width: 600,
                 height: 100,
             }}
