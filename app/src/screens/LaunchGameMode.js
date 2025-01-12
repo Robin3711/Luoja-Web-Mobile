@@ -39,7 +39,7 @@ export default function LaunchGameMode() {
 
                 break;
             case "team":
-                createRoom({quizId: quizId,playerCount: playerCount, teams: ["Uno","Dos"], gameMode: gameMode}).then((room) => {
+                createRoom({quizId: quizId,playerCount: playerCount, teams: ["Uno","Dos"], gameMode: gameMode , difficulty : scrumDifficulty}).then((room) => {
                     navigation.navigate('room', { roomId: room.id });
                 });
 
