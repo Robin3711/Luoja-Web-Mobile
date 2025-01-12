@@ -19,16 +19,19 @@ export default function Room() {
 
     const [teams, setTeams] = useState([]);
 
-    let eventSource = null;
+    const [gameMode, setGameMode] = useState("");
 
-    let gameMode = null;
+    let gameCopy = null;
+
+    let eventSource = null;
 
     const handleEvent = (event) => {
         const data = JSON.parse(event.data);
 
         switch (data.eventType) {
             case "connectionEstablished":
-                gameMode = data.gameMode;
+                gameCopy = data.gameMode;
+                setGameMode(data.gameMode);
                 break;
             case "playerJoined":
                 setPlayers(data.players);
@@ -37,7 +40,7 @@ export default function Room() {
                 setTeams(data.teams);
                 break;
             case "gameStart":
-                navigation.navigate("roomQuizScreen", { roomId: roomId, eventSource: eventSource, gameMode: gameMode });
+                navigation.navigate("roomQuizScreen", { roomId: roomId, eventSource: eventSource, gameMode: gameCopy });
                 break;
             default:
                 break;
@@ -45,14 +48,11 @@ export default function Room() {
     }
 
     useEffect(() => {
-        if (eventSource) {
-            eventSource.close();
-        };
         const connect = async () => {
             joinRoom(roomId).then((source) => {
                 eventSource = source;
 
-                eventSource.addEventListener("message", handleEvent);
+                eventSource.addEventListener('message', handleEvent);
 
                 getPlatformAPI().then((url) => setApiUrl(url));
             });
