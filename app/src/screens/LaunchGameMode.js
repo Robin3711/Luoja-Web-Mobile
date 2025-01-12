@@ -6,7 +6,9 @@ import SimpleButton from '../components/SimpleButton';
 import ChoiseSelector from '../components/ChoicePicker';
 import { useRoute } from '@react-navigation/native';
 import { createGame, createRoom } from '../utils/api';
+import Grid from 'react-native-grid-component';
 
+import { FONT } from '../css/utils/font';
 
 export default function LaunchGameMode() {
 
@@ -36,25 +38,48 @@ export default function LaunchGameMode() {
         });
     }
 
+    const renderItem = (item, index) => (
+        <View style={styles.gridItem}>
+            {item}
+        </View>
+    );
+
     return (
         <View style={styles.view}>
-            <Text style={styles.pageTitle}>Choisissez un mode de jeu</Text>
+            <Text style={FONT.title}>Choisissez un mode de jeu</Text>
+            <View style={{ flex: 1, width: '100%', height: '100%' }}>
+                <Grid
+                    style={styles.grid}
+                    renderItem={renderItem}
+                    data={[
+                        <>
+                            <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
+                            <Text style={FONT.paragraphe}>Le joueur dispose d’un temps illimité pour répondre à chaque question.</Text>
+                        </>,
+                        <>
+                            <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />,
+                            <Text style={FONT.paragraphe}>Le joueur dispose d’un temps limité pour répondre à chaque question : 30s (facile), 15s (moyen), ou 5s (difficile).</Text>
+                        </>,
+                        <>
+                            <SimpleButton text="Compte à rebourd" onPress={() => handleStartQuiz("timed")} />
+                            <Text style={FONT.paragraphe}>Plusieurs joueurs jouent simultanément au même quiz. Le premier à répondre correctement gagne les points et déclenche la question suivante. Chaque joueur ne peut répondre qu'une fois par question.</Text>
+                            <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
+                        </>,
 
-            <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
-            <SimpleButton text="Compte à rebourd" onPress={() => handleStartQuiz("timed")} />
-            <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
-            <SimpleButton text="SCRUM" onPress={() => handleStartQuiz("scrum")} />
-            <ChoiseSelector value={scrumDifficulty} onValueChange={setScrumDifficulty} />
-
-            <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
-            <TextInput
-                placeholder="Nombre de joueurs"
-                keyboardType="numeric"
-                onChangeText={(text) => setPlayerCount(text)}
-            />
-
-            <SimpleButton text="TEAM" onPress={() => handleStartQuiz("team")} />
-
+                        <>
+                            <SimpleButton text="TEAM" onPress={() => handleStartQuiz("team")} />
+                            <Text style={FONT.paragraphe}>Les joueurs forment des équipes et répondent aux questions avec un temps limité, configurable par niveau de difficulté. Le score final de chaque équipe est la moyenne des scores de ses membres.</Text>
+                            <TextInput
+                                placeholder="Nombre de joueurs"
+                                keyboardType="numeric"
+                                onChangeText={(text) => setPlayerCount(text)}
+                            />
+                            <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty/*TODO: a modifier*/} defaultValue={true} /> 
+                        </>
+                    ]}
+                    itemsPerRow={2}
+                />
+            </View>
         </View>
     );
 }
@@ -62,18 +87,34 @@ export default function LaunchGameMode() {
 const styles = StyleSheet.create({
     view: {
         flex: 1,
-        display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
         backgroundColor: COLORS.background.blue,
+        width: '100%',
+        height: '100%',
     },
     pageTitle: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
         fontSize: 40,
         fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    grid: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+    },
+    gridItem: {
+        flex: 1,
+        margin: 10,
+        padding: 25,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+        borderWidth: 5,
+        borderColor: COLORS.palette.blue.normal, // Appliquer la couleur de la bordure
     },
     inputTitle: {
         fontSize: 20,
