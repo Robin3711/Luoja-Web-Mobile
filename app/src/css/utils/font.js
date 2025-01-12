@@ -65,5 +65,18 @@ export const FONT={
         fontSize: 18,
         color: 'red',
         ...center
+    },
+    buttonStyle: {
+        backgroundColor: COLORS.button.blue.basic,
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 5,
+    },
+    buttonText: {
+        fontFamily: fontFamily.lobster.cursive,
+        fontSize: 20,
+        color: COLORS.text.blue.dark,
     }
 }
