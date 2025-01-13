@@ -60,29 +60,33 @@ export default function EndScreen() {
                 {scores !== null ? (
                     <ScrollView style={styles.scoreContainer}>
                         <Text style={styles.scoreTitle}>Scores :</Text>
-                        <ScrollView horizontal={!gameMode === "scrum"} style={styles.teamsContainer}>
-                            {scores.map((score, index) => (
-                                gameMode === "scrum" ? (
-                                    <View key={index} style={styles.scrumResult}>
-                                        <Text style={styles.text}>
+                        <ScrollView style={styles.scoreContainer}>
+                            {gameMode === "scrum" ? (
+                                <View style={styles.scrumContainer}>
+                                    {scores.map((score, index) => (
+                                        <Text key={index} style={styles.text}>
                                             {score.userName} : {score.score}
                                         </Text>
-                                    </View>
-                                ) : (
-                                    <View key={index} style={styles.team}>
-                                        <Text style={FONT.subTitle}>
-                                            {score.teamName} : {score.averageScore}
-                                        </Text>
-                                        <ScrollView style={styles.teamPlayersContainer}>
-                                            {score.players.map((player, index) => (
-                                                <Text key={index} style={styles.text}>
-                                                    {player.userName} : {player.score}
-                                                </Text>
-                                            ))}
-                                        </ScrollView>
-                                    </View>
-                                )
-                            ))}
+                                    ))}
+                                </View>
+                            ) : (
+                                <ScrollView horizontal style={styles.teamsContainer}>
+                                    {scores.map((score, index) => (
+                                        <View key={index} style={styles.team}>
+                                            <Text style={FONT.subTitle}>
+                                                {score.teamName} : {score.averageScore}
+                                            </Text>
+                                            <ScrollView style={styles.teamPlayersContainer}>
+                                                {score.players.map((player, playerIndex) => (
+                                                    <Text key={playerIndex} style={styles.text}>
+                                                        {player.userName} : {player.score}
+                                                    </Text>
+                                                ))}
+                                            </ScrollView>
+                                        </View>
+                                    ))}
+                                </ScrollView>
+                            )}
                         </ScrollView>
                     </ScrollView>
                 ) : (
@@ -118,9 +122,15 @@ const styles = StyleSheet.create({
     },
     scoreContainer: {
         maxHeight: '60%',
-        maxWidth: '90%',
+        maxWidth: '100%',
         overflow: 'scroll',
         margin: 20,
+    },
+    scrumContainer: {
+        flexDirection: 'column', // Les éléments sont empilés verticalement
+        alignItems: 'center',   // Centrer horizontalement les éléments
+        gap: 30,                // Espacement entre les éléments
+        overflow: 'scroll',
     },
     teamsContainer: {
         maxWidth: '80vw',
@@ -128,16 +138,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 20,
         paddingBottom: 20,
-    },
-    scrumResult: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        margin: 10,
-        borderWidth: 2,
-        borderColor: COLORS.palette.blue.darker,
-        borderRadius: 10,
-        padding: 10,
-        backgroundColor: 'white',
     },
     team: {
         alignItems: 'center',
@@ -167,9 +167,10 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 25,
         color: COLORS.text.blue.dark,
+        overflow: 'scroll',
     },
     scoreTitle: {
-        fontSize: 25,
+        fontSize: 50,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
     },
