@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { COLORS } from './color';
+import { Subtitles } from 'lucide-react-native';
 
 const fontFamily = {
     arial: 'Arial',
@@ -36,6 +37,13 @@ export const FONT = StyleSheet.create({
         color: COLORS.text.blue.dark,
         fontSize: isMobile ? 30 : 78,
     },
+    subTitle:{
+        fontFamily: fontFamily.lobster.italic,
+        textAlign: 'center',
+        marginBottom: 10,
+        color: COLORS.text.blue.dark,
+        fontSize: isMobile ? 20 : 39,
+    },
     button: {
         fontFamily: fontFamily.lobster.cursive,
         fontSize: 30,
@@ -44,13 +52,13 @@ export const FONT = StyleSheet.create({
     },
     text: {
         fontFamily: fontFamily.lobster.cursive,
-        fontSize: isMobile ? 12 : 16,
+        fontSize: isMobile ? 16 : 28,   
         color: COLORS.text.blue.dark,
         ...center,
     },
     paragraphe: {
         fontFamily: fontFamily.arial,
-        fontSize: isMobile ? 16 : 22,
+        fontSize: isMobile ? 12 : 16,
         color: COLORS.text.blue.dark,
         textAlign: 'center',
         ...center,
