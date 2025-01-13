@@ -238,9 +238,8 @@ export const toastConfig = {
 };
 
 export function getRoomId(url) {
-    const segments = url.split("/"); // Divise l'URL en segments
-    const id = segments[segments.length - 2]; // Récupère l'avant-dernier segment
-    id.trim(); // Supprime les espaces
-    return id;
+    const queryString = url.split('?')[1]; // Récupérer la partie après le "?"
+    const params = new URLSearchParams(queryString); // Créer un objet URLSearchParams
+    return params.get('roomId'); // Extraire le paramètre roomId
 
 }

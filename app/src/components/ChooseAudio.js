@@ -35,9 +35,15 @@ const ChooseAudio = ({ onValueChange }) => {
             return;
         }
 
-        uploadAudio(formData).then((response) => {
+        uploadAudio(formData).then(async (response) => {
             if (response.status === 200) {
-                setAudios([...audios, URL.createObjectURL(file)]);
+                const jsonResponse = await response.json();
+                const responseId = jsonResponse.filePath;
+                setIds([...ids, responseId]);
+                downloadAudio(responseId).then((response) => {
+                    const url = URL.createObjectURL(response);
+                    setAudios([...audios, url]);
+                })
             }
         }
         ).catch((error) => {

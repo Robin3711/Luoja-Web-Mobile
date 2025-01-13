@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet, Image } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet, Image, RefreshControlComponent } from 'react-native';
 import { COLORS } from '../css/utils/color';
 import { uploadImage, downloadAllImages, downloadImage } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';
@@ -33,16 +33,20 @@ const ChooseFile = ({ onValueChange }) => {
         const formData = new FormData();
         formData.append('file', file);
 
-        uploadImage(formData).then((response) => {
+        uploadImage(formData).then(async (response) => {
             if (response.status === 200) {
-                const addimage = async (response) => {
-                    console.log(response.filePath);
-                    const imageBlob = await downloadImage(response.filePath);
-                    const imageURL = URL.createObjectURL(imageBlob);
-                    setImages([...images, imageURL]);
-                    setIds([...ids, response.filePath]);
-                };
-                addimage(response);
+                const jsonResponse = await response.json();
+                setTimeout(() => {
+                    
+                    const responseId = jsonResponse.filePath;
+                    setIds([...ids, responseId]);
+                    downloadImage(responseId).then((response) => {
+                        const url = URL.createObjectURL(response);
+                        setImages([...images, url])
+                    })
+                    
+                }, 200);
+                
             }
         }).catch((error) => {
             console.log(error);

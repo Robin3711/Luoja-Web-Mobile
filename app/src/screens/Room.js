@@ -70,7 +70,7 @@ export default function Room() {
             {Platform.OS === 'web' ? (
                 <View style={styles.qrCodeContainer}>
                     <QRCode
-                        value={`${apiUrl}/room/${roomId}/join`}
+                        value={`https://luoja.fr/room?roomId=${roomId}`}
                         size={200}
                         color={COLORS.palette.blue.darker}
                         backgroundColor="white"
