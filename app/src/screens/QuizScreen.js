@@ -259,37 +259,37 @@ export default function QuizScreen() {
                         </TouchableOpacity>
                         <View style={styles.mainView}>
                             <View style={styles.questionView}>
-                            <CountdownCircleTimer
-                                key={timerKey}
-                                isPlaying={timerInitialized}
-                                duration={gameTime}
-                                size={Platform.OS === 'web' ? 150 : 110}
-                                strokeWidth={Platform.OS === 'web' ? 15 : 10}
-                                colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
-                                colorsTime={[
-                                    (gameTime * 4) / 5,
-                                    (gameTime * 3) / 5,
-                                    (gameTime * 2) / 5,
-                                    (gameTime * 1) / 5,
-                                    (gameTime * 0) / 5,
-                                ]}
-                                style={{ marginTop: 5 }} // Baisse le cercle de 5 pixels
-                            >
-                                {() => (
-                                    <>
-                                        {gameMode === "timed" ? (
-                                            <Text style={styles.questionNumber}>{remainingTime}</Text>
-                                        ) : (<Text style={styles.questionNumber}></Text>)}
+                                <CountdownCircleTimer
+                                    key={timerKey}
+                                    isPlaying={timerInitialized}
+                                    duration={gameTime}
+                                    size={Platform.OS === 'web' ? 150 : 110}
+                                    strokeWidth={Platform.OS === 'web' ? 15 : 10}
+                                    colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
+                                    colorsTime={[
+                                        (gameTime * 4) / 5,
+                                        (gameTime * 3) / 5,
+                                        (gameTime * 2) / 5,
+                                        (gameTime * 1) / 5,
+                                        (gameTime * 0) / 5,
+                                    ]}
+                                    style={{ marginTop: 5 }} // Baisse le cercle de 5 pixels
+                                >
+                                    {() => (
+                                        <>
+                                            {gameMode === "timed" ? (
+                                                <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                            ) : (<Text style={styles.questionNumber}></Text>)}
 
-                                        <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
-                                    </>
-                                )}
-                            </CountdownCircleTimer>
+                                            <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                        </>
+                                    )}
+                                </CountdownCircleTimer>
 
-                                <Text style={[styles.questionNumber, {marginTop:5}]}>Score: {score}</Text>
+                                <Text style={[styles.score, {marginTop:5}]}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
                                 </View>
-                                <Text style={FONT.paragraphe}>{currentQuestion.question}</Text>
+                                <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
                                 {platform === 'web' && nextQuestionButton()}
                             </View>
 
@@ -363,8 +363,9 @@ const styles = StyleSheet.create({
     questionView: {
         alignItems: 'center',
         top: 20,
-        width: platform === 'web' ? '50%' : '100%',
+        width: platform === 'web' ? '45%' : '100%',
         ...platform !== 'web' && { marginVertical: 10, },
+        ...platform === 'web' && { gap: 70, },
     },
     question: {
         fontSize: platform === 'web' ? 30 : 25,
@@ -382,6 +383,14 @@ const styles = StyleSheet.create({
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
         ...platform !== 'web' && { marginVertical: 10, },
+        ...platform === 'web' && { marginTop: 0, },  
+    },    
+    score: {
+        marginBottom: -15,
+        fontSize: platform === 'web' ? 30 : 12,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+        fontWeight: 'bold',
     },
     answersView: {
         width: platform === 'web' ? '50%' : '100%',
