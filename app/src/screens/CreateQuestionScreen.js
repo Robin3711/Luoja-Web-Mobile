@@ -5,7 +5,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 import SimpleButton from '../components/SimpleButton';
-import { loadFont, mediaType, toast } from '../utils/utils';
+import { mediaType, toast } from '../utils/utils';
 import ChoiseSelector from '../components/ChoicePicker';
 
 export default function CreateQuestionScreen() {

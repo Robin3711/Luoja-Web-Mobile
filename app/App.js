@@ -1,8 +1,7 @@
-import React from 'react';
-import { Platform, useWindowDimensions } from 'react-native';
+import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack'
 import { useFonts, LobsterTwo_400Regular, LobsterTwo_700Bold_Italic } from '@expo-google-fonts/dev';
 import Toast from 'react-native-toast-message';
 
@@ -89,19 +88,17 @@ const MenuDrawer = () => {
 };
 
 const MenuStack = () => {
-  const { width } = useWindowDimensions();
-
   return (
     <stack.Navigator initialRouteName='initMenu'>
-      {width >= 775 ? <stack.Screen name="initMenu" component={MenuTab} options={{ headerShown: false }} /> : <stack.Screen name="initMenu" component={MenuDrawer} options={{ headerShown: false }} />}
+      {Platform.OS === 'web' ? <stack.Screen name="initMenu" component={MenuTab} options={{ headerShown: false }} /> : <stack.Screen name="initMenu" component={MenuDrawer} options={{ headerShown: false }} />}
       <stack.Group screenOptions={{ presentation: 'modal' }}>
         <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz" }} />
-        <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: width >= 400 ? () => null : undefined }} />
+        <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
         <stack.Screen name="login" component={Login} options={{ title: "Se connecter" }} />
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire" }} />
-        {width >= 775 ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Importer des questions" }} /> : null}
-        {width >= 775 ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
-        {width >= 775 ? <stack.Screen name="launchGameMode" component={LaunchGameMode} options={{ title: "Lancer un mode de jeu" }} /> : null}
+        {Platform.OS === 'web' ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Importer des questions" }} /> : null}
+        {Platform.OS === 'web' ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
+        <stack.Screen name="launchGameMode" component={LaunchGameMode} options={{ title: "Lancer un mode de jeu" }} />
         <stack.Screen name="room" component={Room} options={{ title: "Partie multijoueur" }} />
         <stack.Screen name="roomQuizScreen" component={RoomQuizScreen} options={{ title: "Quiz" }} />
         <stack.Screen name="roomEndScreen" component={RoomEndScreen} options={{ title: "Fin de partie multijoueur" }} />
@@ -113,12 +110,12 @@ const MenuStack = () => {
 
 export default function App() {
   let [fontsLoaded] = useFonts({
-      LobsterTwo_400Regular,
-      LobsterTwo_700Bold_Italic
+    LobsterTwo_400Regular,
+    LobsterTwo_700Bold_Italic,
   });
 
   if (!fontsLoaded) {
-      return null;
+    return null;
   }
 
   return (
@@ -130,4 +127,3 @@ export default function App() {
     </>
   );
 }
-

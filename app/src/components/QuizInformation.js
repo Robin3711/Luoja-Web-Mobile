@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Platform, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { cloneQuiz, saveQuiz } from '../utils/api';
@@ -7,6 +7,8 @@ import { getThemeLabel, toast, themeOptions } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 
 const platform = Platform.OS;
+const { width } = Dimensions.get('window');
+const isMobile = width < 775;
 
 export default function QuizInformation({ quiz }) {
     const navigation = useNavigation();
@@ -27,7 +29,6 @@ export default function QuizInformation({ quiz }) {
         return theme ? theme.value : null; // Retourne la valeur correspondante ou null si non trouvée
     }
 
-
     const handleSave = async () => {
         try {
             const value = getValueByLabel(themeName);
@@ -44,11 +45,10 @@ export default function QuizInformation({ quiz }) {
         }
     };
 
-
     const themeName = getThemeLabel(parseInt(quiz.category));
     return (
         <View style={styles.QuizInformationView}>
-            <Text style={[styles.QuizInformationText, { flex: 1.2 }]}>{truncateText(quiz.title, 20)}</Text>
+            <Text style={[styles.QuizInformationText, { flex: 1.2 }]}>{truncateText(quiz.title, isMobile ? 15 : 20)}</Text>
             <Text style={[styles.QuizInformationText, { flex: 0.8 }]}>{themeName ?? "General Knowledge"}</Text>
             <Text style={[styles.QuizInformationText, { flex: 0.8 }]}>{quiz.difficulty}</Text>
             <TouchableOpacity style={styles.QuizInformationButton} onPress={handleSave}>
@@ -64,26 +64,30 @@ export default function QuizInformation({ quiz }) {
 const styles = StyleSheet.create({
     QuizInformationView: {
         display: 'flex',
+        flexWrap: 'wrap',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
-        height: 50,
-        backgroundColor: 'white',
+        height: isMobile ? 70 : 50,
         borderRadius: 10,
         marginVertical: 10,
         padding: 10,
+        marginBottom: 20,
     },
     QuizInformationText: {
         flex: 1,
-        fontSize: 20,
+        fontSize: isMobile ? 12 : 17,
+        minWidth: isMobile ? 100 : 150,
     },
     QuizInformationButton: {
         flex: platform === 'web' ? 0.3 : 0.6,
         backgroundColor: COLORS.button.blue.circle.normal,
-        padding: 10,
+        padding: 8,
         borderRadius: 10,
         alignItems: 'center',
-        ...platform !== 'web' && { height: 40 },
+        marginHorizontal: 5,
+        marginTop: 5,
+        ...platform !== 'web' && { height: isMobile ? 35 : 40 },
     },
 });

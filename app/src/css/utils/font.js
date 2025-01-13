@@ -1,82 +1,81 @@
-import { COLORS } from "./color";
+import { StyleSheet, Dimensions, Platform } from 'react-native';
+import { COLORS } from './color';
+import { Subtitles } from 'lucide-react-native';
 
+const fontFamily = {
+    arial: 'Arial',
+    lobster: {
+        cursive: 'LobsterTwo_400Regular',
+        italic: 'LobsterTwo_700Bold_Italic',
+    }
+};
+
+// Fonction utilitaire pour centrer
 const center = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-}
+};
 
-const fontFamily={
-    arial: "'Arial', sans-serif",
-    lobster: {
-        cursive : "'LobsterTwo_400Regular'",
-        italic : "'LobsterTwo_700Bold_Italic'",
-    }
-}
+const { width } = Dimensions.get('window');
+const isMobile = width < 775;
 
-//mix max pour les tailles : 'clamp(16px, 10vw, 48px)'
-export const FONT={
-    luoja:{
-        fontFamily: fontFamily.lobster.italic,
+// Styles des polices
+export const FONT = StyleSheet.create({
+    luoja: {
+        fontFamily: fontFamily.lobster.cursive,
         color: COLORS.text.blue.dark,
-        position: 'absolute',
-        top: '2vh',
-        fontSize: 150,
+        position: 'relative',
+        top: '10vh',
+        fontSize: isMobile ? 72 : 144, 
         fontWeight: 'bold',
     },
-    title:{
+    title: {
         fontFamily: fontFamily.lobster.italic,
         textAlign: 'center',
-        marginBottom: "10px",
+        marginBottom: 10,
         color: COLORS.text.blue.dark,
-        fontSize: 75,
+        fontSize: isMobile ? 30 : 78,
     },
-    button:{
-        fontFamily: fontFamily.lobster.cursive,
-        fontSize: '200%',
+    subTitle:{
+        fontFamily: fontFamily.lobster.italic,
+        textAlign: 'center',
+        marginBottom: 10,
         color: COLORS.text.blue.dark,
-        height: '100vh',
-        ...center
+        fontSize: isMobile ? 20 : 39,
     },
-    text:{
+    button: {
         fontFamily: fontFamily.lobster.cursive,
         fontSize: 30,
         color: COLORS.text.blue.dark,
-        ...center
+        ...center,
     },
-    paragraphe:{
+    text: {
+        fontFamily: fontFamily.lobster.cursive,
+        fontSize: isMobile ? 16 : 28,   
+        color: COLORS.text.blue.dark,
+        ...center,
+    },
+    paragraphe: {
         fontFamily: fontFamily.arial,
-        fontSize: 17,
+        fontSize: isMobile ? 12 : 16,
         color: COLORS.text.blue.dark,
         textAlign: 'center',
-        ...center
+        ...center,
     },
-    TextInput:{
+    textInput: {
         flex: 1,
-        height: '70%',
+        height: isMobile ? 40 : 50,
         borderWidth: 1,
         borderColor: '#ccc',
         padding: 10,
         borderRadius: 20,
         backgroundColor: '#fff',
-        ...center
+        ...center,
     },
-    error:{
-        fontSize: 18,
+    error: {
+        fontSize: isMobile ? 12 : 14,
         color: 'red',
-        ...center
+        ...center,
     },
-    buttonStyle: {
-        backgroundColor: COLORS.button.blue.basic,
-        padding: 10,
-        borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: 5,
-    },
-    buttonText: {
-        fontFamily: fontFamily.lobster.cursive,
-        fontSize: 20,
-        color: COLORS.text.blue.dark,
-    }
-}
+});

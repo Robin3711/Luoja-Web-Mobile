@@ -23,7 +23,7 @@ export const COLORS = {
     },
 
     text: {
-        grey: "B0B0B0",
+        grey: "#B0B0B0",
 
         blue: {
             light: "#EEF8FF",

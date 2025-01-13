@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import { getRoomScores } from '../utils/api';
+
+import { FONT } from '../css/utils/font';
 
 export default function EndScreen() {
     const route = useRoute();
@@ -41,7 +43,6 @@ export default function EndScreen() {
         navigation.navigate("initMenu");
     };
 
-
     return (error ? (
         <View style={styles.container}>
             <Text style={styles.errorText}>{errorMessage}</Text>
@@ -55,30 +56,35 @@ export default function EndScreen() {
     ) : (
         <View style={styles.container}>
             <View style={styles.parentContainer}>
-                <Text style={styles.title}>Fin de partie !</Text>
-                <Text style={styles.text}>Récapitulatif de la partie :</Text>
+                <Text style={[styles.title, {marginBottom:100}]}>Fin de partie !</Text>
                 {scores !== null ? (
-                    <View style={styles.scoreContainer}>
+                    <ScrollView style={styles.scoreContainer}>
                         <Text style={styles.scoreTitle}>Scores :</Text>
-                        {scores.map((score, index) => (
-                            gameMode === "scrum" ? (
-                                <Text key={index} style={styles.text}>
-                                    {score.userName} : {score.score}
-                                </Text>
-                            ) : (
-                                <Text key={index} style={styles.text}>
-                                    {score.teamName} : {score.averageScore}
-                                    {
-                                        score.players.map((player, index) => (
-                                            <Text key={index} style={styles.text}>
-                                                {player.userName} : {player.score}
-                                            </Text>
-                                        ))
-                                    }
-                                </Text>
-                            )
-                        ))}
-                    </View>
+                        <ScrollView horizontal={!gameMode === "scrum"} style={styles.teamsContainer}>
+                            {scores.map((score, index) => (
+                                gameMode === "scrum" ? (
+                                    <View key={index} style={styles.scrumResult}>
+                                        <Text style={styles.text}>
+                                            {score.userName} : {score.score}
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <View key={index} style={styles.team}>
+                                        <Text style={FONT.subTitle}>
+                                            {score.teamName} : {score.averageScore}
+                                        </Text>
+                                        <ScrollView style={styles.teamPlayersContainer}>
+                                            {score.players.map((player, index) => (
+                                                <Text key={index} style={styles.text}>
+                                                    {player.userName} : {player.score}
+                                                </Text>
+                                            ))}
+                                        </ScrollView>
+                                    </View>
+                                )
+                            ))}
+                        </ScrollView>
+                    </ScrollView>
                 ) : (
                     <Text>Chargement du score...</Text>
                 )}
@@ -99,13 +105,11 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
-
     },
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f0f0f0',
         backgroundColor: COLORS.background.blue,
     },
     parentContainer: {
@@ -113,10 +117,46 @@ const styles = StyleSheet.create({
         margin: 20,
     },
     scoreContainer: {
-        alignItems: 'center',
+        maxHeight: '60%',
+        maxWidth: '90%',
+        overflow: 'scroll',
         margin: 20,
     },
+    teamsContainer: {
+        maxWidth: '80vw',
+        overflow: 'scroll',
+        flexDirection: 'row',
+        marginVertical: 20,
+        paddingBottom: 20,
+    },
+    scrumResult: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        margin: 10,
+        borderWidth: 2,
+        borderColor: COLORS.palette.blue.darker,
+        borderRadius: 10,
+        padding: 10,
+        backgroundColor: 'white',
+    },
+    team: {
+        alignItems: 'center',
+        margin: 10,
+        borderWidth: 5,
+        borderColor: COLORS.palette.blue.darker,
+        borderRadius: 30,
+        padding: 10,
+        height: 270,
+        minWidth: 200,
+        backgroundColor: 'white',
+    },
+    teamPlayersContainer: {
+        flexDirection: 'column',
+        maxHeight: 150,
+        overflow: 'scroll',
+    },
     title: {
+        top: 30,
         textAlign: 'center',
         color: COLORS.text.blue.dark,
         fontSize: 50,
@@ -132,9 +172,6 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
-    },
-    wheelContainer: {
-        margin: 20,
     },
     button: {
         backgroundColor: '#007AFF',

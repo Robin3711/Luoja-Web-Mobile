@@ -42,12 +42,6 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: COLORS.background.blue,
     },
-    appTitle: {
-        height: platform === 'web' ? '10%' : '25%',
-        fontSize: 150,
-        fontFamily: 'LobsterTwo_700Bold_Italic',
-        color: COLORS.text.blue.dark,
-    },
     childView: {
         height: platform === 'web' ? '90%' : '75%',
         flexDirection: platform === 'web' ? 'row' : 'column',

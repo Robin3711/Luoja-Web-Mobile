@@ -59,6 +59,7 @@ const ChoiseSelector = ({ value, onValueChange, parameters = difficultyOptions, 
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
         justifyContent: 'space-around',
         alignItems: 'center',
         width: '100%',
@@ -73,8 +74,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 10,
-        marginHorizontal: 5,
+        margin: 5,
         borderRadius: 20,
+        minWidth: 87,
         backgroundColor: 'white',
     },
     selectedButton: {
