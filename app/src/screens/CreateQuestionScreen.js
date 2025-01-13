@@ -3,14 +3,12 @@ import { View, Text, StyleSheet, TextInput, Picker } from 'react-native';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 import SimpleButton from '../components/SimpleButton';
-import { loadFont, mediaType, toast } from '../utils/utils';
+import { mediaType, toast } from '../utils/utils';
 import ChoiseSelector from '../components/ChoicePicker';
 
 export default function CreateQuestionScreen() {
-
-    loadFont();
-
     const route = useRoute();
     const navigation = useNavigation();
 
@@ -134,7 +132,7 @@ export default function CreateQuestionScreen() {
             {/* Left Panel */}
             <View style={styles.createQuestionLeftView}>
                 <View style={styles.createQuestionInputView}>
-                    <Text style={styles.createQuestionTitle}>Questions :</Text>
+                    <Text style={FONT.title}>Question :</Text>
                     <TextInput
                         style={styles.createQuestionInput}
                         multiline={true}
@@ -159,9 +157,9 @@ export default function CreateQuestionScreen() {
                             }}
                             style={styles.picker}
                         >
-                            <Picker.Item label="2 réponses" value={2} />
-                            <Picker.Item label="3 réponses" value={3} />
-                            <Picker.Item label="4 réponses" value={4} />
+                            <Picker.Item style={FONT.text} label="2 réponses" value={2} />
+                            <Picker.Item style={FONT.text} label="3 réponses" value={3} />
+                            <Picker.Item  style={FONT.text} label="4 réponses" value={4} />
                         </Picker>
                     </View>
                 </View>
@@ -242,6 +240,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 10,
+        gap: 20,
     },
     toggleLabel: {
         fontSize: 16,

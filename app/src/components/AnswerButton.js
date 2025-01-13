@@ -128,7 +128,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
                 {
                     backgroundColor: questionFilters[filter] || backgroundColors[shape],
                     borderColor: 'black', borderWidth: filter === 'BLUE' ? 7 : 0,
-                    height: platform === 'web' ? filter === 'BLUE' ? 150 : 160 : filter === 'BLUE' ? 90 : 100,
+                    height: platform === 'web' ? 160 : 80,
                     width: filter === 'BLUE' ? '90%' : '95%',
                     marginVertical: filter === 'BLUE' ? 10 : 5,
                 },
@@ -160,7 +160,6 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
         </TouchableOpacity>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
@@ -178,32 +177,32 @@ const styles = StyleSheet.create({
         width: '75%',
         textAlign: 'center',
         color: 'white',
-        fontSize: 25,
+        fontSize: platform === 'web' ? 25 : 18, // Adjust font size for mobile
     },
     shapeStyles: {
         square: {
-            width: platform === 'web' ? 115 : 75,
-            height: platform === 'web' ? 115 : 75,
+            width: platform === 'web' ? 115 : 60, // Adjust size for mobile
+            height: platform === 'web' ? 115 : 60, // Adjust size for mobile
             borderRadius: 10,
             borderWidth: platform === 'web' ? 7 : 5,
         },
         circle: {
-            width: platform === 'web' ? 115 : 75,
-            height: platform === 'web' ? 115 : 75,
-            borderRadius: platform === 'web' ? 70 : 45,
+            width: platform === 'web' ? 115 : 60, // Adjust size for mobile
+            height: platform === 'web' ? 115 : 60, // Adjust size for mobile
+            borderRadius: platform === 'web' ? 70 : 30, // Adjust size for mobile
             borderWidth: platform === 'web' ? 7 : 5,
         },
     },
     Image: {
-        width: 100,
-        height: 100,
+        width: platform === 'web' ? 100 : 60, // Adjust size for mobile
+        height: platform === 'web' ? 100 : 60, // Adjust size for mobile
         resizeMode: 'cover',
     },
     button: {
-        position: 'relative', // Permet de positionner le texte absolument par rapport au bouton
+        position: 'relative',
         backgroundColor: COLORS.button.blue.basic,
-        height: 50,
-        width: 100,
+        height: platform === 'web' ? 50 : 40, // Adjust size for mobile
+        width: platform === 'web' ? 100 : 80, // Adjust size for mobile
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
@@ -214,5 +213,4 @@ const styles = StyleSheet.create({
         } : { elevation: 2 },
     },
 });
-
 export default AnswerButton;

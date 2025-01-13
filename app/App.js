@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
-import { useFonts, LobsterTwo_400Regular } from '@expo-google-fonts/dev';
+import { useFonts, LobsterTwo_400Regular, LobsterTwo_700Bold_Italic } from '@expo-google-fonts/dev';
 import Toast from 'react-native-toast-message';
 
 import { toastConfig } from './src/utils/utils';
@@ -26,7 +26,7 @@ import Room from './src/screens/Room';
 import RoomQuizScreen from './src/screens/RoomQuizScreen';
 import RoomEndScreen from './src/screens/RoomEndScreen';
 import JoinGame from './src/screens/JoinRoom';
-import '@expo/metro-runtime'
+import '@expo/metro-runtime';
 
 
 const linking = {
@@ -111,6 +111,7 @@ const MenuStack = () => {
 export default function App() {
   let [fontsLoaded] = useFonts({
     LobsterTwo_400Regular,
+    LobsterTwo_700Bold_Italic,
   });
 
   if (!fontsLoaded) {

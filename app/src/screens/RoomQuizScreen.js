@@ -8,11 +8,11 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import SimpleButton from '../components/SimpleButton';
 import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
-
+import { FONT } from '../css/utils/font';
 
 const platform = Platform.OS;
 
-export default function QuizScreen() {
+export default function RoomQuizScreen() {
     const route = useRoute();
     const navigation = useNavigation();
 
@@ -49,7 +49,6 @@ export default function QuizScreen() {
     useEffect(() => {
         (async () => {
             try {
-
                 eventSource.addEventListener('message', handleEvent);
 
                 const data = await getCurrentRoomQuestion(roomId);
@@ -110,7 +109,6 @@ export default function QuizScreen() {
             setErrorMessage(err.status + " " + err.message);
         }
     };
-
 
     const handleAnswerSelection = (answer) => {
         if (!isAnswered) {
@@ -192,10 +190,10 @@ export default function QuizScreen() {
                                         <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                     )}
                                 </CountdownCircleTimer>
-                                <Text style={styles.questionNumber}>Score: {score}</Text>
+                                <Text style={styles.score}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
                                 </View>
-                                <Text style={styles.question}>{currentQuestion.question}</Text>
+                                <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
                                 {platform === 'web' && validateAnswerButton()}
                             </View>
 
@@ -215,7 +213,7 @@ export default function QuizScreen() {
                                         )
                                     );
                                 })}
-                                {platform !== 'web' && nextQuestionButton()}
+                                {platform !== 'web' && validateAnswerButton()}
                             </View>
                         </View>
                     </>
@@ -254,6 +252,8 @@ const styles = StyleSheet.create({
     questionView: {
         alignItems: 'center',
         width: platform === 'web' ? '50%' : '100%',
+        ...platform === 'web' && { gap: 70, },
+
     },
     question: {
         fontSize: platform === 'web' ? 30 : 25,
@@ -265,6 +265,12 @@ const styles = StyleSheet.create({
     },
     questionNumber: {
         fontSize: platform === 'web' ? 30 : 25,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+        fontWeight: 'bold',
+    },
+    score: {
+        fontSize: platform === 'web' ? 30 : 12,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',

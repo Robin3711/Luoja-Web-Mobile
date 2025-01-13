@@ -12,7 +12,7 @@ import { Edit2, GripVertical, LucideTrash } from 'lucide-react-native';
 import ThemeSelector from '../components/ThemeList';
 
 import { COLORS } from '../css/utils/color';
-import { loadFont } from '../utils/utils';
+import { FONT } from '../css/utils/font';
 
 const platform = Platform.OS;
 
@@ -272,8 +272,6 @@ export default function QuizCreation() {
         );
     };
 
-    loadFont();
-
     return (
         <View style={styles.quizCreationView}>
             <Text style={styles.title}>Créez votre propre quiz !</Text>
@@ -290,10 +288,10 @@ export default function QuizCreation() {
                         <ChoicePicker value={difficulty} onValueChange={setDifficulty} />
                         <View style={styles.quizCreationTopButtonsView}>
                             <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
-                                <Text style={styles.buttonText}>Importer des questions</Text>
+                                <Text style={FONT.button}>Importer des questions</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.buttons} onPress={handleClickCreateQuestion}>
-                                <Text style={styles.buttonText}>Rédiger une question</Text>
+                                <Text style={FONT.button}>Rédiger une question</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -318,13 +316,13 @@ export default function QuizCreation() {
 
             <View style={styles.quizCreationBottomButtonsView}>
                 <TouchableOpacity style={saveButton ? styles.disabledButton : styles.buttons} onPress={handleSave} disabled={saveButton}>
-                    <Text style={styles.buttonText}>Enregistrer</Text>
+                    <Text style={FONT.button}>Enregistrer</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={publishButton ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={publishButton}>
-                    <Text style={styles.buttonText}>Publier</Text>
+                    <Text style={FONT.button}>Publier</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={resetForm ? styles.disabledButton : styles.buttons} onPress={handleReset} disabled={resetForm}>
-                    <Text style={styles.buttonText}>{!quizId ? "Réinitialiser" : "Nouveau quiz"}</Text>
+                    <Text style={FONT.button}>{!quizId ? "Réinitialiser" : "Nouveau quiz"}</Text>
                 </TouchableOpacity>
             </View>
         </View>
