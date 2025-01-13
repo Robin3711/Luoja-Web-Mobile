@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
@@ -119,12 +119,14 @@ const styles = StyleSheet.create({
     parentContainer: {
         alignItems: 'center',
         margin: 20,
+        width: '100%',
     },
     scoreContainer: {
-        maxHeight: '60%',
+        maxHeight: 400,
         maxWidth: '100%',
         overflow: 'scroll',
         margin: 20,
+        
     },
     scrumContainer: {
         flexDirection: 'column', // Les éléments sont empilés verticalement
@@ -133,11 +135,12 @@ const styles = StyleSheet.create({
         overflow: 'scroll',
     },
     teamsContainer: {
-        maxWidth: '80vw',
+        maxWidth: '90vw',
         overflow: 'scroll',
         flexDirection: 'row',
         marginVertical: 20,
         paddingBottom: 20,
+        height: 400,
     },
     team: {
         alignItems: 'center',
