@@ -1,15 +1,18 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Text, View, Platform, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { Text, View, Platform, StyleSheet, ScrollView, TouchableOpacity, TextInput, Dimensions } from 'react-native';
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
-import DifficultySelector from '../components/DifficultyPicker';
+import ChoiseSelector from '../components/ChoicePicker';
 import QuizInformation from '../components/QuizInformation';
-import { loadFont, requireToken } from '../utils/utils';
+import { requireToken } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 const platform = Platform.OS;
+const { width } = Dimensions.get('window');
+const isMobile = width < 775;
 
 export default function SearchScreen() {
     const [data, setData] = useState([]);
@@ -47,9 +50,6 @@ export default function SearchScreen() {
     }, [timer]);
 
     const handleSearchTitle = (currentTitle) => {
-
-
-
         if (timer) {
             clearTimeout(timer);
         }
@@ -59,62 +59,58 @@ export default function SearchScreen() {
         }, 500);
 
         setTimer(newTimer);
-
     }
 
-    loadFont();
     return (
         error ? (
             <View style={styles.screen}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
                 <TouchableOpacity onPress={() => {
-                    navigation.navigate('menuDrawer', { screen: 'account' })
-                }
-                }>
+                    navigation.navigate('initMenu', { screen: 'account' })
+                }}>
                     <Text style={styles.buttonText}>Retour au menu</Text>
                 </TouchableOpacity>
             </View>
         ) : (
             <View style={styles.screen}>
-                <Text style={styles.title}>Quiz de la communauté !</Text>
+                <Text style={FONT.title}>Quiz de la communauté !</Text>
                 <View style={styles.screen2}>
                     <View style={styles.searchParameterView}>
-
-
-                    <View style={styles.filterView}>
-                        <Text style={styles.text}>Titre</Text>
-                        <View style={styles.quizTitleView}>
-                            <TextInput style={styles.quizTitleText} placeholder='Titre' onChangeText={(value) => handleSearchTitle(value)} />
+                        <View style={styles.filterView}>
+                            <Text style={styles.text}>Titre</Text>
+                            <View style={styles.quizTitleView}>
+                                <TextInput style={styles.quizTitleText} placeholder='Titre' onChangeText={(value) => handleSearchTitle(value)} />
+                            </View>
+                        </View>
+                        <View style={styles.filterView}>
+                            <Text style={styles.text}>Thème</Text>
+                            <ThemeSelector onValueChange={setTheme} />
+                        </View>
+                        <View style={styles.filterView}>
+                            <Text style={styles.text}>Difficulté</Text>
+                            <ChoiseSelector testID="ChoiseSelector" value={difficulty} onValueChange={setDifficulty} />
                         </View>
                     </View>
-                    <View style={styles.filterView}>
-                        <Text style={styles.text}>Thème</Text>
-                        <ThemeSelector onValueChange={setTheme} />
-                    </View>
-                    <View style={styles.filterView}>
-                        <Text style={styles.text}>Difficulté</Text>
-                        <DifficultySelector testID="difficultySelector" value={difficulty} onValueChange={setDifficulty} />
-                    </View>
-                </View>
-    
-                <View style={styles.quizCreationRightView}>
-                    {platform === 'web' && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
-                    <ScrollView style={styles.questionsView}>
-                        {
-                            data.length !== 0 ?
-                                data.map((quiz, index) => (
-                                    <View key={index} style={styles.questionItem}>
+
+                    <View style={styles.quizCreationRightView}>
+                        {platform === 'web' && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
+                        <ScrollView style={styles.questionsView}>
+                            {data.length !== 0 ? (
+                                [...data].reverse().map((quiz, index) => (
+                                    <View key={index} style={[styles.questionItem, index % 2 === 0 && styles.alternateBackground]}>
                                         <QuizInformation quiz={quiz} />
                                     </View>
                                 ))
-                                : <Text>Aucun quiz</Text>
-                        }
-                    </ScrollView>
+                            ) : (
+                                <Text>Aucun quiz</Text>
+                            )}
+                        </ScrollView>
+                    </View>
                 </View>
             </View>
-        </View>
-    )
-);}
+        )
+    );
+}
 
 const styles = StyleSheet.create({
     screen: {
@@ -122,7 +118,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'column',
         backgroundColor: COLORS.background.blue,
-        paddingTop: platform === 'web' ? 20 : 0,
+        paddingTop: 20,
     },
     screen2: {
         flexDirection: platform === 'web' ? 'row' : 'column',
@@ -145,15 +141,15 @@ const styles = StyleSheet.create({
         fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     filterView: {
-        marginBottom: platform === 'web' ? 20 : 0,
+        marginBottom: platform === 'web' ? 20 : 10,
     },
     searchParameterView: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
-        height: platform === 'web' ? '60%' : '40%',
+        height: platform === 'web' ? '60%' : 'auto',
         borderRadius: 20,
-        padding: platform === 'web' ? 20 : 0,
+        padding: platform === 'web' ? 20 : 10,
         width: platform === 'web' ? '40%' : '100%',
     },
     quizCreationRightView: {
@@ -161,14 +157,16 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-around',
         backgroundColor: '#8fd3ff',
-        height: platform === 'web' ? '80%' : '60%',
+        height: platform === 'web' ? '80%' : '55%',
         borderRadius: 20,
         padding: 20,
         width: platform === 'web' ? '50%' : '100%',
-        marginTop: platform === 'web' ? 0 : 20,
+        borderRadius: 20,
         ...platform === 'web' && { marginLeft: 20 },
     },
     quizCreationQuestionsTitle: {
+        fontFamily: 'LobsterTwo_400Regular',
+        fontSize: 20,
         backgroundColor: 'white',
         padding: 5,
         borderRadius: 20,
@@ -190,7 +188,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 5,
         borderRadius: 20,
-        height: '80%'
+        height: '80%',
     },
     errorText: {
         fontSize: 18,
@@ -207,5 +205,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
+        borderRadius: 20,
+        
+    },
+    alternateBackground: {
+        backgroundColor: COLORS.palette.blue.lighter,
     },
 });

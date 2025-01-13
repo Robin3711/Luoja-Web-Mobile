@@ -6,10 +6,11 @@ import { createQuiz } from '../utils/api';
 import { toast } from '../utils/utils';
 import RangeCursor from '../components/Cursor';
 import ThemeSelector from '../components/ThemeList';
-import DifficultySelector from '../components/DifficultyPicker';
+import ChoiseSelector from '../components/ChoicePicker';
 import SimpleButton from '../components/SimpleButton';
 
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 
 const platform = Platform.OS;
 
@@ -24,7 +25,7 @@ export default function Parameters() {
     setlaunch(true);
     createQuiz(questionCount, theme, difficulty)
       .then(data => {
-        navigation.navigate('menuDrawer');
+        navigation.navigate('initMenu');
         setlaunch(false);
         setTimeout(() => {
           navigation.navigate('quizScreen', { gameId: data.id });
@@ -32,16 +33,16 @@ export default function Parameters() {
       })
       .catch(error => {
         if (error.status && error.message) {
-          toast('error', error.status, error.message, 3000, 'crimson');
+          toast('error', error.status, error.message, 3000, COLORS.toast.red);
         } else {
-          toast('error', "Erreur", error, 3000, 'crimson');
+          toast('error', "Erreur", error, 3000, COLORS.toast.red);
         }
       });
   };
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.title}>Générer un nouveau quiz !</Text>
+      <Text style={FONT.title}>Générer un nouveau quiz !</Text>
       <View style={styles.list}>
         <View style={{ width: '100%' }}>
           <Text style={styles.text}>Thème</Text>
@@ -49,7 +50,7 @@ export default function Parameters() {
         </View>
         <View style={{ width: '100%' }}>
           <Text style={styles.text}>Difficulté</Text>
-          <DifficultySelector value={difficulty} onValueChange={setDifficulty} />
+          <ChoiseSelector value={difficulty} onValueChange={setDifficulty} />
         </View>
         <View style={{ width: '100%' }}>
           <RangeCursor value={questionCount} onValueChange={setQuestionCount} />

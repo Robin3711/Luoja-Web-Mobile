@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
-import { getQuizAverage } from '../utils/api';
+import { Text, View, StyleSheet, Platform } from 'react-native';
+import { createGame, getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 import { toast } from '../utils/utils';
+import { COLORS } from '../css/utils/color';
+import SimpleButton from './SimpleButton';
+import { FONT } from '../css/utils/font';
 
 export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions }) {
     const [loading, setLoading] = useState(true);
@@ -25,9 +28,9 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                 setNbPlayed(data.nombreDePartie);
             }).catch((error) => {
                 if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, 'crimson');
+                    toast('error', error.status, error.message, 3000, COLORS.toast.red);
                 } else {
-                    toast('error', 'Erreur', error, 3000, 'crimson');
+                    toast('error', 'Erreur', error, 3000, COLORS.toast.red);
                 }
             });
 
@@ -37,7 +40,7 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
     }, [category, status, quizId, date, nbQuestions]);
 
     if (loading) {
-        return <Text>Chargement...</Text>;
+        return <Text style={FONT.button}>Chargement...</Text>;
     }
 
     const isDraft = status === false;
@@ -50,25 +53,37 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
     const handleCreationQuiz = () => {
         if (status === false && Platform.OS === 'web') {
             navigation.navigate('quizCreation', { quizId: quizId });
+        }
+    };
 
+    const handlePlayQuiz = async () => {
+        if (status === true && Platform.OS === 'web') {
+            const data = await createGame(quizId);
+            navigation.navigate('quizScreen', { gameId: data.id });
         }
     };
 
     if (status === false && Platform.OS === 'web') {
         return (
-            <TouchableOpacity onPress={handleCreationQuiz}>
-                <View style={styles.QuizInformationView}>
-                    <View style={styles.PrincipalInformationsView}>
-                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
-                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
-                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                    </View>
-                    <View style={styles.SecondaryInformationsView}>
-                        <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
-                        <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
-                    </View>
+            <View style={styles.QuizInformationView}>
+                <View style={styles.PrincipalInformationsView}>
+                    <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
+                    <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
+                    <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
+                    <SimpleButton 
+                        text="Modifier" 
+                        onPress={handleCreationQuiz} 
+                        color={COLORS.button.blue.basic} 
+                        height={30}
+                        width={100}
+                        textStyle={{ fontSize: 20 }}
+                    />
                 </View>
-            </TouchableOpacity>
+                <View style={styles.SecondaryInformationsView}>
+                    <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
+                    <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
+                </View>
+            </View>
         );
     }
 
@@ -78,6 +93,14 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
+                <SimpleButton 
+                    text="Jouer" 
+                    onPress={handlePlayQuiz} 
+                    color={COLORS.button.blue.darkBasic} 
+                    height={30}
+                    width={100}
+                    textStyle={{ fontSize: 20 }}
+                />
             </View>
             <View style={styles.SecondaryInformationsView}>
                 <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
@@ -130,4 +153,12 @@ const styles = StyleSheet.create({
     draftText: {
         color: '#aaaaaa', // Texte grisé
     },
+    touchableOpacity: {
+        padding: 8, // Espacement interne
+        borderRadius: 4, // Coins arrondis
+        width: 100, // Largeur fixe
+        justifyContent: 'center', // Centrer le texte
+        alignItems: 'center', // Centrer le texte
+        height: 30, // Hauteur fixe
+    }
 });

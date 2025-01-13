@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TextInput, Button, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 
 import { getGameInfos } from '../utils/api';
 import { toast } from '../utils/utils';
@@ -8,7 +8,6 @@ import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 
 import { COLORS } from '../css/utils/color';
-import { loadFont } from '../utils/utils';
 import SimpleButton from '../components/SimpleButton';
 
 const platform = Platform.OS;
@@ -22,14 +21,14 @@ export default function ResumeScreen() {
         try {
             setSearch(true);
             if (!gameId) {
-                toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, 'crimson');
+                toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, COLORS.toast.red);
                 setSearch(false);
                 return;
             }
             let infos = getGameInfos(gameId.toLowerCase());
             infos.then(data => {
                 if (data.error) {
-                    toast('error', 'Erreur', 'Aucune partie trouvée avec cet identifiant', 3000, 'crimson');
+                    toast('error', 'Erreur', 'Aucune partie trouvée avec cet identifiant', 3000, COLORS.toast.red);
                     setSearch(false);
                     return;
                 }
@@ -40,17 +39,17 @@ export default function ResumeScreen() {
             })
                 .catch(error => {
                     if (error.status && error.message) {
-                        toast('error', error.status, error.message, 3000, 'crimson');
+                        toast('error', error.status, error.message, 3000, COLORS.toast.red);
                     } else {
-                        toast('error', "Erreur", error, 3000, 'crimson');
+                        toast('error', "Erreur", error, 3000, COLORS.toast.red);
                     }
                 });
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, 'crimson');
+                toast('error', error.status, error.message, 3000, COLORS.toast.red);
             } else {
-                toast('error', "Erreur", error, 3000, 'crimson');
+                toast('error', "Erreur", error, 3000, COLORS.toast.red);
             }
         }
     }
@@ -60,13 +59,12 @@ export default function ResumeScreen() {
         setGameId(idOfGame);
     };
 
-    loadFont();
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Reprenez votre partie</Text>
             <View style={styles.inputView}>
                 <TouchableOpacity onPress={handlePasteGameId}>
-                    <ClipboardPaste size={30}  color="black"/>
+                    <ClipboardPaste size={30} color="black" />
                 </TouchableOpacity>
                 <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
             </View>
@@ -86,7 +84,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: COLORS.background.blue,
     },
-    title:{
+    title: {
         fontSize: 50,
         textAlign: 'center',
         fontFamily: 'LobsterTwo_700Bold_Italic',

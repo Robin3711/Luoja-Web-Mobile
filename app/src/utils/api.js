@@ -1,10 +1,10 @@
 import { decode } from 'html-entities';
 import { getPlatformAPI, setToken, hasToken } from "./utils";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import EventSource from "react-native-sse";
 
 const handleResponseError = async (response) => {
     let errorMessage = 'Une erreur est survenue';
-
 
     try {
         const errorData = await response.json();
@@ -90,7 +90,6 @@ export async function getCurrentQuestion(quizId) {
         return data;
     }
     catch (error) {
-        console.error(error);
         throw error;
     }
 }
@@ -117,7 +116,6 @@ export async function getCurrentAnswer(answer, quizId) {
         return await response.json();
     }
     catch (error) {
-        console.error(error);
         throw error;
     }
 }
@@ -166,7 +164,7 @@ export async function getQuizAverage(quizId) {
     }
 }
 
-export async function createParty(quizId) {
+export async function createGame(quizId, gameMode, difficulty) {
     try {
         const headers = {};
 
@@ -176,6 +174,9 @@ export async function createParty(quizId) {
 
         let url = `${await getPlatformAPI()}/quiz/${quizId}/play`;
 
+        if (gameMode && difficulty) {
+            url += `?gameMode=${gameMode}&difficulty=${difficulty}`;
+        }
         const response = await fetch(url, { headers });
 
         if (!response.ok) await handleResponseError(response);
@@ -312,6 +313,7 @@ export async function getQuestions(amount, category, difficulty) {
             trueFalse: item.incorrect_answers.length === 1,
             correctAnswer: item.correct_answer,
             incorrectAnswers: item.incorrect_answers,
+            type: "text",
         }));
 
         return questions;
@@ -333,6 +335,7 @@ export async function saveQuiz(title, category, difficulty, quizQuestions) {
             text: q.text,
             correctAnswer: q.correctAnswer,
             incorrectAnswers: q.incorrectAnswers,
+            type: q.type,
         }));
 
         const response = await fetch(url, {
@@ -365,6 +368,7 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
             text: q.text,
             correctAnswer: q.correctAnswer,
             incorrectAnswers: q.incorrectAnswers,
+            type: q.type,
         }));
 
         const response = await fetch(url, {
@@ -379,6 +383,29 @@ export async function editQuiz(quizId, title, category, difficulty, quizQuestion
         if (!response.ok) await handleResponseError(response);
 
         return await response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function cloneQuiz(quizId) {
+    try {
+        const headers = {};
+
+        if (await hasToken()) {
+            headers['token'] = await AsyncStorage.getItem('token');
+        }
+
+        let url = `${await getPlatformAPI()}/quiz/${quizId}/clone`;
+
+        const response = await fetch(url, { headers });
+
+        if (!response.ok) await handleResponseError(response);
+
+        const data = await response.json();
+
+        return data;
+
     } catch (error) {
         throw error;
     }
@@ -431,13 +458,309 @@ export async function getQuizAutoComplete(title, theme, difficulty) {
 
         if (difficulty) parameters += `&difficulty=${difficulty}`;
 
-        const response = await fetch(`https://api.luoja.fr/quiz/list?${parameters}`);
+        const response = await fetch(`${await getPlatformAPI()}/quiz/list?${parameters}`);
 
         if (!response.ok) await handleResponseError(response);
 
         return (await response.json()).quizs;
     }
     catch (error) {
+        throw error;
+    }
+}
+
+export async function uploadImage(file) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/uploads`, {
+            method: 'POST',
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: file,
+        });
+
+        return await response;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadAllImages() {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/downloadall`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadImage(id) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/download/${id}`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.blob();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function listenTimer(gameId, setRemainingTime, setSelectedAnswer, setLoading) {
+    try {
+        const apiBaseUrl = await getPlatformAPI();
+        const token = await AsyncStorage.getItem('token');
+
+        // Create an EventSource instance
+        const eventSource = new EventSource(`${apiBaseUrl}/game/${gameId}/timer?token=${token}`);
+
+        // Handle the 'message' event
+        eventSource.addEventListener('message', (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                const time = data.time;
+
+                setRemainingTime(time);
+
+                if (time === 0) {
+                    setSelectedAnswer(true);
+                    setLoading(true);
+                    eventSource.close(); // Close the connection
+                } else if (time === 1) {
+                    setLoading(true);
+                } else {
+                    setLoading(false);
+                }
+            } catch (parseError) {
+                console.error('Error parsing event data:', parseError);
+                eventSource.close();
+            }
+        });
+
+        // Handle errors
+        eventSource.addEventListener('error', (error) => {
+            console.error('EventSource error:', error);
+            eventSource.close();
+        });
+
+        // Optionally return the event source if needed elsewhere
+        return eventSource;
+    } catch (error) {
+        console.error('Error setting up EventSource:', error);
+        throw error;
+    }
+}
+
+export async function createRoom({quizId, playerCount, teams, gameMode, difficulty}) {
+    try {
+        let response;
+
+        switch (gameMode) {
+            case "scrum":
+                response = await fetch(`${await getPlatformAPI()}/room/${quizId}/create?playerCount=${playerCount}&gameMode=${gameMode}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'token': await AsyncStorage.getItem('token'),
+                    },
+                });
+                break;
+            case "team":
+                response = await fetch(`${await getPlatformAPI()}/room/${quizId}/create?playerCount=${playerCount}&gameMode=${gameMode}&difficulty=${difficulty}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'token': await AsyncStorage.getItem('token'),
+                    },
+                    body: JSON.stringify({ teams }),
+                });
+                break;
+            default:
+                break;
+            }
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+
+}
+
+export async function joinRoom(roomId) {
+    try {
+        const apiBaseUrl = await getPlatformAPI();
+        const token = await AsyncStorage.getItem('token');
+
+        // Create an EventSource instance
+        const eventSource = new EventSource(`${apiBaseUrl}/room/${roomId}/join?token=${token}`);
+
+        // Event listeners
+        eventSource.addEventListener('open', () => {
+            console.log('Connected to room:', roomId);
+        });
+
+        eventSource.addEventListener('message', (event) => {
+            console.log('New message:', event.data);
+        });
+
+        eventSource.addEventListener('error', (error) => {
+            console.error('EventSource error:', error);
+            eventSource.close();
+        });
+
+        return eventSource;
+    } catch (error) {
+        console.error('Error joining room:', error);
+        throw error;
+    }
+}
+
+export async function joinTeam(roomId, teamName) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/joinTeam?teamName=${teamName}&token=${await AsyncStorage.getItem('token')}`);
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+
+}
+
+export async function startRoom(roomId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/start`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function getCurrentRoomQuestion(roomId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/question`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function getCurrentRoomAnswer(answer, roomId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/answer`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: JSON.stringify({ answer }),
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function getRoomScores(roomId) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/room/${roomId}/scores`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function uploadAudio(file) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/uploads`, {
+            method: 'POST',
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: file,
+        });
+
+        return await response;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadAllAudios() {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/downloadall`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function downloadAudio(id) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/download/${id}`, {
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.blob();
+    } catch (error) {
         throw error;
     }
 }

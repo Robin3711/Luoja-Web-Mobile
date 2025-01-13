@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
-
+import { FONT } from '../css/utils/font';
 import { themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
 
@@ -13,7 +12,6 @@ import * as Progress from 'react-native-progress';
 export default function EndScreen() {
     const route = useRoute();
     const navigation = useNavigation();
-    loadFont();
 
     const { score, numberOfQuestions, gameId } = route.params;
 
@@ -23,6 +21,8 @@ export default function EndScreen() {
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
+    const [gameMode, setGameMode] = useState("any");
+
 
     useEffect(() => {
         const loadGameData = async () => {
@@ -33,9 +33,10 @@ export default function EndScreen() {
 
                 const infos = await getGameInfos(gameId);
 
-                setCategory(infos.Category !== 0 ? themeOptions.find(option => option.value === infos.Category)?.label : "any");
-                setDifficulty(infos.Difficulty);
+                setCategory(infos.quizCategory !== 0 ? themeOptions.find(option => option.value === infos.quizCategory)?.label : "any");
+                setDifficulty(infos.quizDifficulty);
                 setLoading(false);
+                setGameMode(infos.gameMode);
 
                 let animationProgress = 0;
                 const targetProgress = score / numberOfQuestions;
@@ -58,13 +59,13 @@ export default function EndScreen() {
     }, [gameId]);
 
     const handleReturnHome = async () => {
-        navigation.navigate("menuDrawer");
+        navigation.navigate("initMenu");
     };
 
     const handleReplay = async () => {
         try {
             const newGameId = await restartGame(gameId);
-            navigation.navigate('quizScreen', { gameId: newGameId.id });
+            navigation.navigate('quizScreen', { gameId: newGameId.id, gameMode: gameMode });
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -75,7 +76,7 @@ export default function EndScreen() {
         <View style={styles.container}>
             <Text style={styles.errorText}>{errorMessage}</Text>
             <TouchableOpacity style={styles.button} onPress={() => {
-                navigation.navigate('menuDrawer')
+                navigation.navigate('initMenu')
             }
             }>
                 <Text style={styles.buttonText}>Retour au menu</Text>
@@ -84,7 +85,7 @@ export default function EndScreen() {
     ) : (
         <View style={styles.container}>
             <View style={styles.parentContainer}>
-                <Text style={styles.title}>Fin de partie !</Text>
+                <Text style={FONT.title}>Fin de partie !</Text>
                 <Text style={styles.text}>Récapitulatif de la partie :</Text>
                 <Text style={styles.text}>Catégorie : {category} | difficulté : {difficulty}</Text>
                 {score !== null && numberOfQuestions !== null ? (

@@ -30,6 +30,7 @@ import {
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { ErrorToast, InfoToast, SuccessToast } from 'react-native-toast-message';
+import { COLORS } from '../css/utils/color';
 
 export const iconSize = Platform.OS === 'web' ? 30 : 18;
 
@@ -129,8 +130,26 @@ export const themeOptions = [
 
 export const difficultyOptions = [
     { label: 'Facile', value: 'easy' },
-    { label: 'Moyen', value: 'medium' },
+    { label: 'Moyenne', value: 'medium' },
     { label: 'Difficile', value: 'hard' },
+];
+
+export const publishSortOptions = [
+    { label: 'Tout', value: null },
+    { label: 'Publier', value: true },
+    { label: 'Incomplet', value: false },
+];
+
+export const historySortOptions = [
+    { label: 'Tout', value: null },
+    { label: 'Finis', value: true },
+    { label: 'En cours', value: false },
+];
+
+export const mediaType = [
+    { label: 'Texte', value: 'text' },
+    { label: 'Image', value: 'image' },
+    { label: 'Audio', value: 'audio' }
 ];
 
 export function loadFont() {
@@ -167,7 +186,7 @@ export const toastConfig = {
         <SuccessToast
             {...props}
             style={{
-                borderLeftColor: 'limegreen',
+                borderLeftColor: COLORS.toast.green,
                 width: 600,
                 height: 100,
             }}
@@ -186,7 +205,7 @@ export const toastConfig = {
         <ErrorToast
             {...props}
             style={{
-                borderLeftColor: 'crimson',
+                borderLeftColor: COLORS.toast.red,
                 width: 600,
                 height: 100,
             }}
@@ -205,7 +224,7 @@ export const toastConfig = {
         <InfoToast
             {...props}
             style={{
-                borderLeftColor: 'deepskyblue',
+                borderLeftColor: COLORS.toast.blue,
                 width: 600,
                 height: 100,
             }}
@@ -217,3 +236,11 @@ export const toastConfig = {
         />
     ),
 };
+
+export function getRoomId(url) {
+    const segments = url.split("/"); // Divise l'URL en segments
+    const id = segments[segments.length - 2]; // Récupère l'avant-dernier segment
+    id.trim(); // Supprime les espaces
+    return id;
+
+}

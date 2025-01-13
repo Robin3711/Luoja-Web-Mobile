@@ -2,16 +2,15 @@ import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
-import * as Progress from 'react-native-progress';
-import { getCurrentQuestion, getCurrentAnswer, getGameInfos } from '../utils/api';
+import { getCurrentQuestion, getCurrentAnswer, getGameInfos, listenTimer } from '../utils/api';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { toast } from '../utils/utils';
 
 import { SimpleButton } from '../components/SimpleButton';
-import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 
 
 const platform = Platform.OS;
@@ -19,7 +18,7 @@ const platform = Platform.OS;
 export default function QuizScreen() {
     const route = useRoute();
     const navigation = useNavigation();
-    const { gameId } = route.params;
+    const { gameId, gameMode } = route.params;
 
     if (!gameId) {
         return (
@@ -27,7 +26,7 @@ export default function QuizScreen() {
                 <Text style={styles.quizQuestionText}>
                     Une erreur est survenue lors de la récupération de la partie.
                 </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('menuDrawer', { screen: 'newQuiz' })}>
+                <TouchableOpacity onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })}>
                     <Text style={styles.buttonText}>Retour</Text>
                 </TouchableOpacity>
             </View>
@@ -35,6 +34,7 @@ export default function QuizScreen() {
     }
 
     const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [currentType, setCurrentType] = useState(null);
     const [questionNumber, setQuestionNumber] = useState(null);
     const [totalQuestion, setTotalQuestion] = useState(null);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -42,29 +42,66 @@ export default function QuizScreen() {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [imagesUri, setImagesUri] = useState([]);
+    const [remainingTime, setRemainingTime] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
-
+    const [gameTime, setGameTime] = useState(0);
+    const [timerInitialized, setTimerInitialized] = useState(false);
+    const [timerKey, setTimerKey] = useState(0);
+    const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
 
     useEffect(() => {
         (async () => {
             try {
                 setLoading(true);
                 const infos = await getGameInfos(gameId);
+
                 refreshData(infos);
             } catch (err) {
                 setError(true);
                 setErrorMessage(err.status + " " + err.message);
-            } finally {
-                setLoading(false);
             }
         })();
     }, [gameId]);
 
+    useEffect(() => {
+        if (remainingTime > 0 && !timerInitialized) {
+            setGameTime(remainingTime);
+            setTimerInitialized(true);
+        }
+    }, [remainingTime]);
+
+    useEffect(() => {
+        let timer;
+        if (remainingTime === 1) {
+
+            timer = setTimeout(() => {
+                setTimeStuckAtOne(true);
+            }, 1000);
+        } else {
+
+            setTimeStuckAtOne(false);
+        }
+
+        return () => clearTimeout(timer);
+    }, [remainingTime]);
+
+
+    useEffect(() => {
+        if (timeStuckAtOne && remainingTime === 1) {
+            setRemainingTime(0);
+            setSelectedAnswer(true);
+        }
+    }, [timeStuckAtOne, remainingTime]);
+
     const refreshData = async (infos) => {
         try {
             const data = await getCurrentQuestion(gameId);
+            setCurrentType(data.type);
+
+            await handleListenTimer();
 
             if (infos.questionCursor === infos.numberOfQuestions) {
                 setQuestionNumber(infos.questionCursor);
@@ -78,6 +115,8 @@ export default function QuizScreen() {
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -88,9 +127,15 @@ export default function QuizScreen() {
             setCorrect(null);
 
             const data = await getCurrentQuestion(gameId);
+            setCurrentType(data.type);
+            await handleListenTimer();
+
             setCurrentQuestion(data);
             setIsAnswered(false);
             setQuestionNumber(questionNumber + 1);
+            setTimerInitialized(false);
+            setLoading(false);
+            setTimerKey(prevKey => prevKey + 1);
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -100,8 +145,10 @@ export default function QuizScreen() {
     };
 
     const handleAnswerSelection = (answer) => {
-        if (!isAnswered) {
-            setSelectedAnswer(answer);
+        if (gameMode !== 'timed' || remainingTime > 0) {
+            if (!isAnswered) {
+                setSelectedAnswer(answer);
+            }
         }
     };
 
@@ -122,6 +169,7 @@ export default function QuizScreen() {
                 setIsAnswered(true);
                 if (correctAnswerFromApi === selectedAnswer) updateScore();
             }
+            setTimerInitialized(false);
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -146,45 +194,60 @@ export default function QuizScreen() {
         });
     };
 
+    const handleListenTimer = async () => {
+        if (gameMode) {
+            switch (gameMode) {
+                case 'timed':
+                    await listenTimer(gameId, setRemainingTime, setSelectedAnswer, setLoading);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
 
     const nextQuestionButton = () => (
+
         <TouchableOpacity
-            style={buttonDisabled || (!isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
-            onPress={() =>
-                isAnswered
-                    ? totalQuestion === questionNumber
-                        ? handleEnd()
-                        : handleNewQuestion()
-                    : handleGetAnswer()
-            }
-            disabled={buttonDisabled || (!isAnswered && !selectedAnswer)}
+            style={buttonDisabled || selectedAnswer === null || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
+            onPress={() => {
+                if (gameMode === 'timed' && remainingTime === 0) {
+                    // If game is timed and remaining time is 0, show the next question
+                    totalQuestion === questionNumber ? handleEnd() : handleNewQuestion();
+                } else {
+                    // For other cases, handle the usual button actions
+                    isAnswered
+                        ? totalQuestion === questionNumber
+                            ? handleEnd()
+                            : handleNewQuestion()
+                        : handleGetAnswer();
+                }
+            }}
+            disabled={buttonDisabled || selectedAnswer === null || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer)}
         >
             <Text style={styles.buttonText}>
-                {isAnswered ? (
+                {gameMode === 'timed' && remainingTime === 0 ? (
+                    buttonDisabled ? 'Chargement de la question suivante...' : (loading ? ('Question suivante') : ('Chargement...'))
+                ) : isAnswered ? (
                     totalQuestion === questionNumber ? (
                         buttonDisabled ? 'Chargement des résultats...' : 'Voir les résultats'
                     ) : (
                         buttonDisabled ? 'Chargement de la question...' : 'Question suivante'
                     )
                 ) : (
-                    buttonDisabled ? 'Vérification...' : 'Vérifier ma réponse'
+                    buttonDisabled ? 'Vérification...' : 'Valider'
                 )}
             </Text>
-
         </TouchableOpacity>
     );
 
-    console.log('questionNumber', questionNumber);
-    console.log('totalQuestion', totalQuestion);
-    console.log('progress', questionNumber / totalQuestion);
-
     const handleCopyGameId = async () => {
         await Clipboard.setStringAsync(gameId);
-        toast('info', 'L\'id à bien été copier !', "", 2000, 'dodgerblue');
+        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.blue);
     };
 
-    loadFont();
     return (
         !error ? (
             <View style={styles.quizScreenView}>
@@ -192,56 +255,60 @@ export default function QuizScreen() {
                     <>
                         <TouchableOpacity onPress={handleCopyGameId} style={styles.gameId}>
                             <Copy size={24} color="black" />
-                            <Text style={styles.gameIdText}>ID : {gameId} </Text>
+                            <Text style={FONT.text}>ID : {gameId} </Text>
                         </TouchableOpacity>
                         <View style={styles.mainView}>
                             <View style={styles.questionView}>
                                 <CountdownCircleTimer
-                                    duration={7}
-                                    size={100}
-                                    strokeWidth={10}
-                                    colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-                                    colorsTime={[7, 5, 2, 0]}
+                                    key={timerKey}
+                                    isPlaying={timerInitialized}
+                                    duration={gameTime}
+                                    size={Platform.OS === 'web' ? 150 : 110}
+                                    strokeWidth={Platform.OS === 'web' ? 15 : 10}
+                                    colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
+                                    colorsTime={[
+                                        (gameTime * 4) / 5,
+                                        (gameTime * 3) / 5,
+                                        (gameTime * 2) / 5,
+                                        (gameTime * 1) / 5,
+                                        (gameTime * 0) / 5,
+                                    ]}
+                                    style={{ marginTop: 5 }} // Baisse le cercle de 5 pixels
                                 >
-                                    {({ remainingTime }) => (
-                                        <Text style={styles.questionNumber}>{questionNumber}</Text>
+                                    {() => (
+                                        <>
+                                            {gameMode === "timed" ? (
+                                                <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                            ) : (<Text style={styles.questionNumber}></Text>)}
+
+                                            <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                        </>
                                     )}
                                 </CountdownCircleTimer>
-                                <Text style={styles.questionNumber}>Score: {score}</Text>
+
+                                <Text style={[styles.score, {marginTop:5}]}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
-                                    
-                                    {platform == 'web' && 
-                                        <>
-                                            <Text style={styles.quizBarTextView}>1 </Text>
-
-                                            <Progress.Bar
-                                            borderRadius={0}
-                                            height={10}
-                                            progress={questionNumber / totalQuestion}
-                                            width={platform === 'web' ? 400 : 200}
-                                            indeterminate={loading}
-                                            indeterminateAnimationDuration={2000}
-                                            />
-
-                                            <Text style={styles.quizBarTextView}> {totalQuestion}</Text>
-                                        </>
-                                    }
                                 </View>
-                                <Text style={styles.question}>{currentQuestion.question}</Text>
+                                <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
                                 {platform === 'web' && nextQuestionButton()}
                             </View>
 
                             <View style={styles.answersView}>
-                                {currentQuestion.answers.map((answer, index) => (
-                                    <AnswerButton
-                                        key={index}
-                                        shape={shapes[index]}
-                                        text={answer}
-                                        onClick={handleAnswerSelection}
-                                        filter={getAnswerFilter(answer)}
-                                    
-                                    />
-                                ))}
+                                {currentQuestion.answers.map((answer, index) => {
+                                    return (
+                                        answer === null ? null : (
+                                            <AnswerButton
+                                                key={index}
+                                                shape={shapes[index]}
+                                                text={answer}
+                                                onClick={() => handleAnswerSelection(answer)}
+                                                filter={getAnswerFilter(answer)}
+                                                type={currentType}
+                                                disabled={gameMode === 'timed' && remainingTime === 0}
+                                            />
+                                        )
+                                    );
+                                })}
                                 {platform !== 'web' && nextQuestionButton()}
                             </View>
                         </View>
@@ -254,14 +321,14 @@ export default function QuizScreen() {
             <View style={styles.quizScreenView}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
 
-                <SimpleButton title="Retour au menu" onPress={() => navigation.navigate('menuDrawer', { screen: 'newQuiz' })} />
-                
+                <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
+
             </View>
         )
 
     );
 }
-
+// ...existing code...
 const styles = StyleSheet.create({
     quizScreenView: {
         flex: 1,
@@ -291,10 +358,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...platform === 'web' && { gap: 20, },
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     questionView: {
         alignItems: 'center',
-        width: platform === 'web' ? '50%' : '100%',
+        top: 20,
+        width: platform === 'web' ? '45%' : '100%',
+        ...platform !== 'web' && { marginVertical: 10, },
+        ...platform === 'web' && { gap: 70, },
     },
     question: {
         fontSize: platform === 'web' ? 30 : 25,
@@ -303,9 +374,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: COLORS.text.blue.dark,
         ...platform === 'web' && { marginVertical: 100, },
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     questionNumber: {
+        marginTop: -20,
         fontSize: platform === 'web' ? 30 : 25,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+        fontWeight: 'bold',
+        ...platform !== 'web' && { marginVertical: 10, },
+        ...platform === 'web' && { marginTop: 0, },  
+    },    
+    score: {
+        marginBottom: -15,
+        fontSize: platform === 'web' ? 30 : 12,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
@@ -313,7 +395,7 @@ const styles = StyleSheet.create({
     answersView: {
         width: platform === 'web' ? '50%' : '100%',
         alignItems: 'center',
-        
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     buttons: {
         display: 'flex',
@@ -326,6 +408,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     disabledButtons: {
         display: 'flex',
@@ -338,23 +421,28 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     quizBarView: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     quizBarTextView: {
         fontSize: 22,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     errorText: {
         fontSize: 18,
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
 });

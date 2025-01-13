@@ -1,33 +1,33 @@
 import { View, Text, Platform, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SimpleButton from '../components/SimpleButton';
-import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+
+import { FONT } from '../css/utils/font';
 
 const platform = Platform.OS;
 
 export default function HomeScreen() {
     const navigation = useNavigation();
-    loadFont();
 
     return (
         <View style={styles.homeView}>
 
-            <Text style={styles.appTitle}>Luoja</Text>
-            
+            <Text style={FONT.luoja}>Luoja</Text>
+
             <View style={styles.childView}>
-                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/splash.png')} />}
+                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
 
                 <View style={styles.listButton}>
-                    <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')}/>
+                    <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')} />
 
                     <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
 
                     <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
                 </View>
 
-                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/splash.png')} />}
-            </View>            
+                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
+            </View>
         </View>
     );
 }
@@ -41,12 +41,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
         backgroundColor: COLORS.background.blue,
-    },
-    appTitle:{
-        height: platform === 'web' ? '10%' : '25%',
-        fontSize: 150,
-        fontFamily: 'LobsterTwo_700Bold_Italic',
-        color: COLORS.text.blue.dark,
     },
     childView: {
         height: platform === 'web' ? '90%' : '75%',

@@ -1,42 +1,53 @@
-import { Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { loadFont } from '../utils/utils';
+import { Text, TouchableOpacity, StyleSheet, Platform, Dimensions } from 'react-native';
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 
 const platform = Platform.OS;
+const { width } = Dimensions.get('window');
+const isMobile = width < 775;
 
-export default function SimpleButton({ text, onPress, color = COLORS.button.blue.basic }) {
-    loadFont();
-    
+export default function SimpleButton({
+    text,
+    onPress,
+    color = COLORS.button.blue.basic,
+    height = isMobile ? 50 : 75,
+    width = isMobile ? 250 : 350,
+    textStyle = {}
+}) {
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor: color }]} >
-            <Text style={styles.text}>{text}</Text>
+        <TouchableOpacity
+            onPress={onPress}
+            style={[styles.button, { backgroundColor: color, minHeight: height, width }]}
+        >
+            <Text style={[FONT.button, styles.buttonText, textStyle]}>{text}</Text>
         </TouchableOpacity>
     );
 }
 
-
 const styles = StyleSheet.create({
     button: {
-        position: 'relative', // Permet de positionner le texte absolument par rapport au bouton
+        position: 'relative',
         backgroundColor: COLORS.button.blue.basic,
-        height: 75,
-        width: 350,
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
-        ...platform === 'web' ? { 
-            boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
-        } : { elevation: 2 },
+        justifyContent: 'center', // Centre le contenu verticalement
+        alignItems: 'center',    // Centre le contenu horizontalement
+        paddingVertical: 10, // Ajoute du padding vertical pour ajuster la hauteur
+        ...platform === 'web'
+            ? {
+                boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
+            }
+            : {
+                elevation: 2, // Ombres pour Android
+                shadowColor: '#000', // Ombres pour iOS
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.25,
+                shadowRadius: 1,
+            },
     },
-    text: {
-        position: 'absolute', // Positionne le texte absolument par rapport au bouton
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)', // Centre le texte horizontalement et verticalement
-        width: '100%',
-        fontSize: 32,
-        fontFamily: 'LobsterTwo_700Bold',
-        textAlign: 'center', // Centre le texte horizontalement
-        color: COLORS.text.blue.dark,
+    buttonText: {
+        textAlign: 'center',
+        flexWrap: 'wrap', // Permet au texte de passer à la ligne si nécessaire
     },
 });

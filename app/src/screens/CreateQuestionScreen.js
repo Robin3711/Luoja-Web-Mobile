@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Switch } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TextInput, Picker } from 'react-native';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
-
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
+import SimpleButton from '../components/SimpleButton';
+import { mediaType, toast } from '../utils/utils';
+import ChoiseSelector from '../components/ChoicePicker';
 
 export default function CreateQuestionScreen() {
-
     const route = useRoute();
     const navigation = useNavigation();
 
@@ -15,7 +16,9 @@ export default function CreateQuestionScreen() {
 
     const [questionText, setQuestionText] = useState('');
     const [selectedShape, setSelectedShape] = useState('');
-    const [showFourAnswers, setShowFourAnswers] = useState(true);
+    const [numAnswers, setNumAnswers] = useState(4); // Par défaut à 4 réponses
+    const [typeQuestion, setType] = useState('text');
+    const [fileName, setFileName] = useState(null);
 
     // Answers state
     const [answers, setAnswers] = useState({
@@ -28,37 +31,38 @@ export default function CreateQuestionScreen() {
     useEffect(() => {
         if (question) {
             setQuestionText(question.text);
-            if (question.trueFalse) {
-                setShowFourAnswers(false);
-                setAnswers({
-                    SQUARE: question.correctAnswer,
-                    TRIANGLE: question.incorrectAnswers[0],
-                });
-                setSelectedShape('SQUARE');
-            } else {
-                setAnswers({
-                    SQUARE: question.correctAnswer,
-                    TRIANGLE: question.incorrectAnswers[0],
-                    CIRCLE: question.incorrectAnswers[1],
-                    STAR: question.incorrectAnswers[2],
-                });
-                setSelectedShape('SQUARE');
-            }
+            const numAns = question.incorrectAnswers.length + 1;
+            setNumAnswers(numAns);
+            setAnswers({
+                SQUARE: question.correctAnswer,
+                TRIANGLE: question.incorrectAnswers[0] || '',
+                CIRCLE: question.incorrectAnswers[1] || '',
+                STAR: question.incorrectAnswers[2] || '',
+            });
+            setType(question.type);
+            setSelectedShape('SQUARE');
+        } else {
+            setType("text");
+            setFileName(null);
         }
-    }
-        , [question]);
+    }, [question]);
 
-    const shapes = ['SQUARE', 'TRIANGLE', ...(showFourAnswers ? ['CIRCLE', 'STAR'] : [])];
+    useEffect(() => {
+        // Synchronise l'état des réponses avec le nombre de réponses
+        setAnswers((prev) => {
+            const newAnswers = { ...prev };
+            if (numAnswers < 4) newAnswers.STAR = '';
+            if (numAnswers < 3) newAnswers.CIRCLE = '';
+            return newAnswers;
+        });
+    }, [numAnswers]);
+
+    const shapes = ['SQUARE', 'TRIANGLE', ...(numAnswers >= 3 ? ['CIRCLE'] : []), ...(numAnswers === 4 ? ['STAR'] : [])];
 
     const handleShapeClick = (shape) => setSelectedShape(shape);
 
     const handleTextChange = (shape, text) =>
         setAnswers((prev) => ({ ...prev, [shape]: text }));
-
-    const handleToggleFourAnswers = () => {
-        setShowFourAnswers((prev) => !prev);
-        setSelectedShape('');
-    };
 
     const handleReset = () => {
         setQuestionText('');
@@ -73,66 +77,52 @@ export default function CreateQuestionScreen() {
 
     const handleSubmit = () => {
         if (!questionText) {
-            alert('La question ne peut pas être vide');
+            toast('error', 'La question ne peut pas être vide', '', 3000, COLORS.toast.red);
             return;
         }
 
         if (!selectedShape) {
-            alert('Veuillez sélectionner une bonne réponse en cliquant sur une forme');
+            toast('error', 'Veuillez sélectionner une bonne réponse en cliquant sur une forme', '', 3000, COLORS.toast.red);
             return;
         }
 
-        if (showFourAnswers) {
-            if (!answers.SQUARE || !answers.TRIANGLE || !answers.CIRCLE || !answers.STAR) {
-                alert('Veuillez remplir toutes les réponses');
-                return;
-            }
-
-            handleQuestion([
-                {
-                    text: questionText,
-                    trueFalse: !showFourAnswers,
-                    correctAnswer: answers[selectedShape],
-                    incorrectAnswers: Object.values(answers).filter((_, i) => i !== shapes.indexOf(selectedShape)),
-                },
-            ], index);
+        const requiredAnswers = shapes.map((shape) => answers[shape]);
+        if (requiredAnswers.some((answer) => !answer)) {
+            toast('error', `Veuillez remplir toutes les ${numAnswers} réponses`, '', 3000, COLORS.toast.red);
+            return;
         }
-        else {
-            if (!answers.SQUARE || !answers.TRIANGLE) {
-                alert('Veuillez remplir toutes les réponses');
-                return;
-            }
 
-            handleQuestion([
-                {
-                    text: questionText,
-                    trueFalse: !showFourAnswers,
-                    correctAnswer: answers[selectedShape],
-                    incorrectAnswers: selectedShape === 'SQUARE' ? [answers.TRIANGLE] : [answers.SQUARE],
-                },
-            ], index);
-        }
+        const incorrectAnswers = shapes.filter((shape) => shape !== selectedShape).map((shape) => answers[shape]);
+
+        handleQuestion([
+            {
+                text: questionText,
+                trueFalse: false,
+                correctAnswer: answers[selectedShape],
+                incorrectAnswers: incorrectAnswers,
+                type: typeQuestion,
+            },
+        ], index);
 
         handleReset();
-
         navigation.goBack();
     };
 
+    const handleValueChange = (shape, id) => {
+        setAnswers((prev) => ({ ...prev, [shape]: id }));
+        setFileName(id);
+    }
+
     const renderWithCheckmark = (shape) => (
         <View style={styles.answerInputContainer} key={shape}>
-            {selectedShape === shape && (
-                <MaterialIcons
-                    name="check"
-                    size={24}
-                    color="green"
-                    style={styles.checkmarkIcon}
-                />
-            )}
             <AnswerInput
                 shape={shape}
                 text={answers[shape]}
                 onTextChange={(text) => handleTextChange(shape, text)}
                 onShapeClick={handleShapeClick}
+                onValueChange={(id) => handleValueChange(shape, id)}
+                type={typeQuestion}
+                selectedShape={selectedShape}
             />
         </View>
     );
@@ -142,7 +132,7 @@ export default function CreateQuestionScreen() {
             {/* Left Panel */}
             <View style={styles.createQuestionLeftView}>
                 <View style={styles.createQuestionInputView}>
-                    <Text style={styles.createQuestionTitle}>Questions :</Text>
+                    <Text style={FONT.title}>Question :</Text>
                     <TextInput
                         style={styles.createQuestionInput}
                         multiline={true}
@@ -150,15 +140,30 @@ export default function CreateQuestionScreen() {
                         value={questionText}
                         onChangeText={setQuestionText}
                     />
+                    <ChoiseSelector
+                        value={typeQuestion}
+                        onValueChange={setType}
+                        parameters={mediaType}
+                        defaultValue={true}
+                        style={styles.choiceSelector}
+                    />
                     <View style={styles.toggleContainer}>
-                        <Text style={styles.toggleLabel}>2 réponses</Text>
-                        <Switch value={showFourAnswers} onValueChange={handleToggleFourAnswers} />
-                        <Text style={styles.toggleLabel}>4 réponses</Text>
+                        <Text style={styles.toggleLabel}>Nombre de réponses :</Text>
+                        <Picker
+                            selectedValue={numAnswers}
+                            onValueChange={(value) => {
+                                setNumAnswers(value);
+                                setSelectedShape(''); // Réinitialise la sélection
+                            }}
+                            style={styles.picker}
+                        >
+                            <Picker.Item style={FONT.text} label="2 réponses" value={2} />
+                            <Picker.Item style={FONT.text} label="3 réponses" value={3} />
+                            <Picker.Item  style={FONT.text} label="4 réponses" value={4} />
+                        </Picker>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.createQuestionSubmit} onPress={handleSubmit}>
-                    <Text>Valider</Text>
-                </TouchableOpacity>
+                <SimpleButton text="Valider" onPress={handleSubmit} />
             </View>
 
             {/* Right Panel */}
@@ -196,12 +201,15 @@ const styles = StyleSheet.create({
     },
     createQuestionTitle: {
         display: 'flex',
+        fontFamily: 'LobsterTwo_400Regular',
+        fontSize: 25,
         justifyContent: 'center',
         alignItems: 'center',
         width: '50%',
         height: '10%',
         backgroundColor: 'white',
         borderRadius: 25,
+        marginBottom: 25,
     },
     createQuestionInput: {
         width: '90%',
@@ -228,19 +236,23 @@ const styles = StyleSheet.create({
         position: 'relative',
         marginVertical: 10,
     },
-    checkmarkIcon: {
-        position: 'absolute',
-        left: -30,
-        top: '50%',
-        transform: [{ translateY: -12 }],
-    },
     toggleContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 10,
+        gap: 20,
     },
     toggleLabel: {
         fontSize: 16,
         marginHorizontal: 10,
+    },
+    picker: {
+        height: 50,
+        width: 150,
+        backgroundColor: 'white',
+        borderRadius: 10,
+    },
+    choiceSelector: {
+        marginTop: 20,
     },
 });

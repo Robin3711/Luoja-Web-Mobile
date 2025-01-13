@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { getGameInfos, restartGame } from '../utils/api';
+import { getGameInfos, createGame } from '../utils/api';
 import { toast } from '../utils/utils';
-import { getThemeLabel, formatReadableDate } from '../utils/utils';
+import { formatReadableDate } from '../utils/utils';
 import { useNavigation } from '@react-navigation/native';
 
 import { COLORS } from '../css/utils/color';
 
-export default function HistoryQuizInformation({ partyId }) {
+export default function HistoryQuizInformation({ partyId, quizId, onStatusChange }) {
     const [loading, setLoading] = useState(true);
     const [score, setScore] = useState(0);
     const [date, setDate] = useState("any");
@@ -16,6 +16,8 @@ export default function HistoryQuizInformation({ partyId }) {
     const [nbQuestions, setNbQuestions] = useState(0);
     const [cursor, setCursor] = useState(0);
     const [buttonText, setButtonText] = useState('Continuer');
+    const [gameMode, setGameMode] = useState(null);
+    const [gameDifficulty, setGameDifficulty] = useState(null);
 
     const navigation = useNavigation();
 
@@ -31,29 +33,24 @@ export default function HistoryQuizInformation({ partyId }) {
                         scoreTemp++;
                     }
                 }
+                setGameMode(data.gameMode);
                 setScore(scoreTemp);
                 let dateTemp = formatReadableDate(data.CreateDate);
                 setDate(dateTemp);
-                let difficultyTemp = data.Difficulty;
-                if (difficultyTemp === "easy") {
-                    setDifficulty("Facile");
-                } else if (difficultyTemp === "medium") {
-                    setDifficulty("Moyen");
-                } else {
-                    setDifficulty("Difficile");
-                }
-                setDifficulty(difficultyTemp);
+                setGameDifficulty(data.gameDifficulty)
+                setDifficulty(data.quizDifficulty);
                 setTitle(data.Title);
                 setNbQuestions(data.numberOfQuestions);
-                if (data.numberOfQuestions === data.questionCursor) {
-                    setButtonText('Rejouer');
-                }
+                const status = data.numberOfQuestions === data.questionCursor ? 'Rejouer' : 'Continuer';
+                setButtonText(status);
+
+                onStatusChange(partyId, status, data.Title);
             }
             catch (error) {
                 if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, 'crimson');
+                    toast('error', error.status, error.message, 3000, COLORS.toast.red);
                 } else {
-                    toast('error', 'Erreur', error, 3000, 'crimson');
+                    toast('error', 'Erreur', error, 3000, COLORS.toast.red);
                 }
             }
         }
@@ -63,12 +60,19 @@ export default function HistoryQuizInformation({ partyId }) {
     const handleContinueGame = async () => {
         if (cursor === nbQuestions) {
             // on recrée une partie
-            const newGameId = await restartGame(partyId);
-            navigation.navigate('quizScreen', { gameId: newGameId.id });
+            createGame(quizId, gameMode, gameDifficulty).then((game) => {
+                navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
+            }).catch((error) => {
+                if (error.status && error.message) {
+                    toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                } else {
+                    toast('error', 'Erreur', error, 3000, COLORS.toast.red);
+                }
+            });
         }
         else {
             // on continue la partie
-            navigation.navigate('quizScreen', { gameId: partyId });
+            navigation.navigate('quizScreen', { gameId: partyId, gameMode: gameMode });
         }
     }
 
@@ -82,7 +86,8 @@ export default function HistoryQuizInformation({ partyId }) {
                 <Text style={styles.titleText}>{title || `${partyId}`}</Text>
                 <Text style={styles.titleText}>{difficulty}</Text>
                 <Text style={styles.titleText}>{nbQuestions}</Text>
-                <TouchableOpacity style={styles.touchableOpacity} onPress={handleContinueGame}>
+                <Text style={styles.titleText}>{gameMode !== null ? gameDifficulty + ' ' + gameMode : 'Default'}</Text>
+                <TouchableOpacity style={[styles.touchableOpacity, { backgroundColor: buttonText === 'Rejouer' ? COLORS.button.blue.darkBasic : COLORS.button.blue.basic }]} onPress={handleContinueGame}>
                     <Text>{buttonText}</Text>
                 </TouchableOpacity>
             </View>
@@ -135,7 +140,6 @@ const styles = StyleSheet.create({
         width: '50%'
     },
     touchableOpacity: {
-        backgroundColor: COLORS.button.blue.basic, // Bleu Bootstrap
         padding: 8, // Espacement interne
         borderRadius: 4, // Coins arrondis
         width: 100, // Largeur fixe
