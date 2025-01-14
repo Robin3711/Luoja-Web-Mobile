@@ -141,12 +141,14 @@ export default function CreateQuestionScreen() {
                 setLoading(false);
             }
             catch (error) {
-                toast('error', 'Erreur lors de la génération des réponses', '', 3000, COLORS.toast.red);
-                setLoading(false);
-                return;
-            }            
+                toast('error', error, '', 3000, COLORS.toast.red);
 
-            
+                if(error.status === 500){
+                    setLoading(false);
+                }
+
+                return;
+            }
         }
     };
 
@@ -207,7 +209,7 @@ export default function CreateQuestionScreen() {
             {/* Right Panel */}
             <View style={styles.createQuestionRightView}>
                 <View style={styles.generateAnswersButtonView}>
-                    <SimpleButton text="Générer des réponses" onPress={handleGenerate} />
+                    <SimpleButton text="Générer des réponses" onPress={handleGenerate} disabled={loading}/>
                     {loading && <ActivityIndicator size="large" color={COLORS.primary} />}
                 </View>
                 <Picker
