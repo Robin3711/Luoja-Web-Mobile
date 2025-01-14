@@ -34,7 +34,7 @@ apk:
   - cd app
   - npm install  
   - npm install eas-cli    
-  - npx eas-cli build --platform android  --profile production --non-interactive --no-wait
+  - npx eas-cli build --platform android  --profile preview --non-interactive --no-wait
   rules:
     - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release"
 
