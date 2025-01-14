@@ -29,7 +29,7 @@ export default function LaunchGameMode() {
                 navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
             })
             .catch((error) => {
-                const errorMsg = error.status && error.message 
+                const errorMsg = error.status && error.message
                     ? `${error.status}: ${error.message}`
                     : error.toString();
                 toast('error', 'Erreur', errorMsg, 3000, COLORS.toast.red);
@@ -37,7 +37,7 @@ export default function LaunchGameMode() {
     };
 
     const handleStartRoom = (gameMode) => {
-        let roomTeams = teams.length > 0 ? teams : ["Team 1", "Team 2"];
+        let roomTeams = teams.length > 1 ? teams : ["Team 1", "Team 2"];
         const playerCount = gameMode === "scrum" ? scrumPlayerCount : teamPlayerCount;
 
         if (playerCount <= 1) {

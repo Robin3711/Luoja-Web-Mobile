@@ -96,63 +96,99 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
         }
     };
 
+
     useEffect(() => {
 
-        async function requestPermission() {
-            const { status } = await Audio.requestPermissionsAsync();
-            if (status !== 'granted') {
-                console.warn('Permission audio non accordée');
-            }
-        }
-        requestPermission();
-
-
-        async function handleMedia() {
-            let fileUri = null;
-            try {
+        if (Platform.OS === 'web') {
+            async function handleMedia() {
                 if (type === 'image' && text) {
-                    const blob = await downloadImage(text);
-                    fileUri = FileSystem.documentDirectory + `${text}`;
-                    const base64Data = await blobToBase64(blob);
-                    await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
-                    setFile(fileUri);
-                    fileRef.current = fileUri;
+                    const file = await downloadImage(text);
+                    const url = URL.createObjectURL(file);
+                    setFile(url);
                 }
 
                 if (type === 'audio' && text) {
-                    const blob = await downloadAudio(text);
-                    fileUri = FileSystem.documentDirectory + `${text}`;
-                    const base64Data = await blobToBase64(blob);
-                    await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
-                    setFile(fileUri);
-                    fileRef.current = fileUri;
-                    await sound.loadAsync({ uri: fileUri });
-                }
-            } catch (error) {
-                console.error('Erreur lors du traitement des fichiers média :', error);
-            }
-        }
-
-        handleMedia();
-
-        return () => {
-            async function cleanup() {
-                try {
-                    if (sound) {
-                        await sound.unloadAsync();
+                    const file = await downloadAudio(text);
+                    console.log(file);
+                    let url;
+                    if (Platform.OS === "web") {
+                        url = URL.createObjectURL(file);
+                        setFile(url);
+                    } else {
+                        url = file;
+                        setFile(url);
                     }
-                    if (fileRef.current) {
-                        const exists = await FileSystem.getInfoAsync(fileRef.current);
-                        if (exists.exists) {
-                            await FileSystem.deleteAsync(fileRef.current, { idempotent: true });
-                        }
+
+
+                    await sound.loadAsync({ uri: url });
+
+                }
+            }
+            handleMedia();
+
+            return () => {
+                sound.unloadAsync();
+            };
+
+        } else {
+            async function requestPermission() {
+                const { status } = await Audio.requestPermissionsAsync();
+                if (status !== 'granted') {
+                    console.warn('Permission audio non accordée');
+                }
+            }
+            requestPermission();
+
+
+            async function handleMedia() {
+                let fileUri = null;
+                try {
+                    if (type === 'image' && text) {
+                        const blob = await downloadImage(text);
+                        fileUri = FileSystem.documentDirectory + `${text}`;
+                        const base64Data = await blobToBase64(blob);
+                        await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
+                        setFile(fileUri);
+                        fileRef.current = fileUri;
+                    }
+
+                    if (type === 'audio' && text) {
+                        const blob = await downloadAudio(text);
+                        fileUri = FileSystem.documentDirectory + `${text}`;
+                        const base64Data = await blobToBase64(blob);
+                        await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
+                        setFile(fileUri);
+                        fileRef.current = fileUri;
+                        await sound.loadAsync({ uri: fileUri });
                     }
                 } catch (error) {
-                    console.error('Erreur lors du nettoyage des fichiers :', error);
+                    console.error('Erreur lors du traitement des fichiers média :', error);
                 }
             }
-            cleanup();
-        };
+
+            handleMedia();
+
+            return () => {
+                async function cleanup() {
+                    try {
+                        if (sound) {
+                            await sound.unloadAsync();
+                        }
+                        if (fileRef.current) {
+                            const exists = await FileSystem.getInfoAsync(fileRef.current);
+                            if (exists.exists) {
+                                await FileSystem.deleteAsync(fileRef.current, { idempotent: true });
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Erreur lors du nettoyage des fichiers :', error);
+                    }
+                }
+                cleanup();
+            };
+        }
+
+
     }, [text, type]);
 
 
