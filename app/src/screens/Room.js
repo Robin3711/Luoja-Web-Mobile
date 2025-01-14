@@ -74,7 +74,7 @@ export default function Room() {
 
                 eventSource.addEventListener('error', (err) => {
                     console.error("Erreur EventSource :", err);
-                    toast("error", "Erreur de connexion à la partie", 3000, COLORS.toast.red);
+                    toast("error", "Le nombre de joueurs maximum est atteint", '', 3000, COLORS.toast.red);
                     navigation.navigate("initMenu");
                 });
 

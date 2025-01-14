@@ -74,6 +74,12 @@ export default function RoomQuizScreen() {
             setGameTime(remainingTime);
             setTimerInitialized(true);
         }
+        else {
+            if (gameMode === "scrum") {
+                setGameTime(30);
+                setTimerInitialized(false);
+            }
+        }
     }, [remainingTime]);
 
     useEffect(() => {
