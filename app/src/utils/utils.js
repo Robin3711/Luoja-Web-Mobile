@@ -238,9 +238,31 @@ export const toastConfig = {
 };
 
 export function getRoomId(url) {
-    const segments = url.split("/"); // Divise l'URL en segments
-    const id = segments[segments.length - 2]; // Récupère l'avant-dernier segment
-    id.trim(); // Supprime les espaces
-    return id;
+    const queryString = url.split('?')[1]; // Récupérer la partie après le "?"
+    const params = new URLSearchParams(queryString);
+    return params.get('roomId'); // Extraire le paramètre roomId
 
+}
+
+export function hasExtension(answer) {
+    return (
+        answer.endsWith('.mp3') ||
+        answer.endsWith('.jpeg') ||
+        answer.endsWith('.jpg') ||
+        answer.endsWith('.png')
+    );
+}
+
+export function hasValidAudioExtension(answer) {
+    return (
+        answer.endsWith('.mp3')
+    )
+}
+
+export function hasValidImageExtension(answer) {
+    return (
+        answer.endsWith('.jpeg') ||
+        answer.endsWith('.jpg') ||
+        answer.endsWith('.png')
+    );
 }

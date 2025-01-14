@@ -563,7 +563,7 @@ export async function listenTimer(gameId, setRemainingTime, setSelectedAnswer, s
     }
 }
 
-export async function createRoom({quizId, playerCount, teams, gameMode, difficulty}) {
+export async function createRoom({ quizId, playerCount, teams, gameMode, difficulty }) {
     try {
         let response;
 
@@ -589,7 +589,7 @@ export async function createRoom({quizId, playerCount, teams, gameMode, difficul
                 break;
             default:
                 break;
-            }
+        }
 
         if (!response.ok) await handleResponseError(response);
 
@@ -760,6 +760,23 @@ export async function downloadAudio(id) {
         if (!response.ok) await handleResponseError(response);
 
         return await response.blob();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function deleteFile(id) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/delete/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response;
     } catch (error) {
         throw error;
     }

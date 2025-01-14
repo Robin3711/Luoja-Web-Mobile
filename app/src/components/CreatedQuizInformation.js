@@ -47,7 +47,7 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
 
     const detailTextStyle = [
         styles.detailText,
-        isDraft && styles.draftText, // Ajouter un texte grisé pour les brouillons
+        isDraft && styles.draftText,
     ];
 
     const handleCreationQuiz = () => {
@@ -70,10 +70,10 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                    <SimpleButton 
-                        text="Modifier" 
-                        onPress={handleCreationQuiz} 
-                        color={COLORS.button.blue.basic} 
+                    <SimpleButton
+                        text="Modifier"
+                        onPress={handleCreationQuiz}
+                        color={COLORS.button.blue.basic}
                         height={30}
                         width={100}
                         textStyle={{ fontSize: 20 }}
@@ -93,10 +93,10 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                <SimpleButton 
-                    text="Jouer" 
-                    onPress={handlePlayQuiz} 
-                    color={COLORS.button.blue.darkBasic} 
+                <SimpleButton
+                    text="Jouer"
+                    onPress={handlePlayQuiz}
+                    color={COLORS.button.blue.darkBasic}
                     height={30}
                     width={100}
                     textStyle={{ fontSize: 20 }}
