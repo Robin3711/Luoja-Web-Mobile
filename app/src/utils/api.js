@@ -764,3 +764,23 @@ export async function downloadAudio(id) {
         throw error;
     }
 }
+
+export async function generateAnswers(question, theme) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/ai/generate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: JSON.stringify({ question, theme }),
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
+        throw error;
+    }
+}
