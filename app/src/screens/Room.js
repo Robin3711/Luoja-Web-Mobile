@@ -50,6 +50,10 @@ export default function Room() {
         }
     }
 
+    const handleReturnHome = async () => {
+        navigation.navigate("initMenu");
+    };
+
     useEffect(() => {
         const connect = async () => {
             joinRoom(roomId).then((source) => {
@@ -131,9 +135,23 @@ export default function Room() {
                 ))}
             </ScrollView>
             {gameMode === "team" && (
+                <div style={styles.teamButtons} >
+                    <SimpleButton
+                        text="Commencer la partie"
+                        onPress={() => startRoom(roomId)}
+                        color={COLORS.button.blue.basic}
+                    />
+                    <SimpleButton
+                        text="Retourner au menu"
+                        onPress={handleReturnHome}
+                        color={COLORS.button.blue.basic}
+                    />
+                </div>
+            )}
+            {gameMode === "scrum" && (
                 <SimpleButton
-                    text="Start Game"
-                    onPress={() => startRoom(roomId)}
+                    text="Retourner au menu"
+                    onPress={handleReturnHome}
                     color={COLORS.button.blue.basic}
                 />
             )}
@@ -144,7 +162,7 @@ export default function Room() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start', // Aligner les éléments en haut
+        justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 20,
         backgroundColor: COLORS.background.blue,
@@ -185,7 +203,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 150,
         overflow: 'scroll',
-        
+
     },
     qrCodeButton: {
         position: 'absolute',
@@ -226,4 +244,9 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
     },
+    teamButtons: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        gap: '10px',
+    }
 });
