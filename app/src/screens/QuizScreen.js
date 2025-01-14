@@ -42,7 +42,6 @@ export default function QuizScreen() {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
-    const [imagesUri, setImagesUri] = useState([]);
     const [remainingTime, setRemainingTime] = useState(0);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);

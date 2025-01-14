@@ -239,7 +239,7 @@ export const toastConfig = {
 
 export function getRoomId(url) {
     const queryString = url.split('?')[1]; // Récupérer la partie après le "?"
-    const params = new URLSearchParams(queryString); // Créer un objet URLSearchParams
+    const params = new URLSearchParams(queryString);
     return params.get('roomId'); // Extraire le paramètre roomId
 
 }

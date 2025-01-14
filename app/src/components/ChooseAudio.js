@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, Platform, StyleSheet, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
-import { uploadAudio, downloadAllAudios, downloadAudio, uploadImage, deleteFile } from '../utils/api';
+import { uploadAudio, downloadAllAudios, downloadAudio, deleteFile } from '../utils/api';
 
 const platform = Platform.OS;
 
