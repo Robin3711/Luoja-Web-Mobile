@@ -60,7 +60,9 @@ export default function CreateQuestionScreen() {
         });
     }, [numAnswers]);
 
-    const shapes = ['SQUARE', 'TRIANGLE', ...(numAnswers >= 3 ? ['CIRCLE'] : []), ...(numAnswers === 4 ? ['STAR'] : [])];
+    const shapes = ['SQUARE', 'TRIANGLE', ...(numAnswers >= 3 ? ['CIRCLE'] : []), ...(numAnswers >= 4 ? ['STAR'] : [])];
+
+    console.log('Shapes:', shapes);
 
     const handleShapeClick = (shape) => setSelectedShape(shape);
 
@@ -119,9 +121,9 @@ export default function CreateQuestionScreen() {
     const handleGenerate = async () => {
 
         if (questionText.length > 0) {
-            
 
-            try{
+
+            try {
                 setLoading(true);
 
                 setType('text');
@@ -143,7 +145,7 @@ export default function CreateQuestionScreen() {
             catch (error) {
                 toast('error', error, '', 3000, COLORS.toast.red);
 
-                if(error.status === 500){
+                if (error.status === 500) {
                     setLoading(false);
                 }
 
@@ -191,15 +193,16 @@ export default function CreateQuestionScreen() {
                         <Text style={styles.toggleLabel}>Nombre de réponses :</Text>
                         <Picker
                             selectedValue={numAnswers}
+
                             onValueChange={(value) => {
                                 setNumAnswers(value);
-                                setSelectedShape(''); // Réinitialise la sélection
+                                setSelectedShape('');
                             }}
                             style={styles.picker}
                         >
                             <Picker.Item style={FONT.text} label="2 réponses" value={2} />
                             <Picker.Item style={FONT.text} label="3 réponses" value={3} />
-                            <Picker.Item  style={FONT.text} label="4 réponses" value={4} />
+                            <Picker.Item style={FONT.text} label="4 réponses" value={4} />
                         </Picker>
                     </View>
                 </View>
@@ -209,7 +212,7 @@ export default function CreateQuestionScreen() {
             {/* Right Panel */}
             <View style={styles.createQuestionRightView}>
                 <View style={styles.generateAnswersButtonView}>
-                    <SimpleButton text="Générer des réponses" onPress={handleGenerate} disabled={loading}/>
+                    <SimpleButton text="Générer des réponses" onPress={handleGenerate} disabled={loading} />
                     {loading && <ActivityIndicator size="large" color={COLORS.primary} />}
                 </View>
                 <Picker
@@ -221,7 +224,7 @@ export default function CreateQuestionScreen() {
                 >
                     <Picker.Item style={FONT.text} label="réaliste" value={"standard"} />
                     <Picker.Item style={FONT.text} label="humoristique" value={"humor"} />
-                    <Picker.Item  style={FONT.text} label="mixte" value={"mix"} />
+                    <Picker.Item style={FONT.text} label="mixte" value={"mix"} />
                 </Picker>
                 {shapes.map((shape) => renderWithCheckmark(shape))}
             </View>
