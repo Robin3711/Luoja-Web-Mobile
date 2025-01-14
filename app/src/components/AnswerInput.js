@@ -6,6 +6,7 @@ import ChooseAudio from './ChooseAudio';
 import { COLORS } from '../css/utils/color';
 import { useFocusEffect } from '@react-navigation/native';
 import { downloadImage, downloadAudio } from '../utils/api';
+import { hasExtension, hasValidAudioExtension, hasValidImageExtension } from '../utils/utils';
 
 const Star = ({ shapeColor, borderColor }) => (
     <Svg width="75" height="75" viewBox="-2 -2 28 28" fill="none">
@@ -63,17 +64,33 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, onValueChange, t
     }
 
     useFocusEffect(useCallback(() => {
+        if (type === 'text' && text) {
+            if (hasExtension(text)) {
+                onValueChange("");
+                onTextChange("");
+            }
+        }
         if (type === 'image' && text) {
-            downloadImage(text).then((file) => {
-                const uri = URL.createObjectURL(file);
-                setFile(uri);
-            });
+            if (hasValidImageExtension(text)) {
+                downloadImage(text).then((file) => {
+                    const uri = URL.createObjectURL(file);
+                    setFile(uri);
+                });
+            } else {
+                onValueChange("");
+                onTextChange("");
+            }
         }
         if (type === 'audio' && text) {
-            downloadAudio(text).then((file) => {
-                const uri = URL.createObjectURL(file);
-                setFile(uri);
-            });
+            if (hasValidAudioExtension(text)) {
+                downloadAudio(text).then((file) => {
+                    const uri = URL.createObjectURL(file);
+                    setFile(uri);
+                });
+            } else {
+                onValueChange("");
+                onTextChange("");
+            }
         }
     }, [text, type]));
 
@@ -107,10 +124,10 @@ const AnswerInput = ({ shape, text, onTextChange, onShapeClick, onValueChange, t
                     onValueChange={handleValueChange}
                 />
             )}
-            {type === 'image' && file && (
+            {type === 'image' && file && hasExtension(text) && (
                 <Image source={{ uri: file }} style={styles.selectedImage} />
             )}
-            {type === 'audio' && file && (
+            {type === 'audio' && file && hasExtension(text) && (
                 <audio controls src={file} type="audio/mp3">
                     <track kind="captions" />
                 </audio>

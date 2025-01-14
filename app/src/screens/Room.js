@@ -74,7 +74,7 @@ export default function Room() {
 
                 eventSource.addEventListener('error', (err) => {
                     console.error("Erreur EventSource :", err);
-                    toast("error", "Le nombre de joueurs maximum est atteint", '', 3000, COLORS.toast.red);
+                    toast("error", "Vous ne pouvez pas rejoindre cette partie", '', 3000, COLORS.toast.red);
                     navigation.navigate("initMenu");
                 });
 
@@ -171,7 +171,7 @@ export default function Room() {
                 ))}
             </ScrollView>
             {gameMode === "team" && (
-                <div style={styles.teamButtons} >
+                <View style={styles.teamButtons} >
                     <SimpleButton
                         text="Commencer la partie"
                         onPress={() => startRoom(roomId)}
@@ -182,7 +182,7 @@ export default function Room() {
                         onPress={handleReturnHome}
                         color={COLORS.button.blue.basic}
                     />
-                </div>
+                </View>
             )}
             {gameMode === "scrum" && (
                 <SimpleButton

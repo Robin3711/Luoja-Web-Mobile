@@ -243,3 +243,26 @@ export function getRoomId(url) {
     return params.get('roomId'); // Extraire le paramètre roomId
 
 }
+
+export function hasExtension(answer) {
+    return (
+        answer.endsWith('.mp3') ||
+        answer.endsWith('.jpeg') ||
+        answer.endsWith('.jpg') ||
+        answer.endsWith('.png')
+    );
+}
+
+export function hasValidAudioExtension(answer) {
+    return (
+        answer.endsWith('.mp3')
+    )
+}
+
+export function hasValidImageExtension(answer) {
+    return (
+        answer.endsWith('.jpeg') ||
+        answer.endsWith('.jpg') ||
+        answer.endsWith('.png')
+    );
+}
