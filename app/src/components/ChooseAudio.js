@@ -56,11 +56,9 @@ const ChooseAudio = ({ onValueChange }) => {
         try {
             const reponseDelete = await deleteFile(id);
             const response = await downloadAllAudios();
-            console.log(response);
             if (response.files && Array.isArray(response.files)) {
                 const files = response.files;
                 const validFiles = files.filter(file => file.fileName.endsWith('.mp3' || '.mpeg'));
-                console.log(validFiles);
                 setIds(validFiles.map((file) => file.fileName));
 
                 const audioPromises = validFiles.map(async (file) => {
@@ -84,11 +82,9 @@ const ChooseAudio = ({ onValueChange }) => {
             const fetchAudios = async () => {
                 try {
                     const response = await downloadAllAudios();
-                    console.log(response);
                     if (response.files && Array.isArray(response.files)) {
                         const files = response.files;
                         const validFiles = files.filter(file => file.fileName.endsWith('.mp3' || '.mpeg'));
-                        console.log(validFiles);
                         setIds(validFiles.map((file) => file.fileName));
 
                         const audioPromises = validFiles.map(async (file) => {

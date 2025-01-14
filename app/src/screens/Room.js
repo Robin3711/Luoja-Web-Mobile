@@ -82,8 +82,6 @@ export default function Room() {
                 const url = await getPlatformAPI();
                 setApiUrl(url);
             } catch (error) {
-
-                console.log("Erreur détectée :", error);
                 toast("error", error.status || 500, error.message || "Une erreur est survenue", 3000, COLORS.toast.red);
                 navigation.navigate("initMenu");
             }

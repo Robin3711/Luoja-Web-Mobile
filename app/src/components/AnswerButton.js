@@ -109,7 +109,6 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
 
                 if (type === 'audio' && text) {
                     const file = await downloadAudio(text);
-                    console.log(file);
                     let url;
                     if (Platform.OS === "web") {
                         url = URL.createObjectURL(file);

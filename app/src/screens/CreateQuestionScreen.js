@@ -62,8 +62,6 @@ export default function CreateQuestionScreen() {
 
     const shapes = ['SQUARE', 'TRIANGLE', ...(numAnswers >= 3 ? ['CIRCLE'] : []), ...(numAnswers >= 4 ? ['STAR'] : [])];
 
-    console.log('Shapes:', shapes);
-
     const handleShapeClick = (shape) => setSelectedShape(shape);
 
     const handleTextChange = (shape, text) =>
