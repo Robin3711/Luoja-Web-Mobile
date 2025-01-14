@@ -221,7 +221,10 @@ export default function RoomQuizScreen() {
                                 >
                                     {() => (
                                         <>
-                                            <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                            {gameMode === "team" ? (
+                                                <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                            ) : (<Text style={styles.questionNumber}></Text>)}
+
                                             <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                         </>
                                     )}

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import { Clipboard as Copy } from 'lucide-react-native';
+import * as Clipboard from 'expo-clipboard';
 
 import { joinRoom, joinTeam, startRoom } from "../utils/api";
 import { getPlatformAPI } from "../utils/utils";
@@ -8,7 +10,8 @@ import { getPlatformAPI } from "../utils/utils";
 import QRCode from "react-native-qrcode-svg";
 import { COLORS } from "../css/utils/color";
 import { FONT } from "../css/utils/font";
-import SimpleButton from "../components/SimpleButton"; // Import SimpleButton
+import SimpleButton from "../components/SimpleButton";
+import { toast } from "../utils/utils";
 
 export default function Room() {
     const route = useRoute();
@@ -54,19 +57,49 @@ export default function Room() {
         navigation.navigate("initMenu");
     };
 
+    const handleCopyRoomId = async () => {
+        await Clipboard.setStringAsync(roomId);
+        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.blue);
+    };
+
     useEffect(() => {
         const connect = async () => {
-            joinRoom(roomId).then((source) => {
+            try {
+
+                const source = await joinRoom(roomId);
                 eventSource = source;
 
                 eventSource.addEventListener('message', handleEvent);
 
-                getPlatformAPI().then((url) => setApiUrl(url));
-            });
+
+                eventSource.addEventListener('error', (err) => {
+                    console.error("Erreur EventSource :", err);
+                    toast("error", "Erreur de connexion à la partie", 3000, COLORS.toast.red);
+                    navigation.navigate("initMenu");
+                });
+
+
+                const url = await getPlatformAPI();
+                setApiUrl(url);
+            } catch (error) {
+
+                console.log("Erreur détectée :", error);
+                toast("error", error.status || 500, error.message || "Une erreur est survenue", 3000, COLORS.toast.red);
+                navigation.navigate("initMenu");
+            }
         };
 
         connect();
-    }, []);
+
+
+        return () => {
+            if (eventSource) {
+                eventSource.close();
+            }
+        };
+    }, [roomId]);
+
+
 
     return (
         <View style={styles.container}>
@@ -79,7 +112,10 @@ export default function Room() {
                         color={COLORS.palette.blue.darker}
                         backgroundColor="white"
                     />
-                    <Text style={[FONT.text, styles.title]}>Room {roomId}</Text>
+                    <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
+                        <Copy size={24} color="black" />
+                        <Text style={[FONT.text, styles.title]}>Room {roomId}</Text>
+                    </TouchableOpacity>
                 </View>
             ) : (
                 <>
@@ -248,5 +284,11 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'space-between',
         gap: '10px',
-    }
+    },
+    roomId: {
+        marginTop: 5,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
