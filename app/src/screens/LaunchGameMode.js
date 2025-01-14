@@ -8,8 +8,8 @@ import { createGame, createRoom } from '../utils/api';
 import { toast } from '../utils/utils';
 import { FONT } from '../css/utils/font';
 
-const { width } = Dimensions.get('window');
-const isMobile = width < 775;
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function LaunchGameMode() {
     const navigation = useNavigation();

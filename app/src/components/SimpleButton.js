@@ -1,8 +1,7 @@
-import { Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
-const platform = Platform.OS;
 
 export default function SimpleButton({
     text,
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
         justifyContent: 'center', // Centre le contenu verticalement
         alignItems: 'center',    // Centre le contenu horizontalement
-        ...platform === 'web'
+        ...!isMobile
             ? {
                 boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
             }

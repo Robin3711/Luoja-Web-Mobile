@@ -1,10 +1,13 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList,  StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import { uploadAudio, downloadAllAudios, downloadAudio } from '../utils/api';
 
-const platform = Platform.OS;
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
 
 const ChooseAudio = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -153,7 +156,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: platform === 'web' ? '6%' : '20%',
+        marginVertical: !isMobile? '6%' : '20%',
         marginHorizontal: '10%',
         backgroundColor: '#f0f0f0',
         padding: 20,

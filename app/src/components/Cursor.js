@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-assets/slider';
+
+
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
 
 const RangeCursor = ({ value, onValueChange }) => {
   const [sliderValue, setSliderValue] = useState(value);
@@ -41,7 +47,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   slider: {
-    width: Platform.OS === "web" ? 700 : 300,
+    width: !isMobile? 700 : 300,
     height: 40,
   },
 });

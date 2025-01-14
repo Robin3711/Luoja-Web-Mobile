@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Platform } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { createGame, getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from './SimpleButton';
 import { FONT } from '../css/utils/font';
+
+
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions }) {
     const [loading, setLoading] = useState(true);
@@ -51,19 +56,19 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
     ];
 
     const handleCreationQuiz = () => {
-        if (status === false && Platform.OS === 'web') {
+        if (status === false && !isMobile) {
             navigation.navigate('quizCreation', { quizId: quizId });
         }
     };
 
     const handlePlayQuiz = async () => {
-        if (status === true && Platform.OS === 'web') {
+        if (status === true && !isMobile) {
             const data = await createGame(quizId);
             navigation.navigate('quizScreen', { gameId: data.id });
         }
     };
 
-    if (status === false && Platform.OS === 'web') {
+    if (status === false && !isMobile) {
         return (
             <View style={styles.QuizInformationView}>
                 <View style={styles.PrincipalInformationsView}>
