@@ -4,6 +4,7 @@ import { COLORS } from '../css/utils/color';
 import { uploadImage, downloadAllImages, downloadImage, deleteFile } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';
 import ImageSelect from './ImageSelect';
+import SimpleButton from './SimpleButton';
 
 const platform = Platform.OS;
 
@@ -85,6 +86,10 @@ const ChooseFile = ({ onValueChange }) => {
         } catch (error) {
             console.error("Erreur lors de la récupération des images :", error);
         }
+    }
+
+    const handleCloseModal = () => {
+        setModalVisible(false);
     }
 
     useFocusEffect(
@@ -170,6 +175,7 @@ const ChooseFile = ({ onValueChange }) => {
                             )}
                         />
                     </ScrollView>
+                    <SimpleButton text={"Fermer"} onPress={handleCloseModal} />
                 </View>
             </Modal>
         </View>

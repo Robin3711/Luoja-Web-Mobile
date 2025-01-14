@@ -3,6 +3,7 @@ import { View, Text, Modal, TouchableOpacity, Platform, StyleSheet, ScrollView }
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import { uploadAudio, downloadAllAudios, downloadAudio, deleteFile } from '../utils/api';
+import SimpleButton from './SimpleButton';
 
 const platform = Platform.OS;
 
@@ -75,6 +76,10 @@ const ChooseAudio = ({ onValueChange }) => {
         } catch (error) {
             console.error("Erreur lors de la récupération des images :", error);
         }
+    }
+
+    const handleCloseModal = () => {
+        setModalVisible(false);
     }
 
     useFocusEffect(
@@ -156,6 +161,7 @@ const ChooseAudio = ({ onValueChange }) => {
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
+                    <SimpleButton text={"Fermer"} onPress={handleCloseModal} />
                 </View>
             </Modal>
         </View>
