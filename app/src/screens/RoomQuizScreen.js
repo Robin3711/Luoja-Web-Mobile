@@ -46,6 +46,13 @@ export default function RoomQuizScreen() {
 
     const [message, setMessage] = useState("Question en cours...");
 
+    // Timer-related states
+    const [remainingTime, setRemainingTime] = useState(0);
+    const [gameTime, setGameTime] = useState(0);
+    const [timerInitialized, setTimerInitialized] = useState(false);
+    const [timerKey, setTimerKey] = useState(0);
+    const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
+
     useEffect(() => {
         (async () => {
             try {
@@ -62,11 +69,37 @@ export default function RoomQuizScreen() {
         })();
     }, [roomId]);
 
+    useEffect(() => {
+        if (remainingTime > 0 && !timerInitialized) {
+            setGameTime(remainingTime);
+            setTimerInitialized(true);
+        }
+    }, [remainingTime]);
+
+    useEffect(() => {
+        let timer;
+        if (remainingTime === 1) {
+            timer = setTimeout(() => {
+                setTimeStuckAtOne(true);
+            }, 1000);
+        } else {
+            setTimeStuckAtOne(false);
+        }
+
+        return () => clearTimeout(timer);
+    }, [remainingTime]);
+
+    useEffect(() => {
+        if (timeStuckAtOne && remainingTime === 1) {
+            setRemainingTime(0);
+            setIsAnswered(true);
+        }
+    }, [timeStuckAtOne, remainingTime]);
+
     const handleEvent = (event) => {
         const data = JSON.parse(event.data);
         switch (data.eventType) {
             case "quizInfos":
-                console.log(data);
                 setTotalQuestion(data.totalQuestion);
                 break;
             case "nextQuestion":
@@ -85,14 +118,15 @@ export default function RoomQuizScreen() {
                 handleEnd();
                 break;
             case "timer":
-                setMessage(`Temps restant : ${data.remainingTime} secondes`);
+                setRemainingTime(data.remainingTime);
                 if (data.remainingTime === 0) {
                     setIsAnswered(true);
                 }
+                break;
             default:
                 break;
         }
-    }
+    };
 
     const handleNewQuestion = async () => {
         try {
@@ -103,7 +137,9 @@ export default function RoomQuizScreen() {
 
             setCurrentQuestion(data);
             setIsAnswered(false);
-            setQuestionNumber((prevQuestionNumber) => prevQuestionNumber + 1); // Use functional update
+            setQuestionNumber((prevQuestionNumber) => prevQuestionNumber + 1);
+            setTimerKey((prevKey) => prevKey + 1);
+            setTimerInitialized(false);
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -147,27 +183,15 @@ export default function RoomQuizScreen() {
 
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
 
-    const validateAnswerButton = () => {
-        if (selectedAnswer && !isAnswered) {
-            return (
-                <TouchableOpacity
-                    style={styles.buttons}
-                    onPress={handleGetAnswer}
-                >
-                    <Text style={styles.buttonText}>Valider</Text>
-                </TouchableOpacity>
-            );
-        } else {
-            return (
-                <TouchableOpacity
-                    style={styles.disabledButtons}
-                    disabled={true}
-                >
-                    <Text style={styles.buttonText}>Valider</Text>
-                </TouchableOpacity>
-            );
-        }
-    }
+    const validateAnswerButton = () => (
+        <TouchableOpacity
+            style={selectedAnswer && !isAnswered ? styles.buttons : styles.disabledButtons}
+            onPress={handleGetAnswer}
+            disabled={!selectedAnswer || isAnswered}
+        >
+            <Text style={styles.buttonText}>Valider</Text>
+        </TouchableOpacity>
+    );
 
     loadFont();
     return (
@@ -180,39 +204,48 @@ export default function RoomQuizScreen() {
                                 <Text>{message}</Text>
 
                                 <CountdownCircleTimer
-                                    duration={7}
+                                    key={timerKey}
+                                    isPlaying={timerInitialized}
+                                    duration={gameTime}
                                     size={Platform.OS === 'web' ? 150 : 110}
                                     strokeWidth={Platform.OS === 'web' ? 15 : 10}
-                                    colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-                                    colorsTime={[7, 5, 2, 0]}
+                                    colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
+                                    colorsTime={[
+                                        (gameTime * 4) / 5,
+                                        (gameTime * 3) / 5,
+                                        (gameTime * 2) / 5,
+                                        (gameTime * 1) / 5,
+                                        (gameTime * 0) / 5,
+                                    ]}
+                                    style={{ marginTop: 5 }}
                                 >
                                     {() => (
-                                        <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                        <>
+                                            <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                            <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                        </>
                                     )}
                                 </CountdownCircleTimer>
                                 <Text style={styles.score}>Score: {score}</Text>
-                                <View style={styles.quizBarView}>
-                                </View>
+                                <View style={styles.quizBarView}></View>
                                 <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
                                 {platform === 'web' && validateAnswerButton()}
                             </View>
 
                             <View style={styles.answersView}>
-                                {currentQuestion.answers.map((answer, index) => {
-                                    return (
-                                        answer === null ? null : (
-                                            <AnswerButton
-                                                key={index}
-                                                shape={shapes[index]}
-                                                text={answer}
-                                                onClick={() => handleAnswerSelection(answer)}
-                                                filter={getAnswerFilter(answer)}
-                                                type={currentQuestion.type}
-                                                disabled={isAnswered}
-                                            />
-                                        )
-                                    );
-                                })}
+                                {currentQuestion.answers.map((answer, index) => (
+                                    answer === null ? null : (
+                                        <AnswerButton
+                                            key={index}
+                                            shape={shapes[index]}
+                                            text={answer}
+                                            onClick={() => handleAnswerSelection(answer)}
+                                            filter={getAnswerFilter(answer)}
+                                            type={currentQuestion.type}
+                                            disabled={isAnswered}
+                                        />
+                                    )
+                                ))}
                                 {platform !== 'web' && validateAnswerButton()}
                             </View>
                         </View>
@@ -229,7 +262,6 @@ export default function RoomQuizScreen() {
 
             </View>
         )
-
     );
 }
 
