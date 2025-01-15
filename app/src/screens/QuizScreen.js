@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity,  StyleSheet , Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos, listenTimer } from '../utils/api';
@@ -7,6 +7,8 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { toast } from '../utils/utils';
+
+import ConfettiContainer from '../components/ConfettiSystem';
 
 import { SimpleButton } from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
@@ -53,6 +55,9 @@ export default function QuizScreen() {
     const [timerInitialized, setTimerInitialized] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
     const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
+    const [animation, setAnimation] = useState('none');
+
+    const confettiRef = useRef();
 
     useEffect(() => {
         (async () => {
@@ -138,6 +143,7 @@ export default function QuizScreen() {
             setTimerInitialized(false);
             setLoading(false);
             setTimerKey(prevKey => prevKey + 1);
+            setAnimation('none');
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -169,7 +175,11 @@ export default function QuizScreen() {
 
                 setCorrect(correctAnswerFromApi);
                 setIsAnswered(true);
-                if (correctAnswerFromApi === selectedAnswer) updateScore();
+                if (correctAnswerFromApi === selectedAnswer){
+                    confettiRef.current.startConfetti();
+                    setAnimation('win');
+                    updateScore();
+                }
             }
             setTimerInitialized(false);
         } catch (err) {
@@ -181,7 +191,7 @@ export default function QuizScreen() {
     };
     const updateScore = () => setScore(score + 1);
 
-    const getAnswerFilter = (answer) => {
+    const getAnswerColor = (answer) => {
         if (answer === selectedAnswer && !isAnswered) return 'BLUE';
         if (answer === correct) return 'GREEN';
         if (answer === selectedAnswer) return 'RED';
@@ -300,33 +310,35 @@ export default function QuizScreen() {
                                     {!isMobile && nextQuestionButton()}
                                 </View>
 
-                                <View style={styles.answersView}>
-                                    {currentQuestion.answers.map((answer, index) => {
-                                        return (
-                                            answer === null ? null : (
-                                                <AnswerButton
-                                                    key={index}
-                                                    shape={shapes[index]}
-                                                    text={answer}
-                                                    onClick={() => handleAnswerSelection(answer)}
-                                                    filter={getAnswerFilter(answer)}
-                                                    type={currentType}
-                                                    disabled={gameMode === 'timed' && remainingTime === 0}
-                                                />
-                                            )
-                                        );
-                                    })}
-                                    {isMobile && nextQuestionButton()}
-                                </View>
+                            <View style={styles.answersView}>
+                                {currentQuestion.answers.map((answer, index) => {
+                                    return (
+                                        answer === null ? null : (
+                                            <AnswerButton
+                                                key={index}
+                                                shape={shapes[index]}
+                                                text={answer}
+                                                onClick={() => handleAnswerSelection(answer)}
+                                                color={getAnswerColor(answer)}
+                                                type={currentType}
+                                                disabled={gameMode === 'timed' && remainingTime === 0}
+                                                animation={animation}
+                                            />
+                                        )
+                                    );
+                                })}
+                                {isMobile && nextQuestionButton()}
                             </View>
-                        </>
-                    ) : (
-                        <Text>Chargement...</Text>
-                    )}
-                </View>
-            ) : (
-                <View style={styles.quizScreenView}>
-                    <Text style={styles.errorText}>{errorMessage}</Text>
+                            <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]}/>
+                        </View>
+                    </>
+                ) : (
+                    <Text>Chargement...</Text>
+                )}
+            </View>
+        ) : (
+            <View style={styles.quizScreenView}>
+                <Text style={styles.errorText}>{errorMessage}</Text>
 
                     <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
 

@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Platform, StyleSheet, Dimensions } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet  , Dimensions} from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentRoomQuestion, getCurrentRoomAnswer } from '../utils/api';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+
+import ConfettiContainer from '../components/ConfettiSystem';
 
 import SimpleButton from '../components/SimpleButton';
 import { loadFont } from '../utils/utils';
@@ -54,6 +56,8 @@ export default function RoomQuizScreen() {
     const [timerInitialized, setTimerInitialized] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
     const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
+
+    const confettiRef = useRef();
 
     useEffect(() => {
         (async () => {
@@ -166,7 +170,10 @@ export default function RoomQuizScreen() {
 
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
-            if (correctAnswerFromApi === selectedAnswer) updateScore();
+            if (correctAnswerFromApi === selectedAnswer){
+                updateScore();
+                confettiRef.current.startConfetti();
+            }
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -175,7 +182,7 @@ export default function RoomQuizScreen() {
 
     const updateScore = () => setScore(score + 1);
 
-    const getAnswerFilter = (answer) => {
+    const getAnswerColor = (answer) => {
         if (answer === selectedAnswer && !isAnswered) return 'BLUE';
         if (answer === correct) return 'GREEN';
         if (answer === selectedAnswer) return 'RED';
@@ -249,31 +256,32 @@ export default function RoomQuizScreen() {
                                     {!isMobile && validateAnswerButton()}
                                 </View>
 
-                                <View style={styles.answersView}>
-                                    {currentQuestion.answers.map((answer, index) => (
-                                        answer === null ? null : (
-                                            <AnswerButton
-                                                key={index}
-                                                shape={shapes[index]}
-                                                text={answer}
-                                                onClick={() => handleAnswerSelection(answer)}
-                                                filter={getAnswerFilter(answer)}
-                                                type={currentQuestion.type}
-                                                disabled={isAnswered}
-                                            />
-                                        )
-                                    ))}
-                                    {isMobile && validateAnswerButton()}
-                                </View>
+                            <View style={styles.answersView}>
+                                {currentQuestion.answers.map((answer, index) => (
+                                    answer === null ? null : (
+                                        <AnswerButton
+                                            key={index}
+                                            shape={shapes[index]}
+                                            text={answer}
+                                            onClick={() => handleAnswerSelection(answer)}
+                                            color={getAnswerColor(answer)}
+                                            type={currentQuestion.type}
+                                            disabled={isAnswered}
+                                        />
+                                    )
+                                ))}
+                                {isMobile && validateAnswerButton()}
                             </View>
-                        </>
-                    ) : (
-                        <Text>Chargement...</Text>
-                    )}
-                </View>
-            ) : (
-                <View style={styles.quizScreenView}>
-                    <Text style={styles.errorText}>{errorMessage}</Text>
+                            <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]}/>
+                        </View>
+                    </>
+                ) : (
+                    <Text>Chargement...</Text>
+                )}
+            </View>
+        ) : (
+            <View style={styles.quizScreenView}>
+                <Text style={styles.errorText}>{errorMessage}</Text>
 
                     <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
 
