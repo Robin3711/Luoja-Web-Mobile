@@ -68,9 +68,7 @@ export default function Account() {
     else {
         return (
             <GradientBackground>
-            
-                error ? (
-                    
+                {error ? (
                     <View style={styles.quizScreenView}>
                         <Text style={FONT.error}>{errorMessage}</Text>
                         <TouchableOpacity onPress={() => {
@@ -89,7 +87,7 @@ export default function Account() {
                             <SimpleButton text="Créer un compte" onPress={() => navigation.navigate('register')} />
                         </View>
                     </View>
-                )
+                )}
             </GradientBackground>
         );
         
