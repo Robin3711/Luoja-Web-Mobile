@@ -13,7 +13,7 @@ import Svg, { Rect } from 'react-native-svg';
 const { width, height } = Dimensions.get('window');
 
 const ConfettiPiece = ({ delay, color, onEnd }) => {
-  const translateY = useSharedValue(-150);
+  const translateY = useSharedValue(-200);
   const translateX = useSharedValue(Math.random() * width);
   const rotate = useSharedValue(Math.random() * 360);
   const opacity = useSharedValue(1);
