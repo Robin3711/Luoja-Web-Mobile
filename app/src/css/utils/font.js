@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, Platform } from 'react-native';
+import { Dimensions, StyleSheet  } from 'react-native';
 import { COLORS } from './color';
 import { Subtitles } from 'lucide-react-native';
 
