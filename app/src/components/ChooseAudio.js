@@ -4,6 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import { uploadAudio, downloadAllAudios, downloadAudio, deleteFile } from '../utils/api';
 import SimpleButton from './SimpleButton';
+import { toast } from '../utils/utils';
 
 const platform = Platform.OS;
 
@@ -32,7 +33,7 @@ const ChooseAudio = ({ onValueChange }) => {
         const formData = new FormData();
         formData.append('file', file);
         if (file.size > 1000000) {
-            alert("Le fichier est trop volumineux. Veuillez choisir un fichier de moins de 1 Mo.");
+            toast('warn', 'Le fichier est trop volumineux. Veuillez choisir un fichier de moins de 1 Mo.', '', 1500, COLORS.toast.text.orange);
             return;
         }
 
@@ -55,7 +56,7 @@ const ChooseAudio = ({ onValueChange }) => {
 
     const handleRefreshAudios = async (id) => {
         try {
-            const reponseDelete = await deleteFile(id);
+            await deleteFile(id);
             const response = await downloadAllAudios();
             if (response.files && Array.isArray(response.files)) {
                 const files = response.files;
@@ -74,7 +75,11 @@ const ChooseAudio = ({ onValueChange }) => {
                 console.error("La réponse de `downloadAllAudios` n'est pas valide.");
             }
         } catch (error) {
-            console.error("Erreur lors de la récupération des images :", error);
+            if (error.status && error.message) {
+                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+            } else {
+                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+            }
         }
     }
 
@@ -104,7 +109,11 @@ const ChooseAudio = ({ onValueChange }) => {
                         console.error("La réponse de `downloadAllAudios` n'est pas valide.");
                     }
                 } catch (error) {
-                    console.error("Erreur lors de la récupération des audios :", error);
+                    if (error.status && error.message) {
+                        toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                    } else {
+                        toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                    }
                 }
             };
 
@@ -209,6 +218,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#d3d3d3',
         borderRadius: 5,
         width: "200px", // Fixe la largeur des éléments
+        height: "100px",
         alignItems: 'center',
     },
     audioLabel: {
