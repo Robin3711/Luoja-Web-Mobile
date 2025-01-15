@@ -244,7 +244,7 @@ export default function QuizScreen() {
 
     const handleCopyGameId = async () => {
         await Clipboard.setStringAsync(gameId);
-        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.blue);
+        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.text.blue);
     };
 
     return (

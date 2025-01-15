@@ -28,7 +28,7 @@ import {
     Volleyball,
     Vote,
 } from 'lucide-react-native';
-import Toast from 'react-native-toast-message';
+import Toast, { BaseToast } from 'react-native-toast-message';
 import { ErrorToast, InfoToast, SuccessToast } from 'react-native-toast-message';
 import { COLORS } from '../css/utils/color';
 
@@ -186,7 +186,7 @@ export const toastConfig = {
         <SuccessToast
             {...props}
             style={{
-                borderLeftColor: COLORS.toast.green,
+                borderLeftColor: COLORS.toast.background.green,
                 width: 600,
                 height: 100,
             }}
@@ -205,7 +205,7 @@ export const toastConfig = {
         <ErrorToast
             {...props}
             style={{
-                borderLeftColor: COLORS.toast.red,
+                borderLeftColor: COLORS.toast.background.red,
                 width: 600,
                 height: 100,
             }}
@@ -224,7 +224,26 @@ export const toastConfig = {
         <InfoToast
             {...props}
             style={{
-                borderLeftColor: COLORS.toast.blue,
+                borderLeftColor: COLORS.toast.background.blue,
+                width: 600,
+                height: 100,
+            }}
+            contentContainerStyle={{
+                paddingHorizontal: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        />
+    ),
+
+    /*
+      Personnaliser un toast de type 'warn'
+    */
+    warn: (props) => (
+        <BaseToast
+            {...props}
+            style={{
+                borderLeftColor: COLORS.toast.background.orange,
                 width: 600,
                 height: 100,
             }}
