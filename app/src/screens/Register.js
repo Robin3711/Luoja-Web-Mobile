@@ -8,6 +8,8 @@ import { Eye, EyeClosed } from 'lucide-react-native';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height;
+import GradientBackground from '../css/utils/linearGradient';
+import { FONT } from '../css/utils/font';
 
 export default function Register() {
 
@@ -39,51 +41,54 @@ export default function Register() {
     }
 
     return (
-        <View style={styles.registerView}>
-            <Text style={styles.pageTitle}>Inscription</Text>
+        <GradientBackground>
+            <View style={styles.registerView}>
+                <Text style={[FONT.title, { marginBottom: !isMobile ? 70 : 15 }]}>Inscription</Text>
 
-            <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
-            <View style={styles.nameInputView}>
-                <TextInput
-                    style={styles.registerInput}
-                    onChangeText={setName}
-                    value={name}
-                    placeholder="Nom d'utilisateur"
-                    autoFocus={true}
-                    returnKeyType="next"
-                    onSubmitEditing={() => {
-                        if (passwordInputRef.current) {
-                            passwordInputRef.current.focus();
-                        }
-                    }}
-                />
-            </View>
+                <Text style={[FONT.subTitle, { marginBottom: 5, marginTop: !isMobile ? 30 : 15 }]}>Nom d'utilisateur</Text>
+                <View style={styles.nameInputView}>
+                    <TextInput
+                        style={styles.registerInput}
+                        onChangeText={setName}
+                        value={name}
+                        placeholder="Nom d'utilisateur"
+                        autoFocus={true}
+                        returnKeyType="next"
+                        onSubmitEditing={() => {
+                            if (passwordInputRef.current) {
+                                passwordInputRef.current.focus();
+                            }
+                        }}
+                    />
+                </View>
 
-            <Text style={styles.inputTitle}>Mot de passe</Text>
-            <View style={styles.passwordInputView}>
-                <TextInput
-                    ref={passwordInputRef}
-                    style={styles.registerInput}
-                    onChangeText={setPassword}
-                    value={password}
-                    placeholder="Mot de passe"
-                    secureTextEntry={hidePassword}
-                    returnKeyType="done"
-                    onSubmitEditing={handleRegister}
-                />
-                <TouchableOpacity onPress={handleHidePassword} style={styles.iconButton}>
-                    {hidePassword ? (
-                        <EyeClosed size={30} color="white" />
-                    ) : (
-                        <Eye size={30} color="white" />
-                    )}
+                <Text style={[FONT.subTitle, { marginBottom: 5, marginTop: !isMobile ? 30 : 15 }]}>Mot de passe</Text>
+                <View style={styles.passwordInputView}>
+                    <TextInput
+                        ref={passwordInputRef}
+                        style={styles.registerInput}
+                        onChangeText={setPassword}
+                        value={password}
+                        placeholder="Mot de passe"
+                        secureTextEntry={hidePassword}
+                        returnKeyType="done"
+                        onSubmitEditing={handleRegister}
+                    />
+                    <TouchableOpacity onPress={handleHidePassword} style={styles.iconButton}>
+                        {hidePassword ? (
+                            <EyeClosed size={30} color="white" />
+                        ) : (
+                            <Eye size={30} color="white" />
+                        )}
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity style={styles.buttons} onPress={handleRegister}>
+                    <Text style={FONT.button}>S'inscrire</Text>
                 </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={styles.buttons} onPress={handleRegister}>
-                <Text style={styles.buttonText}>S'inscrire</Text>
-            </TouchableOpacity>
-        </View>
+        </GradientBackground >
     );
 }
 
@@ -94,18 +99,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     pageTitle: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-        fontSize: 40,
+        fontSize: 50,
         fontWeight: 'bold',
+        fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     inputTitle: {
-        fontSize: 20,
+        fontSize: 30,
         fontWeight: 'bold',
+        fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     registerInput: {
         height: 40,
@@ -147,9 +153,5 @@ const styles = StyleSheet.create({
         width: 250,
         borderRadius: 15,
         marginVertical: 10,
-    },
-    buttonText: {
-        fontSize: 20,
-        fontWeight: 'bold',
     },
 });

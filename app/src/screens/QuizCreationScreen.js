@@ -14,6 +14,7 @@ import ThemeSelector from '../components/ThemeList';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
+import GradientBackground from '../css/utils/linearGradient';
 
 
 
@@ -278,59 +279,61 @@ export default function QuizCreation() {
     };
 
     return (
-        <View style={styles.quizCreationView}>
-            <Text style={styles.title}>Créez votre propre quiz !</Text>
-            <View style={styles.quizCreationChildVIew}>
-                <View style={styles.quizCreationLeftView}>
-                    <View>
-                        <Text style={styles.text}>Titre</Text>
-                        <View style={styles.quizTitleView}>
-                            <TextInput style={styles.quizTitleText} placeholder='Titre du quiz' value={title} onChangeText={setTitle} />
-                        </View>
-                        <Text style={styles.text}>Thème</Text>
-                        <ThemeSelector onValueChange={setCategory} />
-                        <Text style={styles.text}>Difficulté</Text>
-                        <ChoicePicker value={difficulty} onValueChange={setDifficulty} />
-                        <View style={styles.quizCreationTopButtonsView}>
-                            <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
-                                <Text style={FONT.button}>Importer des questions</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttons} onPress={handleClickCreateQuestion}>
-                                <Text style={FONT.button}>Rédiger une question</Text>
-                            </TouchableOpacity>
+        <GradientBackground>
+            <View style={styles.quizCreationView}>
+                <Text style={styles.title}>Créez votre propre quiz !</Text>
+                <View style={styles.quizCreationChildVIew}>
+                    <View style={styles.quizCreationLeftView}>
+                        <View>
+                            <Text style={styles.text}>Titre</Text>
+                            <View style={styles.quizTitleView}>
+                                <TextInput style={styles.quizTitleText} placeholder='Titre du quiz' value={title} onChangeText={setTitle} />
+                            </View>
+                            <Text style={styles.text}>Thème</Text>
+                            <ThemeSelector onValueChange={setCategory} />
+                            <Text style={styles.text}>Difficulté</Text>
+                            <ChoicePicker value={difficulty} onValueChange={setDifficulty} />
+                            <View style={styles.quizCreationTopButtonsView}>
+                                <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
+                                    <Text style={FONT.button}>Importer des questions</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.buttons} onPress={handleClickCreateQuestion}>
+                                    <Text style={FONT.button}>Rédiger une question</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
+
+                    <SafeAreaProvider style={{ marginRight: '5%', height: '100%' }}>
+                        <SafeAreaView>
+                            <View style={styles.quizCreationRightView}>
+                                <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
+                                <DragList
+                                    data={questions}
+                                    keyExtractor={keyExtractor}
+                                    onReordered={handleReordered}
+                                    renderItem={renderQuestionItem}
+                                    containerStyle={styles.dragListContainer}
+                                />
+
+                            </View>
+                        </SafeAreaView>
+                    </SafeAreaProvider>
                 </View>
 
-                <SafeAreaProvider style={{ marginRight: '5%', height: '100%' }}>
-                    <SafeAreaView>
-                        <View style={styles.quizCreationRightView}>
-                            <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
-                            <DragList
-                                data={questions}
-                                keyExtractor={keyExtractor}
-                                onReordered={handleReordered}
-                                renderItem={renderQuestionItem}
-                                containerStyle={styles.dragListContainer}
-                            />
-
-                        </View>
-                    </SafeAreaView>
-                </SafeAreaProvider>
+                <View style={styles.quizCreationBottomButtonsView}>
+                    <TouchableOpacity style={saveButton ? styles.disabledButton : styles.buttons} onPress={handleSave} disabled={saveButton}>
+                        <Text style={FONT.button}>Enregistrer</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={publishButton ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={publishButton}>
+                        <Text style={FONT.button}>Publier</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={resetForm ? styles.disabledButton : styles.buttons} onPress={handleReset} disabled={resetForm}>
+                        <Text style={FONT.button}>{!quizId ? "Réinitialiser" : "Nouveau quiz"}</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-
-            <View style={styles.quizCreationBottomButtonsView}>
-                <TouchableOpacity style={saveButton ? styles.disabledButton : styles.buttons} onPress={handleSave} disabled={saveButton}>
-                    <Text style={FONT.button}>Enregistrer</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={publishButton ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={publishButton}>
-                    <Text style={FONT.button}>Publier</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={resetForm ? styles.disabledButton : styles.buttons} onPress={handleReset} disabled={resetForm}>
-                    <Text style={FONT.button}>{!quizId ? "Réinitialiser" : "Nouveau quiz"}</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+        </GradientBackground>
     );
 }
 
@@ -339,7 +342,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#EEF8FF',
         flexDirection: 'column',
     },
     title: {
@@ -436,6 +438,7 @@ const styles = StyleSheet.create({
     },
     buttons: {
         position: 'relative',
+        justifyContent: 'center',
         backgroundColor: COLORS.button.blue.basic,
         height: 75,
         width: 350,
@@ -448,6 +451,7 @@ const styles = StyleSheet.create({
     },
     disabledButton: {
         position: 'relative',
+        justifyContent: 'center',
         backgroundColor: "#d3d3d3",
         height: 75,
         width: 350,

@@ -6,6 +6,7 @@ import Toast from 'react-native-toast-message';
 
 import { toastConfig } from './src/utils/utils';
 import { Dimensions } from 'react-native';
+import GradientBackground from './src/css/utils/linearGradient';
 
 import MenuTab from './src/components/MenuTab';
 
@@ -124,10 +125,13 @@ export default function App() {
 
   return (
     <>
+    <GradientBackground>
       <NavigationContainer linking={linking}>
         <MenuStack />
       </NavigationContainer>
+    </GradientBackground>
       <Toast config={toastConfig} />
+    
     </>
   );
 }
