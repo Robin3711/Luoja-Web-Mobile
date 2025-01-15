@@ -177,7 +177,7 @@ export const toast = (type, text1, text2, visibilityTime, color) => {
         text2Style: { fontSize: 18, textAlign: 'center', fontStyle: 'italic', color: 'black' },
         visibilityTime: visibilityTime,
         autoHide: true,
-        topOffset: 64,
+        topOffset: 15,
     });
 }
 

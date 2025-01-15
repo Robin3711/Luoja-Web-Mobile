@@ -45,7 +45,7 @@ const ThemeSelector = ({ onValueChange }) => {
                     <FlatList
                         data={themeOptions}
                         keyExtractor={(item) => item.label}
-                        numColumns={isMobile ? 3 : 1}
+                        numColumns={!isMobile ? 3 : 1}
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.themeButton}
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: isMobile ? '6%' : '20%',
+        marginVertical: !isMobile ? '6%' : '20%',
         marginHorizontal: '10%',
         backgroundColor: COLORS.background.blue,
         padding: 20,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         margin: 5,
         borderRadius: 5,
         backgroundColor: COLORS.button.blue.basic,
-        width: isMobile ? 350 : '100%',
+        width: !isMobile ? 350 : '100%',
         height: 70,
     },
     themeLabel: {
