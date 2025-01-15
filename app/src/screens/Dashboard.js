@@ -115,7 +115,7 @@ export default function Dashboard() {
             <View style={styles.dashboardView}>
                 <Text style={FONT.title}>Tableau de bord</Text>
                 <View style={styles.dashboardContainer}>
-                    {!isMobile&& (
+                    {isMobile&& (
                         <TouchableOpacity
                             style={styles.toggleButton}
                             onPress={() => setShowHistory(!showHistory)}
