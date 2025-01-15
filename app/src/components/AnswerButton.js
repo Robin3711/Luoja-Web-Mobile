@@ -37,7 +37,7 @@ const Triangle = ({ shapeColor, borderColor }) => (
 );
 
 
-const AnswerButton = ({ shape, onClick, text, filter, type }) => {
+const AnswerButton = ({ shape, onClick, text, color, type }) => {
     const backgroundColors = {
         SQUARE: '#58bdfe',
         CIRCLE: '#484a77',
@@ -45,24 +45,24 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
         STAR: '#323353',
     };
 
-    const figureFilters = {
+    const shapeColors = {
         GREEN: COLORS.button.response.correct.light,
         RED: COLORS.button.response.incorrect.light,
     };
 
-    const borderFilters = {
+    const borderColors = {
         GREEN: COLORS.button.response.correct.dark,
         RED: COLORS.button.response.incorrect.dark,
     };
 
-    const questionFilters = {
+    const answerColors = {
         GREEN: COLORS.button.response.correct.normal,
         RED: COLORS.button.response.incorrect.normal,
     }
 
     const renderShape = () => {
-        const shapeColor = figureFilters[filter];
-        const borderColor = borderFilters[filter];
+        const shapeColor = shapeColors[color];
+        const borderColor = borderColors[color];
         switch (shape) {
             case 'SQUARE':
                 return <View style={[styles.shapeStyles.square, { backgroundColor: shapeColor || "#c0e6ff", borderColor: borderColor || "#09649f" }]} />;
@@ -202,11 +202,11 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
             style={[
                 styles.container,
                 {
-                    backgroundColor: questionFilters[filter] || backgroundColors[shape],
-                    borderColor: 'black', borderWidth: filter === 'BLUE' ? 7 : 0,
+                    backgroundColor: answerColors[color] || backgroundColors[shape],
+                    borderColor: 'black', borderWidth: color === 'BLUE' ? 7 : 0,
                     height: !isMobile ? 160 : 80,
-                    width: filter === 'BLUE' ? '90%' : '95%',
-                    marginVertical: filter === 'BLUE' ? 10 : 5,
+                    width: color === 'BLUE' ? '90%' : '95%',
+                    marginVertical: color === 'BLUE' ? 10 : 5,
                 },
             ]}
         >

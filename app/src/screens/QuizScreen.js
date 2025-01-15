@@ -190,7 +190,7 @@ export default function QuizScreen() {
     };
     const updateScore = () => setScore(score + 1);
 
-    const getAnswerFilter = (answer) => {
+    const getAnswerColor = (answer) => {
         if (answer === selectedAnswer && !isAnswered) return 'BLUE';
         if (answer === correct) return 'GREEN';
         if (answer === selectedAnswer) return 'RED';
@@ -313,7 +313,7 @@ export default function QuizScreen() {
                                                 shape={shapes[index]}
                                                 text={answer}
                                                 onClick={() => handleAnswerSelection(answer)}
-                                                filter={getAnswerFilter(answer)}
+                                                color={getAnswerColor(answer)}
                                                 type={currentType}
                                                 disabled={gameMode === 'timed' && remainingTime === 0}
                                             />

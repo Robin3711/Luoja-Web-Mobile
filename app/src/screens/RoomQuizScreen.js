@@ -181,7 +181,7 @@ export default function RoomQuizScreen() {
 
     const updateScore = () => setScore(score + 1);
 
-    const getAnswerFilter = (answer) => {
+    const getAnswerColor = (answer) => {
         if (answer === selectedAnswer && !isAnswered) return 'BLUE';
         if (answer === correct) return 'GREEN';
         if (answer === selectedAnswer) return 'RED';
@@ -257,7 +257,7 @@ export default function RoomQuizScreen() {
                                             shape={shapes[index]}
                                             text={answer}
                                             onClick={() => handleAnswerSelection(answer)}
-                                            filter={getAnswerFilter(answer)}
+                                            color={getAnswerColor(answer)}
                                             type={currentQuestion.type}
                                             disabled={isAnswered}
                                         />
