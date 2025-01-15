@@ -141,9 +141,13 @@ export default function CreateQuestionScreen() {
                 setLoading(false);
             }
             catch (error) {
-                toast('error', error, '', 3000, COLORS.toast.red);
+                if (error.status && error.message) {
+                    toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                } else {
+                    toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                }
 
-                if (error.status === 500) {
+                if (error.status === 400 || error.status === 500) {
                     setLoading(false);
                 }
 
