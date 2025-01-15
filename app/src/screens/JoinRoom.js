@@ -8,6 +8,9 @@ import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from "../components/SimpleButton";
 
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
 
 export default function JoinGame() {
   const [roomId, setRoomId] = useState('');
@@ -15,9 +18,6 @@ export default function JoinGame() {
   const [scanned, setScanned] = useState(true);
 
   const navigation = useNavigation();
-
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
 
   useEffect(() => {
     if (!hasToken()) {
@@ -95,7 +95,7 @@ const isMobile = width< height
           <SimpleButton text="Rejoindre" onPress={() => handleConnect(roomId)} />
       </>)}
 
-      {scanned === true && Platform.OS === "android" && (
+      {scanned === true && isMobile && (
         <>
           <SimpleButton text="Scanner le QR CODE" onPress={() => setScanned(false)} />
         </>
