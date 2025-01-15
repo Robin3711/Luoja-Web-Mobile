@@ -12,6 +12,7 @@ import SimpleButton from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
+import GradientBackground from '../css/utils/linearGradient';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height
@@ -43,23 +44,25 @@ export default function Parameters() {
   };
 
   return (
-    <View style={styles.screen}>
-      <Text style={FONT.title}>Générer un nouveau quiz !</Text>
-      <View style={styles.list}>
-        <View style={{ width: '100%' }}>
-          <Text style={styles.text}>Thème</Text>
-          <ThemeSelector onValueChange={setTheme} />
+    <GradientBackground>
+      <View style={styles.screen}>
+        <Text style={FONT.title}>Générer un nouveau quiz !</Text>
+        <View style={styles.list}>
+          <View style={{ width: '100%' }}>
+            <Text style={styles.text}>Thème</Text>
+            <ThemeSelector onValueChange={setTheme} />
+          </View>
+          <View style={{ width: '100%' }}>
+            <Text style={styles.text}>Difficulté</Text>
+            <ChoiseSelector value={difficulty} onValueChange={setDifficulty} />
+          </View>
+          <View style={{ width: '100%' }}>
+            <RangeCursor value={questionCount} onValueChange={setQuestionCount} />
+          </View>
+          <SimpleButton text={launch ? 'Création du quiz...' : 'Créer le quiz'} onPress={handleCreateQuiz} disabled={launch} />
         </View>
-        <View style={{ width: '100%' }}>
-          <Text style={styles.text}>Difficulté</Text>
-          <ChoiseSelector value={difficulty} onValueChange={setDifficulty} />
-        </View>
-        <View style={{ width: '100%' }}>
-          <RangeCursor value={questionCount} onValueChange={setQuestionCount} />
-        </View>
-        <SimpleButton text={launch ? 'Création du quiz...' : 'Créer le quiz'} onPress={handleCreateQuiz} disabled={launch} />
       </View>
-    </View>
+    </GradientBackground>
   );
 }
 
@@ -70,7 +73,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: COLORS.background.blue,
   },
   title: {
     textAlign: 'center',
