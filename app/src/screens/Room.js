@@ -104,112 +104,112 @@ export default function Room() {
 
     return (
         <GradientBackground>
-        <View style={styles.container}>
-            <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
-            {!isMobile ? (
-                <View style={styles.qrCodeContainer}>
-                    <QRCode
-                        value={`https://luoja.fr/room?roomId=${roomId}`}
-                        size={200}
-                        color={COLORS.palette.blue.darker}
-                        backgroundColor="white"
-                    />
-                    <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
-                        <Copy size={24} color="black" />
-                        <Text style={FONT.text}>Room : {roomId}</Text>
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <>
-                    <TouchableOpacity style={styles.qrCodeButton} onPress={() => setModalVisible(true)}>
-                        <Text style={FONT.text}>QR Code</Text>
-                    </TouchableOpacity>
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => setModalVisible(false)}
-                    >
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
-                                <QRCode
-                                    value={`${apiUrl}/room/${roomId}/join`}
-                                    size={200}
-                                    color={COLORS.palette.blue.darker}
-                                    backgroundColor="white"
-                                />
-                                <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
-                                    <Copy size={24} color="black" />
-                                    <Text style={[FONT.text, styles.title]}>Room : {roomId}</Text>
-                                </TouchableOpacity>
-                                <SimpleButton
-                                    text="Close"
-                                    onPress={() => setModalVisible(false)}
-                                    color={COLORS.button.blue.basic}
-                                />
+            <View style={styles.container}>
+                <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
+                {!isMobile ? (
+                    <View style={styles.qrCodeContainer}>
+                        <QRCode
+                            value={`https://luoja.fr/room?roomId=${roomId}`}
+                            size={200}
+                            color={COLORS.palette.blue.darker}
+                            backgroundColor="white"
+                        />
+                        <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
+                            <Copy size={24} color="black" />
+                            <Text style={FONT.text}>Room : {roomId}</Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : (
+                    <>
+                        <TouchableOpacity style={styles.qrCodeButton} onPress={() => setModalVisible(true)}>
+                            <Text style={FONT.text}>QR Code</Text>
+                        </TouchableOpacity>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalVisible}
+                            onRequestClose={() => setModalVisible(false)}
+                        >
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modalContent}>
+                                    <QRCode
+                                        value={`${apiUrl}/room/${roomId}/join`}
+                                        size={200}
+                                        color={COLORS.palette.blue.darker}
+                                        backgroundColor="white"
+                                    />
+                                    <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
+                                        <Copy size={24} color="black" />
+                                        <Text style={[FONT.text, styles.title]}>Room : {roomId}</Text>
+                                    </TouchableOpacity>
+                                    <SimpleButton
+                                        text="Close"
+                                        onPress={() => setModalVisible(false)}
+                                        color={COLORS.button.blue.basic}
+                                    />
+                                </View>
+                            </View>
+                        </Modal>
+                    </>
+                )}
+                <Text style={FONT.subTitle}>Joueurs :</Text>
+                <ScrollView horizontal style={styles.playersContainer}>
+                    {players.map((player) => (
+                        <Text key={player} style={FONT.text}>  {player}  </Text>
+                    ))}
+                </ScrollView>
+                <ScrollView horizontal style={styles.teamsContainer}>
+                    {gameMode === "team" && teams.map((team, index) => (
+                        <View key={index} style={styles.team}>
+                            <Text style={FONT.subTitle}>{team.name}</Text>
+                            <SimpleButton
+                                text="Rejoindre"
+                                onPress={() => joinTeam(roomId, team.name)}
+                                color={COLORS.button.blue.basic}
+                            />
+                            <View style={styles.teamPlayersContainer}>
+                                {team.players.map((player) => (
+                                    <Text key={player} style={FONT.text}>{player}</Text>
+                                ))}
                             </View>
                         </View>
-                    </Modal>
-                </>
-            )}
-            <Text style={FONT.subTitle}>Joueurs :</Text>
-            <ScrollView horizontal style={styles.playersContainer}>
-                {players.map((player) => (
-                    <Text key={player} style={FONT.text}>  {player}  </Text>
-                ))}
-            </ScrollView>
-            <ScrollView horizontal style={styles.teamsContainer}>
-                {gameMode === "team" && teams.map((team, index) => (
-                    <View key={index} style={styles.team}>
-                        <Text style={FONT.subTitle}>{team.name}</Text>
+                    ))}
+                </ScrollView>
+                {gameMode === "team" && (
+                    <View
+                        style={[
+                            styles.teamButtons,
+                            { flexDirection: isMobile ? 'row' : 'column', justifyContent: 'center', gap: isMobile ? 10 : 0 },
+                        ]}
+                    >
                         <SimpleButton
-                            text="Rejoindre"
-                            onPress={() => joinTeam(roomId, team.name)}
+                            text="Commencer la partie"
+                            onPress={() => startRoom(roomId)}
+                            color={COLORS.button.blue.basic}
+                            marginBottom={isMobile ? 0 : 10}
+                            marginVertical={isMobile ? 0 : 1}
+                            width={isMobile ? "50%" : "100%"}
+                        />
+                        <SimpleButton
+                            text="Retourner au menu"
+                            onPress={handleReturnHome}
+                            color={COLORS.button.blue.basic}
+                            marginBottom={isMobile ? 0 : 1}
+                            marginVertical={isMobile ? 0 : 1}
+                            width={isMobile ? "50%" : "100%"}
+                        />
+                    </View>
+                )}
+                {gameMode === "scrum" && (
+                    <View style={styles.teamButtons} >
+                        <SimpleButton
+                            text="Retourner au menu"
+                            onPress={handleReturnHome}
                             color={COLORS.button.blue.basic}
                         />
-                        <View style={styles.teamPlayersContainer}>
-                            {team.players.map((player) => (
-                                <Text key={player} style={FONT.text}>{player}</Text>
-                            ))}
-                        </View>
                     </View>
-                ))}
-            </ScrollView>
-            {gameMode === "team" && (
-                <View
-                    style={[
-                        styles.teamButtons,
-                        { flexDirection: isMobile ? 'row' : 'column', justifyContent: 'center', gap: isMobile ? 10 : 0 },
-                    ]}
-                >
-                    <SimpleButton
-                        text="Commencer la partie"
-                        onPress={() => startRoom(roomId)}
-                        color={COLORS.button.blue.basic}
-                        marginBottom={isMobile ? 0 : 10}
-                        marginVertical={isMobile ? 0 : 1}
-                        width={isMobile ? "50%" : "100%"}
-                    />
-                    <SimpleButton
-                        text="Retourner au menu"
-                        onPress={handleReturnHome}
-                        color={COLORS.button.blue.basic}
-                        marginBottom={isMobile ? 0 : 1}
-                        marginVertical={isMobile ? 0 : 1}
-                        width={isMobile ? "50%" : "100%"}
-                    />
-                </View>
-            )}
-            {gameMode === "scrum" && (
-                <View style={styles.teamButtons} >
-                    <SimpleButton
-                        text="Retourner au menu"
-                        onPress={handleReturnHome}
-                        color={COLORS.button.blue.basic}
-                    />
-                </View>
-            )}
-        </View>
+                )}
+            </View>
         </GradientBackground>
     );
 }

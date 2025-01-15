@@ -63,16 +63,16 @@ export default function ResumeScreen() {
 
     return (
         <GradientBackground>
-        <View style={styles.container}>
-            <Text style={styles.title}>Reprenez votre partie</Text>
-            <View style={styles.inputView}>
-                <TouchableOpacity onPress={handlePasteGameId}>
-                    <ClipboardPaste size={30} color="black" />
-                </TouchableOpacity>
-                <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
+            <View style={styles.container}>
+                <Text style={styles.title}>Reprenez votre partie</Text>
+                <View style={styles.inputView}>
+                    <TouchableOpacity onPress={handlePasteGameId}>
+                        <ClipboardPaste size={30} color="black" />
+                    </TouchableOpacity>
+                    <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
+                </View>
+                <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
             </View>
-            <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
-        </View>
         </GradientBackground>
     );
 

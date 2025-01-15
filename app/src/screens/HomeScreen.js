@@ -14,17 +14,18 @@ export default function HomeScreen() {
 
     return (
         <GradientBackground>
-        <View style={styles.homeView}>
-            <Text style={FONT.luoja}>Luoja</Text>
-            <View style={styles.childView}>
-                {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
-                <View style={styles.listButton}>
-                    <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')} />
-                    <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
-                    <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
-                </View>
-                {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
-            </View> </View>
+            <View style={styles.homeView}>
+                <Text style={FONT.luoja}>Luoja</Text>
+                <View style={styles.childView}>
+                    {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
+                    <View style={styles.listButton}>
+                        <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')} />
+                        <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
+                        <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
+                    </View>
+                    {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
+                </View> 
+            </View>
         </GradientBackground>
     );
 }

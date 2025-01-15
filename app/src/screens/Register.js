@@ -32,45 +32,45 @@ export default function Register() {
 
     return (
         <GradientBackground>
-        <View style={styles.registerView}>
-            <Text style={styles.pageTitle}>Inscription</Text>
+            <View style={styles.registerView}>
+                <Text style={styles.pageTitle}>Inscription</Text>
 
-            <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
-            <View style={styles.nameInputView}>
-                <TextInput
-                    style={styles.registerInput}
-                    onChangeText={setName}
-                    value={name}
-                    placeholder="Nom d'utilisateur"
-                    autoFocus={true}
-                    returnKeyType="next"
-                    onSubmitEditing={() => {
-                        if (passwordInputRef.current) {
-                            passwordInputRef.current.focus();
-                        }
-                    }}
-                />
+                <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
+                <View style={styles.nameInputView}>
+                    <TextInput
+                        style={styles.registerInput}
+                        onChangeText={setName}
+                        value={name}
+                        placeholder="Nom d'utilisateur"
+                        autoFocus={true}
+                        returnKeyType="next"
+                        onSubmitEditing={() => {
+                            if (passwordInputRef.current) {
+                                passwordInputRef.current.focus();
+                            }
+                        }}
+                    />
+                </View>
+
+                <Text style={styles.inputTitle}>Mot de passe</Text>
+                <View style={styles.passwordInputView}>
+                    <TextInput
+                        ref={passwordInputRef}
+                        style={styles.registerInput}
+                        onChangeText={setPassword}
+                        value={password}
+                        placeholder="Mot de passe"
+                        secureTextEntry={true}
+                        returnKeyType="done"
+                        onSubmitEditing={handleRegister}
+                    />
+
+                </View>
+
+                <TouchableOpacity style={styles.buttons} onPress={handleRegister}>
+                    <Text style={styles.buttonText}>S'inscrire</Text>
+                </TouchableOpacity>
             </View>
-
-            <Text style={styles.inputTitle}>Mot de passe</Text>
-            <View style={styles.passwordInputView}>
-                <TextInput
-                    ref={passwordInputRef}
-                    style={styles.registerInput}
-                    onChangeText={setPassword}
-                    value={password}
-                    placeholder="Mot de passe"
-                    secureTextEntry={true}
-                    returnKeyType="done"
-                    onSubmitEditing={handleRegister}
-                />
-
-            </View>
-
-            <TouchableOpacity style={styles.buttons} onPress={handleRegister}>
-                <Text style={styles.buttonText}>S'inscrire</Text>
-            </TouchableOpacity>
-        </View>
         </GradientBackground>
     );
 }

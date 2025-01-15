@@ -69,41 +69,41 @@ export default function JoinGame() {
 
   return (
     <GradientBackground>
-    <View style={styles.container}>
-      {isMobile && scanned === false && (
-        <CameraView
-          onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-          barcodeScannerSettings={{
-            barcodeTypes: ["qr", "pdf417"],
-          }}
-          style={StyleSheet.absoluteFillObject}
-        />
+      <View style={styles.container}>
+        {isMobile && scanned === false && (
+          <CameraView
+            onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+            barcodeScannerSettings={{
+              barcodeTypes: ["qr", "pdf417"],
+            }}
+            style={StyleSheet.absoluteFillObject}
+          />
 
-      )}
-      {scanned === true && (
-        <>
-          <Text style={styles.title}>Rejoindre une partie</Text>
-          <View style={styles.inputView}>
-            <TouchableOpacity onPress={handlePasteGameId}>
-              <ClipboardPaste size={30} color="black" />
-            </TouchableOpacity>
-            <TextInput
-              placeholder="Entrer le code de la partie"
-              value={roomId}
-              onChangeText={setRoomId}
-              style={styles.input}
-            />
-          </View>
-          <SimpleButton text="Rejoindre" onPress={() => handleConnect(roomId)} />
-      </>)}
+        )}
+        {scanned === true && (
+          <>
+            <Text style={styles.title}>Rejoindre une partie</Text>
+            <View style={styles.inputView}>
+              <TouchableOpacity onPress={handlePasteGameId}>
+                <ClipboardPaste size={30} color="black" />
+              </TouchableOpacity>
+              <TextInput
+                placeholder="Entrer le code de la partie"
+                value={roomId}
+                onChangeText={setRoomId}
+                style={styles.input}
+              />
+            </View>
+            <SimpleButton text="Rejoindre" onPress={() => handleConnect(roomId)} />
+        </>)}
 
-      {scanned === true && isMobile && (
-        <>
-          <SimpleButton text="Scanner le QR CODE" onPress={() => setScanned(false)} />
-        </>
-      )}
+        {scanned === true && isMobile && (
+          <>
+            <SimpleButton text="Scanner le QR CODE" onPress={() => setScanned(false)} />
+          </>
+        )}
 
-    </View>
+      </View>
     </GradientBackground>
   );
 }

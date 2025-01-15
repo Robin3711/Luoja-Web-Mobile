@@ -67,30 +67,30 @@ export default function Account() {
     }
     else {
         return (
-                    <GradientBackground>
+            <GradientBackground>
             
-            error ? (
-                
-                <View style={styles.quizScreenView}>
-                    <Text style={FONT.error}>{errorMessage}</Text>
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate('initMenu', { screen: 'account' })
-                    }
-                    }>
-                        <Text style={FONT.button}>Retour au menu</Text>
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <View style={styles.container}>
-                    <Text style={FONT.luoja}>Luoja</Text>
-                    <View style={styles.childView}>
-                        <Text style={FONT.text}>Cette fonctionnalité nécessite un compte</Text>
-                        <SimpleButton text="Se connecter" onPress={() => navigation.navigate('login')} />
-                        <SimpleButton text="Créer un compte" onPress={() => navigation.navigate('register')} />
+                error ? (
+                    
+                    <View style={styles.quizScreenView}>
+                        <Text style={FONT.error}>{errorMessage}</Text>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('initMenu', { screen: 'account' })
+                        }
+                        }>
+                            <Text style={FONT.button}>Retour au menu</Text>
+                        </TouchableOpacity>
                     </View>
-                </View>
-            )
-                </GradientBackground>
+                ) : (
+                    <View style={styles.container}>
+                        <Text style={FONT.luoja}>Luoja</Text>
+                        <View style={styles.childView}>
+                            <Text style={FONT.text}>Cette fonctionnalité nécessite un compte</Text>
+                            <SimpleButton text="Se connecter" onPress={() => navigation.navigate('login')} />
+                            <SimpleButton text="Créer un compte" onPress={() => navigation.navigate('register')} />
+                        </View>
+                    </View>
+                )
+            </GradientBackground>
         );
         
     }

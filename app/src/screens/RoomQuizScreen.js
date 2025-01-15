@@ -209,76 +209,76 @@ export default function RoomQuizScreen() {
     loadFont();
     return (
         <GradientBackground>
-        {!error ? (
-            <View style={styles.quizScreenView}>
-                {currentQuestion ? (
-                    <>
-                        <View style={styles.mainView}>
-                            <View style={styles.questionView}>
-                                <Text>{message}</Text>
+            {!error ? (
+                <View style={styles.quizScreenView}>
+                    {currentQuestion ? (
+                        <>
+                            <View style={styles.mainView}>
+                                <View style={styles.questionView}>
+                                    <Text>{message}</Text>
 
-                                <CountdownCircleTimer
-                                    key={timerKey}
-                                    isPlaying={timerInitialized}
-                                    duration={gameTime}
-                                    size={!isMobile ? 150 : 100}
-                                    strokeWidth={!isMobile ? 15 : 9}
-                                    colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
-                                    colorsTime={[
-                                        (gameTime * 4) / 5,
-                                        (gameTime * 3) / 5,
-                                        (gameTime * 2) / 5,
-                                        (gameTime * 1) / 5,
-                                        (gameTime * 0) / 5,
-                                    ]}
-                                    style={{ marginTop: 5 }}
-                                >
-                                    {() => (
-                                        <>
-                                            {gameMode === "team" ? (
-                                                <Text style={styles.questionNumber}>{remainingTime}</Text>
-                                            ) : (<Text style={styles.questionNumber}></Text>)}
+                                    <CountdownCircleTimer
+                                        key={timerKey}
+                                        isPlaying={timerInitialized}
+                                        duration={gameTime}
+                                        size={!isMobile ? 150 : 100}
+                                        strokeWidth={!isMobile ? 15 : 9}
+                                        colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
+                                        colorsTime={[
+                                            (gameTime * 4) / 5,
+                                            (gameTime * 3) / 5,
+                                            (gameTime * 2) / 5,
+                                            (gameTime * 1) / 5,
+                                            (gameTime * 0) / 5,
+                                        ]}
+                                        style={{ marginTop: 5 }}
+                                    >
+                                        {() => (
+                                            <>
+                                                {gameMode === "team" ? (
+                                                    <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                                ) : (<Text style={styles.questionNumber}></Text>)}
 
-                                            <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
-                                        </>
-                                    )}
-                                </CountdownCircleTimer>
-                                <Text style={styles.score}>Score: {score}</Text>
-                                <View style={styles.quizBarView}></View>
-                                <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
-                                {!isMobile && validateAnswerButton()}
+                                                <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                            </>
+                                        )}
+                                    </CountdownCircleTimer>
+                                    <Text style={styles.score}>Score: {score}</Text>
+                                    <View style={styles.quizBarView}></View>
+                                    <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
+                                    {!isMobile && validateAnswerButton()}
+                                </View>
+
+                                <View style={styles.answersView}>
+                                    {currentQuestion.answers.map((answer, index) => (
+                                        answer === null ? null : (
+                                            <AnswerButton
+                                                key={index}
+                                                shape={shapes[index]}
+                                                text={answer}
+                                                onClick={() => handleAnswerSelection(answer)}
+                                                filter={getAnswerFilter(answer)}
+                                                type={currentQuestion.type}
+                                                disabled={isAnswered}
+                                            />
+                                        )
+                                    ))}
+                                    {isMobile && validateAnswerButton()}
+                                </View>
                             </View>
+                        </>
+                    ) : (
+                        <Text>Chargement...</Text>
+                    )}
+                </View>
+            ) : (
+                <View style={styles.quizScreenView}>
+                    <Text style={styles.errorText}>{errorMessage}</Text>
 
-                            <View style={styles.answersView}>
-                                {currentQuestion.answers.map((answer, index) => (
-                                    answer === null ? null : (
-                                        <AnswerButton
-                                            key={index}
-                                            shape={shapes[index]}
-                                            text={answer}
-                                            onClick={() => handleAnswerSelection(answer)}
-                                            filter={getAnswerFilter(answer)}
-                                            type={currentQuestion.type}
-                                            disabled={isAnswered}
-                                        />
-                                    )
-                                ))}
-                                {isMobile && validateAnswerButton()}
-                            </View>
-                        </View>
-                    </>
-                ) : (
-                    <Text>Chargement...</Text>
-                )}
-            </View>
-        ) : (
-            <View style={styles.quizScreenView}>
-                <Text style={styles.errorText}>{errorMessage}</Text>
+                    <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
 
-                <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
-
-            </View>
-        )}
+                </View>
+            )}
         </GradientBackground>
     );
 }
