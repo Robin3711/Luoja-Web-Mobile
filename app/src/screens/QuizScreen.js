@@ -8,6 +8,8 @@ import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { toast } from '../utils/utils';
 
+import { Audio } from 'expo-av';
+
 import { SimpleButton } from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
@@ -21,6 +23,24 @@ const isMobile = width< height
 
 
 export default function QuizScreen() {
+
+
+const sound = new Audio.Sound();
+
+const badSound = require('../../assets/error_CDOxCYm.mp3');
+const goodSound = require('../../assets/yeah-boiii-i-i-i.mp3');
+
+useEffect(() => {
+    
+        async function requestPermission() {
+            const { status } = await Audio.requestPermissionsAsync();
+            if (status !== 'granted') {
+                console.warn('Permission audio non accordée');
+            }
+        }
+        requestPermission();
+}, []);
+
     const route = useRoute();
     const navigation = useNavigation();
     const { gameId, gameMode } = route.params;
@@ -184,9 +204,27 @@ export default function QuizScreen() {
     const updateScore = () => setScore(score + 1);
 
     const getAnswerFilter = (answer) => {
+
+        const playSound = async (soundFile) => {
+            await sound.unloadAsync();
+            await sound.loadAsync({ uri: soundFile });
+            await sound.playAsync();
+        }
+
         if (answer === selectedAnswer && !isAnswered) return 'BLUE';
-        if (answer === correct) return 'GREEN';
-        if (answer === selectedAnswer) return 'RED';
+        if (answer === correct) {
+            // jouer le son
+            if (answer === selectedAnswer){
+                playSound(goodSound);
+            }            
+            return 'GREEN';
+        }
+        if (answer === selectedAnswer) {
+            // jouer le son
+            playSound(badSound);            
+            return 'RED';
+        } 
+        
         return 'NONE';
     };
 
@@ -216,7 +254,8 @@ export default function QuizScreen() {
 
         <TouchableOpacity
             style={buttonDisabled || selectedAnswer === null || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
-            onPress={() => {
+            onPress={async () => {                
+                await sound.unloadAsync();
                 if (gameMode === 'timed' && remainingTime === 0) {
                     // If game is timed and remaining time is 0, show the next question
                     totalQuestion === questionNumber ? handleEnd() : handleNewQuestion();
