@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TextInput, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, Dimensions, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 
 import { getGameInfos } from '../utils/api';
 import { toast } from '../utils/utils';
@@ -10,7 +10,8 @@ import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 
-const platform = Platform.OS;
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function ResumeScreen() {
     const [gameId, setGameId] = useState('');
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
         color: COLORS.text.blue.dark,
     },
     inputView: {
-        width: platform === 'web' ? '20%' : '80%',
+        width: !isMobile ? '20%' : '80%',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',

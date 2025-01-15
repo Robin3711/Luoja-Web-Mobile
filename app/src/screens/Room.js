@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from "react-native";
+import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import { Clipboard as Copy } from 'lucide-react-native';
+import * as Clipboard from 'expo-clipboard';
 
 import { joinRoom, joinTeam, startRoom } from "../utils/api";
 import { getPlatformAPI } from "../utils/utils";
@@ -8,7 +10,13 @@ import { getPlatformAPI } from "../utils/utils";
 import QRCode from "react-native-qrcode-svg";
 import { COLORS } from "../css/utils/color";
 import { FONT } from "../css/utils/font";
-import SimpleButton from "../components/SimpleButton"; // Import SimpleButton
+import SimpleButton from "../components/SimpleButton";
+import { toast } from "../utils/utils";
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
+
 
 export default function Room() {
     const route = useRoute();
@@ -50,32 +58,67 @@ export default function Room() {
         }
     }
 
+    const handleReturnHome = async () => {
+        navigation.navigate("initMenu");
+    };
+
+    const handleCopyRoomId = async () => {
+        await Clipboard.setStringAsync(roomId);
+        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.blue);
+    };
+
     useEffect(() => {
         const connect = async () => {
-            joinRoom(roomId).then((source) => {
+            try {
+
+                const source = await joinRoom(roomId);
                 eventSource = source;
 
                 eventSource.addEventListener('message', handleEvent);
 
-                getPlatformAPI().then((url) => setApiUrl(url));
-            });
+
+                eventSource.addEventListener('error', (err) => {
+                    console.error("Erreur EventSource :", err);
+                    toast("error", "Vous ne pouvez pas rejoindre cette partie", '', 3000, COLORS.toast.red);
+                    navigation.navigate("initMenu");
+                });
+
+
+                const url = await getPlatformAPI();
+                setApiUrl(url);
+            } catch (error) {
+                toast("error", error.status || 500, error.message || "Une erreur est survenue", 3000, COLORS.toast.red);
+                navigation.navigate("initMenu");
+            }
         };
 
         connect();
-    }, []);
+
+
+        return () => {
+            if (eventSource) {
+                eventSource.close();
+            }
+        };
+    }, [roomId]);
+
+
 
     return (
         <View style={styles.container}>
             <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
-            {Platform.OS === 'web' ? (
+            {!isMobile ? (
                 <View style={styles.qrCodeContainer}>
                     <QRCode
-                        value={`${apiUrl}/room/${roomId}/join`}
+                        value={`https://luoja.fr/room?roomId=${roomId}`}
                         size={200}
                         color={COLORS.palette.blue.darker}
                         backgroundColor="white"
                     />
-                    <Text style={[FONT.text, styles.title]}>Room {roomId}</Text>
+                    <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
+                        <Copy size={24} color="black" />
+                        <Text style={[FONT.text, styles.title]}>Room {roomId}</Text>
+                    </TouchableOpacity>
                 </View>
             ) : (
                 <>
@@ -131,9 +174,23 @@ export default function Room() {
                 ))}
             </ScrollView>
             {gameMode === "team" && (
+                <View style={styles.teamButtons} >
+                    <SimpleButton
+                        text="Commencer la partie"
+                        onPress={() => startRoom(roomId)}
+                        color={COLORS.button.blue.basic}
+                    />
+                    <SimpleButton
+                        text="Retourner au menu"
+                        onPress={handleReturnHome}
+                        color={COLORS.button.blue.basic}
+                    />
+                </View>
+            )}
+            {gameMode === "scrum" && (
                 <SimpleButton
-                    text="Start Game"
-                    onPress={() => startRoom(roomId)}
+                    text="Retourner au menu"
+                    onPress={handleReturnHome}
                     color={COLORS.button.blue.basic}
                 />
             )}
@@ -144,7 +201,7 @@ export default function Room() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start', // Aligner les éléments en haut
+        justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 20,
         backgroundColor: COLORS.background.blue,
@@ -158,7 +215,7 @@ const styles = StyleSheet.create({
     gameMode: {
         textAlign: 'center',
         marginBottom: 20,
-        maxWidth: Platform.OS === 'web' ? '100%' : 200,
+        maxWidth: !isMobile ? '100%' : 200,
     },
     playersContainer: {
         flexDirection: 'row',
@@ -185,7 +242,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 150,
         overflow: 'scroll',
-        
+
     },
     qrCodeButton: {
         position: 'absolute',
@@ -225,5 +282,16 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.button.blue.basic,
         padding: 10,
         borderRadius: 10,
+    },
+    teamButtons: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        gap: '10px',
+    },
+    roomId: {
+        marginTop: 5,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

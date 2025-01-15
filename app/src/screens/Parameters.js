@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet , Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { createQuiz } from '../utils/api';
@@ -12,7 +12,9 @@ import SimpleButton from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
-const platform = Platform.OS;
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function Parameters() {
   const [difficulty, setDifficulty] = useState(null);
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    width: platform === 'web' ? '40%' : '85%',
+    width: !isMobile ? '40%' : '85%',
     margin: 10,
     gap: 30,
   },

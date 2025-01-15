@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Text, View, Platform, StyleSheet, ScrollView, TouchableOpacity, TextInput, Dimensions } from 'react-native';
+import { Text, View, Platform, Dimensions, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
@@ -10,9 +10,8 @@ import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
-const platform = Platform.OS;
-const { width } = Dimensions.get('window');
-const isMobile = width < 775;
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height;
 
 export default function SearchScreen() {
     const [data, setData] = useState([]);
@@ -93,7 +92,7 @@ export default function SearchScreen() {
                     </View>
 
                     <View style={styles.quizCreationRightView}>
-                        {platform === 'web' && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
+                        {!isMobile && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
                         <ScrollView style={styles.questionsView}>
                             {data.length !== 0 ? (
                                 [...data].reverse().map((quiz, index) => (
@@ -121,12 +120,12 @@ const styles = StyleSheet.create({
         paddingTop: 20,
     },
     screen2: {
-        flexDirection: platform === 'web' ? 'row' : 'column',
+        flexDirection: !isMobile ? 'row' : 'column',
         justifyContent: 'space-around',
         alignItems: 'center',
         width: '90%',
         height: '80%',
-        marginTop: platform === 'web' ? 20 : 0,
+        marginTop: !isMobile ? 20 : 0,
     },
     title: {
         textAlign: 'center',
@@ -141,28 +140,28 @@ const styles = StyleSheet.create({
         fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     filterView: {
-        marginBottom: platform === 'web' ? 20 : 10,
+        marginBottom: !isMobile ? 20 : 10,
     },
     searchParameterView: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
-        height: platform === 'web' ? '60%' : 'auto',
+        height: !isMobile ? '60%' : 'auto',
         borderRadius: 20,
-        padding: platform === 'web' ? 20 : 10,
-        width: platform === 'web' ? '40%' : '100%',
+        padding: !isMobile ? 20 : 10,
+        width: !isMobile ? '40%' : '100%',
     },
     quizCreationRightView: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
         backgroundColor: '#8fd3ff',
-        height: platform === 'web' ? '80%' : '55%',
+        height: !isMobile ? '80%' : '55%',
         borderRadius: 20,
         padding: 20,
-        width: platform === 'web' ? '50%' : '100%',
+        width: !isMobile ? '50%' : '100%',
         borderRadius: 20,
-        ...platform === 'web' && { marginLeft: 20 },
+        ...!isMobile && { marginLeft: 20 },
     },
     quizCreationQuestionsTitle: {
         fontFamily: 'LobsterTwo_400Regular',

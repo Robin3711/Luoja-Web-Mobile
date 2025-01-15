@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
@@ -8,8 +8,8 @@ import { createGame, createRoom } from '../utils/api';
 import { toast } from '../utils/utils';
 import { FONT } from '../css/utils/font';
 
-const { width } = Dimensions.get('window');
-const isMobile = width < 775;
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function LaunchGameMode() {
     const navigation = useNavigation();
@@ -19,7 +19,6 @@ export default function LaunchGameMode() {
     const [timerDifficulty, setTimerDifficulty] = useState("easy");
     const [scrumDifficulty, setScrumDifficulty] = useState("easy");
     const [scrumPlayerCount, setScrumPlayerCount] = useState("");
-    const [teamPlayerCount, setTeamPlayerCount] = useState("");
     const [teamCount, setTeamCount] = useState("");
     const [teams, setTeams] = useState([]);
 
@@ -29,7 +28,7 @@ export default function LaunchGameMode() {
                 navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
             })
             .catch((error) => {
-                const errorMsg = error.status && error.message 
+                const errorMsg = error.status && error.message
                     ? `${error.status}: ${error.message}`
                     : error.toString();
                 toast('error', 'Erreur', errorMsg, 3000, COLORS.toast.red);
@@ -37,10 +36,10 @@ export default function LaunchGameMode() {
     };
 
     const handleStartRoom = (gameMode) => {
-        let roomTeams = teams.length > 0 ? teams : ["Team 1", "Team 2"];
-        const playerCount = gameMode === "scrum" ? scrumPlayerCount : teamPlayerCount;
+        let roomTeams = teams.length > 1 ? teams : ["Team 1", "Team 2"];
+        const playerCount = gameMode === "scrum" ? scrumPlayerCount : 99;
 
-        if (playerCount <= 1) {
+        if (gameMode === "scrum" && playerCount <= 1) {
             toast("error", 'Il faut au moins deux joueurs pour lancer une partie', '', 2000, COLORS.toast.red);
             return;
         }
@@ -67,7 +66,7 @@ export default function LaunchGameMode() {
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior={isMobile? 'padding' : 'height'}
         >
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View style={styles.view}>
@@ -99,16 +98,6 @@ export default function LaunchGameMode() {
                         <View style={styles.item}>
                             <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
                             <Text style={FONT.paragraphe}>Les joueurs forment des équipes et répondent aux questions avec un temps limité, configurable par niveau de difficulté. Le score final de chaque équipe est la moyenne des scores de ses membres.</Text>
-                            <View style={styles.inputRow}>
-                                <Text style={styles.label}>Nombre de joueurs</Text>
-                                <TextInput
-                                    placeholder="Nombre de joueurs"
-                                    keyboardType="numeric"
-                                    onChangeText={(text) => setTeamPlayerCount(text)}
-                                    value={teamPlayerCount.toString()}
-                                    style={styles.input}
-                                />
-                            </View>
                             <View style={styles.inputRow}>
                                 <Text style={styles.label}>Nombre d'équipes</Text>
                                 <TextInput

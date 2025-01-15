@@ -1,10 +1,15 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity,  StyleSheet, ScrollView , Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
-import { uploadAudio, downloadAllAudios, downloadAudio, uploadImage } from '../utils/api';
+import { uploadAudio, downloadAllAudios, downloadAudio, deleteFile } from '../utils/api';
+import SimpleButton from './SimpleButton';
+import { toast } from '../utils/utils';
 
-const platform = Platform.OS;
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
 
 const ChooseAudio = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -30,14 +35,20 @@ const ChooseAudio = ({ onValueChange }) => {
         const file = document.getElementById('file').files[0];
         const formData = new FormData();
         formData.append('file', file);
-        if(file.size > 1000000){
-            alert("Le fichier est trop volumineux. Veuillez choisir un fichier de moins de 1 Mo.");
+        if (file.size > 1000000) {
+            toast('warn', 'Le fichier est trop volumineux. Veuillez choisir un fichier de moins de 1 Mo.', '', 1500, COLORS.toast.text.orange);
             return;
         }
 
-        uploadAudio(formData).then((response) => {
+        uploadAudio(formData).then(async (response) => {
             if (response.status === 200) {
-                setAudios([...audios, URL.createObjectURL(file)]);
+                const jsonResponse = await response.json();
+                const responseId = jsonResponse.filePath;
+                setIds([...ids, responseId]);
+                downloadAudio(responseId).then((response) => {
+                    const url = URL.createObjectURL(response);
+                    setAudios([...audios, url]);
+                })
             }
         }
         ).catch((error) => {
@@ -46,16 +57,47 @@ const ChooseAudio = ({ onValueChange }) => {
         );
     };
 
+    const handleRefreshAudios = async (id) => {
+        try {
+            await deleteFile(id);
+            const response = await downloadAllAudios();
+            if (response.files && Array.isArray(response.files)) {
+                const files = response.files;
+                const validFiles = files.filter(file => file.fileName.endsWith('.mp3' || '.mpeg'));
+                setIds(validFiles.map((file) => file.fileName));
+
+                const audioPromises = validFiles.map(async (file) => {
+                    const { fileName } = file;
+                    const audioBlob = await downloadAudio(fileName);
+                    return URL.createObjectURL(audioBlob);
+                });
+
+                const fetchedAudios = await Promise.all(audioPromises);
+                setAudios(fetchedAudios);
+            } else {
+                console.error("La réponse de `downloadAllAudios` n'est pas valide.");
+            }
+        } catch (error) {
+            if (error.status && error.message) {
+                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+            } else {
+                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+            }
+        }
+    }
+
+    const handleCloseModal = () => {
+        setModalVisible(false);
+    }
+
     useFocusEffect(
         useCallback(() => {
             const fetchAudios = async () => {
                 try {
                     const response = await downloadAllAudios();
-                    console.log(response);
                     if (response.files && Array.isArray(response.files)) {
                         const files = response.files;
                         const validFiles = files.filter(file => file.fileName.endsWith('.mp3' || '.mpeg'));
-                        console.log(validFiles);
                         setIds(validFiles.map((file) => file.fileName));
 
                         const audioPromises = validFiles.map(async (file) => {
@@ -70,7 +112,11 @@ const ChooseAudio = ({ onValueChange }) => {
                         console.error("La réponse de `downloadAllAudios` n'est pas valide.");
                     }
                 } catch (error) {
-                    console.error("Erreur lors de la récupération des audios :", error);
+                    if (error.status && error.message) {
+                        toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                    } else {
+                        toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                    }
                 }
             };
 
@@ -97,6 +143,7 @@ const ChooseAudio = ({ onValueChange }) => {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
+                style={styles.modal}
             >
                 <View style={styles.themeListModal}>
                     <input
@@ -105,14 +152,16 @@ const ChooseAudio = ({ onValueChange }) => {
                         name="file"
                         accept="audio/*"
                         onChange={selectFile}
+                        style={styles.inputFile}
                     />
-
-                    <FlatList
+                    <ScrollView
                         horizontal={true}
-                        data={audios}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item, index }) => (
+                        contentContainerStyle={styles.scrollViewContenair}
+                        style={{ maxWidth: 1000 }}
+                    >
+                        {audios.map((item, index) => (
                             <TouchableOpacity
+                                key={index}
                                 onPress={() => handleAudioSelect(item, ids[index])}
                                 style={styles.audioItem}
                             >
@@ -120,9 +169,12 @@ const ChooseAudio = ({ onValueChange }) => {
                                 <audio controls src={item} style={styles.audioPlayer}>
                                     Votre navigateur ne supporte pas l'élément audio.
                                 </audio>
+                                <SimpleButton text="Supprimer" onPress={() => handleRefreshAudios(ids[index])}/>
+
                             </TouchableOpacity>
-                        )}
-                    />
+                        ))}
+                    </ScrollView>
+                    <SimpleButton text={"Fermer"} onPress={handleCloseModal} />
                 </View>
             </Modal>
         </View>
@@ -155,28 +207,52 @@ const styles = StyleSheet.create({
         fontSize: 15,
     },
     themeListModal: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginVertical: platform === 'web' ? '6%' : '20%',
-        marginHorizontal: '10%',
-        backgroundColor: '#f0f0f0',
-        padding: 20,
-        borderRadius: 10,
-    },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginVertical: !isMobile? '6%' : '20%',
+            marginHorizontal: '10%',
+            backgroundColor: COLORS.background.blue,
+            padding: 20,
+            borderRadius: 10,
+            borderWidth: 5,
+            borderStyle: 'solid',
+            borderColor: COLORS.button.blue.basic,
+        },
     audioItem: {
         margin: 10,
         padding: 10,
-        backgroundColor: '#d3d3d3',
+        backgroundColor: COLORS.palette.blue.lighter,
         borderRadius: 5,
+        width: "400px", // Fixe la largeur des éléments
+        height: "250px",
+        alignItems: 'center',
     },
     audioLabel: {
-        marginBottom: 5,
-        fontSize: 16,
-    },
+        padding: 10,
+        fontSize: 40,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+      },
     audioPlayer: {
-        width: 200,
+        width: '100%',
+        height: '100%',
     },
+    scrollViewContenair: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        width: '10%',
+    },
+    inputFile: {
+        margin: 10,
+        padding: 30,
+        backgroundColor: COLORS.palette.blue.lighter,
+        borderRadius: 10,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        fontSize: 20,
+    }
 });
 
 export default ChooseAudio;

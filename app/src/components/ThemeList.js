@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList,  StyleSheet , Dimensions } from 'react-native';
 import { Dices } from 'lucide-react-native';
 import { COLORS } from '../css/utils/color';
 
 import { themeOptions, iconSize } from '../utils/utils';
 
-const platform = Platform.OS;
+
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
 
 const ThemeSelector = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -41,7 +45,7 @@ const ThemeSelector = ({ onValueChange }) => {
                     <FlatList
                         data={themeOptions}
                         keyExtractor={(item) => item.label}
-                        numColumns={platform === 'web' ? 3 : 1}
+                        numColumns={!isMobile ? 3 : 1}
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.themeButton}
@@ -89,7 +93,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: platform === 'web' ? '6%' : '20%',
+        marginVertical: !isMobile ? '6%' : '20%',
         marginHorizontal: '10%',
         backgroundColor: COLORS.background.blue,
         padding: 20,
@@ -116,7 +120,7 @@ const styles = StyleSheet.create({
         margin: 5,
         borderRadius: 5,
         backgroundColor: COLORS.button.blue.basic,
-        width: platform === 'web' ? 350 : '100%',
+        width: !isMobile ? 350 : '100%',
         height: 70,
     },
     themeLabel: {

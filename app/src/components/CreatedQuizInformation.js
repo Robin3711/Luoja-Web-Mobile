@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Platform } from 'react-native';
+import { Text, View, StyleSheet , Dimensions } from 'react-native';
 import { createGame, getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from './SimpleButton';
 import { FONT } from '../css/utils/font';
+
+
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions }) {
     const [loading, setLoading] = useState(true);
@@ -28,9 +33,9 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                 setNbPlayed(data.nombreDePartie);
             }).catch((error) => {
                 if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                    toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
                 } else {
-                    toast('error', 'Erreur', error, 3000, COLORS.toast.red);
+                    toast('error', 'Erreur', error, 3000, COLORS.toast.text.red);
                 }
             });
 
@@ -47,33 +52,33 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
 
     const detailTextStyle = [
         styles.detailText,
-        isDraft && styles.draftText, // Ajouter un texte grisé pour les brouillons
+        isDraft && styles.draftText,
     ];
 
     const handleCreationQuiz = () => {
-        if (status === false && Platform.OS === 'web') {
+        if (status === false && !isMobile) {
             navigation.navigate('quizCreation', { quizId: quizId });
         }
     };
 
     const handlePlayQuiz = async () => {
-        if (status === true && Platform.OS === 'web') {
+        if (status === true && !isMobile) {
             const data = await createGame(quizId);
             navigation.navigate('quizScreen', { gameId: data.id });
         }
     };
 
-    if (status === false && Platform.OS === 'web') {
+    if (status === false && !isMobile) {
         return (
             <View style={styles.QuizInformationView}>
                 <View style={styles.PrincipalInformationsView}>
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
                     <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                    <SimpleButton 
-                        text="Modifier" 
-                        onPress={handleCreationQuiz} 
-                        color={COLORS.button.blue.basic} 
+                    <SimpleButton
+                        text="Modifier"
+                        onPress={handleCreationQuiz}
+                        color={COLORS.button.blue.basic}
                         height={30}
                         width={100}
                         textStyle={{ fontSize: 20 }}
@@ -93,10 +98,10 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
                 <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                <SimpleButton 
-                    text="Jouer" 
-                    onPress={handlePlayQuiz} 
-                    color={COLORS.button.blue.darkBasic} 
+                <SimpleButton
+                    text="Jouer"
+                    onPress={handlePlayQuiz}
+                    color={COLORS.button.blue.darkBasic}
                     height={30}
                     width={100}
                     textStyle={{ fontSize: 20 }}

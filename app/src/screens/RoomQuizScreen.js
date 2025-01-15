@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, StyleSheet  , Dimensions} from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentRoomQuestion, getCurrentRoomAnswer } from '../utils/api';
@@ -10,7 +10,8 @@ import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
-const platform = Platform.OS;
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function RoomQuizScreen() {
     const route = useRoute();
@@ -46,6 +47,13 @@ export default function RoomQuizScreen() {
 
     const [message, setMessage] = useState("Question en cours...");
 
+    // Timer-related states
+    const [remainingTime, setRemainingTime] = useState(0);
+    const [gameTime, setGameTime] = useState(0);
+    const [timerInitialized, setTimerInitialized] = useState(false);
+    const [timerKey, setTimerKey] = useState(0);
+    const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
+
     useEffect(() => {
         (async () => {
             try {
@@ -62,11 +70,43 @@ export default function RoomQuizScreen() {
         })();
     }, [roomId]);
 
+    useEffect(() => {
+        if (remainingTime > 0 && !timerInitialized) {
+            setGameTime(remainingTime);
+            setTimerInitialized(true);
+        }
+        else {
+            if (gameMode === "scrum") {
+                setGameTime(30);
+                setTimerInitialized(false);
+            }
+        }
+    }, [remainingTime]);
+
+    useEffect(() => {
+        let timer;
+        if (remainingTime === 1) {
+            timer = setTimeout(() => {
+                setTimeStuckAtOne(true);
+            }, 1000);
+        } else {
+            setTimeStuckAtOne(false);
+        }
+
+        return () => clearTimeout(timer);
+    }, [remainingTime]);
+
+    useEffect(() => {
+        if (timeStuckAtOne && remainingTime === 1) {
+            setRemainingTime(0);
+            setIsAnswered(true);
+        }
+    }, [timeStuckAtOne, remainingTime]);
+
     const handleEvent = (event) => {
         const data = JSON.parse(event.data);
         switch (data.eventType) {
             case "quizInfos":
-                console.log(data);
                 setTotalQuestion(data.totalQuestion);
                 break;
             case "nextQuestion":
@@ -85,14 +125,15 @@ export default function RoomQuizScreen() {
                 handleEnd();
                 break;
             case "timer":
-                setMessage(`Temps restant : ${data.remainingTime} secondes`);
+                setRemainingTime(data.remainingTime);
                 if (data.remainingTime === 0) {
                     setIsAnswered(true);
                 }
+                break;
             default:
                 break;
         }
-    }
+    };
 
     const handleNewQuestion = async () => {
         try {
@@ -103,7 +144,9 @@ export default function RoomQuizScreen() {
 
             setCurrentQuestion(data);
             setIsAnswered(false);
-            setQuestionNumber((prevQuestionNumber) => prevQuestionNumber + 1); // Use functional update
+            setQuestionNumber((prevQuestionNumber) => prevQuestionNumber + 1);
+            setTimerKey((prevKey) => prevKey + 1);
+            setTimerInitialized(false);
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -147,27 +190,15 @@ export default function RoomQuizScreen() {
 
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
 
-    const validateAnswerButton = () => {
-        if (selectedAnswer && !isAnswered) {
-            return (
-                <TouchableOpacity
-                    style={styles.buttons}
-                    onPress={handleGetAnswer}
-                >
-                    <Text style={styles.buttonText}>Valider</Text>
-                </TouchableOpacity>
-            );
-        } else {
-            return (
-                <TouchableOpacity
-                    style={styles.disabledButtons}
-                    disabled={true}
-                >
-                    <Text style={styles.buttonText}>Valider</Text>
-                </TouchableOpacity>
-            );
-        }
-    }
+    const validateAnswerButton = () => (
+        <TouchableOpacity
+            style={selectedAnswer && !isAnswered ? styles.buttons : styles.disabledButtons}
+            onPress={handleGetAnswer}
+            disabled={!selectedAnswer || isAnswered}
+        >
+            <Text style={styles.buttonText}>Valider</Text>
+        </TouchableOpacity>
+    );
 
     loadFont();
     return (
@@ -180,40 +211,52 @@ export default function RoomQuizScreen() {
                                 <Text>{message}</Text>
 
                                 <CountdownCircleTimer
-                                    duration={7}
-                                    size={Platform.OS === 'web' ? 150 : 110}
-                                    strokeWidth={Platform.OS === 'web' ? 15 : 10}
-                                    colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-                                    colorsTime={[7, 5, 2, 0]}
+                                    key={timerKey}
+                                    isPlaying={timerInitialized}
+                                    duration={gameTime}
+                                    size={!isMobile ? 150 : 110}
+                                    strokeWidth={!isMobile ? 15 : 10}
+                                    colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
+                                    colorsTime={[
+                                        (gameTime * 4) / 5,
+                                        (gameTime * 3) / 5,
+                                        (gameTime * 2) / 5,
+                                        (gameTime * 1) / 5,
+                                        (gameTime * 0) / 5,
+                                    ]}
+                                    style={{ marginTop: 5 }}
                                 >
                                     {() => (
-                                        <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                        <>
+                                            {gameMode === "team" ? (
+                                                <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                            ) : (<Text style={styles.questionNumber}></Text>)}
+
+                                            <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                        </>
                                     )}
                                 </CountdownCircleTimer>
                                 <Text style={styles.score}>Score: {score}</Text>
-                                <View style={styles.quizBarView}>
-                                </View>
+                                <View style={styles.quizBarView}></View>
                                 <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
-                                {platform === 'web' && validateAnswerButton()}
+                                {!isMobile && validateAnswerButton()}
                             </View>
 
                             <View style={styles.answersView}>
-                                {currentQuestion.answers.map((answer, index) => {
-                                    return (
-                                        answer === null ? null : (
-                                            <AnswerButton
-                                                key={index}
-                                                shape={shapes[index]}
-                                                text={answer}
-                                                onClick={() => handleAnswerSelection(answer)}
-                                                filter={getAnswerFilter(answer)}
-                                                type={currentQuestion.type}
-                                                disabled={isAnswered}
-                                            />
-                                        )
-                                    );
-                                })}
-                                {platform !== 'web' && validateAnswerButton()}
+                                {currentQuestion.answers.map((answer, index) => (
+                                    answer === null ? null : (
+                                        <AnswerButton
+                                            key={index}
+                                            shape={shapes[index]}
+                                            text={answer}
+                                            onClick={() => handleAnswerSelection(answer)}
+                                            filter={getAnswerFilter(answer)}
+                                            type={currentQuestion.type}
+                                            disabled={isAnswered}
+                                        />
+                                    )
+                                ))}
+                                {isMobile && validateAnswerButton()}
                             </View>
                         </View>
                     </>
@@ -229,7 +272,6 @@ export default function RoomQuizScreen() {
 
             </View>
         )
-
     );
 }
 
@@ -243,40 +285,40 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.background.blue,
     },
     mainView: {
-        flexDirection: platform === 'web' ? 'row' : 'column',
+        flexDirection: !isMobile ? 'row' : 'column',
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        ...platform === 'web' && { gap: 20, },
+        ...!isMobile && { gap: 20, },
     },
     questionView: {
         alignItems: 'center',
-        width: platform === 'web' ? '50%' : '100%',
-        ...platform === 'web' && { gap: 70, },
+        width: !isMobile ? '50%' : '100%',
+        ...!isMobile && { gap: 70, },
 
     },
     question: {
-        fontSize: platform === 'web' ? 30 : 25,
+        fontSize: !isMobile ? 30 : 25,
         textAlign: 'center',
-        width: platform === 'web' ? '80%' : '95%',
+        width: !isMobile ? '80%' : '95%',
         fontWeight: 'bold',
         color: COLORS.text.blue.dark,
-        ...platform === 'web' && { marginVertical: 100, },
+        ...!isMobile && { marginVertical: 100, },
     },
     questionNumber: {
-        fontSize: platform === 'web' ? 30 : 25,
+        fontSize: !isMobile ? 30 : 25,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
     },
     score: {
-        fontSize: platform === 'web' ? 30 : 12,
+        fontSize: !isMobile ? 30 : 12,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
     },
     answersView: {
-        width: platform === 'web' ? '50%' : '100%',
+        width: !isMobile ? '50%' : '100%',
         alignItems: 'center',
 
     },
@@ -287,7 +329,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#8fd3ff',
         height: 75,
-        width: platform === 'web' ? "35%" : "95%",
+        width: !isMobile ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
@@ -299,7 +341,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#d3d3d3',
         height: 75,
-        width: platform === 'web' ? "35%" : "95%",
+        width: !isMobile ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,

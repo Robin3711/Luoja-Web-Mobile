@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Platform, Image } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Dimensions, StyleSheet, Text, TouchableOpacity,  Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { COLORS } from '../css/utils/color';
 import { downloadImage, downloadAudio } from '../utils/api';
 import { Audio } from 'expo-av';
-const platform = Platform.OS;
+import * as FileSystem from 'expo-file-system';
+import { toast } from '../utils/utils';
+
+
+
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 const Star = ({ shapeColor, borderColor }) => (
-    <Svg width={platform === 'web' ? "115" : "75"} height="115" viewBox="-2 -2 28 28" fill="none">
+    <Svg width={!isMobile ? "115" : "75"} height="115" viewBox="-2 -2 28 28" fill="none">
         <Path
             d="M12 .587l3.668 7.429L24 9.433l-6 5.843 1.42 8.294L12 19.771l-7.42 3.799L6 15.276 0 9.433l8.332-1.417L12 .587z"
             stroke={borderColor || "#0c0d25"}
@@ -23,11 +30,12 @@ const Star = ({ shapeColor, borderColor }) => (
 );
 
 const Triangle = ({ shapeColor, borderColor }) => (
-    <Svg width={platform === 'web' ? "115" : "75"} height="115" viewBox="0 0 24 24" fill="none">
+    <Svg width={!isMobile ? "115" : "75"} height="115" viewBox="0 0 24 24" fill="none">
         <Path d="M12 2L2 22h20L12 2z" stroke={borderColor || "#283971"} strokeWidth="1.5" />
         <Path d="M12 2L2 22h20L12 2z" stroke={borderColor || "#283971"} strokeWidth="1.5" fill={shapeColor || "#96a9e4"} />
     </Svg>
 );
+
 
 const AnswerButton = ({ shape, onClick, text, filter, type }) => {
     const backgroundColors = {
@@ -69,47 +77,54 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
         }
     };
 
-
-
     const [file, setFile] = useState(null);
-
+    const fileRef = useRef(null);
     const sound = new Audio.Sound();
 
-    const playSound = async () => {
-        await sound.unloadAsync();
-        await sound.loadAsync({ uri: file });
-        await sound.playAsync();
+
+    async function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
     }
 
-    useEffect(() => {
-        async function requestPermission() {
-            const { status } = await Audio.requestPermissionsAsync();
-            if (status !== 'granted') {
-                console.warn('Permission audio non accordée');
-            }
+    const playSound = async () => {
+        try {
+            await sound.unloadAsync();
+            await sound.loadAsync({ uri: file });
+            await sound.playAsync();
+        } catch (error) {
+            toast("error", 'Erreur lors de la lecture du son', '', 1500, COLORS.toast.text.red);
         }
-        requestPermission();
-        async function handleMedia() {
-            if (type === 'image' && text) {
-              const file = await downloadImage(text);
-              const url = URL.createObjectURL(file);
-              setFile(url);
-            }
-      
-            if (type === 'audio' && text) {
-              const file = await downloadAudio(text);
-              console.log(file);
-              let url;
-              if (Platform.OS ==="web"){
-                url = URL.createObjectURL(file);
-                setFile(url);
-              } else {
-                url = file;
-                setFile(url);
-              }
-              
+    };
 
-              await sound.loadAsync({ uri: url });
+
+    useEffect(() => {
+
+        if (!isMobile) {
+            async function handleMedia() {
+                if (type === 'image' && text) {
+                    const file = await downloadImage(text);
+                    const url = URL.createObjectURL(file);
+                    setFile(url);
+                }
+
+                if (type === 'audio' && text) {
+                    const file = await downloadAudio(text);
+                    let url;
+                    if (!isMobile) {
+                        url = URL.createObjectURL(file);
+                        setFile(url);
+                    } else {
+                        url = file;
+                        setFile(url);
+                    }
+
+
+                    await sound.loadAsync({ uri: url });
 
                 }
             }
@@ -118,7 +133,68 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
             return () => {
                 sound.unloadAsync();
             };
+
+        } else {
+            async function requestPermission() {
+                const { status } = await Audio.requestPermissionsAsync();
+                if (status !== 'granted') {
+                    toast('warn', 'Permission audio non accordée', '', 1500, COLORS.toast.text.orange);
+                }
+            }
+            requestPermission();
+
+
+            async function handleMedia() {
+                let fileUri = null;
+                try {
+                    if (type === 'image' && text) {
+                        const blob = await downloadImage(text);
+                        fileUri = FileSystem.documentDirectory + `${text}`;
+                        const base64Data = await blobToBase64(blob);
+                        await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
+                        setFile(fileUri);
+                        fileRef.current = fileUri;
+                    }
+
+                    if (type === 'audio' && text) {
+                        const blob = await downloadAudio(text);
+                        fileUri = FileSystem.documentDirectory + `${text}`;
+                        const base64Data = await blobToBase64(blob);
+                        await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
+                        setFile(fileUri);
+                        fileRef.current = fileUri;
+                        await sound.loadAsync({ uri: fileUri });
+                    }
+                } catch (error) {
+                    toast('error', 'Erreur lors du traitement des fichiers média', '', 1500, COLORS.toast.text.red);
+                }
+            }
+
+            handleMedia();
+
+            return () => {
+                async function cleanup() {
+                    try {
+                        if (sound) {
+                            await sound.unloadAsync();
+                        }
+                        if (fileRef.current) {
+                            const exists = await FileSystem.getInfoAsync(fileRef.current);
+                            if (exists.exists) {
+                                await FileSystem.deleteAsync(fileRef.current, { idempotent: true });
+                            }
+                        }
+                    } catch (error) {
+                        toast('error', 'Erreur lors du nettoyage des fichiers', '', 1500, COLORS.toast.text.red);
+                    }
+                }
+                cleanup();
+            };
+        }
+
+
     }, [text, type]);
+
 
     return (
         <TouchableOpacity
@@ -128,7 +204,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
                 {
                     backgroundColor: questionFilters[filter] || backgroundColors[shape],
                     borderColor: 'black', borderWidth: filter === 'BLUE' ? 7 : 0,
-                    height: platform === 'web' ? 160 : 80,
+                    height: !isMobile ? 160 : 80,
                     width: filter === 'BLUE' ? '90%' : '95%',
                     marginVertical: filter === 'BLUE' ? 10 : 5,
                 },
@@ -149,10 +225,10 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
                     <TouchableOpacity onPress={playSound} style={styles.button}>
                         <Text style={styles.text}>Play</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={async () => {sound.pauseAsync()}} style={styles.button}>
+                    <TouchableOpacity onPress={async () => { sound.pauseAsync() }} style={styles.button}>
                         <Text style={styles.text}>Pause</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={async () => {sound.stopAsync()}} style={styles.button}>
+                    <TouchableOpacity onPress={async () => { sound.stopAsync() }} style={styles.button}>
                         <Text style={styles.text}>Stop</Text>
                     </TouchableOpacity>
                 </>
@@ -160,6 +236,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
         </TouchableOpacity>
     );
 };
+
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
@@ -169,7 +246,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         position: 'relative',
         overflow: 'hidden',
-        ...platform === 'web' ? {
+        ...!isMobile ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },
@@ -177,40 +254,41 @@ const styles = StyleSheet.create({
         width: '75%',
         textAlign: 'center',
         color: 'white',
-        fontSize: platform === 'web' ? 25 : 18, // Adjust font size for mobile
+        fontSize: !isMobile ? 25 : 18, // Adjust font size for mobile
     },
     shapeStyles: {
         square: {
-            width: platform === 'web' ? 115 : 60, // Adjust size for mobile
-            height: platform === 'web' ? 115 : 60, // Adjust size for mobile
+            width: !isMobile ? 115 : 75,
+            height: !isMobile ? 115 : 75,
             borderRadius: 10,
-            borderWidth: platform === 'web' ? 7 : 5,
+            borderWidth: !isMobile ? 7 : 5,
         },
         circle: {
-            width: platform === 'web' ? 115 : 60, // Adjust size for mobile
-            height: platform === 'web' ? 115 : 60, // Adjust size for mobile
-            borderRadius: platform === 'web' ? 70 : 30, // Adjust size for mobile
-            borderWidth: platform === 'web' ? 7 : 5,
+            width: !isMobile ? 115 : 75,
+            height: !isMobile ? 115 : 75,
+            borderRadius: !isMobile ? 70 : 45,
+            borderWidth: !isMobile ? 7 : 5,
         },
     },
     Image: {
-        width: platform === 'web' ? 100 : 60, // Adjust size for mobile
-        height: platform === 'web' ? 100 : 60, // Adjust size for mobile
+        width: !isMobile ? 100 : 60, // Adjust size for mobile
+        height: !isMobile ? 100 : 60, // Adjust size for mobile
         resizeMode: 'cover',
     },
     button: {
         position: 'relative',
         backgroundColor: COLORS.button.blue.basic,
-        height: platform === 'web' ? 50 : 40, // Adjust size for mobile
-        width: platform === 'web' ? 100 : 80, // Adjust size for mobile
+        height: !isMobile ? 50 : 40, // Adjust size for mobile
+        width: !isMobile ? 100 : 80, // Adjust size for mobile
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
         alignItems: 'center',
         justifyContent: 'center',
-        ...platform === 'web' ? {
+        ...!isMobile ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },
 });
+
 export default AnswerButton;
