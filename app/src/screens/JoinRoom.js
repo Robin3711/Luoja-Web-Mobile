@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, Dimensions,Platform, StyleSheet, Button, Alert,  TextInput, TouchableOpacity } from "react-native";
 import { CameraView, Camera } from "expo-camera";
-import { getRoomId, hasToken } from "../utils/utils";
+import { getRoomId, hasToken, toast } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
 import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
@@ -35,6 +35,15 @@ export default function JoinGame() {
   }, []);
 
   const handleConnect = async (roomId) => {
+    navigation.navigate('room', { roomId: roomId });
+  }
+
+  const handleConnectWithCode = async (roomId) => {
+    if(roomId === '')
+    {
+      toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, COLORS.toast.text.red);
+      return;
+    }
     navigation.navigate('room', { roomId: roomId });
   }
 
@@ -92,7 +101,7 @@ export default function JoinGame() {
               style={styles.input}
             />
           </View>
-          <SimpleButton text="Rejoindre" onPress={() => handleConnect(roomId)} />
+          <SimpleButton text="Rejoindre" onPress={() => handleConnectWithCode(roomId)} />
       </>)}
 
       {scanned === true && isMobile && (
