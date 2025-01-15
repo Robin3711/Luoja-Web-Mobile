@@ -1,11 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet , Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 
-
 import { userLogin } from '../utils/api';
 import { toast } from '../utils/utils';
+import { Eye, EyeClosed } from 'lucide-react-native';
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height;
 
 export default function Login() {
 
@@ -15,6 +18,7 @@ export default function Login() {
 
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
+    const [hidePassword, setHidePassword] = useState(true);
 
     const handleLogin = async () => {
         try {
@@ -30,6 +34,10 @@ export default function Login() {
             }
         }
     };
+
+    const handleHidePassword = () => {
+        setHidePassword(!hidePassword);
+    }
 
     return (
         <View style={styles.loginView}>
@@ -60,10 +68,18 @@ export default function Login() {
                     onChangeText={setPassword}
                     value={password}
                     placeholder="Mot de passe"
-                    secureTextEntry={true}
+                    secureTextEntry={hidePassword}
                     returnKeyType="done"
                     onSubmitEditing={handleLogin}
                 />
+
+                <TouchableOpacity onPress={handleHidePassword} style={styles.iconButton}>
+                    {hidePassword ? (
+                        <EyeClosed size={30} color="white" />
+                    ) : (
+                        <Eye size={30} color="white" />
+                    )}
+                </TouchableOpacity>
             </View>
 
             <TouchableOpacity style={styles.buttons} onPress={handleLogin}>
@@ -113,11 +129,15 @@ const styles = StyleSheet.create({
     passwordInputView: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 1,
         borderRadius: 20,
         backgroundColor: '#4d65b4',
+        width: !isMobile ? 300 : 320,
+    },
+    iconButton: {
+        paddingRight: 10,
     },
     buttons: {
         display: 'flex',
