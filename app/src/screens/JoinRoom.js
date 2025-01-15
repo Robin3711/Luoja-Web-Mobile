@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Alert, Platform, TextInput, TouchableOpacity } from "react-native";
+import { Text, View, Dimensions,Platform, StyleSheet, Button, Alert,  TextInput, TouchableOpacity } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import { getRoomId, hasToken } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
 import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
+import { COLORS } from '../css/utils/color';
+import SimpleButton from "../components/SimpleButton";
+import GradientBackground from '../css/utils/linearGradient';
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 
 export default function JoinGame() {
   const [roomId, setRoomId] = useState('');
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
+  const [scanned, setScanned] = useState(true);
 
   const navigation = useNavigation();
 
@@ -23,7 +29,8 @@ export default function JoinGame() {
       setHasPermission(status === "granted");
     };
 
-    if (Platform.OS === "android") {
+    if(isMobile)
+    {
       getCameraPermissions();
     }
   }, []);
@@ -53,16 +60,17 @@ export default function JoinGame() {
 
   };
 
-  if (hasPermission === null && Platform.OS === "android") {
+  if (hasPermission === null && isMobile) {
     return <Text>Requesting for camera permission</Text>;
   }
-  if (hasPermission === false && Platform.OS === "android") {
+  if (hasPermission === false && isMobile) {
     return <Text>No access to camera</Text>;
   }
 
   return (
+    <GradientBackground>
     <View style={styles.container}>
-      {Platform.OS === "android" && (
+      {isMobile && scanned === false && (
         <CameraView
           onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
           barcodeScannerSettings={{
@@ -72,40 +80,62 @@ export default function JoinGame() {
         />
 
       )}
-      {Platform.OS === "web" && (
+      {scanned === true && (
         <>
-          <TouchableOpacity onPress={handlePasteGameId}>
-            <ClipboardPaste size={30} color="black" />
-          </TouchableOpacity>
-          <TextInput
-            placeholder="Enter Room ID"
-            value={roomId}
-            onChangeText={setRoomId}
-            style={styles.input}
-          />
-          <Button title="Rejoindre" onPress={() => handleConnect(roomId)} />
+          <Text style={styles.title}>Rejoindre une partie</Text>
+          <View style={styles.inputView}>
+            <TouchableOpacity onPress={handlePasteGameId}>
+              <ClipboardPaste size={30} color="black" />
+            </TouchableOpacity>
+            <TextInput
+              placeholder="Entrer le code de la partie"
+              value={roomId}
+              onChangeText={setRoomId}
+              style={styles.input}
+            />
+          </View>
+          <SimpleButton text="Rejoindre" onPress={() => handleConnect(roomId)} />
+      </>)}
+
+      {scanned === true && isMobile && (
+        <>
+          <SimpleButton text="Scanner le QR CODE" onPress={() => setScanned(false)} />
         </>
       )}
 
-      {scanned && Platform.OS === "web" && (
-        <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
-      )}
-
     </View>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  title: {
+    fontSize: 50,
+    textAlign: 'center',
+    fontFamily: 'LobsterTwo_700Bold_Italic',
+    color: COLORS.text.blue.dark,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    margin: 10,
     padding: 10,
-  }
+    fontSize: 20,
+    fontFamily: 'LobsterTwo_700Bold_Italic',
+    color: COLORS.text.blue.dark,
+  },
+  inputView: {
+    width: !isMobile ? '20%' : '80%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginVertical: 40,
+  },
 });

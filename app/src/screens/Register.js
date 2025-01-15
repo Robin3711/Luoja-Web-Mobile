@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet , Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { userRegister } from '../utils/api';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+import GradientBackground from '../css/utils/linearGradient';
 
 export default function Register() {
 
@@ -30,6 +31,7 @@ export default function Register() {
     };
 
     return (
+        <GradientBackground>
         <View style={styles.registerView}>
             <Text style={styles.pageTitle}>Inscription</Text>
 
@@ -69,6 +71,7 @@ export default function Register() {
                 <Text style={styles.buttonText}>S'inscrire</Text>
             </TouchableOpacity>
         </View>
+        </GradientBackground>
     );
 }
 
@@ -79,7 +82,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     pageTitle: {
         display: 'flex',

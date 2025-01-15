@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getQuizInfos } from '../utils/api';
@@ -14,7 +14,13 @@ import ThemeSelector from '../components/ThemeList';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
-const platform = Platform.OS;
+import GradientBackground from '../css/utils/linearGradient';
+
+
+
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 export default function QuizCreation() {
@@ -39,9 +45,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -56,9 +62,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -74,9 +80,9 @@ export default function QuizCreation() {
 
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -87,9 +93,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     };
@@ -100,9 +106,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -113,9 +119,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -126,7 +132,7 @@ export default function QuizCreation() {
                 const data = await saveQuiz(title, category, difficulty, questions);
                 setQuizId(data.quizId);
 
-                if (Platform.OS === 'web') {
+                if (!isMobile) {
                     navigation.navigate('quizCreation', { quizId: data.quizId });
                 }
             }
@@ -136,13 +142,13 @@ export default function QuizCreation() {
             setPublishButton(false);
             setSaveButton(true);
             setResetForm(false);
-            toast('info', 'Le quiz à bien était sauvegardé !', "", 1000, COLORS.toast.blue);
+            toast('info', 'Le quiz à bien était sauvegardé !', "", 1000, COLORS.toast.text.blue);
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     };
@@ -167,9 +173,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -186,11 +192,11 @@ export default function QuizCreation() {
         setResetForm(true);
 
         // Modification de l'URL pour supprimer les paramètres
-        if (Platform.OS === 'web') {
+        if (!isMobile) {
             navigation.navigate('quizCreation');
         }
 
-        toast('info', 'Le formulaire a été réinitialisé.', '', 1000, COLORS.toast.blue);
+        toast('info', 'Le formulaire a été réinitialisé.', '', 1000, COLORS.toast.text.blue);
     };
 
     // Vérification du token à chaque fois que l'écran est focus
@@ -273,6 +279,7 @@ export default function QuizCreation() {
     };
 
     return (
+        <GradientBackground>
         <View style={styles.quizCreationView}>
             <Text style={styles.title}>Créez votre propre quiz !</Text>
             <View style={styles.quizCreationChildVIew}>
@@ -326,6 +333,7 @@ export default function QuizCreation() {
                 </TouchableOpacity>
             </View>
         </View>
+        </GradientBackground>
     );
 }
 
@@ -334,7 +342,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#EEF8FF',
         flexDirection: 'column',
     },
     title: {
@@ -437,7 +444,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
-        ...platform === 'web' ? {
+        ...!isMobile ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },
@@ -449,7 +456,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
-        ...platform === 'web' ? {
+        ...!isMobile ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },

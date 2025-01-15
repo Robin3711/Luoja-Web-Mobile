@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, Platform } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { COLORS } from './color';
 import { Subtitles } from 'lucide-react-native';
 
@@ -23,12 +23,11 @@ const isMobile = width < 775;
 // Styles des polices
 export const FONT = StyleSheet.create({
     luoja: {
-        fontFamily: fontFamily.lobster.cursive,
+        fontFamily: fontFamily.lobster.italic,
         color: COLORS.text.blue.dark,
         position: 'relative',
         top: '10vh',
-        fontSize: isMobile ? 72 : 144, 
-        fontWeight: 'bold',
+        fontSize: isMobile ? 90 : 144,
     },
     title: {
         fontFamily: fontFamily.lobster.italic,
@@ -37,22 +36,22 @@ export const FONT = StyleSheet.create({
         color: COLORS.text.blue.dark,
         fontSize: isMobile ? 30 : 78,
     },
-    subTitle:{
+    subTitle: {
         fontFamily: fontFamily.lobster.italic,
         textAlign: 'center',
-        marginBottom: 10,
+        marginBottom: 20,
         color: COLORS.text.blue.dark,
         fontSize: isMobile ? 20 : 39,
     },
     button: {
         fontFamily: fontFamily.lobster.cursive,
-        fontSize: 30,
+        fontSize: isMobile ? 25 : 30,
         color: COLORS.text.blue.dark,
         ...center,
     },
     text: {
         fontFamily: fontFamily.lobster.cursive,
-        fontSize: isMobile ? 16 : 28,   
+        fontSize: isMobile ? 16 : 28,
         color: COLORS.text.blue.dark,
         ...center,
     },

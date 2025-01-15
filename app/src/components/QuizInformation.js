@@ -1,14 +1,14 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Platform, Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { cloneQuiz, saveQuiz } from '../utils/api';
 import { getThemeLabel, toast, themeOptions } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 
-const platform = Platform.OS;
-const { width } = Dimensions.get('window');
-const isMobile = width < 775;
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 export default function QuizInformation({ quiz }) {
     const navigation = useNavigation();
@@ -38,9 +38,9 @@ export default function QuizInformation({ quiz }) {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     };
@@ -81,13 +81,14 @@ const styles = StyleSheet.create({
         minWidth: isMobile ? 100 : 150,
     },
     QuizInformationButton: {
-        flex: platform === 'web' ? 0.3 : 0.6,
+        flex: !isMobile ? 0.3 : 0.6,
         backgroundColor: COLORS.button.blue.circle.normal,
-        padding: 8,
+        padding: !isMobile ? 8 : 2,
         borderRadius: 10,
         alignItems: 'center',
         marginHorizontal: 5,
         marginTop: 5,
-        ...platform !== 'web' && { height: isMobile ? 35 : 40 },
+        minWidth: 35,
+        ...isMobile && { height: isMobile ? 35 : 40 },
     },
 });

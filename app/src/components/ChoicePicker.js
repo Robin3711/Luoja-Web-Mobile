@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { difficultyOptions } from '../utils/utils';
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 const ChoiseSelector = ({ value, onValueChange, parameters = difficultyOptions, defaultValue = false, style = null }) => {
@@ -66,7 +69,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#4d65b4',
         borderColor: '#4d65b4',
         borderRadius: 20,
-        padding: 10,
+        padding: isMobile ? 5 : 10,
         marginVertical: 5,
     },
     button: {

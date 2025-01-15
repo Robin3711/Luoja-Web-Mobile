@@ -1,11 +1,15 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, Platform, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Modal, TouchableOpacity,  StyleSheet, ScrollView , Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import { uploadAudio, downloadAllAudios, downloadAudio, deleteFile } from '../utils/api';
 import SimpleButton from './SimpleButton';
+import { toast } from '../utils/utils';
 
-const platform = Platform.OS;
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
 
 const ChooseAudio = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -32,7 +36,7 @@ const ChooseAudio = ({ onValueChange }) => {
         const formData = new FormData();
         formData.append('file', file);
         if (file.size > 1000000) {
-            alert("Le fichier est trop volumineux. Veuillez choisir un fichier de moins de 1 Mo.");
+            toast('warn', 'Le fichier est trop volumineux. Veuillez choisir un fichier de moins de 1 Mo.', '', 1500, COLORS.toast.text.orange);
             return;
         }
 
@@ -55,7 +59,7 @@ const ChooseAudio = ({ onValueChange }) => {
 
     const handleRefreshAudios = async (id) => {
         try {
-            const reponseDelete = await deleteFile(id);
+            await deleteFile(id);
             const response = await downloadAllAudios();
             if (response.files && Array.isArray(response.files)) {
                 const files = response.files;
@@ -74,7 +78,11 @@ const ChooseAudio = ({ onValueChange }) => {
                 console.error("La réponse de `downloadAllAudios` n'est pas valide.");
             }
         } catch (error) {
-            console.error("Erreur lors de la récupération des images :", error);
+            if (error.status && error.message) {
+                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+            } else {
+                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+            }
         }
     }
 
@@ -104,7 +112,11 @@ const ChooseAudio = ({ onValueChange }) => {
                         console.error("La réponse de `downloadAllAudios` n'est pas valide.");
                     }
                 } catch (error) {
-                    console.error("Erreur lors de la récupération des audios :", error);
+                    if (error.status && error.message) {
+                        toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                    } else {
+                        toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                    }
                 }
             };
 
@@ -131,6 +143,7 @@ const ChooseAudio = ({ onValueChange }) => {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
+                style={styles.modal}
             >
                 <View style={styles.themeListModal}>
                     <input
@@ -139,6 +152,7 @@ const ChooseAudio = ({ onValueChange }) => {
                         name="file"
                         accept="audio/*"
                         onChange={selectFile}
+                        style={styles.inputFile}
                     />
                     <ScrollView
                         horizontal={true}
@@ -155,9 +169,8 @@ const ChooseAudio = ({ onValueChange }) => {
                                 <audio controls src={item} style={styles.audioPlayer}>
                                     Votre navigateur ne supporte pas l'élément audio.
                                 </audio>
-                                <TouchableOpacity onPress={() => handleRefreshAudios(ids[index])}>
-                                    <Text>Supprimer</Text>
-                                </TouchableOpacity>
+                                <SimpleButton text="Supprimer" onPress={() => handleRefreshAudios(ids[index])}/>
+
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
@@ -194,27 +207,34 @@ const styles = StyleSheet.create({
         fontSize: 15,
     },
     themeListModal: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginVertical: platform === 'web' ? '6%' : '20%',
-        marginHorizontal: '10%',
-        backgroundColor: '#f0f0f0',
-        padding: 20,
-        borderRadius: 10,
-    },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginVertical: !isMobile? '6%' : '20%',
+            marginHorizontal: '10%',
+            backgroundColor: COLORS.background.blue,
+            padding: 20,
+            borderRadius: 10,
+            borderWidth: 5,
+            borderStyle: 'solid',
+            borderColor: COLORS.button.blue.basic,
+        },
     audioItem: {
         margin: 10,
         padding: 10,
-        backgroundColor: '#d3d3d3',
+        backgroundColor: COLORS.palette.blue.lighter,
         borderRadius: 5,
-        width: "200px", // Fixe la largeur des éléments
+        width: "400px", // Fixe la largeur des éléments
+        height: "250px",
         alignItems: 'center',
     },
     audioLabel: {
-        marginBottom: 5,
-        fontSize: 16,
-    },
+        padding: 10,
+        fontSize: 40,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+      },
     audioPlayer: {
         width: '100%',
         height: '100%',
@@ -225,6 +245,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         width: '10%',
     },
+    inputFile: {
+        margin: 10,
+        padding: 30,
+        backgroundColor: COLORS.palette.blue.lighter,
+        borderRadius: 10,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        fontSize: 20,
+    }
 });
 
 export default ChooseAudio;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Picker, ActivityIndicator } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, TextInput, Picker, ActivityIndicator } from 'react-native';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
@@ -8,6 +8,7 @@ import SimpleButton from '../components/SimpleButton';
 import { mediaType, toast } from '../utils/utils';
 import ChoiseSelector from '../components/ChoicePicker';
 import { generateAnswers } from '../utils/api';
+import GradientBackground from '../css/utils/linearGradient';
 
 export default function CreateQuestionScreen() {
     const route = useRoute();
@@ -80,18 +81,18 @@ export default function CreateQuestionScreen() {
 
     const handleSubmit = () => {
         if (!questionText) {
-            toast('error', 'La question ne peut pas être vide', '', 3000, COLORS.toast.red);
+            toast('error', 'La question ne peut pas être vide', '', 3000, COLORS.toast.text.red);
             return;
         }
 
         if (!selectedShape) {
-            toast('error', 'Veuillez sélectionner une bonne réponse en cliquant sur une forme', '', 3000, COLORS.toast.red);
+            toast('error', 'Veuillez sélectionner une bonne réponse en cliquant sur une forme', '', 3000, COLORS.toast.text.red);
             return;
         }
 
         const requiredAnswers = shapes.map((shape) => answers[shape]);
         if (requiredAnswers.some((answer) => !answer)) {
-            toast('error', `Veuillez remplir toutes les ${numAnswers} réponses`, '', 3000, COLORS.toast.red);
+            toast('error', `Veuillez remplir toutes les ${numAnswers} réponses`, '', 3000, COLORS.toast.text.red);
             return;
         }
 
@@ -141,9 +142,13 @@ export default function CreateQuestionScreen() {
                 setLoading(false);
             }
             catch (error) {
-                toast('error', error, '', 3000, COLORS.toast.red);
+                if (error.status && error.message) {
+                    toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                } else {
+                    toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                }
 
-                if (error.status === 500) {
+                if (error.status === 400 || error.status === 500) {
                     setLoading(false);
                 }
 
@@ -168,65 +173,66 @@ export default function CreateQuestionScreen() {
     );
 
     return (
-        <View style={styles.createQuestionView}>
-            {/* Left Panel */}
-            <View style={styles.createQuestionLeftView}>
-                <View style={styles.createQuestionInputView}>
-                    <Text style={FONT.title}>Question :</Text>
-                    <TextInput
-                        style={styles.createQuestionInput}
-                        multiline={true}
-                        placeholder="Le texte de la question"
-                        value={questionText}
-                        onChangeText={setQuestionText}
-                    />
-                    <ChoiseSelector
-                        value={typeQuestion}
-                        onValueChange={setType}
-                        parameters={mediaType}
-                        defaultValue={true}
-                        style={styles.choiceSelector}
-                    />
-                    <View style={styles.toggleContainer}>
-                        <Text style={styles.toggleLabel}>Nombre de réponses :</Text>
-                        <Picker
-                            selectedValue={numAnswers}
-
-                            onValueChange={(value) => {
-                                setNumAnswers(value);
-                                setSelectedShape('');
-                            }}
-                            style={styles.picker}
-                        >
-                            <Picker.Item style={FONT.text} label="2 réponses" value={2} />
-                            <Picker.Item style={FONT.text} label="3 réponses" value={3} />
-                            <Picker.Item style={FONT.text} label="4 réponses" value={4} />
-                        </Picker>
+        <GradientBackground>
+            <View style={styles.createQuestionView}>
+                {/* Left Panel */}
+                <View style={styles.createQuestionLeftView}>
+                    <View style={styles.createQuestionInputView}>
+                        <Text style={FONT.title}>Question :</Text>
+                        <TextInput
+                            style={styles.createQuestionInput}
+                            multiline={true}
+                            placeholder="Le texte de la question"
+                            value={questionText}
+                            onChangeText={setQuestionText}
+                        />
+                        <ChoiseSelector
+                            value={typeQuestion}
+                            onValueChange={setType}
+                            parameters={mediaType}
+                            defaultValue={true}
+                            style={styles.choiceSelector}
+                        />
+                        <View style={styles.toggleContainer}>
+                            <Text style={styles.toggleLabel}>Nombre de réponses :</Text>
+                            <Picker
+                                selectedValue={numAnswers}
+                                onValueChange={(value) => {
+                                    setNumAnswers(value);
+                                    setSelectedShape('');
+                                }}
+                                style={styles.picker}
+                            >
+                                <Picker.Item style={FONT.text} label="2 réponses" value={2} />
+                                <Picker.Item style={FONT.text} label="3 réponses" value={3} />
+                                <Picker.Item style={FONT.text} label="4 réponses" value={4} />
+                            </Picker>
+                        </View>
                     </View>
+                    <SimpleButton text="Valider" onPress={handleSubmit} />
                 </View>
-                <SimpleButton text="Valider" onPress={handleSubmit} />
-            </View>
 
-            {/* Right Panel */}
-            <View style={styles.createQuestionRightView}>
-                <View style={styles.generateAnswersButtonView}>
-                    <SimpleButton text="Générer des réponses" onPress={handleGenerate} disabled={loading} />
-                    {loading && <ActivityIndicator size="large" color={COLORS.primary} />}
+                {/* Right Panel */}
+                <View style={styles.createQuestionRightView}>
+                    <View style={styles.generateAnswersButtonView}>
+                        <SimpleButton text="Générer des réponses" onPress={handleGenerate} disabled={loading} />
+                        {loading && <ActivityIndicator size="large" color={COLORS.primary} />}
+                    </View>
+                    <Picker
+                        selectedValue={generationTheme}
+                        onValueChange={(value) => {
+                            setGenerationTheme(value);
+                        }}
+                        style={styles.picker}
+                    >
+                        <Picker.Item style={FONT.text} label="réaliste" value={"standard"} />
+                        <Picker.Item style={FONT.text} label="humoristique" value={"humor"} />
+                        <Picker.Item style={FONT.text} label="mixte" value={"mix"} />
+                    </Picker>
+                    {shapes.map((shape) => renderWithCheckmark(shape))}
                 </View>
-                <Picker
-                    selectedValue={generationTheme}
-                    onValueChange={(value) => {
-                        setGenerationTheme(value);
-                    }}
-                    style={styles.picker}
-                >
-                    <Picker.Item style={FONT.text} label="réaliste" value={"standard"} />
-                    <Picker.Item style={FONT.text} label="humoristique" value={"humor"} />
-                    <Picker.Item style={FONT.text} label="mixte" value={"mix"} />
-                </Picker>
-                {shapes.map((shape) => renderWithCheckmark(shape))}
             </View>
-        </View>
+        </GradientBackground>
     );
 }
 
@@ -236,7 +242,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         width: '100%',
         height: '100%',
-        backgroundColor: COLORS.background.blue,
     },
     createQuestionLeftView: {
         flexDirection: 'column',

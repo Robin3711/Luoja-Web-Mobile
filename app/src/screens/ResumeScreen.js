@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TextInput, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, Dimensions, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 
 import { getGameInfos } from '../utils/api';
 import { toast } from '../utils/utils';
@@ -9,8 +9,10 @@ import * as Clipboard from 'expo-clipboard';
 
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
+import GradientBackground from '../css/utils/linearGradient';
 
-const platform = Platform.OS;
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function ResumeScreen() {
     const [gameId, setGameId] = useState('');
@@ -60,6 +62,7 @@ export default function ResumeScreen() {
     };
 
     return (
+        <GradientBackground>
         <View style={styles.container}>
             <Text style={styles.title}>Reprenez votre partie</Text>
             <View style={styles.inputView}>
@@ -70,6 +73,7 @@ export default function ResumeScreen() {
             </View>
             <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
         </View>
+        </GradientBackground>
     );
 
 }
@@ -82,7 +86,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     title: {
         fontSize: 50,
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
         color: COLORS.text.blue.dark,
     },
     inputView: {
-        width: platform === 'web' ? '20%' : '80%',
+        width: !isMobile ? '20%' : '80%',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet , Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 import { getQuestions } from '../utils/api';
@@ -10,6 +10,7 @@ import { toast } from '../utils/utils';
 
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
+import GradientBackground from '../css/utils/linearGradient';
 
 export default function RetrieveQuestions() {
     const route = useRoute();
@@ -36,6 +37,7 @@ export default function RetrieveQuestions() {
     }
 
     return (
+        <GradientBackground>
         <View style={styles.screen}>
             <Text style={styles.title}>Importer des questions</Text>
             <View style={styles.list}>
@@ -54,6 +56,7 @@ export default function RetrieveQuestions() {
 
             </View>
         </View>
+        </GradientBackground>
     );
 }
 
@@ -64,7 +67,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: COLORS.background.blue,
     },
     title: {
         textAlign: 'center',

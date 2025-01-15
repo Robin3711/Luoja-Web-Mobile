@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import { FONT } from '../css/utils/font';
 import { themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
+import GradientBackground from '../css/utils/linearGradient';
 
 import * as Progress from 'react-native-progress';
 
@@ -37,6 +38,9 @@ export default function EndScreen() {
                 setDifficulty(infos.quizDifficulty);
                 setLoading(false);
                 setGameMode(infos.gameMode);
+                if (infos.gameMode === null) {
+                    setGameMode("standard");
+                }
 
                 let animationProgress = 0;
                 const targetProgress = score / numberOfQuestions;
@@ -72,7 +76,9 @@ export default function EndScreen() {
         }
     };
 
-    return (error ? (
+    return (
+        <GradientBackground>
+        {error ? (
         <View style={styles.container}>
             <Text style={styles.errorText}>{errorMessage}</Text>
             <TouchableOpacity style={styles.button} onPress={() => {
@@ -86,8 +92,8 @@ export default function EndScreen() {
         <View style={styles.container}>
             <View style={styles.parentContainer}>
                 <Text style={FONT.title}>Fin de partie !</Text>
-                <Text style={styles.text}>Récapitulatif de la partie :</Text>
-                <Text style={styles.text}>Catégorie : {category} | difficulté : {difficulty}</Text>
+                <Text style={FONT.text}>Récapitulatif de la partie :</Text>
+                <Text style={FONT.text}>Catégorie : {category} | difficulté : {difficulty}</Text>
                 {score !== null && numberOfQuestions !== null ? (
                     <View style={styles.scoreContainer}>
                         <Text style={styles.scoreTitle}>
@@ -122,7 +128,8 @@ export default function EndScreen() {
                 onPress={handleReplay}
             />
         </View>
-    )
+    )}
+    </GradientBackground>
     );
 }
 
@@ -139,7 +146,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#f0f0f0',
-        backgroundColor: COLORS.background.blue,
     },
     parentContainer: {
         alignItems: 'center',

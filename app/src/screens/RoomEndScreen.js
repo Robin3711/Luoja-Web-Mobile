@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, StyleSheet, ScrollView } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
@@ -7,6 +7,13 @@ import SimpleButton from '../components/SimpleButton';
 import { getRoomScores } from '../utils/api';
 
 import { FONT } from '../css/utils/font';
+import GradientBackground from '../css/utils/linearGradient';
+
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
+
+
 
 export default function EndScreen() {
     const route = useRoute();
@@ -43,7 +50,9 @@ export default function EndScreen() {
         navigation.navigate("initMenu");
     };
 
-    return (error ? (
+    return (
+        <GradientBackground>
+        {error ? (
         <View style={styles.container}>
             <Text style={styles.errorText}>{errorMessage}</Text>
             <TouchableOpacity style={styles.button} onPress={() => {
@@ -56,7 +65,7 @@ export default function EndScreen() {
     ) : (
         <View style={styles.container}>
             <View style={styles.parentContainer}>
-                <Text style={[styles.title, {marginBottom:100}]}>Fin de partie !</Text>
+                <Text style={[styles.title, { marginBottom: 100 }]}>Fin de partie !</Text>
                 {scores !== null ? (
                     <ScrollView style={styles.scoreContainer}>
                         <Text style={styles.scoreTitle}>Scores :</Text>
@@ -99,7 +108,8 @@ export default function EndScreen() {
                 onPress={handleReturnHome}
             />
         </View>
-    )
+    )}
+    </GradientBackground>
     );
 }
 
@@ -114,11 +124,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: COLORS.background.blue,
     },
     parentContainer: {
         alignItems: 'center',
-        margin: 20,
+        margin: !isMobile ? 20 : 10,
         width: '100%',
     },
     scoreContainer: {
@@ -126,7 +135,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         overflow: 'scroll',
         margin: 20,
-        
+
     },
     scrumContainer: {
         flexDirection: 'column', // Les éléments sont empilés verticalement
@@ -159,10 +168,10 @@ const styles = StyleSheet.create({
         overflow: 'scroll',
     },
     title: {
-        top: 30,
+        top: !isMobile ? 30 : 60,
         textAlign: 'center',
         color: COLORS.text.blue.dark,
-        fontSize: 50,
+        fontSize: !isMobile ? 50 : 30,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         width: '100%',
         marginBottom: '25%',
@@ -173,7 +182,7 @@ const styles = StyleSheet.create({
         overflow: 'scroll',
     },
     scoreTitle: {
-        fontSize: 50,
+        fontSize: !isMobile ? 50 : 30,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
     },
