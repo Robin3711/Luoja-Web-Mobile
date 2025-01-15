@@ -12,8 +12,8 @@ import ChoiseSelector from "../components/ChoicePicker";
 import { FONT } from "../css/utils/font";
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 export default function Dashboard() {
@@ -35,7 +35,7 @@ export default function Dashboard() {
 
     const handleLogout = async () => {
         await removeToken();
-        toast('success', "Déconnexion réussie !", `Au revoir et à bientôt :-(`, 3000, COLORS.toast.green);
+        toast('success', "Déconnexion réussie !", `Au revoir et à bientôt :-(`, 3000, COLORS.toast.text.green);
         navigation.navigate('login');
     }
 
@@ -115,7 +115,7 @@ export default function Dashboard() {
             <View style={styles.dashboardView}>
                 <Text style={FONT.title}>Tableau de bord</Text>
                 <View style={styles.dashboardContainer}>
-                    {isMobile&& (
+                    {isMobile && (
                         <TouchableOpacity
                             style={styles.toggleButton}
                             onPress={() => setShowHistory(!showHistory)}

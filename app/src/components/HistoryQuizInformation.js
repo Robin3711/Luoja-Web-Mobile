@@ -51,9 +51,9 @@ export default function HistoryQuizInformation({ partyId, quizId, onStatusChange
             }
             catch (error) {
                 if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                    toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
                 } else {
-                    toast('error', 'Erreur', error, 3000, COLORS.toast.red);
+                    toast('error', 'Erreur', error, 3000, COLORS.toast.text.red);
                 }
             }
         }
@@ -67,9 +67,9 @@ export default function HistoryQuizInformation({ partyId, quizId, onStatusChange
                 navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
             }).catch((error) => {
                 if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                    toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
                 } else {
-                    toast('error', 'Erreur', error, 3000, COLORS.toast.red);
+                    toast('error', 'Erreur', error, 3000, COLORS.toast.text.red);
                 }
             });
         }

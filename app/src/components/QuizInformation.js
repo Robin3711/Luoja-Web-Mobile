@@ -38,9 +38,9 @@ export default function QuizInformation({ quiz }) {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     };

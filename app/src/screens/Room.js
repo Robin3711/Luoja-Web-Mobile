@@ -64,7 +64,7 @@ export default function Room() {
 
     const handleCopyRoomId = async () => {
         await Clipboard.setStringAsync(roomId);
-        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.blue);
+        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.text.blue);
     };
 
     useEffect(() => {
@@ -79,7 +79,7 @@ export default function Room() {
 
                 eventSource.addEventListener('error', (err) => {
                     console.error("Erreur EventSource :", err);
-                    toast("error", "Vous ne pouvez pas rejoindre cette partie", '', 3000, COLORS.toast.red);
+                    toast("error", "Vous ne pouvez pas rejoindre cette partie", '', 3000, COLORS.toast.text.red);
                     navigation.navigate("initMenu");
                 });
 
@@ -87,7 +87,7 @@ export default function Room() {
                 const url = await getPlatformAPI();
                 setApiUrl(url);
             } catch (error) {
-                toast("error", error.status || 500, error.message || "Une erreur est survenue", 3000, COLORS.toast.red);
+                toast("error", error.status || 500, error.message || "Une erreur est survenue", 3000, COLORS.toast.text.red);
                 navigation.navigate("initMenu");
             }
         };
