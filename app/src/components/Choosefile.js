@@ -1,12 +1,16 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList,  Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
 import { COLORS } from '../css/utils/color';
 import { uploadImage, downloadAllImages, downloadImage, deleteFile } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';
 import ImageSelect from './ImageSelect';
 import SimpleButton from './SimpleButton';
+import { toast } from '../utils/utils';
 
-const platform = Platform.OS;
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
 
 const ChooseFile = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -51,14 +55,13 @@ const ChooseFile = ({ onValueChange }) => {
             }
         }).catch((error) => {
             console.log(error);
-
         }
         );
     };
 
     const handleRefreshImages = async (id) => {
         try {
-            const reponseDelete = await deleteFile(id);
+            await deleteFile(id);
             const response = await downloadAllImages();
             if (response.files && Array.isArray(response.files)) {
                 const files = response.files;
@@ -84,7 +87,11 @@ const ChooseFile = ({ onValueChange }) => {
                 console.error("La réponse de `downloadAllImages` n'est pas valide.");
             }
         } catch (error) {
-            console.error("Erreur lors de la récupération des images :", error);
+            if (error.status && error.message) {
+                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+            } else {
+                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+            }
         }
     }
 
@@ -121,7 +128,11 @@ const ChooseFile = ({ onValueChange }) => {
                         console.error("La réponse de `downloadAllImages` n'est pas valide.");
                     }
                 } catch (error) {
-                    console.error("Erreur lors de la récupération des images :", error);
+                    if (error.status && error.message) {
+                        toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                    } else {
+                        toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                    }
                 }
             };
 
@@ -155,6 +166,7 @@ const ChooseFile = ({ onValueChange }) => {
                         name="file"
                         accept="image/*"
                         onChange={selectFile}
+                        style={styles.inputFile}
                     />
                     <ScrollView
                         horizontal={true}
@@ -166,12 +178,10 @@ const ChooseFile = ({ onValueChange }) => {
                             data={images}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => (
-                                <>
+                                <View style={styles.imageItem}>
                                     <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]} />
-                                    <TouchableOpacity onPress={() => handleRefreshImages(ids[index])}>
-                                        <Text>Supprimer</Text>
-                                    </TouchableOpacity>
-                                </>
+                                    <SimpleButton text="Supprimer" onPress={() => handleRefreshImages(ids[index])}/>
+                                </View>
                             )}
                         />
                     </ScrollView>
@@ -213,7 +223,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: platform === 'web' ? '6%' : '20%',
+        marginVertical: !isMobile ? '6%' : '20%',
         marginHorizontal: '10%',
         backgroundColor: COLORS.background.blue,
         padding: 20,
@@ -240,7 +250,7 @@ const styles = StyleSheet.create({
         margin: 5,
         borderRadius: 5,
         backgroundColor: COLORS.button.blue.basic,
-        width: platform === 'web' ? 350 : '100%',
+        width: !isMobile ? 350 : '100%',
         height: 70,
     },
     themeLabel: {
@@ -251,6 +261,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 10,
         gap: 10,
+    },
+    inputFile: {
+        margin: 10,
+        padding: 30,
+        backgroundColor: COLORS.palette.blue.lighter,
+        borderRadius: 10,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        fontSize: 20,
+    },
+    imageItem: {
+        margin: 10,
+        padding: 10,
+        backgroundColor: COLORS.palette.blue.lighter,
+        borderRadius: 5,
+        width: "400px", // Fixe la largeur des éléments
+        height: "300px",
+        alignItems: 'center',
     },
 });
 

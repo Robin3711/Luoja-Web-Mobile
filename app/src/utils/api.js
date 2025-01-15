@@ -2,6 +2,8 @@ import { decode } from 'html-entities';
 import { getPlatformAPI, setToken, hasToken } from "./utils";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventSource from "react-native-sse";
+import { toast } from './utils';
+import { COLORS } from '../css/utils/color';
 
 const handleResponseError = async (response) => {
     let errorMessage = 'Une erreur est survenue';
@@ -611,7 +613,7 @@ export async function joinRoom(roomId) {
 
         // Event listeners
         eventSource.addEventListener('open', () => {
-            console.log('Connected to room:', roomId);
+            toast("info", 'Connected to room: ' + roomId, '', 2000, COLORS.toast.text.blue);
         });
 
         eventSource.addEventListener('message', (event) => {
@@ -625,7 +627,7 @@ export async function joinRoom(roomId) {
 
         return eventSource;
     } catch (error) {
-        console.error('Error joining room:', error);
+        toast("error", 'Error joining room:' + roomId, '', 2000, COLORS.toast.text.red);
         throw error;
     }
 }

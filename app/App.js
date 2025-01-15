@@ -4,6 +4,8 @@ import Toast from 'react-native-toast-message';
 import GradientNavigator from './src/components/GradientNavigator';
 import { toastConfig } from './src/utils/utils';
 
+
+
 export default function App() {
   let [fontsLoaded] = useFonts({
     LobsterTwo_400Regular,
