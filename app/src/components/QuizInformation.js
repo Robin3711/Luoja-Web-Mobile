@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity,  StyleSheet , Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { cloneQuiz, saveQuiz } from '../utils/api';
@@ -7,8 +7,8 @@ import { getThemeLabel, toast, themeOptions } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 export default function QuizInformation({ quiz }) {
     const navigation = useNavigation();
@@ -83,11 +83,12 @@ const styles = StyleSheet.create({
     QuizInformationButton: {
         flex: !isMobile ? 0.3 : 0.6,
         backgroundColor: COLORS.button.blue.circle.normal,
-        padding: 8,
+        padding: !isMobile ? 8 : 2,
         borderRadius: 10,
         alignItems: 'center',
         marginHorizontal: 5,
         marginTop: 5,
-        ...isMobile&& { height: isMobile ? 35 : 40 },
+        minWidth: 35,
+        ...isMobile && { height: isMobile ? 35 : 40 },
     },
 });

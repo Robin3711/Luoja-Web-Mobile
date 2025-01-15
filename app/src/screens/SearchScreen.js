@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
         borderRadius: 20,
-        
+
     },
     alternateBackground: {
         backgroundColor: COLORS.palette.blue.lighter,

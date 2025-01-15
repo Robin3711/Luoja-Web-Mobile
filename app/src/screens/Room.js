@@ -13,8 +13,8 @@ import { FONT } from "../css/utils/font";
 import SimpleButton from "../components/SimpleButton";
 import { toast } from "../utils/utils";
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 
@@ -94,15 +94,12 @@ export default function Room() {
 
         connect();
 
-
         return () => {
             if (eventSource) {
                 eventSource.close();
             }
         };
     }, [roomId]);
-
-
 
     return (
         <View style={styles.container}>
@@ -117,7 +114,7 @@ export default function Room() {
                     />
                     <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
                         <Copy size={24} color="black" />
-                        <Text style={[FONT.text, styles.title]}>Room {roomId}</Text>
+                        <Text style={FONT.text}>Room : {roomId}</Text>
                     </TouchableOpacity>
                 </View>
             ) : (
@@ -139,7 +136,10 @@ export default function Room() {
                                     color={COLORS.palette.blue.darker}
                                     backgroundColor="white"
                                 />
-                                <Text style={[FONT.text, styles.title]}>Room {roomId}</Text>
+                                <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
+                                    <Copy size={24} color="black" />
+                                    <Text style={[FONT.text, styles.title]}>Room : {roomId}</Text>
+                                </TouchableOpacity>
                                 <SimpleButton
                                     text="Close"
                                     onPress={() => setModalVisible(false)}
@@ -174,25 +174,38 @@ export default function Room() {
                 ))}
             </ScrollView>
             {gameMode === "team" && (
-                <View style={styles.teamButtons} >
+                <View
+                    style={[
+                        styles.teamButtons,
+                        { flexDirection: isMobile ? 'row' : 'column', justifyContent: 'center', gap: isMobile ? 10 : 0 },
+                    ]}
+                >
                     <SimpleButton
                         text="Commencer la partie"
                         onPress={() => startRoom(roomId)}
                         color={COLORS.button.blue.basic}
+                        marginBottom={isMobile ? 0 : 10}
+                        marginVertical={isMobile ? 0 : 1}
+                        width={isMobile ? "50%" : "100%"}
                     />
+                    <SimpleButton
+                        text="Retourner au menu"
+                        onPress={handleReturnHome}
+                        color={COLORS.button.blue.basic}
+                        marginBottom={isMobile ? 0 : 1}
+                        marginVertical={isMobile ? 0 : 1}
+                        width={isMobile ? "50%" : "100%"}
+                    />
+                </View>
+            )}
+            {gameMode === "scrum" && (
+                <View style={styles.teamButtons} >
                     <SimpleButton
                         text="Retourner au menu"
                         onPress={handleReturnHome}
                         color={COLORS.button.blue.basic}
                     />
                 </View>
-            )}
-            {gameMode === "scrum" && (
-                <SimpleButton
-                    text="Retourner au menu"
-                    onPress={handleReturnHome}
-                    color={COLORS.button.blue.basic}
-                />
             )}
         </View>
     );
@@ -205,7 +218,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
         backgroundColor: COLORS.background.blue,
-        gap: 20,
+        gap: !isMobile ? 20 : 0,
     },
     title: {
         fontSize: 14,
@@ -215,18 +228,19 @@ const styles = StyleSheet.create({
     gameMode: {
         textAlign: 'center',
         marginBottom: 20,
-        maxWidth: !isMobile ? '100%' : 200,
+        maxWidth: !isMobile ? '100%' : 210,
     },
     playersContainer: {
         flexDirection: 'row',
-        marginVertical: 10,
-        maxWidth: 400,
+        marginVertical: !isMobile ? 10 : 0,
+        maxWidth: 500,
+        minHeight: 30,
     },
     teamsContainer: {
         maxWidth: '100%',
         overflow: 'scroll',
         flexDirection: 'row',
-        marginVertical: 20,
+        marginVertical: 15,
     },
     team: {
         alignItems: 'center',
@@ -242,7 +256,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 150,
         overflow: 'scroll',
-
     },
     qrCodeButton: {
         position: 'absolute',
@@ -287,6 +300,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'space-between',
         gap: '10px',
+        maxHeight: 200,
     },
     roomId: {
         marginTop: 5,
