@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { View, Text, Modal, TouchableOpacity,  StyleSheet, ScrollView , Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
-import { uploadAudio, downloadAllAudios, downloadAudio, uploadImage } from '../utils/api';
+import { uploadAudio, downloadAllAudios, downloadAudio, deleteFile } from '../utils/api';
 import SimpleButton from './SimpleButton';
 import { toast } from '../utils/utils';
 
@@ -143,6 +143,7 @@ const ChooseAudio = ({ onValueChange }) => {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
+                style={styles.modal}
             >
                 <View style={styles.themeListModal}>
                     <input
