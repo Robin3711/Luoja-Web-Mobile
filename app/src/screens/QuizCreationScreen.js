@@ -436,6 +436,7 @@ const styles = StyleSheet.create({
     },
     buttons: {
         position: 'relative',
+        justifyContent: 'center',
         backgroundColor: COLORS.button.blue.basic,
         height: 75,
         width: 350,
@@ -448,6 +449,7 @@ const styles = StyleSheet.create({
     },
     disabledButton: {
         position: 'relative',
+        justifyContent: 'center',
         backgroundColor: "#d3d3d3",
         height: 75,
         width: 350,
