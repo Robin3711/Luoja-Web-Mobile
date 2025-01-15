@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentRoomQuestion, getCurrentRoomAnswer } from '../utils/api';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+
+import ConfettiContainer from '../components/ConfettiSystem';
 
 import SimpleButton from '../components/SimpleButton';
 import { loadFont } from '../utils/utils';
@@ -52,6 +54,8 @@ export default function RoomQuizScreen() {
     const [timerInitialized, setTimerInitialized] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
     const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
+
+    const confettiRef = useRef();
 
     useEffect(() => {
         (async () => {
@@ -164,7 +168,10 @@ export default function RoomQuizScreen() {
 
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
-            if (correctAnswerFromApi === selectedAnswer) updateScore();
+            if (correctAnswerFromApi === selectedAnswer){
+                updateScore();
+                confettiRef.current.startConfetti();
+            }
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -257,6 +264,7 @@ export default function RoomQuizScreen() {
                                 ))}
                                 {platform !== 'web' && validateAnswerButton()}
                             </View>
+                            <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]}/>
                         </View>
                     </>
                 ) : (

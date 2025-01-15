@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
@@ -7,6 +7,8 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { toast } from '../utils/utils';
+
+import ConfettiContainer from '../components/ConfettiSystem';
 
 import { SimpleButton } from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
@@ -50,6 +52,8 @@ export default function QuizScreen() {
     const [timerInitialized, setTimerInitialized] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
     const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
+
+    const confettiRef = useRef();
 
     useEffect(() => {
         (async () => {
@@ -166,7 +170,10 @@ export default function QuizScreen() {
 
                 setCorrect(correctAnswerFromApi);
                 setIsAnswered(true);
-                if (correctAnswerFromApi === selectedAnswer) updateScore();
+                if (correctAnswerFromApi === selectedAnswer){
+                    confettiRef.current.startConfetti();
+                    updateScore();
+                }
             }
             setTimerInitialized(false);
         } catch (err) {
@@ -310,6 +317,7 @@ export default function QuizScreen() {
                                 })}
                                 {platform !== 'web' && nextQuestionButton()}
                             </View>
+                            <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]}/>
                         </View>
                     </>
                 ) : (
