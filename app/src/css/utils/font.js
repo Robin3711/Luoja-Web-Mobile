@@ -23,12 +23,11 @@ const isMobile = width < 775;
 // Styles des polices
 export const FONT = StyleSheet.create({
     luoja: {
-        fontFamily: fontFamily.lobster.cursive,
+        fontFamily: fontFamily.lobster.italic,
         color: COLORS.text.blue.dark,
         position: 'relative',
         top: '10vh',
-        fontSize: isMobile ? 72 : 144, 
-        fontWeight: 'bold',
+        fontSize: isMobile ? 90 : 144, 
     },
     title: {
         fontFamily: fontFamily.lobster.italic,
