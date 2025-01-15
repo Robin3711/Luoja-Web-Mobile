@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, FlatList,  StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
-import { uploadAudio, downloadAllAudios, downloadAudio } from '../utils/api';
+import { uploadAudio, downloadAllAudios, downloadAudio, uploadImage } from '../utils/api';
 
 
 const { width  , height} = Dimensions.get('window');
@@ -33,16 +33,20 @@ const ChooseAudio = ({ onValueChange }) => {
         const file = document.getElementById('file').files[0];
         const formData = new FormData();
         formData.append('file', file);
-
-        try {
-            const response = await uploadAudio(formData);
-            if (response.status === 200) {
-                const fileURL = URL.createObjectURL(file);
-                setAudios([...audios, fileURL]);
-            }
-        } catch (error) {
-            console.error("Erreur lors de l'upload :", error);
+        if(file.size > 1000000){
+            alert("Le fichier est trop volumineux. Veuillez choisir un fichier de moins de 1 Mo.");
+            return;
         }
+
+        uploadAudio(formData).then((response) => {
+            if (response.status === 200) {
+                setAudios([...audios, URL.createObjectURL(file)]);
+            }
+        }
+        ).catch((error) => {
+            console.log(error);
+        }
+        );
     };
 
     useFocusEffect(
@@ -53,7 +57,8 @@ const ChooseAudio = ({ onValueChange }) => {
                     console.log(response);
                     if (response.files && Array.isArray(response.files)) {
                         const files = response.files;
-                        const validFiles = files.filter(file => file.fileName.endsWith('.mp3'));
+                        const validFiles = files.filter(file => file.fileName.endsWith('.mp3' || '.mpeg'));
+                        console.log(validFiles);
                         setIds(validFiles.map((file) => file.fileName));
 
                         const audioPromises = validFiles.map(async (file) => {
@@ -101,7 +106,7 @@ const ChooseAudio = ({ onValueChange }) => {
                         type="file"
                         id="file"
                         name="file"
-                        accept="audio/mp3"
+                        accept="audio/*"
                         onChange={selectFile}
                     />
 

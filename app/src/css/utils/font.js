@@ -1,5 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { COLORS } from './color';
+import { Subtitles } from 'lucide-react-native';
 
 const fontFamily = {
     arial: 'Arial',
@@ -16,6 +17,9 @@ const center = {
     alignItems: 'center',
 };
 
+const { width } = Dimensions.get('window');
+const isMobile = width < 775;
+
 // Styles des polices
 export const FONT = StyleSheet.create({
     luoja: {
@@ -23,7 +27,7 @@ export const FONT = StyleSheet.create({
         color: COLORS.text.blue.dark,
         position: 'relative',
         top: '10vh',
-        fontSize: 144, 
+        fontSize: isMobile ? 72 : 144, 
         fontWeight: 'bold',
     },
     title: {
@@ -31,30 +35,37 @@ export const FONT = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 10,
         color: COLORS.text.blue.dark,
-        fontSize: 24,
+        fontSize: isMobile ? 30 : 78,
+    },
+    subTitle:{
+        fontFamily: fontFamily.lobster.italic,
+        textAlign: 'center',
+        marginBottom: 10,
+        color: COLORS.text.blue.dark,
+        fontSize: isMobile ? 20 : 39,
     },
     button: {
         fontFamily: fontFamily.lobster.cursive,
-        fontSize: 30, // Taille en nombre
+        fontSize: 30,
         color: COLORS.text.blue.dark,
         ...center,
     },
     text: {
         fontFamily: fontFamily.lobster.cursive,
-        fontSize: 16,
+        fontSize: isMobile ? 16 : 28,   
         color: COLORS.text.blue.dark,
         ...center,
     },
-    paragraph: {
+    paragraphe: {
         fontFamily: fontFamily.arial,
-        fontSize: 14,
+        fontSize: isMobile ? 12 : 16,
         color: COLORS.text.blue.dark,
         textAlign: 'center',
         ...center,
     },
     textInput: {
         flex: 1,
-        height: 50,
+        height: isMobile ? 40 : 50,
         borderWidth: 1,
         borderColor: '#ccc',
         padding: 10,
@@ -63,7 +74,7 @@ export const FONT = StyleSheet.create({
         ...center,
     },
     error: {
-        fontSize: 14,
+        fontSize: isMobile ? 12 : 14,
         color: 'red',
         ...center,
     },

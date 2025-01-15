@@ -27,7 +27,7 @@ export default function Dashboard() {
     const [historyTitle, setHistoryTitle] = useState({})
     const [sortHistory, setSortHistory] = useState(null);
     const [showFastQuizOnly, setShowFastQuizOnly] = useState(false);
-
+    const [showHistory, setShowHistory] = useState(true); // Nouvel état pour gérer l'affichage des sections
 
     if (!hasToken()) {
         navigation.navigate('login');
@@ -115,52 +115,66 @@ export default function Dashboard() {
             <View style={styles.dashboardView}>
                 <Text style={FONT.title}>Tableau de bord</Text>
                 <View style={styles.dashboardContainer}>
-                    <View style={styles.dashboardSection}>
-                        <Text style={styles.dashboardText}>Historique</Text>
-                        <View style={styles.buttonContainer}>
-                            <ChoiseSelector value={sortHistory} onValueChange={setSortHistory} parameters={historySortOptions} defaultValue={true} />
-                            <TouchableOpacity
-                                style={[
-                                    styles.filterButton,
-                                    showFastQuizOnly && styles.activeFilterButton
-                                ]}
-                                onPress={() => setShowFastQuizOnly(!showFastQuizOnly)}
-                            >
-                                <Text style={styles.filterButtonText}>
-                                    {showFastQuizOnly ? "Afficher Tout" : "Enlever les quizs rapides"}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                    {platform !== 'web' && (
+                        <TouchableOpacity
+                            style={styles.toggleButton}
+                            onPress={() => setShowHistory(!showHistory)}
+                        >
+                            <Text style={styles.toggleButtonText}>
+                                {showHistory ? "Afficher vos quiz publiés" : "Afficher l'historique"}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                    {(platform === 'web' || showHistory) && (
+                        <View style={styles.dashboardSection}>
+                            <Text style={styles.dashboardText}>Historique</Text>
+                            <View style={styles.buttonContainer}>
+                                <ChoiseSelector value={sortHistory} onValueChange={setSortHistory} parameters={historySortOptions} defaultValue={true} />
+                                <TouchableOpacity
+                                    style={[
+                                        styles.filterButton,
+                                        showFastQuizOnly && styles.activeFilterButton
+                                    ]}
+                                    onPress={() => setShowFastQuizOnly(!showFastQuizOnly)}
+                                >
+                                    <Text style={styles.filterButtonText}>
+                                        {showFastQuizOnly ? "Afficher Tout" : "Enlever les quizs rapides"}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
 
-                        <ScrollView>
-                            {handleSortHistoryItems([...history].reverse(), sortHistory).map((item, index) => (
-                                <View key={index}>
-                                    <HistoryQuizInformation partyId={item.id} quizId={item.quizId} onStatusChange={handleStatusChange} />
-                                </View>
-                            ))}
-                        </ScrollView>
-                    </View>
-                    <View style={styles.dashboardSection}>
-                        <Text style={styles.dashboardText}>Vos quiz publiés</Text>
-                        <View style={styles.buttonContainer}>
-                            <ChoiseSelector value={sortPublishedQuizzes} onValueChange={setSortPublishedQuizzes} parameters={publishSortOptions} defaultValue={true} />
+                            <ScrollView>
+                                {handleSortHistoryItems([...history].reverse(), sortHistory).map((item, index) => (
+                                    <View key={index}>
+                                        <HistoryQuizInformation partyId={item.id} quizId={item.quizId} onStatusChange={handleStatusChange} />
+                                    </View>
+                                ))}
+                            </ScrollView>
                         </View>
-                        <ScrollView>
-                            {handleSortQuizzes([...publishedQuizzes].reverse(), sortPublishedQuizzes).map((item, index) => (
-                                <View key={index}>
-                                    <CreatedQuizInformation
-                                        quizId={item.id}
-                                        category={item.category}
-                                        difficulty={item.difficulty}
-                                        date={item.createdAt}
-                                        status={item.public}
-                                        title={item.title}
-                                        nbQuestions={item.numberOfQuestions}
-                                    />
-                                </View>
-                            ))}
-                        </ScrollView>
-                    </View>
+                    )}
+                    {(platform === 'web' || !showHistory) && (
+                        <View style={styles.dashboardSection}>
+                            <Text style={styles.dashboardText}>Vos quiz publiés</Text>
+                            <View style={styles.buttonContainer}>
+                                <ChoiseSelector value={sortPublishedQuizzes} onValueChange={setSortPublishedQuizzes} parameters={publishSortOptions} defaultValue={true} />
+                            </View>
+                            <ScrollView>
+                                {handleSortQuizzes([...publishedQuizzes].reverse(), sortPublishedQuizzes).map((item, index) => (
+                                    <View key={index}>
+                                        <CreatedQuizInformation
+                                            quizId={item.id}
+                                            category={item.category}
+                                            difficulty={item.difficulty}
+                                            date={item.createdAt}
+                                            status={item.public}
+                                            title={item.title}
+                                            nbQuestions={item.numberOfQuestions}
+                                        />
+                                    </View>
+                                ))}
+                            </ScrollView>
+                        </View>
+                    )}
                 </View>
                 <SimpleButton text="Déconnexion" onPress={handleLogout} color={'red'} />
             </View>
@@ -203,7 +217,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: COLORS.background.lightBlue, // Ajouter une couleur de fond pour délimiter chaque section
         borderRadius: 8, // Amélioration visuelle
-        maxHeight: !isMobile ? '100%' : '45%', // Limiter la hauteur sur mobile
+        maxHeight: !isMobile ? '100%' : '100%', // Limiter la hauteur sur mobile
     },
     touchableOpacity: {
         backgroundColor: 'red',
@@ -235,5 +249,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-
+    toggleButton: {
+        backgroundColor: COLORS.button.blue.basic,
+        padding: 10,
+        borderRadius: 8,
+        marginTop: 10,
+        alignItems: 'center',
+    },
+    toggleButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 });

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
@@ -18,44 +18,44 @@ export default function LaunchGameMode() {
     const quizId = route.params.quizId;
     const [timerDifficulty, setTimerDifficulty] = useState("easy");
     const [scrumDifficulty, setScrumDifficulty] = useState("easy");
-    const [playerCount, setPlayerCount] = useState("");
+    const [scrumPlayerCount, setScrumPlayerCount] = useState("");
+    const [teamPlayerCount, setTeamPlayerCount] = useState("");
     const [teamCount, setTeamCount] = useState("");
     const [teams, setTeams] = useState([]);
 
     const handleStartQuiz = (gameMode) => {
-        createGame(quizId, gameMode, gameMode === "timed" ? timerDifficulty : scrumDifficulty).then((game) => {
-            navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
-        }).catch((error) => {
-            if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
-            } else {
-                toast('error', 'Erreur', error, 3000, COLORS.toast.red);
-            }
-        });
+        createGame(quizId, gameMode, gameMode === "timed" ? timerDifficulty : scrumDifficulty)
+            .then((game) => {
+                navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
+            })
+            .catch((error) => {
+                const errorMsg = error.status && error.message 
+                    ? `${error.status}: ${error.message}`
+                    : error.toString();
+                toast('error', 'Erreur', errorMsg, 3000, COLORS.toast.red);
+            });
     };
 
     const handleStartRoom = (gameMode) => {
-        let roomTeams;
-        if (teams.length > 0) {
-            roomTeams = teams;
-        } else {
-            roomTeams = ["Terroristes", "Contre-terroristes"];
+        let roomTeams = teams.length > 0 ? teams : ["Team 1", "Team 2"];
+        const playerCount = gameMode === "scrum" ? scrumPlayerCount : teamPlayerCount;
+
+        if (playerCount <= 1) {
+            toast("error", 'Il faut au moins deux joueurs pour lancer une partie', '', 2000, COLORS.toast.red);
+            return;
         }
 
-        switch (gameMode) {
-            case "scrum":
-                createRoom({ quizId: quizId, playerCount: playerCount, gameMode: gameMode }).then((room) => {
-                    navigation.navigate('room', { roomId: room.id });
-                });
-                break;
-            case "team":
-                createRoom({ quizId: quizId, playerCount: playerCount, teams: roomTeams, gameMode: gameMode, difficulty: scrumDifficulty }).then((room) => {
-                    navigation.navigate('room', { roomId: room.id });
-                });
-                break;
-            default:
-                break;
-        }
+        const roomPayload = {
+            quizId,
+            playerCount,
+            gameMode,
+            teams: roomTeams,
+            difficulty: scrumDifficulty
+        };
+
+        createRoom(roomPayload)
+            .then((room) => navigation.navigate('room', { roomId: room.id }))
+            .catch((error) => console.error(error));
     };
 
     const handleTeamNameChange = (index, name) => {
@@ -65,59 +65,80 @@ export default function LaunchGameMode() {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
-            <View style={styles.view}>
-                <Text style={FONT.title}>Choisissez un mode de jeu</Text>
-                <View style={styles.container}>
-                    <View style={styles.item}>
-                        <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
-                        <Text style={FONT.paragraphe}>Le joueur dispose d’un temps illimité pour répondre à chaque question.</Text>
-                    </View>
-                    <View style={styles.item}>
-                        <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
-                        <Text style={FONT.paragraphe}>Le joueur dispose d’un temps limité pour répondre à chaque question : 30s (facile), 15s (moyen), ou 5s (difficile).</Text>
-                    </View>
-                    <View style={styles.item}>
-                        <SimpleButton text="Compte à rebourd" onPress={() => handleStartQuiz("timed")} />
-                        <Text style={FONT.paragraphe}>Plusieurs joueurs jouent simultanément au même quiz. Le premier à répondre correctement gagne les points et déclenche la question suivante. Chaque joueur ne peut répondre qu'une fois par question.</Text>
-                        <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
-                    </View>
-                    <View style={styles.item}>
-                        <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
-                        <Text style={FONT.paragraphe}>Les joueurs forment des équipes et répondent aux questions avec un temps limité, configurable par niveau de difficulté. Le score final de chaque équipe est la moyenne des scores de ses membres.</Text>
-                        <TextInput
-                            placeholder="Nombre de joueurs"
-                            keyboardType="numeric"
-                            onChangeText={(text) => setPlayerCount(text)}
-                            value={playerCount.toString()}
-                        />
-                        <TextInput
-                            placeholder="Nombre d'équipes"
-                            keyboardType="numeric"
-                            onChangeText={(text) => {
-                                const number = parseInt(text, 10);
-                                if (isNaN(number)) {
-                                    setTeamCount("");
-                                    setTeams([]);
-                                } else {
-                                    setTeamCount(number);
-                                    setTeams(Array.from({ length: number }, (_, i) => `Team ${i + 1}`));
-                                }
-                            }}
-                            value={teamCount.toString()}
-                        />
-                        {teams.map((team, index) => (
-                            <TextInput
-                                key={index}
-                                placeholder={`Nom de l'équipe ${index + 1}`}
-                                value={team}
-                                onChangeText={(text) => handleTeamNameChange(index, text)}
-                            />
-                        ))}
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                <View style={styles.view}>
+                    <Text style={FONT.title}>Choisissez un mode de jeu</Text>
+                    <View style={styles.container}>
+                        <View style={styles.item}>
+                            <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
+                            <Text style={FONT.paragraphe}>Le joueur dispose d’un temps illimité pour répondre à chaque question.</Text>
+                        </View>
+                        <View style={styles.item}>
+                            <SimpleButton text="Compte à rebours" onPress={() => handleStartQuiz("timed")} />
+                            <Text style={FONT.paragraphe}>Le joueur dispose d’un temps limité pour répondre à chaque question : 30s (facile), 15s (moyen), ou 5s (difficile).</Text>
+                            <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
+                        </View>
+                        <View style={styles.item}>
+                            <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
+                            <Text style={FONT.paragraphe}>Plusieurs joueurs jouent simultanément au même quiz. Le premier à répondre correctement gagne les points et déclenche la question suivante. Chaque joueur ne peut répondre qu'une fois par question.</Text>
+                            <View style={styles.inputRow}>
+                                <Text style={styles.label}>Nombre de joueurs</Text>
+                                <TextInput
+                                    placeholder="Nombre de joueurs"
+                                    keyboardType="numeric"
+                                    onChangeText={(text) => setScrumPlayerCount(text)}
+                                    value={scrumPlayerCount.toString()}
+                                    style={styles.input}
+                                />
+                            </View>
+                        </View>
+                        <View style={styles.item}>
+                            <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
+                            <Text style={FONT.paragraphe}>Les joueurs forment des équipes et répondent aux questions avec un temps limité, configurable par niveau de difficulté. Le score final de chaque équipe est la moyenne des scores de ses membres.</Text>
+                            <View style={styles.inputRow}>
+                                <Text style={styles.label}>Nombre de joueurs</Text>
+                                <TextInput
+                                    placeholder="Nombre de joueurs"
+                                    keyboardType="numeric"
+                                    onChangeText={(text) => setTeamPlayerCount(text)}
+                                    value={teamPlayerCount.toString()}
+                                    style={styles.input}
+                                />
+                            </View>
+                            <View style={styles.inputRow}>
+                                <Text style={styles.label}>Nombre d'équipes</Text>
+                                <TextInput
+                                    placeholder="Nombre d'équipes"
+                                    keyboardType="numeric"
+                                    onChangeText={(text) => {
+                                        const number = parseInt(text, 10);
+                                        setTeamCount(isNaN(number) ? "" : number);
+                                        setTeams(isNaN(number) ? [] : Array.from({ length: number }, (_, i) => `Team ${i + 1}`));
+                                    }}
+                                    value={teamCount.toString()}
+                                    style={styles.input}
+                                />
+                            </View>
+                            {teams.map((team, index) => (
+                                <View key={index} style={styles.inputRow}>
+                                    <Text style={styles.label}>{`Nom de l'équipe ${index + 1}`}</Text>
+                                    <TextInput
+                                        placeholder={`Nom de l'équipe ${index + 1}`}
+                                        value={team}
+                                        onChangeText={(text) => handleTeamNameChange(index, text)}
+                                        style={styles.input}
+                                    />
+                                </View>
+                            ))}
+                        </View>
                     </View>
                 </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -131,7 +152,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 10,
         backgroundColor: COLORS.background.blue,
         width: '100%',
     },
@@ -140,19 +160,62 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: isMobile ? 'column' : 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-around',
         alignItems: 'center',
+        justifyContent: 'space-around',
+        gap: 10, // Ajoute un espace entre les items
     },
     item: {
-        flex: 1,
-        margin: 10,
-        padding: 25,
+        margin: 15,
+        padding: 30,
         backgroundColor: 'white',
-        borderRadius: 10,
+        borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 5,
+        borderWidth: 3,
         borderColor: COLORS.palette.blue.normal,
-        width: isMobile ? '90%' : '40%',
+        width: isMobile ? '93%' : '40%', // Augmente la largeur pour les écrans plus grands
+        height: 'auto',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        elevation: 5,
+    },
+    paragraphSpacing: {
+        marginTop: 10,
+    },
+    inputRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    label: {
+        fontSize: 16,
+        color: COLORS.text.dark,
+        marginRight: 10,
+    },
+    input: {
+        flex: 1,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: COLORS.palette.blue.normal,
+        borderRadius: 8,
+        backgroundColor: 'white',
+    },
+    teamInputContainer: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    text: {
+        fontSize: isMobile ? 16 : 20, // Taille de texte ajustée pour les écrans plus grands
+        textAlign: 'center',
+        color: COLORS.text.dark,
+    },
+    title: {
+        fontSize: isMobile ? 24 : 32, // Agrandir les titres
+        fontWeight: 'bold',
+        color: COLORS.text.primary,
+        marginBottom: 20,
+        textAlign: 'center',
     },
 });

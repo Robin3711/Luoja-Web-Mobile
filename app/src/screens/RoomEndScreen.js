@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import { getRoomScores } from '../utils/api';
+
+import { FONT } from '../css/utils/font';
 
 export default function EndScreen() {
     const route = useRoute();
@@ -41,7 +43,6 @@ export default function EndScreen() {
         navigation.navigate("initMenu");
     };
 
-
     return (error ? (
         <View style={styles.container}>
             <Text style={styles.errorText}>{errorMessage}</Text>
@@ -55,30 +56,39 @@ export default function EndScreen() {
     ) : (
         <View style={styles.container}>
             <View style={styles.parentContainer}>
-                <Text style={styles.title}>Fin de partie !</Text>
-                <Text style={styles.text}>Récapitulatif de la partie :</Text>
+                <Text style={[styles.title, {marginBottom:100}]}>Fin de partie !</Text>
                 {scores !== null ? (
-                    <View style={styles.scoreContainer}>
+                    <ScrollView style={styles.scoreContainer}>
                         <Text style={styles.scoreTitle}>Scores :</Text>
-                        {scores.map((score, index) => (
-                            gameMode === "scrum" ? (
-                                <Text key={index} style={styles.text}>
-                                    {score.userName} : {score.score}
-                                </Text>
+                        <ScrollView style={styles.scoreContainer}>
+                            {gameMode === "scrum" ? (
+                                <View style={styles.scrumContainer}>
+                                    {scores.map((score, index) => (
+                                        <Text key={index} style={styles.text}>
+                                            {score.userName} : {score.score}
+                                        </Text>
+                                    ))}
+                                </View>
                             ) : (
-                                <Text key={index} style={styles.text}>
-                                    {score.teamName} : {score.averageScore}
-                                    {
-                                        score.players.map((player, index) => (
-                                            <Text key={index} style={styles.text}>
-                                                {player.userName} : {player.score}
+                                <ScrollView horizontal style={styles.teamsContainer}>
+                                    {scores.map((score, index) => (
+                                        <View key={index} style={styles.team}>
+                                            <Text style={FONT.subTitle}>
+                                                {score.teamName} : {score.averageScore}
                                             </Text>
-                                        ))
-                                    }
-                                </Text>
-                            )
-                        ))}
-                    </View>
+                                            <ScrollView style={styles.teamPlayersContainer}>
+                                                {score.players.map((player, playerIndex) => (
+                                                    <Text key={playerIndex} style={styles.text}>
+                                                        {player.userName} : {player.score}
+                                                    </Text>
+                                                ))}
+                                            </ScrollView>
+                                        </View>
+                                    ))}
+                                </ScrollView>
+                            )}
+                        </ScrollView>
+                    </ScrollView>
                 ) : (
                     <Text>Chargement du score...</Text>
                 )}
@@ -99,24 +109,57 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
-
     },
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f0f0f0',
         backgroundColor: COLORS.background.blue,
     },
     parentContainer: {
         alignItems: 'center',
         margin: 20,
+        width: '100%',
     },
     scoreContainer: {
-        alignItems: 'center',
+        maxHeight: 400,
+        maxWidth: '100%',
+        overflow: 'scroll',
         margin: 20,
+        
+    },
+    scrumContainer: {
+        flexDirection: 'column', // Les éléments sont empilés verticalement
+        alignItems: 'center',   // Centrer horizontalement les éléments
+        gap: 30,                // Espacement entre les éléments
+        overflow: 'scroll',
+    },
+    teamsContainer: {
+        maxWidth: '90vw',
+        overflow: 'scroll',
+        flexDirection: 'row',
+        marginVertical: 20,
+        paddingBottom: 20,
+        height: 400,
+    },
+    team: {
+        alignItems: 'center',
+        margin: 10,
+        borderWidth: 5,
+        borderColor: COLORS.palette.blue.darker,
+        borderRadius: 30,
+        padding: 10,
+        height: 270,
+        minWidth: 200,
+        backgroundColor: 'white',
+    },
+    teamPlayersContainer: {
+        flexDirection: 'column',
+        maxHeight: 150,
+        overflow: 'scroll',
     },
     title: {
+        top: 30,
         textAlign: 'center',
         color: COLORS.text.blue.dark,
         fontSize: 50,
@@ -127,14 +170,12 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 25,
         color: COLORS.text.blue.dark,
+        overflow: 'scroll',
     },
     scoreTitle: {
-        fontSize: 25,
+        fontSize: 50,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
-    },
-    wheelContainer: {
-        margin: 20,
     },
     button: {
         backgroundColor: '#007AFF',

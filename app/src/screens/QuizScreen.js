@@ -10,6 +10,7 @@ import { toast } from '../utils/utils';
 
 import { SimpleButton } from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 
 
 const platform = Platform.OS;
@@ -254,7 +255,7 @@ export default function QuizScreen() {
                     <>
                         <TouchableOpacity onPress={handleCopyGameId} style={styles.gameId}>
                             <Copy size={24} color="black" />
-                            <Text style={styles.gameIdText}>ID : {gameId} </Text>
+                            <Text style={FONT.text}>ID : {gameId} </Text>
                         </TouchableOpacity>
                         <View style={styles.mainView}>
                             <View style={styles.questionView}>
@@ -272,6 +273,7 @@ export default function QuizScreen() {
                                         (gameTime * 1) / 5,
                                         (gameTime * 0) / 5,
                                     ]}
+                                    style={{ marginTop: 5 }} // Baisse le cercle de 5 pixels
                                 >
                                     {() => (
                                         <>
@@ -284,16 +286,15 @@ export default function QuizScreen() {
                                     )}
                                 </CountdownCircleTimer>
 
-                                <Text style={styles.questionNumber}>Score: {score}</Text>
+                                <Text style={[styles.score, {marginTop:5}]}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
                                 </View>
-                                <Text style={styles.question}>{currentQuestion.question}</Text>
+                                <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
                                 {platform === 'web' && nextQuestionButton()}
                             </View>
 
                             <View style={styles.answersView}>
                                 {currentQuestion.answers.map((answer, index) => {
-                                    console.log('Answer:', answer); // Ajout du console.log
                                     return (
                                         answer === null ? null : (
                                             <AnswerButton
@@ -310,8 +311,6 @@ export default function QuizScreen() {
                                 })}
                                 {platform !== 'web' && nextQuestionButton()}
                             </View>
-
-
                         </View>
                     </>
                 ) : (
@@ -329,7 +328,7 @@ export default function QuizScreen() {
 
     );
 }
-
+// ...existing code...
 const styles = StyleSheet.create({
     quizScreenView: {
         flex: 1,
@@ -359,10 +358,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...platform === 'web' && { gap: 20, },
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     questionView: {
         alignItems: 'center',
-        width: platform === 'web' ? '50%' : '100%',
+        top: 20,
+        width: platform === 'web' ? '45%' : '100%',
+        ...platform !== 'web' && { marginVertical: 10, },
+        ...platform === 'web' && { gap: 70, },
     },
     question: {
         fontSize: platform === 'web' ? 30 : 25,
@@ -371,9 +374,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: COLORS.text.blue.dark,
         ...platform === 'web' && { marginVertical: 100, },
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     questionNumber: {
+        marginTop: -20,
         fontSize: platform === 'web' ? 30 : 25,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+        fontWeight: 'bold',
+        ...platform !== 'web' && { marginVertical: 10, },
+        ...platform === 'web' && { marginTop: 0, },  
+    },    
+    score: {
+        marginBottom: -15,
+        fontSize: platform === 'web' ? 30 : 12,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
@@ -381,7 +395,7 @@ const styles = StyleSheet.create({
     answersView: {
         width: platform === 'web' ? '50%' : '100%',
         alignItems: 'center',
-
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     buttons: {
         display: 'flex',
@@ -394,6 +408,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     disabledButtons: {
         display: 'flex',
@@ -406,23 +421,28 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     quizBarView: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     quizBarTextView: {
         fontSize: 22,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
     errorText: {
         fontSize: 18,
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
+        ...platform !== 'web' && { marginVertical: 10, },
     },
 });

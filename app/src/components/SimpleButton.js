@@ -1,22 +1,26 @@
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet,  Dimensions } from 'react-native';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
+
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 
 export default function SimpleButton({
     text,
     onPress,
     color = COLORS.button.blue.basic,
-    height = 75,
-    width = 350,
+    height = isMobile ? 50 : 75,
+    width = isMobile ? 250 : 350,
     textStyle = {}
 }) {
     return (
         <TouchableOpacity
             onPress={onPress}
-            style={[styles.button, { backgroundColor: color, height, width }]}
+            style={[styles.button, { backgroundColor: color, minHeight: height, width }]}
         >
-            <Text style={[FONT.button, { textAlign: 'center' }, textStyle]}>{text}</Text>
+            <Text style={[FONT.button, styles.buttonText, textStyle]}>{text}</Text>
         </TouchableOpacity>
     );
 }
@@ -30,6 +34,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
         justifyContent: 'center', // Centre le contenu verticalement
         alignItems: 'center',    // Centre le contenu horizontalement
+        paddingVertical: 10, // Ajoute du padding vertical pour ajuster la hauteur
         ...!isMobile
             ? {
                 boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
@@ -41,5 +46,9 @@ const styles = StyleSheet.create({
                 shadowOpacity: 0.25,
                 shadowRadius: 1,
             },
+    },
+    buttonText: {
+        textAlign: 'center',
+        flexWrap: 'wrap', // Permet au texte de passer à la ligne si nécessaire
     },
 });
