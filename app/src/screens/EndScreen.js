@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet , Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
@@ -38,8 +38,7 @@ export default function EndScreen() {
                 setDifficulty(infos.quizDifficulty);
                 setLoading(false);
                 setGameMode(infos.gameMode);
-                if(infos.gameMode === null)
-                {
+                if (infos.gameMode === null) {
                     setGameMode("standard");
                 }
 
@@ -93,8 +92,8 @@ export default function EndScreen() {
         <View style={styles.container}>
             <View style={styles.parentContainer}>
                 <Text style={FONT.title}>Fin de partie !</Text>
-                <Text style={styles.text}>Récapitulatif de la partie :</Text>
-                <Text style={styles.text}>Catégorie : {category} | difficulté : {difficulty}</Text>
+                <Text style={FONT.text}>Récapitulatif de la partie :</Text>
+                <Text style={FONT.text}>Catégorie : {category} | difficulté : {difficulty}</Text>
                 {score !== null && numberOfQuestions !== null ? (
                     <View style={styles.scoreContainer}>
                         <Text style={styles.scoreTitle}>

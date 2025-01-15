@@ -13,7 +13,8 @@ import { FONT } from "../css/utils/font";
 import GradientBackground from '../css/utils/linearGradient';
 
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height;
+const isMobile = width < height
+
 
 export default function Dashboard() {
     const navigation = useNavigation();
@@ -34,7 +35,7 @@ export default function Dashboard() {
 
     const handleLogout = async () => {
         await removeToken();
-        toast('success', "Déconnexion réussie !", `Au revoir et à bientôt :-(`, 3000, COLORS.toast.green);
+        toast('success', "Déconnexion réussie !", `Au revoir et à bientôt :-(`, 3000, COLORS.toast.text.green);
         navigation.navigate('login');
     }
 
@@ -100,46 +101,47 @@ export default function Dashboard() {
     };
 
     return (
-            error ? (
-                <View style={styles.quizScreenView}>
-                    <Text style={styles.errorText}>{errorMessage}</Text>
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate('initMenu', { screen: 'account' })
-                    }}>
-                        <Text style={styles.buttonText}>Retour au menu</Text>
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <View style={styles.dashboardView}>
-                    <Text style={FONT.title}>Tableau de bord</Text>
-                    <View style={styles.dashboardContainer}>
-                        {isMobile && (
-                            <TouchableOpacity
-                                style={styles.toggleButton}
-                                onPress={() => setShowHistory(!showHistory)}
-                            >
-                                <Text style={styles.toggleButtonText}>
-                                    {showHistory ? "Afficher vos quiz publiés" : "Afficher l'historique"}
-                                </Text>
-                            </TouchableOpacity>
-                        )}
-                        {(!isMobile || showHistory) && (
-                            <View style={styles.dashboardSection}>
-                                <Text style={styles.dashboardText}>Historique</Text>
-                                <View style={styles.buttonContainer}>
-                                    <ChoiseSelector value={sortHistory} onValueChange={setSortHistory} parameters={historySortOptions} defaultValue={true} />
-                                    <TouchableOpacity
-                                        style={[
-                                            styles.filterButton,
-                                            showFastQuizOnly && styles.activeFilterButton
-                                        ]}
-                                        onPress={() => setShowFastQuizOnly(!showFastQuizOnly)}
-                                    >
-                                        <Text style={styles.filterButtonText}>
-                                            {showFastQuizOnly ? "Afficher Tout" : "Enlever les quizs rapides"}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
+        error ? (
+            <View style={styles.quizScreenView}>
+                <Text style={styles.errorText}>{errorMessage}</Text>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('initMenu', { screen: 'account' })
+                }
+                }>
+                    <Text style={styles.buttonText}>Retour au menu</Text>
+                </TouchableOpacity>
+            </View>
+        ) : (
+            <View style={styles.dashboardView}>
+                <Text style={FONT.title}>Tableau de bord</Text>
+                <View style={styles.dashboardContainer}>
+                    {isMobile && (
+                        <TouchableOpacity
+                            style={styles.toggleButton}
+                            onPress={() => setShowHistory(!showHistory)}
+                        >
+                            <Text style={styles.toggleButtonText}>
+                                {showHistory ? "Afficher vos quiz publiés" : "Afficher l'historique"}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                    {(!isMobile || showHistory) && (
+                        <View style={styles.dashboardSection}>
+                            <Text style={styles.dashboardText}>Historique</Text>
+                            <View style={styles.buttonContainer}>
+                                <ChoiseSelector value={sortHistory} onValueChange={setSortHistory} parameters={historySortOptions} defaultValue={true} />
+                                <TouchableOpacity
+                                    style={[
+                                        styles.filterButton,
+                                        showFastQuizOnly && styles.activeFilterButton
+                                    ]}
+                                    onPress={() => setShowFastQuizOnly(!showFastQuizOnly)}
+                                >
+                                    <Text style={styles.filterButtonText}>
+                                        {showFastQuizOnly ? "Afficher Tout" : "Enlever les quizs rapides"}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
 
                                 <ScrollView>
                                     {handleSortHistoryItems([...history].reverse(), sortHistory).map((item, index) => (

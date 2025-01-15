@@ -81,18 +81,18 @@ export default function CreateQuestionScreen() {
 
     const handleSubmit = () => {
         if (!questionText) {
-            toast('error', 'La question ne peut pas être vide', '', 3000, COLORS.toast.red);
+            toast('error', 'La question ne peut pas être vide', '', 3000, COLORS.toast.text.red);
             return;
         }
 
         if (!selectedShape) {
-            toast('error', 'Veuillez sélectionner une bonne réponse en cliquant sur une forme', '', 3000, COLORS.toast.red);
+            toast('error', 'Veuillez sélectionner une bonne réponse en cliquant sur une forme', '', 3000, COLORS.toast.text.red);
             return;
         }
 
         const requiredAnswers = shapes.map((shape) => answers[shape]);
         if (requiredAnswers.some((answer) => !answer)) {
-            toast('error', `Veuillez remplir toutes les ${numAnswers} réponses`, '', 3000, COLORS.toast.red);
+            toast('error', `Veuillez remplir toutes les ${numAnswers} réponses`, '', 3000, COLORS.toast.text.red);
             return;
         }
 

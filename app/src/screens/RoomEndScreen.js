@@ -10,8 +10,8 @@ import { FONT } from '../css/utils/font';
 import GradientBackground from '../css/utils/linearGradient';
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 
@@ -65,7 +65,7 @@ export default function EndScreen() {
     ) : (
         <View style={styles.container}>
             <View style={styles.parentContainer}>
-                <Text style={[styles.title, {marginBottom:100}]}>Fin de partie !</Text>
+                <Text style={[styles.title, { marginBottom: 100 }]}>Fin de partie !</Text>
                 {scores !== null ? (
                     <ScrollView style={styles.scoreContainer}>
                         <Text style={styles.scoreTitle}>Scores :</Text>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     },
     parentContainer: {
         alignItems: 'center',
-        margin: 20,
+        margin: !isMobile ? 20 : 10,
         width: '100%',
     },
     scoreContainer: {
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         overflow: 'scroll',
         margin: 20,
-        
+
     },
     scrumContainer: {
         flexDirection: 'column', // Les éléments sont empilés verticalement
@@ -168,10 +168,10 @@ const styles = StyleSheet.create({
         overflow: 'scroll',
     },
     title: {
-        top: 30,
+        top: !isMobile ? 30 : 60,
         textAlign: 'center',
         color: COLORS.text.blue.dark,
-        fontSize: 50,
+        fontSize: !isMobile ? 50 : 30,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         width: '100%',
         marginBottom: '25%',
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
         overflow: 'scroll',
     },
     scoreTitle: {
-        fontSize: 50,
+        fontSize: !isMobile ? 50 : 30,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
     },

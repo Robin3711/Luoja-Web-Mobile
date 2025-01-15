@@ -10,8 +10,8 @@ import { FONT } from '../css/utils/font';
 import GradientBackground from '../css/utils/linearGradient';
 import { G } from 'react-native-svg';
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 export default function LaunchGameMode() {
     const navigation = useNavigation();
@@ -33,7 +33,7 @@ export default function LaunchGameMode() {
                 const errorMsg = error.status && error.message
                     ? `${error.status}: ${error.message}`
                     : error.toString();
-                toast('error', 'Erreur', errorMsg, 3000, COLORS.toast.red);
+                toast('error', 'Erreur', errorMsg, 3000, COLORS.toast.text.red);
             });
     };
 
@@ -42,7 +42,7 @@ export default function LaunchGameMode() {
         const playerCount = gameMode === "scrum" ? scrumPlayerCount : 99;
 
         if (gameMode === "scrum" && playerCount <= 1) {
-            toast("error", 'Il faut au moins deux joueurs pour lancer une partie', '', 2000, COLORS.toast.red);
+            toast("error", 'Il faut au moins deux joueurs pour lancer une partie', '', 2000, COLORS.toast.text.red);
             return;
         }
 
@@ -69,7 +69,7 @@ export default function LaunchGameMode() {
         <GradientBackground>
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={isMobile? 'padding' : 'height'}
+            behavior={isMobile ? 'padding' : 'height'}
         >
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View style={styles.view}>

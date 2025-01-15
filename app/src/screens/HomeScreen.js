@@ -1,5 +1,4 @@
-import { View, Text,  Dimensions, StyleSheet, Image } from 'react-native';
-import React from 'react';
+import { View, Text, Dimensions, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SimpleButton from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
@@ -7,10 +6,8 @@ import { FONT } from '../css/utils/font';
 import GradientBackground from '../css/utils/linearGradient';
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
-
-
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 export default function HomeScreen() {
     const navigation = useNavigation();

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity,  StyleSheet , Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos, listenTimer } from '../utils/api';
@@ -14,11 +14,8 @@ import { FONT } from '../css/utils/font';
 
 import GradientBackground from '../css/utils/linearGradient';
 
-
-
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
-
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 export default function QuizScreen() {
@@ -253,6 +250,11 @@ export default function QuizScreen() {
         toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.text.blue);
     };
 
+    const getTopValue = () => {
+        if (!isMobile) return 20;
+        return currentQuestion?.question?.length > 60 ? 50 : 20;
+    };
+
     return (
         <GradientBackground>
         {!error ? (
@@ -264,13 +266,13 @@ export default function QuizScreen() {
                             <Text style={FONT.text}>ID : {gameId} </Text>
                         </TouchableOpacity>
                         <View style={styles.mainView}>
-                            <View style={styles.questionView}>
+                            <View style={[styles.questionView, { top: getTopValue() }]}>
                                 <CountdownCircleTimer
                                     key={timerKey}
                                     isPlaying={timerInitialized}
                                     duration={gameTime}
-                                    size={!isMobile? 150 : 110}
-                                    strokeWidth={!isMobile ? 15 : 10}
+                                    size={!isMobile ? 150 : 95}
+                                    strokeWidth={!isMobile ? 15 : 9}
                                     colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
                                     colorsTime={[
                                         (gameTime * 4) / 5,
@@ -279,7 +281,6 @@ export default function QuizScreen() {
                                         (gameTime * 1) / 5,
                                         (gameTime * 0) / 5,
                                     ]}
-                                    style={{ marginTop: 5 }}
                                 >
                                     {() => (
                                         <>
@@ -368,7 +369,7 @@ const styles = StyleSheet.create({
     },
     questionView: {
         alignItems: 'center',
-        top: 20,
+        top: !isMobile ? 20 : 50,
         width: !isMobile ? '45%' : '100%',
         ...isMobile && { marginVertical: 10, },
         ...!isMobile && { gap: 70, },
@@ -383,8 +384,8 @@ const styles = StyleSheet.create({
         ...isMobile && { marginVertical: 10, },
     },
     questionNumber: {
-        marginTop: -20,
-        fontSize: !isMobile ? 30 : 25,
+        marginTop: !isMobile ? -20 : -15,
+        fontSize: !isMobile ? 30 : 17,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
@@ -422,7 +423,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#d3d3d3',
-        height: 75,
+        height: !isMobile ? 75 : 70,
         width: !isMobile ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,

@@ -1,10 +1,10 @@
-import { Text, TouchableOpacity,  StyleSheet , Dimensions } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 export default function SimpleButton({
@@ -13,12 +13,17 @@ export default function SimpleButton({
     color = COLORS.button.blue.basic,
     height = isMobile ? 50 : 75,
     width = isMobile ? 250 : 350,
-    textStyle = {}
+    textStyle = {},
+    disabled,
+    marginVertical = 10,
+    marginBottom = 25,
+    paddingVertical = 10,
 }) {
     return (
         <TouchableOpacity
             onPress={onPress}
-            style={[styles.button, { backgroundColor: color, minHeight: height, width }]}
+            style={[styles.button, { backgroundColor: color, minHeight: height, width, marginVertical, marginBottom, paddingVertical }]}
+            disabled={disabled}
         >
             <Text style={[FONT.button, styles.buttonText, textStyle]}>{text}</Text>
         </TouchableOpacity>
@@ -30,11 +35,8 @@ const styles = StyleSheet.create({
         position: 'relative',
         backgroundColor: COLORS.button.blue.basic,
         borderRadius: 15,
-        marginVertical: 10,
-        marginBottom: 25,
         justifyContent: 'center', // Centre le contenu verticalement
         alignItems: 'center',    // Centre le contenu horizontalement
-        paddingVertical: 10, // Ajoute du padding vertical pour ajuster la hauteur
         ...!isMobile
             ? {
                 boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',

@@ -31,8 +31,8 @@ import { Dimensions } from 'react-native';
 import Toast, { BaseToast } from 'react-native-toast-message';
 import { ErrorToast, InfoToast, SuccessToast } from 'react-native-toast-message';
 import { COLORS } from '../css/utils/color';
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 export const iconSize = !isMobile ? 30 : 18;
 
@@ -172,12 +172,12 @@ export const toast = (type, text1, text2, visibilityTime, color) => {
         type: type,
         position: 'top',
         text1: text1.toString(),
-        text1Style: { fontSize: 22, textAlign: 'center', fontWeight: 'bold', color },
+        text1Style: { fontSize: !isMobile ? 22 : 16, textAlign: 'center', fontWeight: 'bold', color },
         text2: text2.toString(),
-        text2Style: { fontSize: 18, textAlign: 'center', fontStyle: 'italic', color: 'black' },
+        text2Style: { fontSize: !isMobile ? 18 : 13, textAlign: 'center', fontStyle: 'italic', color: 'black' },
         visibilityTime: visibilityTime,
         autoHide: true,
-        topOffset: 15,
+        topOffset: !isMobile ? 15 : 60,
     });
 }
 
@@ -190,8 +190,8 @@ export const toastConfig = {
             {...props}
             style={{
                 borderLeftColor: COLORS.toast.background.green,
-                width: 600,
-                height: 100,
+                width: !isMobile ? 600 : 350,
+                height: !isMobile ? 100 : 70,
             }}
             contentContainerStyle={{
                 paddingHorizontal: 20,
@@ -209,8 +209,8 @@ export const toastConfig = {
             {...props}
             style={{
                 borderLeftColor: COLORS.toast.background.red,
-                width: 600,
-                height: 100,
+                width: !isMobile ? 600 : 350,
+                height: !isMobile ? 100 : 70,
             }}
             contentContainerStyle={{
                 paddingHorizontal: 20,
@@ -228,8 +228,8 @@ export const toastConfig = {
             {...props}
             style={{
                 borderLeftColor: COLORS.toast.background.blue,
-                width: 600,
-                height: 100,
+                width: !isMobile ? 600 : 350,
+                height: !isMobile ? 100 : 70,
             }}
             contentContainerStyle={{
                 paddingHorizontal: 20,
@@ -247,8 +247,8 @@ export const toastConfig = {
             {...props}
             style={{
                 borderLeftColor: COLORS.toast.background.orange,
-                width: 600,
-                height: 100,
+                width: !isMobile ? 600 : 350,
+                height: !isMobile ? 100 : 70,
             }}
             contentContainerStyle={{
                 paddingHorizontal: 20,
