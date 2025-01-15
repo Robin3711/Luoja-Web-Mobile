@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 
 const ImageSelect = ({ uri, onImageSelect, id }) => {
     return (

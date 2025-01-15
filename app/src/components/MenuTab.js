@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Platform } from 'react-native';
+import { Dimensions, StyleSheet, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import Parameters from '../screens/Parameters';
@@ -7,6 +7,9 @@ import ResumeScreen from '../screens/ResumeScreen';
 import QuizCreation from '../screens/QuizCreationScreen';
 import Account from '../screens/Account';
 import joinGame from '../screens/JoinRoom';
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 const Tab = createBottomTabNavigator();
 
@@ -76,7 +79,7 @@ const MenuTab = () => {
                 }}
             />
             <Tab.Screen
-                name="joinGame"
+                name="join"
                 component={joinGame}
                 options={{
                     tabBarLabel: ({ focused, color }) => (
@@ -109,7 +112,7 @@ const MenuTab = () => {
                     ),
                 }}
             />
-            {Platform.OS === 'web' && (
+            { !isMobile && (
                 <Tab.Screen
                     name="quizCreation"
                     component={QuizCreation}

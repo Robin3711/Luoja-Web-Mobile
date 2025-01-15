@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
@@ -8,8 +8,8 @@ import { createGame, createRoom } from '../utils/api';
 import { toast } from '../utils/utils';
 import { FONT } from '../css/utils/font';
 
-const { width } = Dimensions.get('window');
-const isMobile = width < 775;
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function LaunchGameMode() {
     const navigation = useNavigation();
@@ -66,7 +66,7 @@ export default function LaunchGameMode() {
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior={isMobile? 'padding' : 'height'}
         >
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View style={styles.view}>

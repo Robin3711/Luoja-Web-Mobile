@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text,  Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { difficultyOptions } from '../utils/utils';
 
