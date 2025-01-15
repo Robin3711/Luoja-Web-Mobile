@@ -52,7 +52,7 @@ export default function LaunchGameMode() {
             difficulty: scrumDifficulty
         };
 
-        createRoom(roomPayload)
+        createRoom(roomPayisMobilload)
             .then((room) => navigation.navigate('room', { roomId: room.id }))
             .catch((error) => console.error(error));
     };
@@ -105,6 +105,11 @@ export default function LaunchGameMode() {
                                     keyboardType="numeric"
                                     onChangeText={(text) => {
                                         const number = parseInt(text, 10);
+                                        if(number > 6)
+                                        {
+                                            toast("error", "Le nombre de team est limité à 6", "", 2000, COLORS.toast.text.red);
+                                            return;
+                                        };
                                         setTeamCount(isNaN(number) ? "" : number);
                                         setTeams(isNaN(number) ? [] : Array.from({ length: number }, (_, i) => `Team ${i + 1}`));
                                     }}
