@@ -42,7 +42,7 @@ const linking = {
       userInfos: 'userInfos',
       login: 'login',
       register: 'register',
-      JoinGame: 'JoinGame',
+      join: 'join',
       retrieveQuestions: {
         path: 'retrieveQuestions/:handleAddQuestions',
         stringify: {
@@ -79,7 +79,7 @@ const MenuDrawer = () => {
       <drawer.Screen name="home" component={HomeScreen} options={{ title: "Luoja", drawerLabel: "Accueil" }} />
       <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Luoja", drawerLabel: "Partie rapide" }} />
       <drawer.Screen name="search" component={SearchScreen} options={{ title: "Luoja", drawerLabel: "Quiz de la communauté" }} />
-      <drawer.Screen name="JoinGame" component={JoinGame} options={{ title: "Luoja", drawerLabel: "Rejoindre une partie" }} />
+      <drawer.Screen name="join" component={JoinGame} options={{ title: "Luoja", drawerLabel: "Rejoindre une partie" }} />
       <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Luoja", drawerLabel: "Reprendre une partie" }} />
       {Platform.OS === 'web' ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Luoja", drawerLabel: "Créer votre propre quiz" }} /> : null}
       <drawer.Screen name="account" component={Account} options={{ title: "Luoja", drawerLabel: "Votre compte" }} />
