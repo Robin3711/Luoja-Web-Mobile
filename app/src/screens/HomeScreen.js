@@ -24,6 +24,8 @@ export default function HomeScreen() {
                     <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
 
                     <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
+
+                    <SimpleButton text="Rejoindre une partie" onPress={() => navigation.navigate('join')} />
                 </View>
 
                 {platform === 'web' && <Image style={styles.logo} source={require('../../assets/icon.png')} />}

@@ -37,6 +37,10 @@ export default function EndScreen() {
                 setDifficulty(infos.quizDifficulty);
                 setLoading(false);
                 setGameMode(infos.gameMode);
+                if(infos.gameMode === null)
+                {
+                    setGameMode("standard");
+                }
 
                 let animationProgress = 0;
                 const targetProgress = score / numberOfQuestions;

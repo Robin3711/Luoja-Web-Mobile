@@ -5,12 +5,15 @@ import { getRoomId, hasToken } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
 import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
+import { COLORS } from '../css/utils/color';
+import SimpleButton from "../components/SimpleButton";
 
+const platform = Platform.OS;
 
 export default function JoinGame() {
   const [roomId, setRoomId] = useState('');
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
+  const [scanned, setScanned] = useState(true);
 
   const navigation = useNavigation();
 
@@ -62,7 +65,7 @@ export default function JoinGame() {
 
   return (
     <View style={styles.container}>
-      {Platform.OS === "android" && (
+      {Platform.OS === "android" && scanned === false && (
         <CameraView
           onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
           barcodeScannerSettings={{
@@ -72,23 +75,27 @@ export default function JoinGame() {
         />
 
       )}
-      {Platform.OS === "web" && (
+      {scanned === true && (
         <>
-          <TouchableOpacity onPress={handlePasteGameId}>
-            <ClipboardPaste size={30} color="black" />
-          </TouchableOpacity>
-          <TextInput
-            placeholder="Enter Room ID"
-            value={roomId}
-            onChangeText={setRoomId}
-            style={styles.input}
-          />
-          <Button title="Rejoindre" onPress={() => handleConnect(roomId)} />
-        </>
-      )}
+          <Text style={styles.title}>Rejoindre une partie</Text>
+          <View style={styles.inputView}>
+            <TouchableOpacity onPress={handlePasteGameId}>
+              <ClipboardPaste size={30} color="black" />
+            </TouchableOpacity>
+            <TextInput
+              placeholder="Entrer le code de la partie"
+              value={roomId}
+              onChangeText={setRoomId}
+              style={styles.input}
+            />
+          </View>
+          <SimpleButton text="Rejoindre" onPress={() => handleConnect(roomId)} />
+      </>)}
 
-      {scanned && Platform.OS === "web" && (
-        <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
+      {scanned === true && Platform.OS === "android" && (
+        <>
+          <SimpleButton text="Scanner le QR CODE" onPress={() => setScanned(false)} />
+        </>
       )}
 
     </View>
@@ -98,14 +105,32 @@ export default function JoinGame() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: COLORS.background.blue,
+  },
+  title: {
+    fontSize: 50,
+    textAlign: 'center',
+    fontFamily: 'LobsterTwo_700Bold_Italic',
+    color: COLORS.text.blue.dark,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    margin: 10,
     padding: 10,
-  }
+    fontSize: 20,
+    fontFamily: 'LobsterTwo_700Bold_Italic',
+    color: COLORS.text.blue.dark,
+  },
+  inputView: {
+    width: platform === 'web' ? '20%' : '80%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginVertical: 40,
+  },
 });
