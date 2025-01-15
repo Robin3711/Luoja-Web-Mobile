@@ -10,6 +10,7 @@ import { toast } from '../utils/utils';
 
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
+import GradientBackground from '../css/utils/linearGradient';
 
 export default function RetrieveQuestions() {
     const route = useRoute();
@@ -36,24 +37,26 @@ export default function RetrieveQuestions() {
     }
 
     return (
-        <View style={styles.screen}>
-            <Text style={styles.title}>Importer des questions</Text>
-            <View style={styles.list}>
-                <View style={{ width: '100%' }}>
-                    <Text style={styles.text}>Thème</Text>
-                    <ThemeSelector onValueChange={setCategory} />
-                </View>
-                <View style={{ width: '100%' }}>
-                    <Text style={styles.text}>Difficulté</Text>
-                    <ChoicePicker value={difficulty} onValueChange={setDifficulty} />
-                </View>
-                <View style={{ width: '100%' }}>
-                    <RangeCursor value={amount} onValueChange={setAmount} />
-                </View>
-                <SimpleButton text='Valider' onPress={handleRetrieveQuestions} />
+        <GradientBackground>
+            <View style={styles.screen}>
+                <Text style={styles.title}>Importer des questions</Text>
+                <View style={styles.list}>
+                    <View style={{ width: '100%' }}>
+                        <Text style={styles.text}>Thème</Text>
+                        <ThemeSelector onValueChange={setCategory} />
+                    </View>
+                    <View style={{ width: '100%' }}>
+                        <Text style={styles.text}>Difficulté</Text>
+                        <ChoicePicker value={difficulty} onValueChange={setDifficulty} />
+                    </View>
+                    <View style={{ width: '100%' }}>
+                        <RangeCursor value={amount} onValueChange={setAmount} />
+                    </View>
+                    <SimpleButton text='Valider' onPress={handleRetrieveQuestions} />
 
+                </View>
             </View>
-        </View>
+        </GradientBackground>
     );
 }
 
@@ -64,7 +67,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: COLORS.background.blue,
     },
     title: {
         textAlign: 'center',

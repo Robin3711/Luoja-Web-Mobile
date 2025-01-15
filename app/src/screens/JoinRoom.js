@@ -7,6 +7,7 @@ import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from "../components/SimpleButton";
+import GradientBackground from '../css/utils/linearGradient';
 
 const { width  , height} = Dimensions.get('window');
 const isMobile = width< height
@@ -67,41 +68,43 @@ export default function JoinGame() {
   }
 
   return (
-    <View style={styles.container}>
-      {isMobile && scanned === false && (
-        <CameraView
-          onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-          barcodeScannerSettings={{
-            barcodeTypes: ["qr", "pdf417"],
-          }}
-          style={StyleSheet.absoluteFillObject}
-        />
+    <GradientBackground>
+      <View style={styles.container}>
+        {isMobile && scanned === false && (
+          <CameraView
+            onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+            barcodeScannerSettings={{
+              barcodeTypes: ["qr", "pdf417"],
+            }}
+            style={StyleSheet.absoluteFillObject}
+          />
 
-      )}
-      {scanned === true && (
-        <>
-          <Text style={styles.title}>Rejoindre une partie</Text>
-          <View style={styles.inputView}>
-            <TouchableOpacity onPress={handlePasteGameId}>
-              <ClipboardPaste size={30} color="black" />
-            </TouchableOpacity>
-            <TextInput
-              placeholder="Entrer le code de la partie"
-              value={roomId}
-              onChangeText={setRoomId}
-              style={styles.input}
-            />
-          </View>
-          <SimpleButton text="Rejoindre" onPress={() => handleConnect(roomId)} />
-      </>)}
+        )}
+        {scanned === true && (
+          <>
+            <Text style={styles.title}>Rejoindre une partie</Text>
+            <View style={styles.inputView}>
+              <TouchableOpacity onPress={handlePasteGameId}>
+                <ClipboardPaste size={30} color="black" />
+              </TouchableOpacity>
+              <TextInput
+                placeholder="Entrer le code de la partie"
+                value={roomId}
+                onChangeText={setRoomId}
+                style={styles.input}
+              />
+            </View>
+            <SimpleButton text="Rejoindre" onPress={() => handleConnect(roomId)} />
+        </>)}
 
-      {scanned === true && isMobile && (
-        <>
-          <SimpleButton text="Scanner le QR CODE" onPress={() => setScanned(false)} />
-        </>
-      )}
+        {scanned === true && isMobile && (
+          <>
+            <SimpleButton text="Scanner le QR CODE" onPress={() => setScanned(false)} />
+          </>
+        )}
 
-    </View>
+      </View>
+    </GradientBackground>
   );
 }
 
@@ -113,7 +116,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: COLORS.background.blue,
   },
   title: {
     fontSize: 50,

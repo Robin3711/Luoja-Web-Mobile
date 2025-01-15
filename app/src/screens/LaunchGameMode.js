@@ -7,6 +7,8 @@ import ChoiseSelector from '../components/ChoicePicker';
 import { createGame, createRoom } from '../utils/api';
 import { toast } from '../utils/utils';
 import { FONT } from '../css/utils/font';
+import GradientBackground from '../css/utils/linearGradient';
+import { G } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height
@@ -64,70 +66,72 @@ export default function LaunchGameMode() {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={isMobile ? 'padding' : 'height'}
-        >
-            <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                <View style={styles.view}>
-                    <Text style={FONT.title}>Choisissez un mode de jeu</Text>
-                    <View style={styles.container}>
-                        <View style={styles.item}>
-                            <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
-                            <Text style={FONT.paragraphe}>Le joueur dispose d’un temps illimité pour répondre à chaque question.</Text>
-                        </View>
-                        <View style={styles.item}>
-                            <SimpleButton text="Compte à rebours" onPress={() => handleStartQuiz("timed")} />
-                            <Text style={FONT.paragraphe}>Le joueur dispose d’un temps limité pour répondre à chaque question : 30s (facile), 15s (moyen), ou 5s (difficile).</Text>
-                            <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
-                        </View>
-                        <View style={styles.item}>
-                            <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
-                            <Text style={FONT.paragraphe}>Plusieurs joueurs jouent simultanément au même quiz. Le premier à répondre correctement gagne les points et déclenche la question suivante. Chaque joueur ne peut répondre qu'une fois par question.</Text>
-                            <View style={styles.inputRow}>
-                                <Text style={styles.label}>Nombre de joueurs</Text>
-                                <TextInput
-                                    placeholder="Nombre de joueurs"
-                                    keyboardType="numeric"
-                                    onChangeText={(text) => setScrumPlayerCount(text)}
-                                    value={scrumPlayerCount.toString()}
-                                    style={styles.input}
-                                />
+        <GradientBackground>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={isMobile ? 'padding' : 'height'}
+            >
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    <View style={styles.view}>
+                        <Text style={FONT.title}>Choisissez un mode de jeu</Text>
+                        <View style={styles.container}>
+                            <View style={styles.item}>
+                                <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
+                                <Text style={FONT.paragraphe}>Le joueur dispose d’un temps illimité pour répondre à chaque question.</Text>
                             </View>
-                        </View>
-                        <View style={styles.item}>
-                            <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
-                            <Text style={FONT.paragraphe}>Les joueurs forment des équipes et répondent aux questions avec un temps limité, configurable par niveau de difficulté. Le score final de chaque équipe est la moyenne des scores de ses membres.</Text>
-                            <View style={styles.inputRow}>
-                                <Text style={styles.label}>Nombre d'équipes</Text>
-                                <TextInput
-                                    placeholder="Nombre d'équipes"
-                                    keyboardType="numeric"
-                                    onChangeText={(text) => {
-                                        const number = parseInt(text, 10);
-                                        setTeamCount(isNaN(number) ? "" : number);
-                                        setTeams(isNaN(number) ? [] : Array.from({ length: number }, (_, i) => `Team ${i + 1}`));
-                                    }}
-                                    value={teamCount.toString()}
-                                    style={styles.input}
-                                />
+                            <View style={styles.item}>
+                                <SimpleButton text="Compte à rebours" onPress={() => handleStartQuiz("timed")} />
+                                <Text style={FONT.paragraphe}>Le joueur dispose d’un temps limité pour répondre à chaque question : 30s (facile), 15s (moyen), ou 5s (difficile).</Text>
+                                <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
                             </View>
-                            {teams.map((team, index) => (
-                                <View key={index} style={styles.inputRow}>
-                                    <Text style={styles.label}>{`Nom de l'équipe ${index + 1}`}</Text>
+                            <View style={styles.item}>
+                                <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
+                                <Text style={FONT.paragraphe}>Plusieurs joueurs jouent simultanément au même quiz. Le premier à répondre correctement gagne les points et déclenche la question suivante. Chaque joueur ne peut répondre qu'une fois par question.</Text>
+                                <View style={styles.inputRow}>
+                                    <Text style={styles.label}>Nombre de joueurs</Text>
                                     <TextInput
-                                        placeholder={`Nom de l'équipe ${index + 1}`}
-                                        value={team}
-                                        onChangeText={(text) => handleTeamNameChange(index, text)}
+                                        placeholder="Nombre de joueurs"
+                                        keyboardType="numeric"
+                                        onChangeText={(text) => setScrumPlayerCount(text)}
+                                        value={scrumPlayerCount.toString()}
                                         style={styles.input}
                                     />
                                 </View>
-                            ))}
+                            </View>
+                            <View style={styles.item}>
+                                <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
+                                <Text style={FONT.paragraphe}>Les joueurs forment des équipes et répondent aux questions avec un temps limité, configurable par niveau de difficulté. Le score final de chaque équipe est la moyenne des scores de ses membres.</Text>
+                                <View style={styles.inputRow}>
+                                    <Text style={styles.label}>Nombre d'équipes</Text>
+                                    <TextInput
+                                        placeholder="Nombre d'équipes"
+                                        keyboardType="numeric"
+                                        onChangeText={(text) => {
+                                            const number = parseInt(text, 10);
+                                            setTeamCount(isNaN(number) ? "" : number);
+                                            setTeams(isNaN(number) ? [] : Array.from({ length: number }, (_, i) => `Team ${i + 1}`));
+                                        }}
+                                        value={teamCount.toString()}
+                                        style={styles.input}
+                                    />
+                                </View>
+                                {teams.map((team, index) => (
+                                    <View key={index} style={styles.inputRow}>
+                                        <Text style={styles.label}>{`Nom de l'équipe ${index + 1}`}</Text>
+                                        <TextInput
+                                            placeholder={`Nom de l'équipe ${index + 1}`}
+                                            value={team}
+                                            onChangeText={(text) => handleTeamNameChange(index, text)}
+                                            style={styles.input}
+                                        />
+                                    </View>
+                                ))}
+                            </View>
                         </View>
                     </View>
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </GradientBackground>
     );
 }
 
@@ -141,7 +145,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: COLORS.background.blue,
         width: '100%',
     },
     container: {
