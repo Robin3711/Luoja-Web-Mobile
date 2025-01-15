@@ -3,7 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-assets/slider';
 
 
-
 const { width  , height} = Dimensions.get('window');
 const isMobile = width< height
 
@@ -47,8 +46,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   slider: {
-    width: !isMobile? 700 : 300,
-    height: 40,
+    width: !isMobile ? 700 : 300,
   },
 });
 

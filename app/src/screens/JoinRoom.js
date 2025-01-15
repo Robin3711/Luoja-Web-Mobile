@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Alert, Platform, TextInput } from "react-native";
+import { Text, View, StyleSheet, Button, Alert,  TextInput } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import { getRoomId, hasToken } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
@@ -11,6 +11,9 @@ export default function JoinGame() {
 
   const navigation = useNavigation();
 
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
   useEffect(() => {
     if (!hasToken()) {
         navigation.navigate('login');
@@ -20,7 +23,7 @@ export default function JoinGame() {
       setHasPermission(status === "granted");
     };
 
-    if(Platform.OS ==="android")
+    if(isMobile)
     {
       getCameraPermissions();
     }
@@ -48,16 +51,16 @@ export default function JoinGame() {
 
   };
 
-  if (hasPermission === null && Platform.OS === "android") {
+  if (hasPermission === null && isMobile) {
     return <Text>Requesting for camera permission</Text>;
   }
-  if (hasPermission === false && Platform.OS === "android") {
+  if (hasPermission === false && isMobile) {
     return <Text>No access to camera</Text>;
   }
 
   return (
     <View style={styles.container}>
-      {Platform.OS === "android" && ( 
+      {isMobile && ( 
         <CameraView
         onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
         barcodeScannerSettings={{
@@ -67,10 +70,10 @@ export default function JoinGame() {
       />
       
     )}
-    {Platform.OS === "web" && (
+    {!isMobile && (
       <TextInput placeholder="Enter Room ID" onSubmitEditing={(e) => handleConnect(e.nativeEvent.text)} style={styles.input} />
     )}
-    {scanned && Platform.OS ==="web" && (
+    {scanned && !isMobile && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
       )}
 

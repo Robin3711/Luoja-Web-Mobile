@@ -6,11 +6,13 @@ import { getUserInfos } from '../utils/api';
 import { hasToken } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
-import { Platform } from 'react-native';
 import Dashboard from './Dashboard';
 import SimpleButton from '../components/SimpleButton';
 
-const platform = Platform.OS;
+
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function Account() {
     const navigation = useNavigation();
@@ -99,13 +101,13 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.background.blue,
     },
     appTitle: {
-        height: platform === 'web' ? '10%' : '25%',
+        height: !isMobile ? '10%' : '25%',
         fontSize: 150,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
     },
     childView: {
-        height: platform === 'web' ? '90%' : '75%',
+        height: !isMobile ? '90%' : '75%',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',

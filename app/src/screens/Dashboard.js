@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Platform } from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { hasToken, removeToken, toast } from "../utils/utils";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useEffect, useState, useCallback } from "react";
@@ -11,7 +11,10 @@ import SimpleButton from "../components/SimpleButton";
 import ChoiseSelector from "../components/ChoicePicker";
 import { FONT } from "../css/utils/font";
 
-const platform = Platform.OS;
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
 
 export default function Dashboard() {
     const navigation = useNavigation();
@@ -177,30 +180,30 @@ const styles = StyleSheet.create({
         paddingVertical: 10, // Espacement pour éviter de toucher les bords de l'écran
     },
     title: {
-        fontSize: platform === 'web' ? 75 : 30, // Réduction de la taille sur mobile
+        fontSize: !isMobile ? 75 : 30, // Réduction de la taille sur mobile
         fontFamily: 'LobsterTwo_700Bold_Italic',
         textAlign: 'center',
         marginBottom: 10, // Espacement sous le titre
     },
     dashboardText: {
         marginTop: 10,
-        fontSize: platform === 'web' ? 40 : 20, // Réduction de la taille sur mobile
+        fontSize: !isMobile ? 40 : 20, // Réduction de la taille sur mobile
         fontFamily: 'LobsterTwo_700Bold_Italic',
         textAlign: 'center',
     },
     dashboardContainer: {
         flex: 1, // Prendre tout l'espace disponible
-        flexDirection: platform === 'web' ? 'row' : 'column',
-        justifyContent: platform === 'web' ? 'space-between' : 'flex-start',
+        flexDirection: !isMobile ? 'row' : 'column',
+        justifyContent: !isMobile ? 'space-between' : 'flex-start',
         width: '90%',
     },
     dashboardSection: {
         flex: 1, // Prendre tout l'espace disponible par section
-        marginBottom: platform === 'web' ? 0 : 10, // Ajouter un espacement entre les sections sur mobile
+        marginBottom: !isMobile ? 0 : 10, // Ajouter un espacement entre les sections sur mobile
         padding: 10,
         backgroundColor: COLORS.background.lightBlue, // Ajouter une couleur de fond pour délimiter chaque section
         borderRadius: 8, // Amélioration visuelle
-        maxHeight: platform === 'web' ? '100%' : '45%', // Limiter la hauteur sur mobile
+        maxHeight: !isMobile ? '100%' : '45%', // Limiter la hauteur sur mobile
     },
     touchableOpacity: {
         backgroundColor: 'red',

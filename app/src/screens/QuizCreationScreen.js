@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getQuizInfos } from '../utils/api';
@@ -14,7 +14,12 @@ import ThemeSelector from '../components/ThemeList';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
-const platform = Platform.OS;
+
+
+
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 
 export default function QuizCreation() {
@@ -126,7 +131,7 @@ export default function QuizCreation() {
                 const data = await saveQuiz(title, category, difficulty, questions);
                 setQuizId(data.quizId);
 
-                if (Platform.OS === 'web') {
+                if (!isMobile) {
                     navigation.navigate('quizCreation', { quizId: data.quizId });
                 }
             }
@@ -186,7 +191,7 @@ export default function QuizCreation() {
         setResetForm(true);
 
         // Modification de l'URL pour supprimer les paramètres
-        if (Platform.OS === 'web') {
+        if (!isMobile) {
             navigation.navigate('quizCreation');
         }
 
@@ -437,7 +442,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
-        ...platform === 'web' ? {
+        ...!isMobile ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },
@@ -449,7 +454,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
-        ...platform === 'web' ? {
+        ...!isMobile ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },
