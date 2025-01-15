@@ -16,6 +16,16 @@ export default function Register() {
 
     const handleRegister = async () => {
         try {
+            if( name.length > 20 )
+            {
+                toast('error', 'Erreur', 'Le nom d\'utilisateur ne doit pas dépasser 20 caractères', 3000, COLORS.toast.red);
+                return;
+            }
+            if( name.length < 3 )
+            {
+                toast('error', 'Erreur', 'Le nom d\'utilisateur doit contenir au moins 3 caractères', 3000, COLORS.toast.red);
+                return;
+            }
             await userRegister(name, password);
             toast('success', "Enregistrement réussie !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, COLORS.toast.green);
             navigation.navigate('initMenu', { screen: 'account' });
