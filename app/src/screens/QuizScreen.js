@@ -57,6 +57,7 @@ export default function QuizScreen() {
     const [timerInitialized, setTimerInitialized] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
     const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
+    const [animation, setAnimation] = useState('none');
 
     const confettiRef = useRef();
 
@@ -144,6 +145,7 @@ export default function QuizScreen() {
             setTimerInitialized(false);
             setLoading(false);
             setTimerKey(prevKey => prevKey + 1);
+            setAnimation('none');
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -177,6 +179,7 @@ export default function QuizScreen() {
                 setIsAnswered(true);
                 if (correctAnswerFromApi === selectedAnswer){
                     confettiRef.current.startConfetti();
+                    setAnimation('win');
                     updateScore();
                 }
             }
@@ -316,6 +319,7 @@ export default function QuizScreen() {
                                                 color={getAnswerColor(answer)}
                                                 type={currentType}
                                                 disabled={gameMode === 'timed' && remainingTime === 0}
+                                                animation={animation}
                                             />
                                         )
                                     );
