@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: !isMobile ? 700 : 300,
+    height: 40,
   },
 });
 

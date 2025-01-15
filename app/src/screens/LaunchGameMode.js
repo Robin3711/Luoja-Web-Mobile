@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Dimensions, StyleSheet, TextInput, ScrollView, KeyboardAvoidingVie } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';

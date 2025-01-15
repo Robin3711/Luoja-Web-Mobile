@@ -166,6 +166,7 @@ const ChooseFile = ({ onValueChange }) => {
                         name="file"
                         accept="image/*"
                         onChange={selectFile}
+                        style={styles.inputFile}
                     />
                     <ScrollView
                         horizontal={true}
@@ -177,12 +178,10 @@ const ChooseFile = ({ onValueChange }) => {
                             data={images}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => (
-                                <>
+                                <View style={styles.imageItem}>
                                     <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]} />
-                                    <TouchableOpacity onPress={() => handleRefreshImages(ids[index])}>
-                                        <Text>Supprimer</Text>
-                                    </TouchableOpacity>
-                                </>
+                                    <SimpleButton text="Supprimer" onPress={() => handleRefreshImages(ids[index])}/>
+                                </View>
                             )}
                         />
                     </ScrollView>
@@ -262,6 +261,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 10,
         gap: 10,
+    },
+    inputFile: {
+        margin: 10,
+        padding: 30,
+        backgroundColor: COLORS.palette.blue.lighter,
+        borderRadius: 10,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        fontSize: 20,
+    },
+    imageItem: {
+        margin: 10,
+        padding: 10,
+        backgroundColor: COLORS.palette.blue.lighter,
+        borderRadius: 5,
+        width: "400px", // Fixe la largeur des éléments
+        height: "300px",
+        alignItems: 'center',
     },
 });
 

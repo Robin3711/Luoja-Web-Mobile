@@ -204,7 +204,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
                 {
                     backgroundColor: questionFilters[filter] || backgroundColors[shape],
                     borderColor: 'black', borderWidth: filter === 'BLUE' ? 7 : 0,
-                    height: isMobile ? 160 : 80,
+                    height: !isMobile ? 160 : 80,
                     width: filter === 'BLUE' ? '90%' : '95%',
                     marginVertical: filter === 'BLUE' ? 10 : 5,
                 },

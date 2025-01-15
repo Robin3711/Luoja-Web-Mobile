@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { View, Text, Modal, TouchableOpacity,  StyleSheet, ScrollView , Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
-import { uploadAudio, downloadAllAudios, downloadAudio, uploadImage } from '../utils/api';
+import { uploadAudio, downloadAllAudios, downloadAudio, deleteFile } from '../utils/api';
 import SimpleButton from './SimpleButton';
 import { toast } from '../utils/utils';
 
@@ -143,6 +143,7 @@ const ChooseAudio = ({ onValueChange }) => {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
+                style={styles.modal}
             >
                 <View style={styles.themeListModal}>
                     <input
@@ -151,6 +152,7 @@ const ChooseAudio = ({ onValueChange }) => {
                         name="file"
                         accept="audio/*"
                         onChange={selectFile}
+                        style={styles.inputFile}
                     />
                     <ScrollView
                         horizontal={true}
@@ -167,9 +169,8 @@ const ChooseAudio = ({ onValueChange }) => {
                                 <audio controls src={item} style={styles.audioPlayer}>
                                     Votre navigateur ne supporte pas l'élément audio.
                                 </audio>
-                                <TouchableOpacity onPress={() => handleRefreshAudios(ids[index])}>
-                                    <Text>Supprimer</Text>
-                                </TouchableOpacity>
+                                <SimpleButton text="Supprimer" onPress={() => handleRefreshAudios(ids[index])}/>
+
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
@@ -206,28 +207,34 @@ const styles = StyleSheet.create({
         fontSize: 15,
     },
     themeListModal: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginVertical: !isMobile? '6%' : '20%',
-        marginHorizontal: '10%',
-        backgroundColor: '#f0f0f0',
-        padding: 20,
-        borderRadius: 10,
-    },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginVertical: !isMobile? '6%' : '20%',
+            marginHorizontal: '10%',
+            backgroundColor: COLORS.background.blue,
+            padding: 20,
+            borderRadius: 10,
+            borderWidth: 5,
+            borderStyle: 'solid',
+            borderColor: COLORS.button.blue.basic,
+        },
     audioItem: {
         margin: 10,
         padding: 10,
-        backgroundColor: '#d3d3d3',
+        backgroundColor: COLORS.palette.blue.lighter,
         borderRadius: 5,
-        width: "200px", // Fixe la largeur des éléments
-        height: "100px",
+        width: "400px", // Fixe la largeur des éléments
+        height: "250px",
         alignItems: 'center',
     },
     audioLabel: {
-        marginBottom: 5,
-        fontSize: 16,
-    },
+        padding: 10,
+        fontSize: 40,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        color: COLORS.text.blue.dark,
+      },
     audioPlayer: {
         width: '100%',
         height: '100%',
@@ -238,6 +245,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         width: '10%',
     },
+    inputFile: {
+        margin: 10,
+        padding: 30,
+        backgroundColor: COLORS.palette.blue.lighter,
+        borderRadius: 10,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        fontSize: 20,
+    }
 });
 
 export default ChooseAudio;
