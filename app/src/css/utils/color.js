@@ -1,13 +1,13 @@
 export const COLORS = {
     palette: {
-        blue:{
+        blue: {
             lighter: '#C0E6FF',
             light: '#58BDFE',
             normal: '#4D65B4',
             dark: '#484A77',
             darker: '#323353',
         },
-        pink: 
+        pink:
         {
             lighter: '#FFA0B7',
             light: '#FE6C90',
@@ -109,7 +109,7 @@ export const COLORS = {
     },
 
     timer: {
-        blue:{
+        blue: {
             lighter: '#C0E6FF',
             light: '#58BDFE',
             normal: '#4D65B4',
@@ -119,8 +119,17 @@ export const COLORS = {
     },
 
     toast: {
-        red: 'crimson',
-        green: 'limegreen',
-        blue: 'deepskyblue'
+        text: {
+            red: 'crimson',
+            green: 'seagreen',
+            blue: 'dodgerblue',
+            orange: 'darkorange',
+        },
+        background: {
+            red: 'firebrick',
+            green: 'limegreen',
+            blue: 'deepskyblue',
+            orange: 'orange',
+        }
     }
 }

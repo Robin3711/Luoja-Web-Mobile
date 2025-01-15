@@ -47,7 +47,6 @@ export default function QuizScreen() {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [correct, setCorrect] = useState(null);
     const [score, setScore] = useState(0);
-    const [imagesUri, setImagesUri] = useState([]);
     const [remainingTime, setRemainingTime] = useState(0);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -250,7 +249,7 @@ export default function QuizScreen() {
 
     const handleCopyGameId = async () => {
         await Clipboard.setStringAsync(gameId);
-        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.blue);
+        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.text.blue);
     };
 
     return (
@@ -278,7 +277,7 @@ export default function QuizScreen() {
                                         (gameTime * 1) / 5,
                                         (gameTime * 0) / 5,
                                     ]}
-                                    style={{ marginTop: 5 }} // Baisse le cercle de 5 pixels
+                                    style={{ marginTop: 5 }}
                                 >
                                     {() => (
                                         <>
@@ -291,7 +290,7 @@ export default function QuizScreen() {
                                     )}
                                 </CountdownCircleTimer>
 
-                                <Text style={[styles.score, {marginTop:5}]}>Score: {score}</Text>
+                                <Text style={[styles.score, { marginTop: 5 }]}>Score: {score}</Text>
                                 <View style={styles.quizBarView}>
                                 </View>
                                 <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
@@ -333,7 +332,7 @@ export default function QuizScreen() {
 
     );
 }
-// ...existing code...
+
 const styles = StyleSheet.create({
     quizScreenView: {
         flex: 1,
@@ -388,8 +387,8 @@ const styles = StyleSheet.create({
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
         ...isMobile && { marginVertical: 10, },
-        ...!isMobile && { marginTop: 0, },  
-    },    
+        ...!isMobile && { marginTop: 0, },
+    },
     score: {
         marginBottom: -15,
         fontSize: !isMobile ? 30 : 12,

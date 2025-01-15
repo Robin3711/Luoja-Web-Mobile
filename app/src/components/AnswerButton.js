@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Dimensions, StyleSheet, Text, TouchableOpacity,  Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { COLORS } from '../css/utils/color';
 import { downloadImage, downloadAudio } from '../utils/api';
 import { Audio } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
+import { toast } from '../utils/utils';
+
 
 
 
@@ -32,6 +35,7 @@ const Triangle = ({ shapeColor, borderColor }) => (
         <Path d="M12 2L2 22h20L12 2z" stroke={borderColor || "#283971"} strokeWidth="1.5" fill={shapeColor || "#96a9e4"} />
     </Svg>
 );
+
 
 const AnswerButton = ({ shape, onClick, text, filter, type }) => {
     const backgroundColors = {
@@ -73,47 +77,54 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
         }
     };
 
-
-
     const [file, setFile] = useState(null);
-
+    const fileRef = useRef(null);
     const sound = new Audio.Sound();
 
-    const playSound = async () => {
-        await sound.unloadAsync();
-        await sound.loadAsync({ uri: file });
-        await sound.playAsync();
+
+    async function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
     }
 
-    useEffect(() => {
-        async function requestPermission() {
-            const { status } = await Audio.requestPermissionsAsync();
-            if (status !== 'granted') {
-                console.warn('Permission audio non accordée');
-            }
+    const playSound = async () => {
+        try {
+            await sound.unloadAsync();
+            await sound.loadAsync({ uri: file });
+            await sound.playAsync();
+        } catch (error) {
+            toast("error", 'Erreur lors de la lecture du son', '', 1500, COLORS.toast.text.red);
         }
-        requestPermission();
-        async function handleMedia() {
-            if (type === 'image' && text) {
-              const file = await downloadImage(text);
-              const url = URL.createObjectURL(file);
-              setFile(url);
-            }
-      
-            if (type === 'audio' && text) {
-              const file = await downloadAudio(text);
-              console.log(file);
-              let url;
-              if (!isMobile){
-                url = URL.createObjectURL(file);
-                setFile(url);
-              } else {
-                url = file;
-                setFile(url);
-              }
-              
+    };
 
-              await sound.loadAsync({ uri: url });
+
+    useEffect(() => {
+
+        if (Platform.OS === 'web') {
+            async function handleMedia() {
+                if (type === 'image' && text) {
+                    const file = await downloadImage(text);
+                    const url = URL.createObjectURL(file);
+                    setFile(url);
+                }
+
+                if (type === 'audio' && text) {
+                    const file = await downloadAudio(text);
+                    let url;
+                    if (Platform.OS === "web") {
+                        url = URL.createObjectURL(file);
+                        setFile(url);
+                    } else {
+                        url = file;
+                        setFile(url);
+                    }
+
+
+                    await sound.loadAsync({ uri: url });
 
                 }
             }
@@ -122,7 +133,68 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
             return () => {
                 sound.unloadAsync();
             };
+
+        } else {
+            async function requestPermission() {
+                const { status } = await Audio.requestPermissionsAsync();
+                if (status !== 'granted') {
+                    toast('warn', 'Permission audio non accordée', '', 1500, COLORS.toast.text.orange);
+                }
+            }
+            requestPermission();
+
+
+            async function handleMedia() {
+                let fileUri = null;
+                try {
+                    if (type === 'image' && text) {
+                        const blob = await downloadImage(text);
+                        fileUri = FileSystem.documentDirectory + `${text}`;
+                        const base64Data = await blobToBase64(blob);
+                        await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
+                        setFile(fileUri);
+                        fileRef.current = fileUri;
+                    }
+
+                    if (type === 'audio' && text) {
+                        const blob = await downloadAudio(text);
+                        fileUri = FileSystem.documentDirectory + `${text}`;
+                        const base64Data = await blobToBase64(blob);
+                        await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
+                        setFile(fileUri);
+                        fileRef.current = fileUri;
+                        await sound.loadAsync({ uri: fileUri });
+                    }
+                } catch (error) {
+                    toast('error', 'Erreur lors du traitement des fichiers média', '', 1500, COLORS.toast.text.red);
+                }
+            }
+
+            handleMedia();
+
+            return () => {
+                async function cleanup() {
+                    try {
+                        if (sound) {
+                            await sound.unloadAsync();
+                        }
+                        if (fileRef.current) {
+                            const exists = await FileSystem.getInfoAsync(fileRef.current);
+                            if (exists.exists) {
+                                await FileSystem.deleteAsync(fileRef.current, { idempotent: true });
+                            }
+                        }
+                    } catch (error) {
+                        toast('error', 'Erreur lors du nettoyage des fichiers', '', 1500, COLORS.toast.text.red);
+                    }
+                }
+                cleanup();
+            };
+        }
+
+
     }, [text, type]);
+
 
     return (
         <TouchableOpacity
@@ -153,10 +225,10 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
                     <TouchableOpacity onPress={playSound} style={styles.button}>
                         <Text style={styles.text}>Play</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={async () => {sound.pauseAsync()}} style={styles.button}>
+                    <TouchableOpacity onPress={async () => { sound.pauseAsync() }} style={styles.button}>
                         <Text style={styles.text}>Pause</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={async () => {sound.stopAsync()}} style={styles.button}>
+                    <TouchableOpacity onPress={async () => { sound.stopAsync() }} style={styles.button}>
                         <Text style={styles.text}>Stop</Text>
                     </TouchableOpacity>
                 </>
@@ -164,6 +236,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
         </TouchableOpacity>
     );
 };
+
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
@@ -217,4 +290,5 @@ const styles = StyleSheet.create({
         } : { elevation: 2 },
     },
 });
+
 export default AnswerButton;

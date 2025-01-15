@@ -79,7 +79,7 @@ const MenuTab = () => {
                 }}
             />
             <Tab.Screen
-                name="joinGame"
+                name="join"
                 component={joinGame}
                 options={{
                     tabBarLabel: ({ focused, color }) => (

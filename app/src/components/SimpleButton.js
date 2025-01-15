@@ -13,12 +13,14 @@ export default function SimpleButton({
     color = COLORS.button.blue.basic,
     height = isMobile ? 50 : 75,
     width = isMobile ? 250 : 350,
-    textStyle = {}
+    textStyle = {},
+    disabled,
 }) {
     return (
         <TouchableOpacity
             onPress={onPress}
             style={[styles.button, { backgroundColor: color, minHeight: height, width }]}
+            disabled={disabled}
         >
             <Text style={[FONT.button, styles.buttonText, textStyle]}>{text}</Text>
         </TouchableOpacity>

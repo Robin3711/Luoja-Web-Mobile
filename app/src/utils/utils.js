@@ -28,7 +28,7 @@ import {
     Vote,
 } from 'lucide-react-native';
 import { Dimensions } from 'react-native';
-import Toast from 'react-native-toast-message';
+import Toast, { BaseToast } from 'react-native-toast-message';
 import { ErrorToast, InfoToast, SuccessToast } from 'react-native-toast-message';
 import { COLORS } from '../css/utils/color';
 const { width  , height} = Dimensions.get('window');
@@ -189,7 +189,7 @@ export const toastConfig = {
         <SuccessToast
             {...props}
             style={{
-                borderLeftColor: COLORS.toast.green,
+                borderLeftColor: COLORS.toast.background.green,
                 width: 600,
                 height: 100,
             }}
@@ -208,7 +208,7 @@ export const toastConfig = {
         <ErrorToast
             {...props}
             style={{
-                borderLeftColor: COLORS.toast.red,
+                borderLeftColor: COLORS.toast.background.red,
                 width: 600,
                 height: 100,
             }}
@@ -227,7 +227,26 @@ export const toastConfig = {
         <InfoToast
             {...props}
             style={{
-                borderLeftColor: COLORS.toast.blue,
+                borderLeftColor: COLORS.toast.background.blue,
+                width: 600,
+                height: 100,
+            }}
+            contentContainerStyle={{
+                paddingHorizontal: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        />
+    ),
+
+    /*
+      Personnaliser un toast de type 'warn'
+    */
+    warn: (props) => (
+        <BaseToast
+            {...props}
+            style={{
+                borderLeftColor: COLORS.toast.background.orange,
                 width: 600,
                 height: 100,
             }}
@@ -241,9 +260,31 @@ export const toastConfig = {
 };
 
 export function getRoomId(url) {
-    const segments = url.split("/"); // Divise l'URL en segments
-    const id = segments[segments.length - 2]; // Récupère l'avant-dernier segment
-    id.trim(); // Supprime les espaces
-    return id;
+    const queryString = url.split('?')[1]; // Récupérer la partie après le "?"
+    const params = new URLSearchParams(queryString);
+    return params.get('roomId'); // Extraire le paramètre roomId
 
+}
+
+export function hasExtension(answer) {
+    return (
+        answer.endsWith('.mp3') ||
+        answer.endsWith('.jpeg') ||
+        answer.endsWith('.jpg') ||
+        answer.endsWith('.png')
+    );
+}
+
+export function hasValidAudioExtension(answer) {
+    return (
+        answer.endsWith('.mp3')
+    )
+}
+
+export function hasValidImageExtension(answer) {
+    return (
+        answer.endsWith('.jpeg') ||
+        answer.endsWith('.jpg') ||
+        answer.endsWith('.png')
+    );
 }

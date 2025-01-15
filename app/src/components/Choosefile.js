@@ -1,9 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList,  Dimensions, StyleSheet, Image } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList,  Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
 import { COLORS } from '../css/utils/color';
-import { uploadImage, downloadAllImages, downloadImage } from '../utils/api';
+import { uploadImage, downloadAllImages, downloadImage, deleteFile } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';
 import ImageSelect from './ImageSelect';
+import SimpleButton from './SimpleButton';
+import { toast } from '../utils/utils';
 
 
 const { width  , height} = Dimensions.get('window');
@@ -36,24 +38,66 @@ const ChooseFile = ({ onValueChange }) => {
         const formData = new FormData();
         formData.append('file', file);
 
-        uploadImage(formData).then((response) => {
+        uploadImage(formData).then(async (response) => {
             if (response.status === 200) {
-                const addimage = async (response) => {
-                    console.log(response.filePath);
-                    const imageBlob = await downloadImage(response.filePath);
-                    const imageURL = URL.createObjectURL(imageBlob);
-                    setImages([...images, imageURL]);
-                    setIds([...ids, response.filePath]);
-                };
-                addimage(response);
+                const jsonResponse = await response.json();
+                setTimeout(() => {
+
+                    const responseId = jsonResponse.filePath;
+                    setIds([...ids, responseId]);
+                    downloadImage(responseId).then((response) => {
+                        const url = URL.createObjectURL(response);
+                        setImages([...images, url])
+                    })
+
+                }, 200);
+
             }
         }).catch((error) => {
             console.log(error);
-
         }
         );
     };
 
+    const handleRefreshImages = async (id) => {
+        try {
+            await deleteFile(id);
+            const response = await downloadAllImages();
+            if (response.files && Array.isArray(response.files)) {
+                const files = response.files;
+                const validFiles = files.filter(file => file.fileName.endsWith('.png' || '.jpg' || '.jpeg'));
+                setIds(validFiles.map((file) => file.fileName));
+
+                // Traiter chaque `fileName` pour télécharger les images
+                const imagePromises = validFiles.map(async (file) => {
+                    const { fileName } = file;
+                    const imageBlob = await downloadImage(fileName);
+
+                    // Convertir le blob en URL locale
+                    const imageURL = URL.createObjectURL(imageBlob);
+                    return imageURL;
+                });
+
+                // Résoudre toutes les promesses
+                const fetchedImages = await Promise.all(imagePromises);
+
+                // Mettre à jour l'état des images
+                setImages(fetchedImages);
+            } else {
+                console.error("La réponse de `downloadAllImages` n'est pas valide.");
+            }
+        } catch (error) {
+            if (error.status && error.message) {
+                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+            } else {
+                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+            }
+        }
+    }
+
+    const handleCloseModal = () => {
+        setModalVisible(false);
+    }
 
     useFocusEffect(
         useCallback(() => {
@@ -62,10 +106,11 @@ const ChooseFile = ({ onValueChange }) => {
                     const response = await downloadAllImages();
                     if (response.files && Array.isArray(response.files)) {
                         const files = response.files;
-                        setIds(files.map((file) => file.fileName));
+                        const validFiles = files.filter(file => file.fileName.endsWith('.png' || '.jpg' || '.jpeg'));
+                        setIds(validFiles.map((file) => file.fileName));
 
                         // Traiter chaque `fileName` pour télécharger les images
-                        const imagePromises = files.map(async (file) => {
+                        const imagePromises = validFiles.map(async (file) => {
                             const { fileName } = file;
                             const imageBlob = await downloadImage(fileName);
 
@@ -83,7 +128,11 @@ const ChooseFile = ({ onValueChange }) => {
                         console.error("La réponse de `downloadAllImages` n'est pas valide.");
                     }
                 } catch (error) {
-                    console.error("Erreur lors de la récupération des images :", error);
+                    if (error.status && error.message) {
+                        toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                    } else {
+                        toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                    }
                 }
             };
 
@@ -118,15 +167,26 @@ const ChooseFile = ({ onValueChange }) => {
                         accept="image/*"
                         onChange={selectFile}
                     />
-
-                    <FlatList
+                    <ScrollView
                         horizontal={true}
-                        data={images}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item, index }) => (
-                            <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]} />
-                        )}
-                    />
+                        contentContainerStyle={styles.scrollViewContenair}
+                        style={{ maxWidth: 1000 }}
+                    >
+                        <FlatList
+                            horizontal={true}
+                            data={images}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item, index }) => (
+                                <>
+                                    <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]} />
+                                    <TouchableOpacity onPress={() => handleRefreshImages(ids[index])}>
+                                        <Text>Supprimer</Text>
+                                    </TouchableOpacity>
+                                </>
+                            )}
+                        />
+                    </ScrollView>
+                    <SimpleButton text={"Fermer"} onPress={handleCloseModal} />
                 </View>
             </Modal>
         </View>
