@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 import { getGameInfos, createGame } from '../utils/api';
 import { toast } from '../utils/utils';
 import { formatReadableDate } from '../utils/utils';

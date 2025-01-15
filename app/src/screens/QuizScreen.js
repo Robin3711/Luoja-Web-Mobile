@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity,  StyleSheet , Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos, listenTimer } from '../utils/api';
@@ -13,7 +13,12 @@ import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
 
-const platform = Platform.OS;
+
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
+
 
 export default function QuizScreen() {
     const route = useRoute();
@@ -262,8 +267,8 @@ export default function QuizScreen() {
                                     key={timerKey}
                                     isPlaying={timerInitialized}
                                     duration={gameTime}
-                                    size={Platform.OS === 'web' ? 150 : 110}
-                                    strokeWidth={Platform.OS === 'web' ? 15 : 10}
+                                    size={!isMobile? 150 : 110}
+                                    strokeWidth={!isMobile ? 15 : 10}
                                     colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
                                     colorsTime={[
                                         (gameTime * 4) / 5,
@@ -289,7 +294,7 @@ export default function QuizScreen() {
                                 <View style={styles.quizBarView}>
                                 </View>
                                 <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
-                                {platform === 'web' && nextQuestionButton()}
+                                {!isMobile && nextQuestionButton()}
                             </View>
 
                             <View style={styles.answersView}>
@@ -308,7 +313,7 @@ export default function QuizScreen() {
                                         )
                                     );
                                 })}
-                                {platform !== 'web' && nextQuestionButton()}
+                                {isMobile && nextQuestionButton()}
                             </View>
                         </View>
                     </>
@@ -352,49 +357,49 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     mainView: {
-        flexDirection: platform === 'web' ? 'row' : 'column',
+        flexDirection: !isMobile ? 'row' : 'column',
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        ...platform === 'web' && { gap: 20, },
-        ...platform !== 'web' && { marginVertical: 10, },
+        ...!isMobile && { gap: 20, },
+        ...isMobile && { marginVertical: 10, },
     },
     questionView: {
         alignItems: 'center',
         top: 20,
-        width: platform === 'web' ? '45%' : '100%',
-        ...platform !== 'web' && { marginVertical: 10, },
-        ...platform === 'web' && { gap: 70, },
+        width: !isMobile ? '45%' : '100%',
+        ...isMobile && { marginVertical: 10, },
+        ...!isMobile && { gap: 70, },
     },
     question: {
-        fontSize: platform === 'web' ? 30 : 25,
+        fontSize: !isMobile ? 30 : 25,
         textAlign: 'center',
-        width: platform === 'web' ? '80%' : '95%',
+        width: !isMobile ? '80%' : '95%',
         fontWeight: 'bold',
         color: COLORS.text.blue.dark,
-        ...platform === 'web' && { marginVertical: 100, },
-        ...platform !== 'web' && { marginVertical: 10, },
+        ...!isMobile && { marginVertical: 100, },
+        ...isMobile && { marginVertical: 10, },
     },
     questionNumber: {
         marginTop: -20,
-        fontSize: platform === 'web' ? 30 : 25,
+        fontSize: !isMobile ? 30 : 25,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
-        ...platform !== 'web' && { marginVertical: 10, },
-        ...platform === 'web' && { marginTop: 0, },
+        ...isMobile && { marginVertical: 10, },
+        ...!isMobile && { marginTop: 0, },
     },
     score: {
         marginBottom: -15,
-        fontSize: platform === 'web' ? 30 : 12,
+        fontSize: !isMobile ? 30 : 12,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
     },
     answersView: {
-        width: platform === 'web' ? '50%' : '100%',
+        width: !isMobile ? '50%' : '100%',
         alignItems: 'center',
-        ...platform !== 'web' && { marginVertical: 10, },
+        ...isMobile && { marginVertical: 10, },
     },
     buttons: {
         display: 'flex',
@@ -403,11 +408,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#8fd3ff',
         height: 75,
-        width: platform === 'web' ? "35%" : "95%",
+        width: !isMobile ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
-        ...platform !== 'web' && { marginVertical: 10, },
+        ...isMobile && { marginVertical: 10, },
     },
     disabledButtons: {
         display: 'flex',
@@ -416,32 +421,32 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#d3d3d3',
         height: 75,
-        width: platform === 'web' ? "35%" : "95%",
+        width: !isMobile ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
-        ...platform !== 'web' && { marginVertical: 10, },
+        ...isMobile && { marginVertical: 10, },
     },
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',
-        ...platform !== 'web' && { marginVertical: 10, },
+        ...isMobile && { marginVertical: 10, },
     },
     quizBarView: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        ...platform !== 'web' && { marginVertical: 10, },
+        ...isMobile && { marginVertical: 10, },
     },
     quizBarTextView: {
         fontSize: 22,
-        ...platform !== 'web' && { marginVertical: 10, },
+        ...isMobile && { marginVertical: 10, },
     },
     errorText: {
         fontSize: 18,
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
-        ...platform !== 'web' && { marginVertical: 10, },
+        ...isMobile && { marginVertical: 10, },
     },
 });

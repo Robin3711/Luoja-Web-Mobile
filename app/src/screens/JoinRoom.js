@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Alert, Platform, TextInput, TouchableOpacity } from "react-native";
+import { Text, View, Dimensions,Platform, StyleSheet, Button, Alert,  TextInput, TouchableOpacity } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import { getRoomId, hasToken } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
@@ -8,7 +8,9 @@ import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from "../components/SimpleButton";
 
-const platform = Platform.OS;
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
 
 export default function JoinGame() {
   const [roomId, setRoomId] = useState('');
@@ -26,7 +28,8 @@ export default function JoinGame() {
       setHasPermission(status === "granted");
     };
 
-    if (Platform.OS === "android") {
+    if(isMobile)
+    {
       getCameraPermissions();
     }
   }, []);
@@ -56,16 +59,16 @@ export default function JoinGame() {
 
   };
 
-  if (hasPermission === null && Platform.OS === "android") {
+  if (hasPermission === null && isMobile) {
     return <Text>Requesting for camera permission</Text>;
   }
-  if (hasPermission === false && Platform.OS === "android") {
+  if (hasPermission === false && isMobile) {
     return <Text>No access to camera</Text>;
   }
 
   return (
     <View style={styles.container}>
-      {Platform.OS === "android" && scanned === false && (
+      {isMobile && scanned === false && (
         <CameraView
           onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
           barcodeScannerSettings={{
@@ -92,7 +95,7 @@ export default function JoinGame() {
           <SimpleButton text="Rejoindre" onPress={() => handleConnect(roomId)} />
       </>)}
 
-      {scanned === true && Platform.OS === "android" && (
+      {scanned === true && isMobile && (
         <>
           <SimpleButton text="Scanner le QR CODE" onPress={() => setScanned(false)} />
         </>
@@ -125,7 +128,7 @@ const styles = StyleSheet.create({
     color: COLORS.text.blue.dark,
   },
   inputView: {
-    width: platform === 'web' ? '20%' : '80%',
+    width: !isMobile ? '20%' : '80%',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

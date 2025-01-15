@@ -1,12 +1,15 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, Platform, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Modal, TouchableOpacity,  StyleSheet, ScrollView , Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
-import { uploadAudio, downloadAllAudios, downloadAudio, deleteFile } from '../utils/api';
+import { uploadAudio, downloadAllAudios, downloadAudio, uploadImage } from '../utils/api';
 import SimpleButton from './SimpleButton';
 import { toast } from '../utils/utils';
 
-const platform = Platform.OS;
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
 
 const ChooseAudio = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -207,7 +210,7 @@ const styles = StyleSheet.create({
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            marginVertical: platform === 'web' ? '6%' : '20%',
+            marginVertical: !isMobile? '6%' : '20%',
             marginHorizontal: '10%',
             backgroundColor: COLORS.background.blue,
             padding: 20,

@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { useFonts, LobsterTwo_400Regular, LobsterTwo_700Bold, LobsterTwo_700Bold_Italic } from '@expo-google-fonts/dev';
@@ -28,17 +27,21 @@ import {
     Volleyball,
     Vote,
 } from 'lucide-react-native';
+import { Dimensions } from 'react-native';
 import Toast, { BaseToast } from 'react-native-toast-message';
 import { ErrorToast, InfoToast, SuccessToast } from 'react-native-toast-message';
 import { COLORS } from '../css/utils/color';
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
-export const iconSize = Platform.OS === 'web' ? 30 : 18;
+export const iconSize = !isMobile ? 30 : 18;
+
 
 let apiUrl = null;
 
 export async function getPlatformAPI() {
     if (apiUrl == null) {
-        if (Platform.OS === 'web') {
+        if (!isMobile) {
             // Vérifie si l'application tourne sur Expo Metro Web
             if (Constants.debugMode) {
                 apiUrl = 'https://api.luoja.fr';

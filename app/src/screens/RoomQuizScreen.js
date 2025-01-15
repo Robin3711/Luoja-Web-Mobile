@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, StyleSheet  , Dimensions} from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentRoomQuestion, getCurrentRoomAnswer } from '../utils/api';
@@ -10,7 +10,8 @@ import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
-const platform = Platform.OS;
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
 
 export default function RoomQuizScreen() {
     const route = useRoute();
@@ -213,8 +214,8 @@ export default function RoomQuizScreen() {
                                     key={timerKey}
                                     isPlaying={timerInitialized}
                                     duration={gameTime}
-                                    size={Platform.OS === 'web' ? 150 : 110}
-                                    strokeWidth={Platform.OS === 'web' ? 15 : 10}
+                                    size={!isMobile ? 150 : 110}
+                                    strokeWidth={!isMobile ? 15 : 10}
                                     colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
                                     colorsTime={[
                                         (gameTime * 4) / 5,
@@ -238,7 +239,7 @@ export default function RoomQuizScreen() {
                                 <Text style={styles.score}>Score: {score}</Text>
                                 <View style={styles.quizBarView}></View>
                                 <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
-                                {platform === 'web' && validateAnswerButton()}
+                                {!isMobile && validateAnswerButton()}
                             </View>
 
                             <View style={styles.answersView}>
@@ -255,7 +256,7 @@ export default function RoomQuizScreen() {
                                         />
                                     )
                                 ))}
-                                {platform !== 'web' && validateAnswerButton()}
+                                {isMobile && validateAnswerButton()}
                             </View>
                         </View>
                     </>
@@ -284,40 +285,40 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.background.blue,
     },
     mainView: {
-        flexDirection: platform === 'web' ? 'row' : 'column',
+        flexDirection: !isMobile ? 'row' : 'column',
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        ...platform === 'web' && { gap: 20, },
+        ...!isMobile && { gap: 20, },
     },
     questionView: {
         alignItems: 'center',
-        width: platform === 'web' ? '50%' : '100%',
-        ...platform === 'web' && { gap: 70, },
+        width: !isMobile ? '50%' : '100%',
+        ...!isMobile && { gap: 70, },
 
     },
     question: {
-        fontSize: platform === 'web' ? 30 : 25,
+        fontSize: !isMobile ? 30 : 25,
         textAlign: 'center',
-        width: platform === 'web' ? '80%' : '95%',
+        width: !isMobile ? '80%' : '95%',
         fontWeight: 'bold',
         color: COLORS.text.blue.dark,
-        ...platform === 'web' && { marginVertical: 100, },
+        ...!isMobile && { marginVertical: 100, },
     },
     questionNumber: {
-        fontSize: platform === 'web' ? 30 : 25,
+        fontSize: !isMobile ? 30 : 25,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
     },
     score: {
-        fontSize: platform === 'web' ? 30 : 12,
+        fontSize: !isMobile ? 30 : 12,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
     },
     answersView: {
-        width: platform === 'web' ? '50%' : '100%',
+        width: !isMobile ? '50%' : '100%',
         alignItems: 'center',
 
     },
@@ -328,7 +329,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#8fd3ff',
         height: 75,
-        width: platform === 'web' ? "35%" : "95%",
+        width: !isMobile ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
@@ -340,7 +341,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#d3d3d3',
         height: 75,
-        width: platform === 'web' ? "35%" : "95%",
+        width: !isMobile ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
