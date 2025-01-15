@@ -5,6 +5,7 @@ import { uploadImage, downloadAllImages, downloadImage, deleteFile } from '../ut
 import { useFocusEffect } from '@react-navigation/native';
 import ImageSelect from './ImageSelect';
 import SimpleButton from './SimpleButton';
+import { toast } from '../utils/utils';
 
 const platform = Platform.OS;
 
@@ -51,14 +52,13 @@ const ChooseFile = ({ onValueChange }) => {
             }
         }).catch((error) => {
             console.log(error);
-
         }
         );
     };
 
     const handleRefreshImages = async (id) => {
         try {
-            const reponseDelete = await deleteFile(id);
+            await deleteFile(id);
             const response = await downloadAllImages();
             if (response.files && Array.isArray(response.files)) {
                 const files = response.files;
@@ -84,7 +84,11 @@ const ChooseFile = ({ onValueChange }) => {
                 console.error("La réponse de `downloadAllImages` n'est pas valide.");
             }
         } catch (error) {
-            console.error("Erreur lors de la récupération des images :", error);
+            if (error.status && error.message) {
+                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+            } else {
+                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+            }
         }
     }
 
@@ -121,7 +125,11 @@ const ChooseFile = ({ onValueChange }) => {
                         console.error("La réponse de `downloadAllImages` n'est pas valide.");
                     }
                 } catch (error) {
-                    console.error("Erreur lors de la récupération des images :", error);
+                    if (error.status && error.message) {
+                        toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                    } else {
+                        toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                    }
                 }
             };
 

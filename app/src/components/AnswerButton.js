@@ -5,6 +5,7 @@ import { COLORS } from '../css/utils/color';
 import { downloadImage, downloadAudio } from '../utils/api';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
+import { toast } from '../utils/utils';
 
 const platform = Platform.OS;
 
@@ -92,7 +93,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
             await sound.loadAsync({ uri: file });
             await sound.playAsync();
         } catch (error) {
-            console.error('Erreur lors de la lecture du son :', error);
+            toast("error", 'Erreur lors de la lecture du son', '', 1500, COLORS.toast.text.red);
         }
     };
 
@@ -133,7 +134,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
             async function requestPermission() {
                 const { status } = await Audio.requestPermissionsAsync();
                 if (status !== 'granted') {
-                    console.warn('Permission audio non accordée');
+                    toast('warn', 'Permission audio non accordée', '', 1500, COLORS.toast.text.orange);
                 }
             }
             requestPermission();
@@ -161,7 +162,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
                         await sound.loadAsync({ uri: fileUri });
                     }
                 } catch (error) {
-                    console.error('Erreur lors du traitement des fichiers média :', error);
+                    toast('error', 'Erreur lors du traitement des fichiers média', '', 1500, COLORS.toast.text.red);
                 }
             }
 
@@ -180,7 +181,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
                             }
                         }
                     } catch (error) {
-                        console.error('Erreur lors du nettoyage des fichiers :', error);
+                        toast('error', 'Erreur lors du nettoyage des fichiers', '', 1500, COLORS.toast.text.red);
                     }
                 }
                 cleanup();
