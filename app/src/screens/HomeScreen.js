@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     },
     logo: {
         marginHorizontal: 200,
-        width: 500,
+        width: 600,
         height: 700,
     },
 });
