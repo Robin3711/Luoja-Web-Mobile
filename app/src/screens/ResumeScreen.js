@@ -9,6 +9,7 @@ import * as Clipboard from 'expo-clipboard';
 
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
+import GradientBackground from '../css/utils/linearGradient';
 
 const { width  , height} = Dimensions.get('window');
 const isMobile = width< height

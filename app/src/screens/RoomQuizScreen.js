@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Platform, StyleSheet  , Dimensions} from 'react-native';
+import { View, Text, TouchableOpacity,  StyleSheet  , Dimensions} from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentRoomQuestion, getCurrentRoomAnswer } from '../utils/api';
@@ -9,6 +9,7 @@ import SimpleButton from '../components/SimpleButton';
 import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
+import GradientBackground from '../css/utils/linearGradient';
 
 const { width  , height} = Dimensions.get('window');
 const isMobile = width< height

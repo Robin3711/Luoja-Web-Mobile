@@ -12,6 +12,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height;
+import GradientBackground from '../css/utils/linearGradient';
 
 export default function SearchScreen() {
     const [data, setData] = useState([]);

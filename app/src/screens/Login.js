@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet , Dimensions } from
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 
+import GradientBackground from '../css/utils/linearGradient';
 
 import { userLogin } from '../utils/api';
 import { toast } from '../utils/utils';

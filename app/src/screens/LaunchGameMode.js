@@ -7,6 +7,7 @@ import ChoiseSelector from '../components/ChoicePicker';
 import { createGame, createRoom } from '../utils/api';
 import { toast } from '../utils/utils';
 import { FONT } from '../css/utils/font';
+import GradientBackground from '../css/utils/linearGradient';
 
 const { width  , height} = Dimensions.get('window');
 const isMobile = width< height

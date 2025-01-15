@@ -12,6 +12,7 @@ import { SimpleButton } from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
+import GradientBackground from '../css/utils/linearGradient';
 
 
 

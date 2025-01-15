@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from "react-native";
+import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
+import GradientBackground from '../css/utils/linearGradient';
 
 import { joinRoom, joinTeam, startRoom } from "../utils/api";
 import { getPlatformAPI } from "../utils/utils";

@@ -7,6 +7,7 @@ import SimpleButton from '../components/SimpleButton';
 import { getRoomScores } from '../utils/api';
 
 import { FONT } from '../css/utils/font';
+import GradientBackground from '../css/utils/linearGradient';
 
 
 const { width  , height} = Dimensions.get('window');

@@ -10,6 +10,7 @@ import { publishSortOptions, historySortOptions } from "../utils/utils";
 import SimpleButton from "../components/SimpleButton";
 import ChoiseSelector from "../components/ChoicePicker";
 import { FONT } from "../css/utils/font";
+import GradientBackground from '../css/utils/linearGradient';
 
 
 const { width  , height} = Dimensions.get('window');

@@ -10,6 +10,7 @@ import { toast } from '../utils/utils';
 
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
+import GradientBackground from '../css/utils/linearGradient';
 
 export default function RetrieveQuestions() {
     const route = useRoute();

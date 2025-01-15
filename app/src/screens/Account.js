@@ -8,6 +8,7 @@ import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 import Dashboard from './Dashboard';
 import SimpleButton from '../components/SimpleButton';
+import GradientBackground from '../css/utils/linearGradient';
 
 
 

@@ -10,27 +10,24 @@ import GradientBackground from '../css/utils/linearGradient';
 const { width  , height} = Dimensions.get('window');
 const isMobile = width< height
 
+
+
 export default function HomeScreen() {
     const navigation = useNavigation();
 
     return (
         <GradientBackground>
-            <View style={styles.homeView}>
-                <Text style={FONT.luoja}>Luoja</Text>
-                <View style={styles.childView}>
-                    {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
-                    <View style={styles.listButton}>
-                        <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')} />
-                        <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
-                        <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
-                    </View>
-                    {!isMobile  && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
-
-                    <SimpleButton text="Rejoindre une partie" onPress={() => navigation.navigate('join')} />
+        <View style={styles.homeView}>
+            <Text style={FONT.luoja}>Luoja</Text>
+            <View style={styles.childView}>
+                {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
+                <View style={styles.listButton}>
+                    <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')} />
+                    <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
+                    <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
                 </View>
-
-                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
-            </View>
+                {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
+            </View> </View>
         </GradientBackground>
     );
 }

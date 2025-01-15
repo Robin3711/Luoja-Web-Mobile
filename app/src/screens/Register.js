@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { userRegister } from '../utils/api';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+import GradientBackground from '../css/utils/linearGradient';
 
 export default function Register() {
 

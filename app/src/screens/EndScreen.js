@@ -6,6 +6,7 @@ import SimpleButton from '../components/SimpleButton';
 import { FONT } from '../css/utils/font';
 import { themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
+import GradientBackground from '../css/utils/linearGradient';
 
 import * as Progress from 'react-native-progress';
 

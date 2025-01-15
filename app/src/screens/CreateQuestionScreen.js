@@ -8,6 +8,7 @@ import SimpleButton from '../components/SimpleButton';
 import { mediaType, toast } from '../utils/utils';
 import ChoiseSelector from '../components/ChoicePicker';
 import { generateAnswers } from '../utils/api';
+import GradientBackground from '../css/utils/linearGradient';
 
 export default function CreateQuestionScreen() {
     const route = useRoute();
