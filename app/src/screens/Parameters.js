@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet , Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { createQuiz } from '../utils/api';
@@ -13,8 +13,8 @@ import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 export default function Parameters() {
   const [difficulty, setDifficulty] = useState(null);
@@ -35,9 +35,9 @@ export default function Parameters() {
       })
       .catch(error => {
         if (error.status && error.message) {
-          toast('error', error.status, error.message, 3000, COLORS.toast.red);
+          toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
         } else {
-          toast('error', "Erreur", error, 3000, COLORS.toast.red);
+          toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
         }
       });
   };

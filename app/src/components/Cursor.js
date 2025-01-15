@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet , Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Slider from '@react-native-assets/slider';
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 const RangeCursor = ({ value, onValueChange }) => {
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   cursorLabel: {
-    fontSize: 20,
+    fontSize: !isMobile ? 20 : 18,
     fontWeight: 'bold',
     margin: 10,
   },
