@@ -104,7 +104,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
 
     useEffect(() => {
 
-        if (Platform.OS === 'web') {
+        if (!isMobile) {
             async function handleMedia() {
                 if (type === 'image' && text) {
                     const file = await downloadImage(text);
@@ -115,7 +115,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
                 if (type === 'audio' && text) {
                     const file = await downloadAudio(text);
                     let url;
-                    if (Platform.OS === "web") {
+                    if (!isMobile) {
                         url = URL.createObjectURL(file);
                         setFile(url);
                     } else {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Dimensions, StyleSheet, Button, Alert,  TextInput, TouchableOpacity } from "react-native";
+import { Text, View, Dimensions,Platform, StyleSheet, Button, Alert,  TextInput, TouchableOpacity } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import { getRoomId, hasToken } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     color: COLORS.text.blue.dark,
   },
   inputView: {
-    width: platform === 'web' ? '20%' : '80%',
+    width: !isMobile ? '20%' : '80%',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
