@@ -101,6 +101,8 @@ export default function Dashboard() {
     };
 
     return (
+        <GradientBackground>
+            {
         error ? (
             <View style={styles.quizScreenView}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
@@ -178,7 +180,8 @@ export default function Dashboard() {
                     </View>
                     <SimpleButton text="Déconnexion" onPress={handleLogout} color={'red'} />
                 </View>
-            )
+            )}
+        </GradientBackground>
     );
 }
 
@@ -188,7 +191,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start', // Aligner les éléments en haut
-        width: '100%',
+        width: "100vw",
         height: '100%',
         paddingVertical: 10, // Espacement pour éviter de toucher les bords de l'écran
     },
