@@ -613,7 +613,7 @@ export async function joinRoom(roomId) {
 
         // Event listeners
         eventSource.addEventListener('open', () => {
-            toast("info", 'Connected to room: ' + roomId, '', 1500, COLORS.toast.text.blue);
+            toast("info", 'Connected to room: ' + roomId, '', 2000, COLORS.toast.text.blue);
         });
 
         eventSource.addEventListener('message', (event) => {
@@ -627,7 +627,7 @@ export async function joinRoom(roomId) {
 
         return eventSource;
     } catch (error) {
-        toast("error", 'Error joining room:' + roomId, '', 1500, COLORS.toast.text.red);
+        toast("error", 'Error joining room:' + roomId, '', 2000, COLORS.toast.text.red);
         throw error;
     }
 }
