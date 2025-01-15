@@ -1,9 +1,10 @@
+import React from 'react';
 import { View, Text, Platform, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SimpleButton from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
-
 import { FONT } from '../css/utils/font';
+import GradientBackground from '../css/utils/linearGradient';
 
 const platform = Platform.OS;
 
@@ -11,24 +12,20 @@ export default function HomeScreen() {
     const navigation = useNavigation();
 
     return (
-        <View style={styles.homeView}>
-
-            <Text style={FONT.luoja}>Luoja</Text>
-
-            <View style={styles.childView}>
-                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
-
-                <View style={styles.listButton}>
-                    <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')} />
-
-                    <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
-
-                    <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
+        <GradientBackground>
+            <View style={styles.homeView}>
+                <Text style={FONT.luoja}>Luoja</Text>
+                <View style={styles.childView}>
+                    {platform === 'web' && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
+                    <View style={styles.listButton}>
+                        <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')} />
+                        <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
+                        <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
+                    </View>
+                    {platform === 'web' && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
                 </View>
-
-                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
             </View>
-        </View>
+        </GradientBackground>
     );
 }
 
@@ -40,7 +37,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     childView: {
         height: platform === 'web' ? '90%' : '75%',
