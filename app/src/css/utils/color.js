@@ -19,6 +19,7 @@ export const COLORS = {
 
     background: {
         blue: "#EEF8FF",
+        dark_blue: "#DDF1FF",
         pink: "#FFEAEF",
     },
 
