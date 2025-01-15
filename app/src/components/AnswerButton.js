@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Dimensions, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 import { Audio } from 'expo-av';
@@ -21,10 +21,6 @@ import { toast } from '../utils/utils';
 
 const { width  , height} = Dimensions.get('window');
 const isMobile = width< height
-
-// ** Fin Constantes **
-
-// ** Composants **
 
 const Star = ({ shapeColor, borderColor }) => (
     <Svg width={!isMobile ? "115" : "75"} height="115" viewBox="-2 -2 28 28" fill="none">
@@ -208,13 +204,12 @@ const AnswerButton = ({ shape, onClick, text, color, type, animation }) => {
                             }
                         }
                     } catch (error) {
-                        toast('error', 'Erreur lors du nettoyage des fichiers', '', 1500, COLORS.toast.text.red);
+                        toast('error', 'Erreur lors du nettoyage des fichiers', '', 2000, COLORS.toast.text.red);
                     }
                 }
                 cleanup();
             };
         }
-
 
     }, [text, type]);
 

@@ -12,8 +12,8 @@ import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 export default function RoomQuizScreen() {
     const route = useRoute();
@@ -207,6 +207,11 @@ export default function RoomQuizScreen() {
         </TouchableOpacity>
     );
 
+    const getTopValue = () => {
+        if (!isMobile) return 20;
+        return currentQuestion?.question?.length > 60 ? 50 : 20;
+    };
+
     loadFont();
     return (
         !error ? (
@@ -221,8 +226,8 @@ export default function RoomQuizScreen() {
                                     key={timerKey}
                                     isPlaying={timerInitialized}
                                     duration={gameTime}
-                                    size={!isMobile ? 150 : 110}
-                                    strokeWidth={!isMobile ? 15 : 10}
+                                    size={!isMobile ? 150 : 100}
+                                    strokeWidth={!isMobile ? 15 : 9}
                                     colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
                                     colorsTime={[
                                         (gameTime * 4) / 5,
@@ -314,7 +319,7 @@ const styles = StyleSheet.create({
         ...!isMobile && { marginVertical: 100, },
     },
     questionNumber: {
-        fontSize: !isMobile ? 30 : 25,
+        fontSize: !isMobile ? 30 : 17,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
