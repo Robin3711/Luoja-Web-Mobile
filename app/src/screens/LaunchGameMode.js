@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, TextInput, ScrollView, KeyboardAvoidingVie } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
@@ -67,7 +67,7 @@ export default function LaunchGameMode() {
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior={isMobile? 'padding' : 'height'}
         >
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View style={styles.view}>

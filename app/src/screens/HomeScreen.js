@@ -1,4 +1,4 @@
-import { View, Text,  StyleSheet, Image } from 'react-native';
+import { View, Text,  Dimensions, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SimpleButton from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';

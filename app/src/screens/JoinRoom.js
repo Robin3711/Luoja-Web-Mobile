@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Alert,  TextInput } from "react-native";
+import { Text, View, Dimensions, StyleSheet, Button, Alert,  TextInput } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import { getRoomId, hasToken } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";

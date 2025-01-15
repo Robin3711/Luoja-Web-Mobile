@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity,  Image } from 'react-native';
+import { View, Dimensions, StyleSheet, Text, TouchableOpacity,  Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { COLORS } from '../css/utils/color';
 import { downloadImage, downloadAudio } from '../utils/api';
@@ -104,7 +104,7 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
               const file = await downloadAudio(text);
               console.log(file);
               let url;
-              if (Platform.OS ==="web"){
+              if (!isMobile){
                 url = URL.createObjectURL(file);
                 setFile(url);
               } else {
@@ -181,32 +181,32 @@ const styles = StyleSheet.create({
         width: '75%',
         textAlign: 'center',
         color: 'white',
-        fontSize: platform === 'web' ? 25 : 18, // Adjust font size for mobile
+        fontSize: !isMobile ? 25 : 18, // Adjust font size for mobile
     },
     shapeStyles: {
         square: {
-            width: platform === 'web' ? 115 : 75,
-            height: platform === 'web' ? 115 : 75,
+            width: !isMobile ? 115 : 75,
+            height: !isMobile ? 115 : 75,
             borderRadius: 10,
             borderWidth: !isMobile ? 7 : 5,
         },
         circle: {
-            width: platform === 'web' ? 115 : 75,
-            height: platform === 'web' ? 115 : 75,
-            borderRadius: platform === 'web' ? 70 : 45,
-            borderWidth: platform === 'web' ? 7 : 5,
+            width: !isMobile ? 115 : 75,
+            height: !isMobile ? 115 : 75,
+            borderRadius: !isMobile ? 70 : 45,
+            borderWidth: !isMobile ? 7 : 5,
         },
     },
     Image: {
-        width: platform === 'web' ? 100 : 60, // Adjust size for mobile
-        height: platform === 'web' ? 100 : 60, // Adjust size for mobile
+        width: !isMobile ? 100 : 60, // Adjust size for mobile
+        height: !isMobile ? 100 : 60, // Adjust size for mobile
         resizeMode: 'cover',
     },
     button: {
         position: 'relative',
         backgroundColor: COLORS.button.blue.basic,
-        height: platform === 'web' ? 50 : 40, // Adjust size for mobile
-        width: platform === 'web' ? 100 : 80, // Adjust size for mobile
+        height: !isMobile ? 50 : 40, // Adjust size for mobile
+        width: !isMobile ? 100 : 80, // Adjust size for mobile
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,

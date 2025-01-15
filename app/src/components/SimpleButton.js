@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, StyleSheet,  Dimensions } from 'react-native';
+import { Text, TouchableOpacity,  StyleSheet , Dimensions } from 'react-native';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 

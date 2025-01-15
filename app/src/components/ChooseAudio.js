@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList,  StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList,  StyleSheet , Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import { uploadAudio, downloadAllAudios, downloadAudio, uploadImage } from '../utils/api';

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, Dimensions, StyleSheet, TouchableOpacity } from "react-native";
 import { hasToken, removeToken, toast } from "../utils/utils";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useEffect, useState, useCallback } from "react";
@@ -115,7 +115,7 @@ export default function Dashboard() {
             <View style={styles.dashboardView}>
                 <Text style={FONT.title}>Tableau de bord</Text>
                 <View style={styles.dashboardContainer}>
-                    {platform !== 'web' && (
+                    {!isMobile&& (
                         <TouchableOpacity
                             style={styles.toggleButton}
                             onPress={() => setShowHistory(!showHistory)}
@@ -125,7 +125,7 @@ export default function Dashboard() {
                             </Text>
                         </TouchableOpacity>
                     )}
-                    {(platform === 'web' || showHistory) && (
+                    {(!isMobile || showHistory) && (
                         <View style={styles.dashboardSection}>
                             <Text style={styles.dashboardText}>Historique</Text>
                             <View style={styles.buttonContainer}>
@@ -152,7 +152,7 @@ export default function Dashboard() {
                             </ScrollView>
                         </View>
                     )}
-                    {(platform === 'web' || !showHistory) && (
+                    {(!isMobile || !showHistory) && (
                         <View style={styles.dashboardSection}>
                             <Text style={styles.dashboardText}>Vos quiz publiés</Text>
                             <View style={styles.buttonContainer}>

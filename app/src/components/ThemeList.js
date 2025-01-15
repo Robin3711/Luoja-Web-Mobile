@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList,  StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList,  StyleSheet , Dimensions } from 'react-native';
 import { Dices } from 'lucide-react-native';
 import { COLORS } from '../css/utils/color';
 

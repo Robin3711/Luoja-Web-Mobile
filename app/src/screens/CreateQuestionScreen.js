@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Picker, ActivityIndicator } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, TextInput, Picker, ActivityIndicator } from 'react-native';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';

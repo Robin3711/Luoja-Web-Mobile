@@ -5,6 +5,7 @@ import { useFonts, LobsterTwo_400Regular, LobsterTwo_700Bold_Italic } from '@exp
 import Toast from 'react-native-toast-message';
 
 import { toastConfig } from './src/utils/utils';
+import { Dimensions } from 'react-native';
 
 import MenuTab from './src/components/MenuTab';
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from "react-native";
+import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
 import { joinRoom, joinTeam, startRoom } from "../utils/api";
@@ -9,6 +9,11 @@ import QRCode from "react-native-qrcode-svg";
 import { COLORS } from "../css/utils/color";
 import { FONT } from "../css/utils/font";
 import SimpleButton from "../components/SimpleButton"; // Import SimpleButton
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
+
 
 export default function Room() {
     const route = useRoute();
@@ -67,7 +72,7 @@ export default function Room() {
     return (
         <View style={styles.container}>
             <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
-            {Platform.OS === 'web' ? (
+            {!isMobile ? (
                 <View style={styles.qrCodeContainer}>
                     <QRCode
                         value={`${apiUrl}/room/${roomId}/join`}
@@ -158,7 +163,7 @@ const styles = StyleSheet.create({
     gameMode: {
         textAlign: 'center',
         marginBottom: 20,
-        maxWidth: Platform.OS === 'web' ? '100%' : 200,
+        maxWidth: !isMobile ? '100%' : 200,
     },
     playersContainer: {
         flexDirection: 'row',

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList,  StyleSheet, Image } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList,  Dimensions, StyleSheet, Image } from 'react-native';
 import { COLORS } from '../css/utils/color';
 import { uploadImage, downloadAllImages, downloadImage } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';

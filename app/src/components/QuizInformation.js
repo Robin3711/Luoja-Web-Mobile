@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity,  StyleSheet , Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { cloneQuiz, saveQuiz } from '../utils/api';
@@ -88,6 +88,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginHorizontal: 5,
         marginTop: 5,
-        ...isMobile && { height: isMobile ? 35 : 40 },
+        ...isMobile&& { height: isMobile ? 35 : 40 },
     },
 });

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
+import { View, TextInput, Dimensions, StyleSheet, Pressable, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import ChooseFile from './Choosefile';
 import ChooseAudio from './ChooseAudio';

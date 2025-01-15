@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, StyleSheet, ScrollView } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
@@ -7,6 +7,12 @@ import SimpleButton from '../components/SimpleButton';
 import { getRoomScores } from '../utils/api';
 
 import { FONT } from '../css/utils/font';
+
+
+const { width  , height} = Dimensions.get('window');
+const isMobile = width< height
+
+
 
 export default function EndScreen() {
     const route = useRoute();
