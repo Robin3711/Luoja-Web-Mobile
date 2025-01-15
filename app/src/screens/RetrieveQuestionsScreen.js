@@ -37,6 +37,7 @@ export default function RetrieveQuestions() {
     }
 
     return (
+        <GradientBackground>
         <View style={styles.screen}>
             <Text style={styles.title}>Importer des questions</Text>
             <View style={styles.list}>
@@ -55,6 +56,7 @@ export default function RetrieveQuestions() {
 
             </View>
         </View>
+        </GradientBackground>
     );
 }
 
@@ -65,7 +67,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: COLORS.background.blue,
     },
     title: {
         textAlign: 'center',

@@ -50,7 +50,9 @@ export default function EndScreen() {
         navigation.navigate("initMenu");
     };
 
-    return (error ? (
+    return (
+        <GradientBackground>
+        {error ? (
         <View style={styles.container}>
             <Text style={styles.errorText}>{errorMessage}</Text>
             <TouchableOpacity style={styles.button} onPress={() => {
@@ -106,7 +108,8 @@ export default function EndScreen() {
                 onPress={handleReturnHome}
             />
         </View>
-    )
+    )}
+    </GradientBackground>
     );
 }
 
@@ -121,7 +124,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: COLORS.background.blue,
     },
     parentContainer: {
         alignItems: 'center',

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet , Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 
@@ -33,44 +33,46 @@ export default function Login() {
     };
 
     return (
-        <View style={styles.loginView}>
-            <Text style={styles.pageTitle}>Connexion</Text>
+        <GradientBackground>
+            <View style={styles.loginView}>
+                <Text style={styles.pageTitle}>Connexion</Text>
 
-            <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
-            <View style={styles.nameInputView}>
-                <TextInput
-                    style={styles.loginInput}
-                    onChangeText={setName}
-                    value={name}
-                    placeholder="Nom d'utilisateur"
-                    autoFocus={true}
-                    returnKeyType="next"
-                    onSubmitEditing={() => {
-                        if (passwordInputRef.current) {
-                            passwordInputRef.current.focus();
-                        }
-                    }}
-                />
+                <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
+                <View style={styles.nameInputView}>
+                    <TextInput
+                        style={styles.loginInput}
+                        onChangeText={setName}
+                        value={name}
+                        placeholder="Nom d'utilisateur"
+                        autoFocus={true}
+                        returnKeyType="next"
+                        onSubmitEditing={() => {
+                            if (passwordInputRef.current) {
+                                passwordInputRef.current.focus();
+                            }
+                        }}
+                    />
+                </View>
+
+                <Text style={styles.inputTitle}>Mot de passe</Text>
+                <View style={styles.passwordInputView}>
+                    <TextInput
+                        ref={passwordInputRef}
+                        style={styles.loginInput}
+                        onChangeText={setPassword}
+                        value={password}
+                        placeholder="Mot de passe"
+                        secureTextEntry={true}
+                        returnKeyType="done"
+                        onSubmitEditing={handleLogin}
+                    />
+                </View>
+
+                <TouchableOpacity style={styles.buttons} onPress={handleLogin}>
+                    <Text style={styles.buttonText}>Se connecter</Text>
+                </TouchableOpacity>
             </View>
-
-            <Text style={styles.inputTitle}>Mot de passe</Text>
-            <View style={styles.passwordInputView}>
-                <TextInput
-                    ref={passwordInputRef}
-                    style={styles.loginInput}
-                    onChangeText={setPassword}
-                    value={password}
-                    placeholder="Mot de passe"
-                    secureTextEntry={true}
-                    returnKeyType="done"
-                    onSubmitEditing={handleLogin}
-                />
-            </View>
-
-            <TouchableOpacity style={styles.buttons} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Se connecter</Text>
-            </TouchableOpacity>
-        </View>
+        </GradientBackground>
     );
 }
 
@@ -81,7 +83,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     pageTitle: {
         display: 'flex',

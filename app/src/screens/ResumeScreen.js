@@ -62,6 +62,7 @@ export default function ResumeScreen() {
     };
 
     return (
+        <GradientBackground>
         <View style={styles.container}>
             <Text style={styles.title}>Reprenez votre partie</Text>
             <View style={styles.inputView}>
@@ -72,6 +73,7 @@ export default function ResumeScreen() {
             </View>
             <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
         </View>
+        </GradientBackground>
     );
 
 }
@@ -84,7 +86,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     title: {
         fontSize: 50,

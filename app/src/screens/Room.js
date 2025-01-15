@@ -106,6 +106,7 @@ export default function Room() {
 
 
     return (
+        <GradientBackground>
         <View style={styles.container}>
             <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
             {!isMobile ? (
@@ -196,6 +197,7 @@ export default function Room() {
                 />
             )}
         </View>
+        </GradientBackground>
     );
 }
 
@@ -205,7 +207,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 20,
-        backgroundColor: COLORS.background.blue,
         gap: 20,
     },
     title: {

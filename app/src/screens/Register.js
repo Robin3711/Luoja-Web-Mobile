@@ -31,6 +31,7 @@ export default function Register() {
     };
 
     return (
+        <GradientBackground>
         <View style={styles.registerView}>
             <Text style={styles.pageTitle}>Inscription</Text>
 
@@ -70,6 +71,7 @@ export default function Register() {
                 <Text style={styles.buttonText}>S'inscrire</Text>
             </TouchableOpacity>
         </View>
+        </GradientBackground>
     );
 }
 
@@ -80,7 +82,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     pageTitle: {
         display: 'flex',

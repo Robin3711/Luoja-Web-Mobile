@@ -68,6 +68,7 @@ export default function JoinGame() {
   }
 
   return (
+    <GradientBackground>
     <View style={styles.container}>
       {isMobile && scanned === false && (
         <CameraView
@@ -103,6 +104,7 @@ export default function JoinGame() {
       )}
 
     </View>
+    </GradientBackground>
   );
 }
 
@@ -114,7 +116,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: COLORS.background.blue,
   },
   title: {
     fontSize: 50,

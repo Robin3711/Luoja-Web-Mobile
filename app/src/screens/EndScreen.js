@@ -77,7 +77,9 @@ export default function EndScreen() {
         }
     };
 
-    return (error ? (
+    return (
+        <GradientBackground>
+        {error ? (
         <View style={styles.container}>
             <Text style={styles.errorText}>{errorMessage}</Text>
             <TouchableOpacity style={styles.button} onPress={() => {
@@ -127,7 +129,8 @@ export default function EndScreen() {
                 onPress={handleReplay}
             />
         </View>
-    )
+    )}
+    </GradientBackground>
     );
 }
 
@@ -144,7 +147,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#f0f0f0',
-        backgroundColor: COLORS.background.blue,
     },
     parentContainer: {
         alignItems: 'center',

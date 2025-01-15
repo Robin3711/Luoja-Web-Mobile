@@ -8,6 +8,7 @@ import { createGame, createRoom } from '../utils/api';
 import { toast } from '../utils/utils';
 import { FONT } from '../css/utils/font';
 import GradientBackground from '../css/utils/linearGradient';
+import { G } from 'react-native-svg';
 
 const { width  , height} = Dimensions.get('window');
 const isMobile = width< height
@@ -65,6 +66,7 @@ export default function LaunchGameMode() {
     };
 
     return (
+        <GradientBackground>
         <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={isMobile? 'padding' : 'height'}
@@ -129,6 +131,7 @@ export default function LaunchGameMode() {
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>
+        </GradientBackground>
     );
 }
 
@@ -142,7 +145,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: COLORS.background.blue,
         width: '100%',
     },
     container: {

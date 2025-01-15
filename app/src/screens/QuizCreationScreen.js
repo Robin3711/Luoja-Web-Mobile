@@ -279,6 +279,7 @@ export default function QuizCreation() {
     };
 
     return (
+        <GradientBackground>
         <View style={styles.quizCreationView}>
             <Text style={styles.title}>Créez votre propre quiz !</Text>
             <View style={styles.quizCreationChildVIew}>
@@ -332,6 +333,7 @@ export default function QuizCreation() {
                 </TouchableOpacity>
             </View>
         </View>
+        </GradientBackground>
     );
 }
 
@@ -340,7 +342,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#EEF8FF',
         flexDirection: 'column',
     },
     title: {

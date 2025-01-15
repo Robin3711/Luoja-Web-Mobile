@@ -254,7 +254,8 @@ export default function QuizScreen() {
     };
 
     return (
-        !error ? (
+        <GradientBackground>
+        {!error ? (
             <View style={styles.quizScreenView}>
                 {currentQuestion ? (
                     <>
@@ -329,7 +330,8 @@ export default function QuizScreen() {
                 <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
 
             </View>
-        )
+        )}
+        </GradientBackground>
 
     );
 }
@@ -341,7 +343,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     gameId: {
         position: 'absolute',

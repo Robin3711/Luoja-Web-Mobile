@@ -67,7 +67,10 @@ export default function Account() {
     }
     else {
         return (
+                    <GradientBackground>
+            
             error ? (
+                
                 <View style={styles.quizScreenView}>
                     <Text style={FONT.error}>{errorMessage}</Text>
                     <TouchableOpacity onPress={() => {
@@ -87,7 +90,9 @@ export default function Account() {
                     </View>
                 </View>
             )
+                </GradientBackground>
         );
+        
     }
 }
 
@@ -99,7 +104,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     appTitle: {
         height: !isMobile ? '10%' : '25%',
