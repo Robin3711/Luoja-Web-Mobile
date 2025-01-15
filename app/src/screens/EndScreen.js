@@ -16,8 +16,6 @@ export default function EndScreen() {
 
     const { score, numberOfQuestions, gameId } = route.params;
 
-    const [category, setCategory] = useState(null);
-    const [difficulty, setDifficulty] = useState(null);
     const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -34,8 +32,6 @@ export default function EndScreen() {
 
                 const infos = await getGameInfos(gameId);
 
-                setCategory(infos.quizCategory !== 0 ? themeOptions.find(option => option.value === infos.quizCategory)?.label : "any");
-                setDifficulty(infos.quizDifficulty);
                 setLoading(false);
                 setGameMode(infos.gameMode);
                 if (infos.gameMode === null) {
@@ -92,8 +88,6 @@ export default function EndScreen() {
             <View style={styles.container}>
                 <View style={styles.parentContainer}>
                     <Text style={FONT.title}>Fin de partie !</Text>
-                    <Text style={FONT.text}>Récapitulatif de la partie :</Text>
-                    <Text style={FONT.text}>Catégorie : {category} | difficulté : {difficulty}</Text>
                     {score !== null && numberOfQuestions !== null ? (
                         <View style={styles.scoreContainer}>
                             <Text style={styles.scoreTitle}>
