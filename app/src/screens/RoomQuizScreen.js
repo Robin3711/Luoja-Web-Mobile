@@ -121,6 +121,12 @@ const goodSound = require('../../assets/goodAnswerSound.mp3');
         switch (data.eventType) {
             case "quizInfos":
                 setTotalQuestion(data.totalQuestion);
+
+                if  (data.currentQuestion)
+                {
+                    setQuestionNumber(data.currentQuestion+1);
+                    setScore(data.score);
+                }
                 break;
             case "nextQuestion":
                 handleNewQuestion();
