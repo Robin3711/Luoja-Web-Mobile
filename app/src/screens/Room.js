@@ -73,12 +73,12 @@ export default function Room() {
         const connect = async () => {
             try {
 
-                if(! await hasToken()){
-                    navigation.navigate('initMenu', { screen: 'account', params: {roomId: roomId} });
+                if (! await hasToken()) {
+                    navigation.navigate('initMenu', { screen: 'account', params: { roomId: roomId } });
                 }
-                else{
+                else {
                     const source = await joinRoom(roomId);
-                    
+
                     eventSource = source;
 
                     eventSource.addEventListener('message', handleEvent);
@@ -264,8 +264,8 @@ const styles = StyleSheet.create({
     teamPlayersContainer: {
         flexDirection: 'column',
         alignItems: 'center',
-        height: 150,
-        overflow: 'scroll',
+        height: !isMobile ? "25%" : null,
+        overflow: 'auto',
     },
     qrCodeButton: {
         position: 'absolute',
