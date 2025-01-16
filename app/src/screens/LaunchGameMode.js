@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Dimensions, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import ChoiseSelector from '../components/ChoicePicker';
@@ -8,7 +8,6 @@ import { createGame, createRoom } from '../utils/api';
 import { toast } from '../utils/utils';
 import { FONT } from '../css/utils/font';
 import GradientBackground from '../css/utils/linearGradient';
-import { G } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height
@@ -165,6 +164,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        height: isMobile ? null : "100%"
     },
     view: {
         flex: 1,

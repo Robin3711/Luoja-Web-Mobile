@@ -51,6 +51,6 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
     tintColor: COLORS.palette.blue.light,
-    opacity: 0.35 ,
+    opacity: 0.35,
   },
 });

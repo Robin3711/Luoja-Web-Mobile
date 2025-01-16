@@ -192,7 +192,7 @@ export default function CreateQuestionScreen() {
     );
 
     return (
-        <GradientBackground showLogo={true}>
+        <GradientBackground>
             <View style={styles.createQuestionView}>
                 {/* Left Panel */}
                 <View style={styles.createQuestionLeftView}>
@@ -261,8 +261,8 @@ const styles = StyleSheet.create({
     createQuestionView: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        width: '100%',
-        height: '100%',
+        width: '100vw',
+        height: '100vh',
     },
     createQuestionLeftView: {
         flexDirection: 'column',

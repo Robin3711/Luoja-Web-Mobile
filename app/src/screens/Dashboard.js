@@ -13,7 +13,7 @@ import { FONT } from "../css/utils/font";
 import GradientBackground from '../css/utils/linearGradient';
 
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height
+const isMobile = width < height;
 
 
 export default function Dashboard() {
@@ -102,7 +102,7 @@ export default function Dashboard() {
     };
 
     return (
-        <GradientBackground showLogo={true}>
+        <GradientBackground>
             {
                 error ? (
                     <View style={styles.dashboardView}>

@@ -36,7 +36,6 @@ const isMobile = width < height
 
 export const iconSize = !isMobile ? 30 : 18;
 
-
 let apiUrl = null;
 
 export async function getPlatformAPI() {

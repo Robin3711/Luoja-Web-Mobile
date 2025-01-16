@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import { getGameInfos, createGame } from '../utils/api';
+import { getGameInfos } from '../utils/api';
 import { toast } from '../utils/utils';
 import { formatReadableDate } from '../utils/utils';
 import { useNavigation } from '@react-navigation/native';

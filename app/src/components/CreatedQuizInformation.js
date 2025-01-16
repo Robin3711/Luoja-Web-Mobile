@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
-import { createGame, getQuizAverage } from '../utils/api';
+import { getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from './SimpleButton';
 import { FONT } from '../css/utils/font';
-
-
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height
@@ -45,7 +43,7 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
     }, [category, status, quizId, date, nbQuestions]);
 
     if (loading) {
-        return <Text style={FONT.text}>Chargement...</Text>;
+        return <Text style={FONT.button}>Chargement...</Text>;
     }
 
     const isDraft = status === false;

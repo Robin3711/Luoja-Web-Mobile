@@ -146,10 +146,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     touchableOpacity: {
-        padding: !isMobile ? 8 : 0,
+        padding: !isMobile ? 6 : 0,
         backgroundColor: COLORS.button.blue.circle.normal,
         borderRadius: 10,
-        width: isMobile ? 60 : 100,
+        width: isMobile ? 60 : 90,
         justifyContent: 'center',
         alignItems: 'center',
         height: isMobile ? 30 : 40,

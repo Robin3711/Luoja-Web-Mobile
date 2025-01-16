@@ -85,9 +85,9 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
         const isImage = type === 'image';
         switch (shape) {
             case 'SQUARE':
-                return <View style={[styles.shapeStyles.square, { backgroundColor: shapeColor || "#c0e6ff", borderColor: borderColor || "#09649f", width: isImage ? (!isMobile ? 75 : 45) : (!isMobile ? 115 : 75), height: isImage ? (!isMobile ? 75 : 45)  : (!isMobile ? 115 : 75) }]} />;
+                return <View style={[styles.shapeStyles.square, { backgroundColor: shapeColor || "#c0e6ff", borderColor: borderColor || "#09649f", width: isImage ? (!isMobile ? 75 : 45) : (!isMobile ? 115 : 75), height: isImage ? (!isMobile ? 75 : 45) : (!isMobile ? 115 : 75) }]} />;
             case 'CIRCLE':
-                return <View style={[styles.shapeStyles.circle, { backgroundColor: shapeColor || "#7577af", borderColor: borderColor || "#212248", width: isImage ? (!isMobile ? 75 : 45) : (!isMobile ? 115 : 75), height: isImage ? (!isMobile ? 75 : 45)  : (!isMobile ? 115 : 75) }]} />;
+                return <View style={[styles.shapeStyles.circle, { backgroundColor: shapeColor || "#7577af", borderColor: borderColor || "#212248", width: isImage ? (!isMobile ? 75 : 45) : (!isMobile ? 115 : 75), height: isImage ? (!isMobile ? 75 : 45) : (!isMobile ? 115 : 75) }]} />;
             case 'TRIANGLE':
                 return <Triangle shapeColor={shapeColor} borderColor={borderColor} isImage={isImage} />;
             case 'STAR':
@@ -108,7 +108,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
     useImperativeHandle(ref, () => ({
         stopAudio: async () => {
 
-            if (sound.current) {    
+            if (sound.current) {
                 await sound.current.stopAsync();
             }
         }
@@ -260,7 +260,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
     const animatedStyle = useAnimatedStyle(() => {
         const rotate = interpolate(rotation.value, [0, 1], [-1.5, 1.5]);
         const translate = interpolate(translation.value, [0, 1], [-25, 25]);
-        
+
         return {
             transform: [
                 { rotate: `${rotate}deg` },
@@ -274,7 +274,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
     // ** JSX **
 
     return (
-        <Animated.View style={[styles.animatedContainer, animatedStyle, { flexDirection: type === 'image' ? 'row' : 'column', flexWrap: type === 'image'? 'wrap' : (!isMobile? 'wrap' : 'nowrap') , width: type === 'image' ? '45%' : '95%' }]}>
+        <Animated.View style={[styles.animatedContainer, animatedStyle, { flexDirection: type === 'image' ? 'row' : 'column', flexWrap: type === 'image' ? 'wrap' : (!isMobile ? 'wrap' : 'nowrap'), width: type === 'image' ? '45%' : '95%' }]}>
             <TouchableOpacity
                 onPress={() => onClick(text)}
                 style={[
@@ -282,12 +282,12 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
                     {
                         backgroundColor: answerColors[color] || backgroundColors[shape],
                         borderColor: 'black', borderWidth: color === 'BLUE' ? 7 : 0,
-                        height: type === 'image' ? (!isMobile ? 300 : 160) : (!isMobile ? 160 : 80),
+                        height: type === 'image' ? (!isMobile ? 300 : 160) : (!isMobile ? 140 : 80),
                         width: color === 'BLUE' ? '90%' : '95%',
                         marginVertical: color === 'BLUE' ? 10 : 5,
                         justifyContent: type === 'image' ? 'center' : 'start',
                     },
-        ]}
+                ]}
             >
                 {type === 'image' && (
                     <View style={styles.shapeContainer}>
@@ -305,13 +305,13 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
                     />
                 )}
                 {type === "audio" && (
-                    <View style={{ flexDirection: 'row', gap:30, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flexDirection: 'row', gap: 30, justifyContent: 'center', alignItems: 'center' }}>
                         <Image source={require('../../assets/speaker.png')} style={{ width: 75, height: 75, display: !isMobile ? 'none' : 'none' }} />
                         <TouchableOpacity onPress={playSound} style={styles.button}>
-                            <Text style={[styles.text, {textAlign: 'center'}]}>Play</Text>
+                            <Text style={[styles.text, { textAlign: 'center' }]}>Play</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={async () => { sound.current.stopAsync() }} style={styles.button}>
-                            <Text style={[styles.text, {textAlign: 'center'}]}>Stop</Text>
+                            <Text style={[styles.text, { textAlign: 'center' }]}>Stop</Text>
                         </TouchableOpacity>
                     </View>
                 )}
@@ -350,8 +350,8 @@ const styles = StyleSheet.create({
     },
     shapeContainer: {
         position: 'absolute',
-        top:10,
-        left:10,
+        top: 10,
+        left: 10,
         zIndex: 1,
     },
     shapeStyles: {

@@ -11,9 +11,7 @@ import GradientBackground from '../css/utils/linearGradient';
 
 
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height
-
-
+const isMobile = width < height;
 
 export default function EndScreen() {
     const route = useRoute();
@@ -51,7 +49,7 @@ export default function EndScreen() {
     };
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             {error ? (
                 <View style={styles.container}>
                     <Text style={styles.errorText}>{errorMessage}</Text>
@@ -84,7 +82,6 @@ export default function EndScreen() {
                                         </View>
                                     ) : (
                                         <View>
-
                                             {scores.map((score, index) => (
                                                 <View key={index} style={styles.team}>
                                                     <Text style={FONT.subTitle}>
@@ -108,7 +105,7 @@ export default function EndScreen() {
                         )}
                     </View>
 
-                    
+
                 </ScrollView>
             )}
         </GradientBackground>

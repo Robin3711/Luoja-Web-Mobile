@@ -3,10 +3,8 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Slider from '@react-native-assets/slider';
 import { FONT } from '../css/utils/font';
 
-
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height
-
+const isMobile = width < height;
 
 const RangeCursor = ({ value, onValueChange }) => {
   const [sliderValue, setSliderValue] = useState(value);

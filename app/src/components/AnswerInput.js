@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, TextInput, Dimensions, StyleSheet, Pressable, Image } from 'react-native';
+import { View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import ChooseFile from './Choosefile';
 import ChooseAudio from './ChooseAudio';
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: 125,
+        height: 115,
         paddingHorizontal: 20,
         borderRadius: 25,
         boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Modal, Platform } from "react-native";
+import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
@@ -15,9 +15,7 @@ import SimpleButton from "../components/SimpleButton";
 import { toast } from "../utils/utils";
 
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height
-
-const platform = Platform.OS;
+const isMobile = width < height;
 
 
 export default function Room() {
@@ -77,8 +75,8 @@ export default function Room() {
         const connect = async () => {
             try {
 
-                if  (! await hasToken())  {
-                    navigation.navigate('initMenu', { screen: 'account', params: {  roomId: roomId  } });
+                if (! await hasToken()) {
+                    navigation.navigate('initMenu', { screen: 'account', params: { roomId: roomId } });
                 }
                 else {
                     const userInfo = await getUserInfos();

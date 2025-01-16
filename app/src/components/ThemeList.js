@@ -5,10 +5,8 @@ import { COLORS } from '../css/utils/color';
 
 import { themeOptions, iconSize } from '../utils/utils';
 
-
-
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height
+const isMobile = width < height;
 
 
 const ThemeSelector = ({ onValueChange }) => {

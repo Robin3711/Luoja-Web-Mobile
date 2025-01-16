@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Text, View, Platform, Dimensions, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
@@ -62,7 +62,7 @@ export default function SearchScreen() {
     }
 
     return (
-        <GradientBackground showLogo={true}>
+        <GradientBackground>
             {error ? (
                 <View style={styles.screen}>
                     <Text style={styles.errorText}>{errorMessage}</Text>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         width: '90%',
-        height: '80%',
+        height: '80vh',
         marginTop: !isMobile ? 20 : 0,
     },
     filterView: {

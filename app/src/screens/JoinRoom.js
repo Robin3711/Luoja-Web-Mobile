@@ -13,7 +13,6 @@ const { width, height } = Dimensions.get('window');
 const isMobile = width < height
 const platform = Platform.OS;
 
-
 export default function JoinGame() {
   const [roomId, setRoomId] = useState('');
   const [hasPermission, setHasPermission] = useState(null);
@@ -79,7 +78,7 @@ export default function JoinGame() {
   }
 
   return (
-    <GradientBackground showLogo={true}>
+    <GradientBackground>
       <View style={styles.container}>
         {platform === "android" && scanned === false && (
           <CameraView

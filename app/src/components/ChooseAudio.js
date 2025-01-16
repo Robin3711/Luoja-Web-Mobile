@@ -8,7 +8,7 @@ import { toast } from '../utils/utils';
 
 
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height
+const isMobile = width < height;
 
 
 const ChooseAudio = ({ onValueChange }) => {

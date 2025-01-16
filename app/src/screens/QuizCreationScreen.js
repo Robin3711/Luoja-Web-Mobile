@@ -16,12 +16,8 @@ import { FONT } from '../css/utils/font';
 
 import GradientBackground from '../css/utils/linearGradient';
 
-
-
-
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height
-
+const isMobile = width < height;
 
 export default function QuizCreation() {
 
@@ -279,7 +275,7 @@ export default function QuizCreation() {
     };
 
     return (
-        <GradientBackground showLogo={true}>
+        <GradientBackground>
             <View style={styles.quizCreationView}>
                 <Text style={styles.title}>Créez votre propre quiz !</Text>
                 <View style={styles.quizCreationChildVIew}>
