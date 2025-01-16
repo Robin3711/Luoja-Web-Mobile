@@ -11,11 +11,11 @@ import { toast } from '../utils/utils';
 import ConfettiContainer from '../components/ConfettiSystem';
 import { Audio } from 'expo-av';
 
-import { SimpleButton } from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
 import GradientBackground from '../css/utils/linearGradient';
+import SimpleButton from '../components/SimpleButton';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height;
@@ -73,7 +73,6 @@ export default function QuizScreen() {
             try {
                 setLoading(true);
                 const infos = await getGameInfos(gameId);
-
                 refreshData(infos);
             } catch (err) {
                 setError(true);
@@ -188,7 +187,7 @@ export default function QuizScreen() {
                     setAnimation('win');
                     updateScore();
                 }
-                else{
+                else {
                     setAnimation('lose');
                 }
             }
@@ -374,9 +373,7 @@ export default function QuizScreen() {
             ) : (
                 <View style={styles.quizScreenView}>
                     <Text style={styles.errorText}>{errorMessage}</Text>
-
                     <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
-
                 </View>
             )}
         </GradientBackground>
