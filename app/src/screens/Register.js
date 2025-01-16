@@ -35,7 +35,7 @@ export default function Register() {
             }
             await userRegister(name, password);
             toast('success', "Enregistrement réussie !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, COLORS.toast.green);
-            if( route.params ){
+            if( route.params && roomId != null ){
                 navigation.navigate('room', { roomId: roomId });
             }
             else{

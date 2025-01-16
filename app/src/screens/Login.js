@@ -27,7 +27,7 @@ export default function Login() {
         try {
             await userLogin(name, password);
             toast('success', "Connexion réussie !", `Bienvenue ${name}`, 3000, COLORS.toast.green);
-            if( route.params ){
+            if( route.params && roomId != null ){
                 navigation.navigate('room', { roomId: roomId });
             }
             else{
