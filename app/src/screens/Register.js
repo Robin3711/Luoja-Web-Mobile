@@ -61,12 +61,6 @@ export default function Register() {
 
     return (
         <GradientBackground showLogo={true}>
-            <View style={styles.imageContainer}>
-                <Image
-                    source={require('../../assets/LogoLuojaRepete.png')}
-                    style={styles.image}
-                />
-            </View>
             <View style={styles.registerView}>
                 <Text style={[FONT.title, { marginBottom: !isMobile ? 70 : 15 }]}>Inscription</Text>
 
