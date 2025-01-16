@@ -68,6 +68,8 @@ export default function RoomQuizScreen() {
     const [timerKey, setTimerKey] = useState(0);
     const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
 
+    const [animation, setAnimation] = useState('none');
+
     const confettiRef = useRef();
 
     useEffect(() => {
@@ -189,11 +191,15 @@ export default function RoomQuizScreen() {
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
             if (correctAnswerFromApi === selectedAnswer) {
-                updateScore();
                 confettiRef.current.startConfetti();
+                setAnimation('win');
+                updateScore();
             } else if (gameMode === "scrum") {
                 setMessage("En attente des autres joueurs...");
             }
+            else{
+                setAnimation('lose');
+            } 
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -314,6 +320,7 @@ export default function RoomQuizScreen() {
                                                 color={getAnswerColor(answer)}
                                                 type={currentQuestion.type}
                                                 disabled={isAnswered}
+                                                animation={animation}
                                             />
                                         )
                                     ))}
