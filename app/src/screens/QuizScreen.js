@@ -188,6 +188,9 @@ export default function QuizScreen() {
                     setAnimation('win');
                     updateScore();
                 }
+                else{
+                    setAnimation('lose');
+                }
             }
             setTimerInitialized(false);
         } catch (err) {

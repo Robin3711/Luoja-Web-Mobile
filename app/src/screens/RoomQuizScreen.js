@@ -68,6 +68,8 @@ export default function RoomQuizScreen() {
     const [timerKey, setTimerKey] = useState(0);
     const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
 
+    const [animation, setAnimation] = useState('none');
+
     const confettiRef = useRef();
 
     useEffect(() => {
@@ -189,8 +191,12 @@ export default function RoomQuizScreen() {
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
             if (correctAnswerFromApi === selectedAnswer) {
-                updateScore();
                 confettiRef.current.startConfetti();
+                setAnimation('win');
+                updateScore();
+            }
+            else{
+                setAnimation('lose');
             }
         } catch (err) {
             setError(true);
@@ -312,6 +318,7 @@ export default function RoomQuizScreen() {
                                                 color={getAnswerColor(answer)}
                                                 type={currentQuestion.type}
                                                 disabled={isAnswered}
+                                                animation={animation}
                                             />
                                         )
                                     ))}
