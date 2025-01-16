@@ -11,6 +11,7 @@ import GradientBackground from '../css/utils/linearGradient';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height
+const platform = Platform.OS;
 
 
 export default function JoinGame() {
@@ -32,7 +33,7 @@ export default function JoinGame() {
       setHasPermission(status === "granted");
     };
 
-    if (isMobile) {
+    if (platform === "android") {
       getCameraPermissions();
     }
   }, []);
@@ -70,10 +71,10 @@ export default function JoinGame() {
 
   };
 
-  if (hasPermission === null && isMobile) {
+  if (hasPermission === null && platform === "android") {
     return <Text>Requesting for camera permission</Text>;
   }
-  if (hasPermission === false && isMobile) {
+  if (hasPermission === false && platform === "android") {
     return <Text>No access to camera</Text>;
   }
 
@@ -86,7 +87,7 @@ export default function JoinGame() {
         />
       </View>
       <View style={styles.container}>
-        {isMobile && scanned === false && (
+        {platform==="android" && scanned === false && (
           <CameraView
             onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
             barcodeScannerSettings={{
