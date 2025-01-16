@@ -7,10 +7,11 @@ import SimpleButton from '../components/SimpleButton';
 import { getRoomScores } from '../utils/api';
 
 import { FONT } from '../css/utils/font';
+import GradientBackground from '../css/utils/linearGradient';
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 
@@ -49,63 +50,66 @@ export default function EndScreen() {
         navigation.navigate("initMenu");
     };
 
-    return (error ? (
-        <View style={styles.container}>
-            <Text style={styles.errorText}>{errorMessage}</Text>
-            <TouchableOpacity style={styles.button} onPress={() => {
-                navigation.navigate('initMenu')
-            }
-            }>
-                <Text style={styles.buttonText}>Retour au menu</Text>
-            </TouchableOpacity>
-        </View>
-    ) : (
-        <View style={styles.container}>
-            <View style={styles.parentContainer}>
-                <Text style={[styles.title, {marginBottom:100}]}>Fin de partie !</Text>
-                {scores !== null ? (
-                    <ScrollView style={styles.scoreContainer}>
-                        <Text style={styles.scoreTitle}>Scores :</Text>
-                        <ScrollView style={styles.scoreContainer}>
-                            {gameMode === "scrum" ? (
-                                <View style={styles.scrumContainer}>
-                                    {scores.map((score, index) => (
-                                        <Text key={index} style={styles.text}>
-                                            {score.userName} : {score.score}
-                                        </Text>
-                                    ))}
-                                </View>
-                            ) : (
-                                <ScrollView horizontal style={styles.teamsContainer}>
-                                    {scores.map((score, index) => (
-                                        <View key={index} style={styles.team}>
-                                            <Text style={FONT.subTitle}>
-                                                {score.teamName} : {score.averageScore}
-                                            </Text>
-                                            <ScrollView style={styles.teamPlayersContainer}>
-                                                {score.players.map((player, playerIndex) => (
-                                                    <Text key={playerIndex} style={styles.text}>
-                                                        {player.userName} : {player.score}
-                                                    </Text>
-                                                ))}
-                                            </ScrollView>
-                                        </View>
-                                    ))}
-                                </ScrollView>
-                            )}
-                        </ScrollView>
-                    </ScrollView>
-                ) : (
-                    <Text>Chargement du score...</Text>
-                )}
+    return (
+        <GradientBackground>
+            {error ? (
+            <View style={styles.container}>
+                <Text style={styles.errorText}>{errorMessage}</Text>
+                <TouchableOpacity style={styles.button} onPress={() => {
+                    navigation.navigate('initMenu')
+                }
+                }>
+                    <Text style={styles.buttonText}>Retour au menu</Text>
+                </TouchableOpacity>
             </View>
+        ) : (
+            <View style={styles.container}>
+                <View style={styles.parentContainer}>
+                    <Text style={[styles.title, { marginBottom: 100 }]}>Fin de partie !</Text>
+                    {scores !== null ? (
+                        <ScrollView style={styles.scoreContainer}>
+                            <Text style={styles.scoreTitle}>Scores :</Text>
+                            <ScrollView style={styles.scoreContainer}>
+                                {gameMode === "scrum" ? (
+                                    <View style={styles.scrumContainer}>
+                                        {scores.map((score, index) => (
+                                            <Text key={index} style={styles.text}>
+                                                {score.userName} : {score.score}
+                                            </Text>
+                                        ))}
+                                    </View>
+                                ) : (
+                                    <ScrollView horizontal style={styles.teamsContainer}>
+                                        {scores.map((score, index) => (
+                                            <View key={index} style={styles.team}>
+                                                <Text style={FONT.subTitle}>
+                                                    {score.teamName} : {score.averageScore}
+                                                </Text>
+                                                <ScrollView style={styles.teamPlayersContainer}>
+                                                    {score.players.map((player, playerIndex) => (
+                                                        <Text key={playerIndex} style={styles.text}>
+                                                            {player.userName} : {player.score}
+                                                        </Text>
+                                                    ))}
+                                                </ScrollView>
+                                            </View>
+                                        ))}
+                                    </ScrollView>
+                                )}
+                            </ScrollView>
+                        </ScrollView>
+                    ) : (
+                        <Text>Chargement du score...</Text>
+                    )}
+                </View>
 
-            <SimpleButton
-                text="Retourner au menu"
-                onPress={handleReturnHome}
-            />
-        </View>
-    )
+                <SimpleButton
+                    text="Retourner au menu"
+                    onPress={handleReturnHome}
+                />
+            </View>
+        )}
+    </GradientBackground>
     );
 }
 
@@ -120,11 +124,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: COLORS.background.blue,
     },
     parentContainer: {
         alignItems: 'center',
-        margin: 20,
+        margin: !isMobile ? 20 : 10,
         width: '100%',
     },
     scoreContainer: {
@@ -132,7 +135,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         overflow: 'scroll',
         margin: 20,
-        
+
     },
     scrumContainer: {
         flexDirection: 'column', // Les éléments sont empilés verticalement
@@ -165,10 +168,10 @@ const styles = StyleSheet.create({
         overflow: 'scroll',
     },
     title: {
-        top: 30,
+        top: !isMobile ? 30 : 60,
         textAlign: 'center',
         color: COLORS.text.blue.dark,
-        fontSize: 50,
+        fontSize: !isMobile ? 50 : 30,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         width: '100%',
         marginBottom: '25%',
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
         overflow: 'scroll',
     },
     scoreTitle: {
-        fontSize: 50,
+        fontSize: !isMobile ? 50 : 30,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
     },

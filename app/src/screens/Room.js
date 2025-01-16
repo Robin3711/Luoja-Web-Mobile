@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from "react-native";
+import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
+import GradientBackground from '../css/utils/linearGradient';
 
 import { joinRoom, joinTeam, startRoom } from "../utils/api";
 import { getPlatformAPI } from "../utils/utils";
@@ -13,8 +14,8 @@ import { FONT } from "../css/utils/font";
 import SimpleButton from "../components/SimpleButton";
 import { toast } from "../utils/utils";
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 
@@ -64,7 +65,7 @@ export default function Room() {
 
     const handleCopyRoomId = async () => {
         await Clipboard.setStringAsync(roomId);
-        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.blue);
+        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.text.blue);
     };
 
     useEffect(() => {
@@ -79,7 +80,7 @@ export default function Room() {
 
                 eventSource.addEventListener('error', (err) => {
                     console.error("Erreur EventSource :", err);
-                    toast("error", "Vous ne pouvez pas rejoindre cette partie", '', 3000, COLORS.toast.red);
+                    toast("error", "Vous ne pouvez pas rejoindre cette partie", '', 3000, COLORS.toast.text.red);
                     navigation.navigate("initMenu");
                 });
 
@@ -87,13 +88,12 @@ export default function Room() {
                 const url = await getPlatformAPI();
                 setApiUrl(url);
             } catch (error) {
-                toast("error", error.status || 500, error.message || "Une erreur est survenue", 3000, COLORS.toast.red);
+                toast("error", error.status || 500, error.message || "Une erreur est survenue", 3000, COLORS.toast.text.red);
                 navigation.navigate("initMenu");
             }
         };
 
         connect();
-
 
         return () => {
             if (eventSource) {
@@ -102,99 +102,115 @@ export default function Room() {
         };
     }, [roomId]);
 
-
-
     return (
-        <View style={styles.container}>
-            <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
-            {!isMobile ? (
-                <View style={styles.qrCodeContainer}>
-                    <QRCode
-                        value={`https://luoja.fr/room?roomId=${roomId}`}
-                        size={200}
-                        color={COLORS.palette.blue.darker}
-                        backgroundColor="white"
-                    />
-                    <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
-                        <Copy size={24} color="black" />
-                        <Text style={[FONT.text, styles.title]}>Room {roomId}</Text>
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <>
-                    <TouchableOpacity style={styles.qrCodeButton} onPress={() => setModalVisible(true)}>
-                        <Text style={FONT.text}>QR Code</Text>
-                    </TouchableOpacity>
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => setModalVisible(false)}
-                    >
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
-                                <QRCode
-                                    value={`${apiUrl}/room/${roomId}/join`}
-                                    size={200}
-                                    color={COLORS.palette.blue.darker}
-                                    backgroundColor="white"
-                                />
-                                <Text style={[FONT.text, styles.title]}>Room {roomId}</Text>
-                                <SimpleButton
-                                    text="Close"
-                                    onPress={() => setModalVisible(false)}
-                                    color={COLORS.button.blue.basic}
-                                />
+        <GradientBackground>
+            <View style={styles.container}>
+                <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
+                {!isMobile ? (
+                    <View style={styles.qrCodeContainer}>
+                        <QRCode
+                            value={`https://luoja.fr/room?roomId=${roomId}`}
+                            size={200}
+                            color={COLORS.palette.blue.darker}
+                            backgroundColor="white"
+                        />
+                        <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
+                            <Copy size={24} color="black" />
+                            <Text style={FONT.text}>Room : {roomId}</Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : (
+                    <>
+                        <TouchableOpacity style={styles.qrCodeButton} onPress={() => setModalVisible(true)}>
+                            <Text style={FONT.text}>QR Code</Text>
+                        </TouchableOpacity>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalVisible}
+                            onRequestClose={() => setModalVisible(false)}
+                        >
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modalContent}>
+                                    <QRCode
+                                        value={`${apiUrl}/room/${roomId}/join`}
+                                        size={200}
+                                        color={COLORS.palette.blue.darker}
+                                        backgroundColor="white"
+                                    />
+                                    <TouchableOpacity onPress={handleCopyRoomId} style={styles.roomId}>
+                                        <Copy size={24} color="black" />
+                                        <Text style={[FONT.text, styles.title]}>Room : {roomId}</Text>
+                                    </TouchableOpacity>
+                                    <SimpleButton
+                                        text="Close"
+                                        onPress={() => setModalVisible(false)}
+                                        color={COLORS.button.blue.basic}
+                                    />
+                                </View>
+                            </View>
+                        </Modal>
+                    </>
+                )}
+                <Text style={FONT.subTitle}>Joueurs :</Text>
+                <ScrollView horizontal style={styles.playersContainer}>
+                    {players.map((player) => (
+                        <Text key={player} style={FONT.text}>  {player}  </Text>
+                    ))}
+                </ScrollView>
+                <ScrollView horizontal style={styles.teamsContainer}>
+                    {gameMode === "team" && teams.map((team, index) => (
+                        <View key={index} style={styles.team}>
+                            <Text style={FONT.subTitle}>{team.name}</Text>
+                            <SimpleButton
+                                text="Rejoindre"
+                                onPress={() => joinTeam(roomId, team.name)}
+                                color={COLORS.button.blue.basic}
+                            />
+                            <View style={styles.teamPlayersContainer}>
+                                {team.players.map((player) => (
+                                    <Text key={player} style={FONT.text}>{player}</Text>
+                                ))}
                             </View>
                         </View>
-                    </Modal>
-                </>
-            )}
-            <Text style={FONT.subTitle}>Joueurs :</Text>
-            <ScrollView horizontal style={styles.playersContainer}>
-                {players.map((player) => (
-                    <Text key={player} style={FONT.text}>  {player}  </Text>
-                ))}
-            </ScrollView>
-            <ScrollView horizontal style={styles.teamsContainer}>
-                {gameMode === "team" && teams.map((team, index) => (
-                    <View key={index} style={styles.team}>
-                        <Text style={FONT.subTitle}>{team.name}</Text>
+                    ))}
+                </ScrollView>
+                {gameMode === "team" && (
+                    <View
+                        style={[
+                            styles.teamButtons,
+                            { flexDirection: isMobile ? 'row' : 'column', justifyContent: 'center', gap: isMobile ? 10 : 0 },
+                        ]}
+                    >
                         <SimpleButton
-                            text="Rejoindre"
-                            onPress={() => joinTeam(roomId, team.name)}
+                            text="Commencer la partie"
+                            onPress={() => startRoom(roomId)}
+                            color={COLORS.button.blue.basic}
+                            marginBottom={isMobile ? 0 : 10}
+                            marginVertical={isMobile ? 0 : 1}
+                            width={isMobile ? "50%" : "100%"}
+                        />
+                        <SimpleButton
+                            text="Retourner au menu"
+                            onPress={handleReturnHome}
+                            color={COLORS.button.blue.basic}
+                            marginBottom={isMobile ? 0 : 1}
+                            marginVertical={isMobile ? 0 : 1}
+                            width={isMobile ? "50%" : "100%"}
+                        />
+                    </View>
+                )}
+                {gameMode === "scrum" && (
+                    <View style={styles.teamButtons} >
+                        <SimpleButton
+                            text="Retourner au menu"
+                            onPress={handleReturnHome}
                             color={COLORS.button.blue.basic}
                         />
-                        <View style={styles.teamPlayersContainer}>
-                            {team.players.map((player) => (
-                                <Text key={player} style={FONT.text}>{player}</Text>
-                            ))}
-                        </View>
                     </View>
-                ))}
-            </ScrollView>
-            {gameMode === "team" && (
-                <View style={styles.teamButtons} >
-                    <SimpleButton
-                        text="Commencer la partie"
-                        onPress={() => startRoom(roomId)}
-                        color={COLORS.button.blue.basic}
-                    />
-                    <SimpleButton
-                        text="Retourner au menu"
-                        onPress={handleReturnHome}
-                        color={COLORS.button.blue.basic}
-                    />
-                </View>
-            )}
-            {gameMode === "scrum" && (
-                <SimpleButton
-                    text="Retourner au menu"
-                    onPress={handleReturnHome}
-                    color={COLORS.button.blue.basic}
-                />
-            )}
-        </View>
+                )}
+            </View>
+        </GradientBackground>
     );
 }
 
@@ -205,7 +221,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
         backgroundColor: COLORS.background.blue,
-        gap: 20,
+        gap: !isMobile ? 20 : 0,
     },
     title: {
         fontSize: 14,
@@ -215,18 +231,19 @@ const styles = StyleSheet.create({
     gameMode: {
         textAlign: 'center',
         marginBottom: 20,
-        maxWidth: !isMobile ? '100%' : 200,
+        maxWidth: !isMobile ? '100%' : 210,
     },
     playersContainer: {
         flexDirection: 'row',
-        marginVertical: 10,
-        maxWidth: 400,
+        marginVertical: !isMobile ? 10 : 0,
+        maxWidth: 500,
+        minHeight: 30,
     },
     teamsContainer: {
         maxWidth: '100%',
         overflow: 'scroll',
         flexDirection: 'row',
-        marginVertical: 20,
+        marginVertical: 15,
     },
     team: {
         alignItems: 'center',
@@ -242,7 +259,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 150,
         overflow: 'scroll',
-
     },
     qrCodeButton: {
         position: 'absolute',
@@ -287,6 +303,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'space-between',
         gap: '10px',
+        maxHeight: 200,
     },
     roomId: {
         marginTop: 5,

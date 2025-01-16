@@ -7,6 +7,9 @@ import { useNavigation } from '@react-navigation/native';
 
 import { COLORS } from '../css/utils/color';
 
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height;
+
 export default function HistoryQuizInformation({ partyId, quizId, onStatusChange }) {
     const [loading, setLoading] = useState(true);
     const [score, setScore] = useState(0);
@@ -48,9 +51,9 @@ export default function HistoryQuizInformation({ partyId, quizId, onStatusChange
             }
             catch (error) {
                 if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                    toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
                 } else {
-                    toast('error', 'Erreur', error, 3000, COLORS.toast.red);
+                    toast('error', 'Erreur', error, 3000, COLORS.toast.text.red);
                 }
             }
         }
@@ -64,9 +67,9 @@ export default function HistoryQuizInformation({ partyId, quizId, onStatusChange
                 navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
             }).catch((error) => {
                 if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                    toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
                 } else {
-                    toast('error', 'Erreur', error, 3000, COLORS.toast.red);
+                    toast('error', 'Erreur', error, 3000, COLORS.toast.text.red);
                 }
             });
         }
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
         width: '50%'
     },
     touchableOpacity: {
-        padding: 8, // Espacement interne
+        padding: !isMobile ? 8 : 0, // Espacement interne
         borderRadius: 4, // Coins arrondis
         width: 100, // Largeur fixe
         justifyContent: 'center', // Centrer le texte

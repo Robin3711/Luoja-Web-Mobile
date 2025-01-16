@@ -9,6 +9,7 @@ import * as Clipboard from 'expo-clipboard';
 
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
+import GradientBackground from '../css/utils/linearGradient';
 
 const { width  , height} = Dimensions.get('window');
 const isMobile = width< height
@@ -61,16 +62,18 @@ export default function ResumeScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Reprenez votre partie</Text>
-            <View style={styles.inputView}>
-                <TouchableOpacity onPress={handlePasteGameId}>
-                    <ClipboardPaste size={30} color="black" />
-                </TouchableOpacity>
-                <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
+        <GradientBackground>
+            <View style={styles.container}>
+                <Text style={styles.title}>Reprenez votre partie</Text>
+                <View style={styles.inputView}>
+                    <TouchableOpacity onPress={handlePasteGameId}>
+                        <ClipboardPaste size={30} color="black" />
+                    </TouchableOpacity>
+                    <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
+                </View>
+                <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
             </View>
-            <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
-        </View>
+        </GradientBackground>
     );
 
 }
@@ -83,7 +86,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     title: {
         fontSize: 50,

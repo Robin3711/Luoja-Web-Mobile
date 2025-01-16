@@ -12,6 +12,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height;
+import GradientBackground from '../css/utils/linearGradient';
 
 export default function SearchScreen() {
     const [data, setData] = useState([]);
@@ -61,53 +62,55 @@ export default function SearchScreen() {
     }
 
     return (
-        error ? (
-            <View style={styles.screen}>
-                <Text style={styles.errorText}>{errorMessage}</Text>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('initMenu', { screen: 'account' })
-                }}>
-                    <Text style={styles.buttonText}>Retour au menu</Text>
-                </TouchableOpacity>
-            </View>
-        ) : (
-            <View style={styles.screen}>
-                <Text style={FONT.title}>Quiz de la communauté !</Text>
-                <View style={styles.screen2}>
-                    <View style={styles.searchParameterView}>
-                        <View style={styles.filterView}>
-                            <Text style={styles.text}>Titre</Text>
-                            <View style={styles.quizTitleView}>
-                                <TextInput style={styles.quizTitleText} placeholder='Titre' onChangeText={(value) => handleSearchTitle(value)} />
+        <GradientBackground>
+            {error ? (
+                <View style={styles.screen}>
+                    <Text style={styles.errorText}>{errorMessage}</Text>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('initMenu', { screen: 'account' })
+                    }}>
+                        <Text style={styles.buttonText}>Retour au menu</Text>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                <View style={styles.screen}>
+                    <Text style={FONT.title}>Quiz de la communauté !</Text>
+                    <View style={styles.screen2}>
+                        <View style={styles.searchParameterView}>
+                            <View style={styles.filterView}>
+                                <Text style={styles.text}>Titre</Text>
+                                <View style={styles.quizTitleView}>
+                                    <TextInput style={styles.quizTitleText} placeholder='Titre' onChangeText={(value) => handleSearchTitle(value)} />
+                                </View>
+                            </View>
+                            <View style={styles.filterView}>
+                                <Text style={styles.text}>Thème</Text>
+                                <ThemeSelector onValueChange={setTheme} />
+                            </View>
+                            <View style={styles.filterView}>
+                                <Text style={styles.text}>Difficulté</Text>
+                                <ChoiseSelector testID="ChoiseSelector" value={difficulty} onValueChange={setDifficulty} />
                             </View>
                         </View>
-                        <View style={styles.filterView}>
-                            <Text style={styles.text}>Thème</Text>
-                            <ThemeSelector onValueChange={setTheme} />
-                        </View>
-                        <View style={styles.filterView}>
-                            <Text style={styles.text}>Difficulté</Text>
-                            <ChoiseSelector testID="ChoiseSelector" value={difficulty} onValueChange={setDifficulty} />
-                        </View>
-                    </View>
 
-                    <View style={styles.quizCreationRightView}>
-                        {!isMobile && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
-                        <ScrollView style={styles.questionsView}>
-                            {data.length !== 0 ? (
-                                [...data].reverse().map((quiz, index) => (
-                                    <View key={index} style={[styles.questionItem, index % 2 === 0 && styles.alternateBackground]}>
-                                        <QuizInformation quiz={quiz} />
-                                    </View>
-                                ))
-                            ) : (
-                                <Text>Aucun quiz</Text>
-                            )}
-                        </ScrollView>
+                        <View style={styles.quizCreationRightView}>
+                            {!isMobile && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
+                            <ScrollView style={styles.questionsView}>
+                                {data.length !== 0 ? (
+                                    [...data].reverse().map((quiz, index) => (
+                                        <View key={index} style={[styles.questionItem, index % 2 === 0 && styles.alternateBackground]}>
+                                            <QuizInformation quiz={quiz} />
+                                        </View>
+                                    ))
+                                ) : (
+                                    <Text>Aucun quiz</Text>
+                                )}
+                            </ScrollView>
+                        </View>
                     </View>
                 </View>
-            </View>
-        )
+            )}
+        </GradientBackground>
     );
 }
 
@@ -116,7 +119,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         flexDirection: 'column',
-        backgroundColor: COLORS.background.blue,
         paddingTop: 20,
     },
     screen2: {
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
         borderRadius: 20,
-        
+
     },
     alternateBackground: {
         backgroundColor: COLORS.palette.blue.lighter,
