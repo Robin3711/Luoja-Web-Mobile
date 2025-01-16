@@ -135,6 +135,12 @@ export default function RoomQuizScreen() {
                     setIsAnswered(true);
                 }
                 break;
+            case "currentQuestion":
+                setCurrentQuestion(data.currentQuestion);
+                break;
+            case "score":
+                setScore(data.score);
+                break;
             default:
                 break;
         }
