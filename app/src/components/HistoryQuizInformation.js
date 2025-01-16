@@ -72,7 +72,7 @@ export default function HistoryQuizInformation({ partyId, quizId, onStatusChange
     }
 
     if (loading) {
-        return <Text>Chargement...</Text>;
+        return <Text style={FONT.text}>Chargement...</Text>;
     }
 
     return (

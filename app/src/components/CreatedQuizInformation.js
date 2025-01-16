@@ -45,7 +45,7 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
     }, [category, status, quizId, date, nbQuestions]);
 
     if (loading) {
-        return <Text style={FONT.button}>Chargement...</Text>;
+        return <Text style={FONT.text}>Chargement...</Text>;
     }
 
     const isDraft = status === false;
