@@ -6,7 +6,7 @@ import * as Clipboard from 'expo-clipboard';
 import GradientBackground from '../css/utils/linearGradient';
 
 import { joinRoom, joinTeam, startRoom } from "../utils/api";
-import { getPlatformAPI } from "../utils/utils";
+import { getPlatformAPI, hasToken } from "../utils/utils";
 
 import QRCode from "react-native-qrcode-svg";
 import { COLORS } from "../css/utils/color";
@@ -72,21 +72,27 @@ export default function Room() {
         const connect = async () => {
             try {
 
-                const source = await joinRoom(roomId);
-                eventSource = source;
+                if(! await hasToken()){
+                    navigation.navigate('initMenu', { screen: 'account', params: {roomId: roomId} });
+                }
+                else{
+                    const source = await joinRoom(roomId);
+                    
+                    eventSource = source;
 
-                eventSource.addEventListener('message', handleEvent);
-
-
-                eventSource.addEventListener('error', (err) => {
-                    console.error("Erreur EventSource :", err);
-                    toast("error", "Vous ne pouvez pas rejoindre cette partie", '', 3000, COLORS.toast.text.red);
-                    navigation.navigate("initMenu");
-                });
+                    eventSource.addEventListener('message', handleEvent);
 
 
-                const url = await getPlatformAPI();
-                setApiUrl(url);
+                    eventSource.addEventListener('error', (err) => {
+                        console.error("Erreur EventSource :", err);
+                        toast("error", "Vous ne pouvez pas rejoindre cette partie", '', 3000, COLORS.toast.text.red);
+                        navigation.navigate("initMenu");
+                    });
+
+
+                    const url = await getPlatformAPI();
+                    setApiUrl(url);
+                }
             } catch (error) {
                 toast("error", error.status || 500, error.message || "Une erreur est survenue", 3000, COLORS.toast.text.red);
                 navigation.navigate("initMenu");

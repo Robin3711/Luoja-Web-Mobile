@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet , Dimensions } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 
 import { getUserInfos } from '../utils/api';
 import { hasToken } from '../utils/utils';
@@ -16,7 +16,13 @@ const { width  , height} = Dimensions.get('window');
 const isMobile = width< height
 
 export default function Account() {
+    const route = useRoute();
     const navigation = useNavigation();
+    let roomId = null
+
+    if(route.params){
+        roomId = route.params.roomId;
+    }
 
     const [isLogged, setIsLogged] = useState(false);
     const [userInfos, setUserInfos] = useState(null);
@@ -83,8 +89,8 @@ export default function Account() {
                         <Text style={FONT.luoja}>Luoja</Text>
                         <View style={styles.childView}>
                             <Text style={FONT.text}>Cette fonctionnalité nécessite un compte</Text>
-                            <SimpleButton text="Se connecter" onPress={() => navigation.navigate('login')} />
-                            <SimpleButton text="Créer un compte" onPress={() => navigation.navigate('register')} />
+                            <SimpleButton text="Se connecter" onPress={() => navigation.navigate('login', { roomId : roomId })} />
+                            <SimpleButton text="Créer un compte" onPress={() => navigation.navigate('register', { roomId : roomId })} />
                         </View>
                     </View>
                 )}

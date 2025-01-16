@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 
 import GradientBackground from '../css/utils/linearGradient';
@@ -14,8 +14,14 @@ const { width, height } = Dimensions.get('window');
 const isMobile = width < height;
 
 export default function Login() {
-
+    const route = useRoute();
     const navigation = useNavigation();
+    
+    let roomId = null;
+    
+    if(route.params){
+        roomId = route.params.roomId;
+    }
 
     const passwordInputRef = useRef(null);
 
@@ -27,7 +33,12 @@ export default function Login() {
         try {
             await userLogin(name, password);
             toast('success', "Connexion réussie !", `Bienvenue ${name}`, 3000, COLORS.toast.green);
-            navigation.navigate('initMenu', { screen: 'account' });
+            if( route.params && roomId != null ){
+                navigation.navigate('room', { roomId: roomId });
+            }
+            else{
+                navigation.navigate('initMenu', { screen: 'account' });
+            }
         }
         catch (error) {
             if (error.status && error.message) {
