@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Dimensions, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import ChoiseSelector from '../components/ChoicePicker';
@@ -23,6 +23,7 @@ export default function LaunchGameMode() {
     const [scrumPlayerCount, setScrumPlayerCount] = useState("");
     const [teamCount, setTeamCount] = useState("");
     const [teams, setTeams] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleStartQuiz = (gameMode) => {
         createGame(quizId, gameMode, gameMode === "timed" ? timerDifficulty : scrumDifficulty)
@@ -65,6 +66,10 @@ export default function LaunchGameMode() {
         setTeams(newTeams);
     };
 
+    useFocusEffect(() => {
+        setIsLoading(false);
+    });
+
     return (
         <GradientBackground>
             <KeyboardAvoidingView
@@ -85,7 +90,10 @@ export default function LaunchGameMode() {
                                 <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
                             </View>
                             <View style={styles.item}>
-                                <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} />
+                                <SimpleButton text="SCRUM" onPress={() => {
+                                setIsLoading(true);
+                                handleStartRoom("scrum");
+                            }}  disabled={isLoading}/>
                                 <Text style={FONT.paragraphe}>Plusieurs joueurs jouent simultanément au même quiz. Le premier à répondre correctement gagne les points et déclenche la question suivante. Chaque joueur ne peut répondre qu'une fois par question.</Text>
                                 <View style={styles.inputRow}>
                                     <Text style={styles.label}>Nombre de joueurs</Text>
@@ -108,6 +116,11 @@ export default function LaunchGameMode() {
                                         keyboardType="numeric"
                                         onChangeText={(text) => {
                                             const number = parseInt(text, 10);
+                                        if(number > 6)
+                                        {
+                                            toast("error", "Le nombre de team est limité à 6", "", 2000, COLORS.toast.text.red);
+                                            return;
+                                        };
                                             setTeamCount(isNaN(number) ? "" : number);
                                             setTeams(isNaN(number) ? [] : Array.from({ length: number }, (_, i) => `Team ${i + 1}`));
                                         }}
