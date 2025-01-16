@@ -113,7 +113,7 @@ export default function Room() {
         <GradientBackground>
             <View style={styles.container}>
                 <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
-                {platform==="android" ? (
+                {!isMobile ? (
                     <View style={styles.qrCodeContainer}>
                         <QRCode
                             value={`https://luoja.fr/room?roomId=${roomId}`}
