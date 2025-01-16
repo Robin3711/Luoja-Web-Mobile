@@ -116,9 +116,8 @@ export default function RoomQuizScreen() {
 
                 if  (data.currentQuestion)
                 {
-                console.log(data.currentQuestion );
-                setQuestionNumber(data.currentQuestion+1);
-                setScore(data.score);
+                    setQuestionNumber(data.currentQuestion+1);
+                    setScore(data.score);
                 }
                 break;
             case "nextQuestion":
