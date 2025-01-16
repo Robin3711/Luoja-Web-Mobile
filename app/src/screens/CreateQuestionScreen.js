@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Dimensions, StyleSheet, TextInput, Picker, ActivityIndicator } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, TextInput, Picker } from 'react-native';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
@@ -9,6 +9,9 @@ import { mediaType, toast } from '../utils/utils';
 import ChoiseSelector from '../components/ChoicePicker';
 import { generateAnswers } from '../utils/api';
 import GradientBackground from '../css/utils/linearGradient';
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height;
 
 export default function CreateQuestionScreen() {
     const route = useRoute();
@@ -139,6 +142,7 @@ export default function CreateQuestionScreen() {
                 });
 
                 setSelectedShape('SQUARE');
+
                 setLoading(false);
             }
             catch (error) {
@@ -154,6 +158,9 @@ export default function CreateQuestionScreen() {
 
                 return;
             }
+        }
+        else {
+            toast("warn", "Vous devez écrire une question", '', 2000, COLORS.toast.text.orange);
         }
     };
 
@@ -214,21 +221,25 @@ export default function CreateQuestionScreen() {
 
                 {/* Right Panel */}
                 <View style={styles.createQuestionRightView}>
-                    <View style={styles.generateAnswersButtonView}>
-                        <SimpleButton text="Générer des réponses" onPress={handleGenerate} disabled={loading} />
-                        {loading && <ActivityIndicator size="large" color={COLORS.primary} />}
+                    <View style={styles.createQuestionSubRightView}>
+                        <View style={styles.generateAnswersButtonView}>
+                            <SimpleButton
+                                text="Générer des réponses"
+                                onPress={handleGenerate}
+                                disabled={loading}
+                                loading={loading}
+                            />
+                            <Picker
+                                selectedValue={generationTheme}
+                                onValueChange={(value) => setGenerationTheme(value)}
+                                style={[styles.picker, { marginTop: -30 }]}
+                            >
+                                <Picker.Item style={FONT.text} label="réaliste" value={"standard"} />
+                                <Picker.Item style={FONT.text} label="humoristique" value={"humor"} />
+                                <Picker.Item style={FONT.text} label="mixte" value={"mix"} />
+                            </Picker>
+                        </View>
                     </View>
-                    <Picker
-                        selectedValue={generationTheme}
-                        onValueChange={(value) => {
-                            setGenerationTheme(value);
-                        }}
-                        style={styles.picker}
-                    >
-                        <Picker.Item style={FONT.text} label="réaliste" value={"standard"} />
-                        <Picker.Item style={FONT.text} label="humoristique" value={"humor"} />
-                        <Picker.Item style={FONT.text} label="mixte" value={"mix"} />
-                    </Picker>
                     {shapes.map((shape) => renderWithCheckmark(shape))}
                 </View>
             </View>
@@ -292,6 +303,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         width: '45%',
         height: '100%',
+        paddingTop: 10,
+        paddingBottom: 40,
+    },
+    createQuestionSubRightView: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center'
     },
     answerInputContainer: {
         position: 'relative',
@@ -317,9 +336,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     generateAnswersButtonView: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        gap: 20,
+        flexDirection: 'column', // Aligner horizontalement
+        justifyContent: 'center', // Centrer horizontalement dans le parent
+        alignItems: 'center', // Centrer verticalement
+        gap: 10, // Espacement horizontal entre le bouton et le Picker (optionnel)
+        borderColor: COLORS.palette.blue.normal,
+        borderWidth: !isMobile ? 0 : 3,
     },
 });

@@ -298,7 +298,7 @@ export default function QuizCreation() {
                                     <Text style={FONT.button}>Importer des questions</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.buttons} onPress={handleClickCreateQuestion}>
-                                    <Text style={FONT.button}>Rédiger une question</Text>
+                                    <Text style={FONT.button}>Créer une question</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -315,7 +315,6 @@ export default function QuizCreation() {
                                     renderItem={renderQuestionItem}
                                     containerStyle={styles.dragListContainer}
                                 />
-
                             </View>
                         </SafeAreaView>
                     </SafeAreaProvider>
