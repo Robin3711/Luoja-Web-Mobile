@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...!isMobile && { gap: 20, },
-        ...isMobile && { marginVertical: 10, },
+        ...isMobile && { gap: '5%', },
     },
     questionView: {
         alignItems: 'center',
