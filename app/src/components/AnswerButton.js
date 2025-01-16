@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { View, Dimensions, StyleSheet, Text, TouchableOpacity, Image, Platform } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { COLORS } from '../css/utils/color';
@@ -193,6 +193,65 @@ const AnswerButton = ({ shape, onClick, text, filter, type }) => {
 
     }, [text, type]);
 
+    // ** Fin Media **
+
+    // ** Animation **
+
+    // 0.5 = rotation de base
+    const rotation = useSharedValue(0.5);
+    const translation = useSharedValue(0.5);
+
+    useEffect(() => {
+        if (animation === 'win' && color === 'GREEN') {
+
+            // Aller à 0 
+            rotation.value = withTiming(0, { duration: 100 }, () => {
+                // Commencer l'animation de rotation
+                rotation.value = withRepeat(
+                    withTiming(1, { duration: 100 }),
+                    5, // Répéter 5 fois
+                    true, // Alterner la direction
+                    () => {
+                        // Retour à 0.5
+                        rotation.value = withTiming(0.5, { duration: 100 });
+                    }
+                );
+            });
+        }
+        else if (animation === 'lose' && color === 'RED') {
+            //Aller à 0
+            translation.value = withTiming(0, { duration: 100 }, () => {
+                // Commencer l'animation de translation
+                translation.value = withRepeat(
+                    withTiming(1, { duration: 100 }),
+                    3, // Répéter 1 fois
+                    true, // Alterner la direction
+                    () => {
+                        // Retour à 0.5
+                        translation.value = withTiming(0.5, { duration: 100 });
+                    }
+                );
+            });
+        }
+    }, [animation]);
+
+    const animatedStyle = useAnimatedStyle(() => {
+        const rotate = interpolate(rotation.value, [0, 1], [-1.5, 1.5]);
+        const translate = interpolate(translation.value, [0, 1], [-25, 25]);
+
+        console.log(translation.value)
+
+        return {
+            transform: [
+                { rotate: `${rotate}deg` },
+                { translateX: translate },
+            ],
+        };
+    });
+
+    // ** Fin Animation **
+
+    // ** JSX **
 
     return (
         <TouchableOpacity
