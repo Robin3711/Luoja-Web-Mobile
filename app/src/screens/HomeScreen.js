@@ -24,7 +24,7 @@ export default function HomeScreen() {
                         <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
                     </View>
                     {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
-                </View> 
+                </View>
             </View>
         </GradientBackground>
     );

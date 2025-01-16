@@ -74,21 +74,22 @@ export default function SearchScreen() {
                 </View>
             ) : (
                 <View style={styles.screen}>
-                    <Text style={FONT.title}>Quiz de la communauté !</Text>
+                    <Text style={[FONT.title, { marginTop: !isMobile ? 20 : -20 }]}>Quiz de la communauté !</Text>
                     <View style={styles.screen2}>
                         <View style={styles.searchParameterView}>
+                            <Text style={[FONT.subTitle, { marginTop: -10, marginBottom: !isMobile ? 15 : 5 }]}>Filtrer les recherches</Text>
                             <View style={styles.filterView}>
-                                <Text style={styles.text}>Titre</Text>
+                                <Text style={FONT.text}>Titre</Text>
                                 <View style={styles.quizTitleView}>
                                     <TextInput style={styles.quizTitleText} placeholder='Titre' onChangeText={(value) => handleSearchTitle(value)} />
                                 </View>
                             </View>
                             <View style={styles.filterView}>
-                                <Text style={styles.text}>Thème</Text>
+                                <Text style={FONT.text}>Thème</Text>
                                 <ThemeSelector onValueChange={setTheme} />
                             </View>
                             <View style={styles.filterView}>
-                                <Text style={styles.text}>Difficulté</Text>
+                                <Text style={FONT.text}>Difficulté</Text>
                                 <ChoiseSelector testID="ChoiseSelector" value={difficulty} onValueChange={setDifficulty} />
                             </View>
                         </View>
@@ -129,18 +130,6 @@ const styles = StyleSheet.create({
         height: '80%',
         marginTop: !isMobile ? 20 : 0,
     },
-    title: {
-        textAlign: 'center',
-        color: COLORS.text.blue.dark,
-        fontSize: 50,
-        fontFamily: 'LobsterTwo_700Bold_Italic',
-        width: '100%',
-    },
-    text: {
-        fontSize: 20,
-        color: COLORS.text.blue.dark,
-        fontFamily: 'LobsterTwo_700Bold_Italic',
-    },
     filterView: {
         marginBottom: !isMobile ? 20 : 10,
     },
@@ -151,7 +140,11 @@ const styles = StyleSheet.create({
         height: !isMobile ? '60%' : 'auto',
         borderRadius: 20,
         padding: !isMobile ? 20 : 10,
+        marginBottom: 10,
+        paddingBottom: 0,
         width: !isMobile ? '40%' : '100%',
+        borderColor: COLORS.palette.blue.normal,
+        borderWidth: !isMobile ? 0 : 3,
     },
     quizCreationRightView: {
         display: 'flex',
