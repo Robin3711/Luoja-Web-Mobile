@@ -109,9 +109,8 @@ export default function RoomQuizScreen() {
             case "quizInfos":
                 setTotalQuestion(data.totalQuestion);
 
-                if  (data.currentQuestion)
-                {
-                    setQuestionNumber(data.currentQuestion+1);
+                if (data.currentQuestion) {
+                    setQuestionNumber(data.currentQuestion + 1);
                     setScore(data.score);
                 }
                 break;
@@ -174,6 +173,7 @@ export default function RoomQuizScreen() {
 
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
+            setTimerInitialized(false);
             if (correctAnswerFromApi === selectedAnswer) {
                 confettiRef.current.startConfetti();
                 setAnimation('win');
@@ -181,9 +181,9 @@ export default function RoomQuizScreen() {
             } else if (gameMode === "scrum") {
                 setMessage("En attente des autres joueurs...");
             }
-            else{
+            else {
                 setAnimation('lose');
-            } 
+            }
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -210,9 +210,9 @@ export default function RoomQuizScreen() {
             return 'GREEN';
 
         }
-        if (answer === selectedAnswer ) {
+        if (answer === selectedAnswer) {
             // jouer le son
-            if(!isPlaying){
+            if (!isPlaying) {
                 playSound(badSound);
                 setIsPlaying(true);
             }
@@ -296,7 +296,7 @@ export default function RoomQuizScreen() {
                                                 {gameMode === "team" ? (
                                                     <Text style={styles.questionNumber}>{remainingTime}</Text>
                                                 ) : (<Text style={styles.questionNumber}></Text>)}
-                                            
+
                                                 <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                             </>
                                         )}

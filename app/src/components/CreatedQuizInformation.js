@@ -62,68 +62,50 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
     };
 
     const handlePlayQuiz = async () => {
-        if (status === true && !isMobile) {
-            try {
-                setDisable(true);
-                const data = await createGame(quizId);
-                setDisable(false);
-                navigation.navigate('quizScreen', { gameId: data.id });
-            } catch (error) {
-                if (error.status && error.message) {
-                    toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
-                } else {
-                    toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
-                }
-                setDisable(false);
+        try {
+            setDisable(true);
+            navigation.navigate('launchGameMode', { quizId: quizId });
+        } catch (error) {
+            if (error.status && error.message) {
+                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+            } else {
+                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
             }
+            setDisable(false);
+        } finally {
+            setDisable(false);
         }
     };
 
-    if (status === false && !isMobile) {
-        return (
-            <View style={styles.QuizInformationView}>
-                <View style={styles.PrincipalInformationsView}>
-                    <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
-                    <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
-                    <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                    <SimpleButton
-                        text="Modifier"
-                        onPress={handleCreationQuiz}
-                        color={COLORS.button.blue.basic}
-                        height={30}
-                        width={100}
-                        textStyle={{ fontSize: 20 }}
-                        disabled={disable}
-                    />
-                </View>
-                <View style={styles.SecondaryInformationsView}>
-                    <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
-                    <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
-                </View>
-            </View>
-        );
-    }
-
     return (
-        <View style={styles.QuizInformationView}>
-            <View style={styles.PrincipalInformationsView}>
-                <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
-                <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
-                <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                <SimpleButton
-                    text="Jouer"
-                    onPress={handlePlayQuiz}
-                    color={COLORS.button.blue.darkBasic}
-                    height={30}
-                    width={100}
-                    textStyle={{ fontSize: 20 }}
-                    disabled={disable}
-                />
-            </View>
-            <View style={styles.SecondaryInformationsView}>
-                <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
-                <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
-            </View>
+        <View>
+            {!isMobile || (isMobile && status) ? (
+                <View style={styles.QuizInformationView}>
+                    <View style={styles.PrincipalInformationsView}>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
+                        <SimpleButton
+                            text={status ? "Jouer" : "Modifier"}
+                            onPress={status ? handlePlayQuiz : handleCreationQuiz}
+                            backgroundColor={status ? COLORS.button.blue.darkBasic : COLORS.button.blue.basic}
+                            height={30}
+                            width={100}
+                            textStyle={{ fontSize: 20 }}
+                            disabled={disable}
+                        />
+                    </View>
+                    <View style={styles.SecondaryInformationsView}>
+                        <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
+                        <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
+                    </View>
+                </View>
+            ) : (
+                <View>
+
+                </View>
+            )
+            }
         </View>
     );
 }

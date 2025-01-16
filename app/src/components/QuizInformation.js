@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         padding: 10,
         marginBottom: 20,
+        gap: 5,
     },
     QuizInformationText: {
         flex: 1,
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
         width: isMobile ? 50 : 100, // Largeur fixe
         justifyContent: 'center', // Centrer le texte
         alignItems: 'center', // Centrer le texte
-        height: isMobile? 30 : 40, // Hauteur fixe
+        height: isMobile ? 30 : 40, // Hauteur fixe
         marginHorizontal: 5,
     }
 });

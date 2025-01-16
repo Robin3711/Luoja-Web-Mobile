@@ -224,6 +224,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.background.lightBlue, // Ajouter une couleur de fond pour délimiter chaque section
         borderRadius: 8, // Amélioration visuelle
         maxHeight: '100%', // Limiter la hauteur sur mobile
+        minWidth: !isMobile ? null : '100%',
     },
     touchableOpacity: {
         backgroundColor: 'red',
