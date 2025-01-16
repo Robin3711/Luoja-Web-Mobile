@@ -51,10 +51,10 @@ export default function QuizInformation({ quiz }) {
             <Text style={[styles.QuizInformationText, { flex: 1.2 }]}>{truncateText(quiz.title, isMobile ? 15 : 20)}</Text>
             <Text style={[styles.QuizInformationText, { flex: isMobile ? 0.8 : 1.7 }]}>{themeName ?? "General Knowledge"}</Text>
             <Text style={[styles.QuizInformationText, { flex: 0.8 }]}>{quiz.difficulty}</Text>
-            <TouchableOpacity style={styles.QuizInformationButton} onPress={handleSave}>
+            <TouchableOpacity style={styles.touchableOpacity} onPress={handleSave}>
                 <Text style={[{ color: COLORS.text.blue.light }]}>Cloner</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.QuizInformationButton} onPress={handleLaunchGameMode}>
+            <TouchableOpacity style={styles.touchableOpacity} onPress={handleLaunchGameMode}>
                 <Text style={[{ color: COLORS.text.blue.light }]}>Jouer</Text>
             </TouchableOpacity>
         </View>
@@ -91,4 +91,14 @@ const styles = StyleSheet.create({
         minWidth: 35,
         ...isMobile && { height: isMobile ? 35 : 40 },
     },
+    touchableOpacity: {
+        padding: !isMobile ? 8 : 0, // Espacement interne
+        backgroundColor: COLORS.button.blue.circle.normal,
+        borderRadius: 10, // Coins arrondis
+        width: isMobile ? 50 : 100, // Largeur fixe
+        justifyContent: 'center', // Centrer le texte
+        alignItems: 'center', // Centrer le texte
+        height: isMobile? 30 : 40, // Hauteur fixe
+        marginHorizontal: 5,
+    }
 });

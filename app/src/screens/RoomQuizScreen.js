@@ -69,7 +69,6 @@ export default function RoomQuizScreen() {
     const [gameTime, setGameTime] = useState(0);
     const [timerInitialized, setTimerInitialized] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
-    const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
 
     const [animation, setAnimation] = useState('none');
 
@@ -103,26 +102,6 @@ export default function RoomQuizScreen() {
             }
         }
     }, [remainingTime]);
-
-    useEffect(() => {
-        let timer;
-        if (remainingTime === 1) {
-            timer = setTimeout(() => {
-                setTimeStuckAtOne(true);
-            }, 1000);
-        } else {
-            setTimeStuckAtOne(false);
-        }
-
-        return () => clearTimeout(timer);
-    }, [remainingTime]);
-
-    useEffect(() => {
-        if (timeStuckAtOne && remainingTime === 1) {
-            setRemainingTime(0);
-            setIsAnswered(true);
-        }
-    }, [timeStuckAtOne, remainingTime]);
 
     const handleEvent = (event) => {
         const data = JSON.parse(event.data);
