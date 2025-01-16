@@ -55,6 +55,13 @@ export const FONT = StyleSheet.create({
         color: COLORS.text.blue.dark,
         ...center,
     },
+    textAlternate: {
+        marginLeft: 20,
+        fontFamily: fontFamily.lobster.cursive,
+        fontSize: isMobile ? 16 : 28,
+        color: COLORS.text.blue.dark,
+        ...center,
+    },
     paragraphe: {
         fontFamily: fontFamily.arial,
         fontSize: isMobile ? 12 : 16,
