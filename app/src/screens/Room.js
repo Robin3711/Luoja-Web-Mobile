@@ -233,6 +233,9 @@ export default function Room() {
                                 width={isMobile ? "50%" : "100%"}
                             />
                         )}
+                        {owner !== user && (
+                            <Text style={FONT.subTitle}>En attente du lancement de la partie</Text>
+                        )}
                         <SimpleButton
                             text="Retourner au menu"
                             onPress={handleReturnHome}

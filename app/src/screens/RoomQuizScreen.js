@@ -191,6 +191,8 @@ export default function RoomQuizScreen() {
             if (correctAnswerFromApi === selectedAnswer) {
                 updateScore();
                 confettiRef.current.startConfetti();
+            } else if (gameMode === "scrum") {
+                setMessage("En attente des autres joueurs...");
             }
         } catch (err) {
             setError(true);
@@ -267,7 +269,7 @@ export default function RoomQuizScreen() {
 
                                 <View style={styles.questionView}>
 
-                                    <Text>{message}</Text>
+                                    <Text style={FONT.text}>{message}</Text>
 
                                     <CountdownCircleTimer
                                         key={timerKey}
@@ -290,7 +292,7 @@ export default function RoomQuizScreen() {
                                                 {gameMode === "team" ? (
                                                     <Text style={styles.questionNumber}>{remainingTime}</Text>
                                                 ) : (<Text style={styles.questionNumber}></Text>)}
-
+                                            
                                                 <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                             </>
                                         )}
