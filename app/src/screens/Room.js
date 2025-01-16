@@ -80,7 +80,7 @@ export default function Room() {
                 if  (! await hasToken())  {
                     navigation.navigate('initMenu', { screen: 'account', params: {  roomId: roomId  } });
                 }
-                else  {
+                else {
                     const userInfo = await getUserInfos();
                     setUser(userInfo.userName);
                     const source = await joinRoom(roomId);
@@ -172,16 +172,16 @@ export default function Room() {
                             player === owner ? (
                                 <Text key={player} style={FONT.text}>👑 {player} (Vous)</Text>
                             ) :
-                            (   
-                                <Text key={player} style={FONT.textAlternate}>{player} (Vous)</Text>
-                            )
+                                (
+                                    <Text key={player} style={FONT.textAlternate}>{player} (Vous)</Text>
+                                )
                         ) : (
                             player === owner ? (
                                 <Text key={player} style={FONT.text}> 👑 {player}</Text>
                             ) :
-                            (
-                                <Text key={player} style={FONT.textAlternate}>{player}</Text>
-                            )
+                                (
+                                    <Text key={player} style={FONT.textAlternate}>{player}</Text>
+                                )
                         )
                     ))}
                 </ScrollView>
@@ -200,16 +200,16 @@ export default function Room() {
                                         player === owner ? (
                                             <Text key={player} style={FONT.text}>👑 {player} (Vous)</Text>
                                         ) :
-                                        (   
-                                            <Text key={player} style={FONT.text}>{player} (Vous)</Text>
-                                        )
+                                            (
+                                                <Text key={player} style={FONT.text}>{player} (Vous)</Text>
+                                            )
                                     ) : (
                                         player === owner ? (
                                             <Text key={player} style={FONT.text}> 👑 {player}</Text>
                                         ) :
-                                        (
-                                            <Text key={player} style={FONT.text}>{player}</Text>
-                                        )
+                                            (
+                                                <Text key={player} style={FONT.text}>{player}</Text>
+                                            )
                                     )
                                 ))}
                             </View>
