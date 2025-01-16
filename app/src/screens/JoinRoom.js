@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Text, View, Dimensions, Platform, StyleSheet, Image, Alert, TextInput, TouchableOpacity } from "react-native";
+import { Text, View, Dimensions, Platform, StyleSheet, Alert, TextInput, TouchableOpacity } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import { getRoomId, requireToken, toast } from "../utils/utils";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -79,13 +79,7 @@ export default function JoinGame() {
   }
 
   return (
-    <GradientBackground>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require('../../assets/LogoLuojaRepete.png')} // Remplacez par le chemin de votre image
-          style={styles.image}
-        />
-      </View>
+    <GradientBackground showLogo={true}>
       <View style={styles.container}>
         {platform === "android" && scanned === false && (
           <CameraView
@@ -126,22 +120,6 @@ export default function JoinGame() {
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-    tintColor: COLORS.palette.blue.light,
-    opacity: 0.35,
-  },
   container: {
     flex: 1,
     display: 'flex',

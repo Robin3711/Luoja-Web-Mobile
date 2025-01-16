@@ -85,7 +85,7 @@ const ChooseAudio = ({ onValueChange }) => {
             }
         }
         ).catch((error) => {
-            console.log(error);
+            toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
         }
         );
     };

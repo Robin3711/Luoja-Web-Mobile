@@ -27,7 +27,7 @@ export default function Dashboard() {
     const [historyTitle, setHistoryTitle] = useState({})
     const [sortHistory, setSortHistory] = useState(null);
     const [showFastQuizOnly, setShowFastQuizOnly] = useState(false);
-    const [showHistory, setShowHistory] = useState(true); // Nouvel état pour gérer l'affichage des sections
+    const [showHistory, setShowHistory] = useState(true);
     const [disableInformation, setDisableInformation] = useState(false);
 
     if (!hasToken()) {
@@ -102,10 +102,10 @@ export default function Dashboard() {
     };
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             {
                 error ? (
-                    <View style={styles.quizScreenView}>
+                    <View style={styles.dashboardView}>
                         <Text style={styles.errorText}>{errorMessage}</Text>
                         <TouchableOpacity onPress={() => {
                             navigation.navigate('initMenu', { screen: 'account' })
@@ -131,7 +131,7 @@ export default function Dashboard() {
                             {(!isMobile || showHistory) && (
                                 <View style={styles.dashboardSection}>
                                     <Text style={styles.dashboardText}>Historique</Text>
-                                    <View style={styles.buttonContainer}>
+                                    <View>
                                         <ChoiseSelector value={sortHistory} onValueChange={setSortHistory} parameters={historySortOptions} defaultValue={true} />
                                         <TouchableOpacity
                                             style={[
@@ -158,7 +158,7 @@ export default function Dashboard() {
                             {(!isMobile || !showHistory) && (
                                 <View style={styles.dashboardSection}>
                                     <Text style={styles.dashboardText}>Vos quiz publiés</Text>
-                                    <View style={styles.buttonContainer}>
+                                    <View>
                                         <ChoiseSelector value={sortPublishedQuizzes} onValueChange={setSortPublishedQuizzes} parameters={publishSortOptions} defaultValue={true} />
                                     </View>
                                     <ScrollView>
@@ -197,7 +197,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start', // Aligner les éléments en haut
         width: "100vw",
         height: '100%',
-        paddingVertical: 10, // Espacement pour éviter de toucher les bords de l'écran
     },
     title: {
         fontSize: !isMobile ? 75 : 30, // Réduction de la taille sur mobile
@@ -215,7 +214,8 @@ const styles = StyleSheet.create({
         flex: 1, // Prendre tout l'espace disponible
         flexDirection: !isMobile ? 'row' : 'column',
         justifyContent: !isMobile ? 'space-between' : 'flex-start',
-        width: '90%',
+        width: '100%',
+        height: '100%',
     },
     dashboardSection: {
         flex: 1, // Prendre tout l'espace disponible par section
@@ -223,7 +223,8 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: COLORS.background.lightBlue, // Ajouter une couleur de fond pour délimiter chaque section
         borderRadius: 8, // Amélioration visuelle
-        maxHeight: !isMobile ? '100%' : '100%', // Limiter la hauteur sur mobile
+        maxHeight: '100%', // Limiter la hauteur sur mobile
+        minWidth: !isMobile ? null : '100%',
     },
     touchableOpacity: {
         backgroundColor: 'red',

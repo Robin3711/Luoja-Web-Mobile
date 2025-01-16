@@ -16,10 +16,10 @@ const isMobile = width < height;
 export default function Login() {
     const route = useRoute();
     const navigation = useNavigation();
-    
+
     let roomId = null;
-    
-    if(route.params){
+
+    if (route.params) {
         roomId = route.params.roomId;
     }
 
@@ -33,10 +33,10 @@ export default function Login() {
         try {
             await userLogin(name, password);
             toast('success', "Connexion réussie !", `Bienvenue ${name}`, 3000, COLORS.toast.green);
-            if( route.params && roomId != null ){
+            if (route.params && roomId != null) {
                 navigation.navigate('room', { roomId: roomId });
             }
-            else{
+            else {
                 navigation.navigate('initMenu', { screen: 'account' });
             }
         }
@@ -54,7 +54,7 @@ export default function Login() {
     }
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             <View style={styles.loginView}>
                 <Text style={[FONT.title, { marginBottom: !isMobile ? 70 : 15 }]}>Connexion</Text>
 
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     },
     loginInput: {
         height: 40,
-        width: 250,
+        width: 280,
         margin: 12,
         borderWidth: 1,
         padding: 10,

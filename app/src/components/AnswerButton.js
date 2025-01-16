@@ -107,11 +107,8 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
 
     useImperativeHandle(ref, () => ({
         stopAudio: async () => {
-            console.log('stopAudio');
 
-            if (sound.current) {
-                console.log('ref', ref);
-    
+            if (sound.current) {    
                 await sound.current.stopAsync();
             }
         }
@@ -263,9 +260,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
     const animatedStyle = useAnimatedStyle(() => {
         const rotate = interpolate(rotation.value, [0, 1], [-1.5, 1.5]);
         const translate = interpolate(translation.value, [0, 1], [-25, 25]);
-
-        console.log(translation.value)
-
+        
         return {
             transform: [
                 { rotate: `${rotate}deg` },

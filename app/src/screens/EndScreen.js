@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
@@ -60,12 +60,6 @@ export default function EndScreen() {
 
     return (
         <GradientBackground>
-            <View style={styles.imageContainer}>
-                <Image
-                    source={require('../../assets/LogoLuojaRepete.png')} // Remplacez par le chemin de votre image
-                    style={styles.image}
-                />
-            </View>
             {error ? (
             <View style={styles.container}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
@@ -120,22 +114,6 @@ export default function EndScreen() {
 }
 
 const styles = StyleSheet.create({
-    imageContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
-        tintColor: COLORS.palette.blue.light,
-        opacity: 0.35,
-    },
     errorText: {
         fontSize: 18,
         color: 'red',

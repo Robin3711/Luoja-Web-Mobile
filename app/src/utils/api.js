@@ -500,7 +500,7 @@ export async function downloadAllImages() {
 
         return await response.json();
     } catch (error) {
-        throw error;
+        console.error(error);
     }
 }
 
@@ -616,10 +616,6 @@ export async function joinRoom(roomId) {
             toast("info", 'Connected to room: ' + roomId, '', 2000, COLORS.toast.text.blue);
         });
 
-        eventSource.addEventListener('message', (event) => {
-            console.log('New message:', event.data);
-        });
-
         eventSource.addEventListener('error', (error) => {
             console.error('EventSource error:', error);
             eventSource.close();
@@ -659,7 +655,7 @@ export async function startRoom(roomId) {
         return await response.json();
     }
     catch (error) {
-        toast("error", 'Seul le créateur peut lancer la partie ! ', '', 2000, COLORS.toast.text.red);
+        toast("error", error, '', 2000, COLORS.toast.text.red);
     }
 }
 
@@ -747,7 +743,7 @@ export async function downloadAllAudios() {
         return await response.json();
     }
     catch (error) {
-        throw error;
+        console.error(error);
     }
 }
 

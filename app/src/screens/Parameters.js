@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { createQuiz } from '../utils/api';
@@ -45,7 +45,7 @@ export default function Parameters() {
   };
 
   return (
-    <GradientBackground>
+    <GradientBackground showLogo={true}>
       <View style={styles.screen}>
         <Text style={FONT.title}>Générer un nouveau quiz !</Text>
         <View style={styles.list}>

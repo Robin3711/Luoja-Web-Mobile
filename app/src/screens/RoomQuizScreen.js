@@ -69,7 +69,6 @@ export default function RoomQuizScreen() {
     const [gameTime, setGameTime] = useState(0);
     const [timerInitialized, setTimerInitialized] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
-    const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
 
     const [animation, setAnimation] = useState('none');
 
@@ -104,35 +103,14 @@ export default function RoomQuizScreen() {
         }
     }, [remainingTime]);
 
-    useEffect(() => {
-        let timer;
-        if (remainingTime === 1) {
-            timer = setTimeout(() => {
-                setTimeStuckAtOne(true);
-            }, 1000);
-        } else {
-            setTimeStuckAtOne(false);
-        }
-
-        return () => clearTimeout(timer);
-    }, [remainingTime]);
-
-    useEffect(() => {
-        if (timeStuckAtOne && remainingTime === 1) {
-            setRemainingTime(0);
-            setIsAnswered(true);
-        }
-    }, [timeStuckAtOne, remainingTime]);
-
     const handleEvent = (event) => {
         const data = JSON.parse(event.data);
         switch (data.eventType) {
             case "quizInfos":
                 setTotalQuestion(data.totalQuestion);
 
-                if  (data.currentQuestion)
-                {
-                    setQuestionNumber(data.currentQuestion+1);
+                if (data.currentQuestion) {
+                    setQuestionNumber(data.currentQuestion + 1);
                     setScore(data.score);
                 }
                 break;
@@ -195,6 +173,7 @@ export default function RoomQuizScreen() {
 
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
+            setTimerInitialized(false);
             if (correctAnswerFromApi === selectedAnswer) {
                 confettiRef.current.startConfetti();
                 setAnimation('win');
@@ -202,9 +181,9 @@ export default function RoomQuizScreen() {
             } else if (gameMode === "scrum") {
                 setMessage("En attente des autres joueurs...");
             }
-            else{
+            else {
                 setAnimation('lose');
-            } 
+            }
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -231,9 +210,9 @@ export default function RoomQuizScreen() {
             return 'GREEN';
 
         }
-        if (answer === selectedAnswer ) {
+        if (answer === selectedAnswer) {
             // jouer le son
-            if(!isPlaying){
+            if (!isPlaying) {
                 playSound(badSound);
                 setIsPlaying(true);
             }
@@ -252,12 +231,13 @@ export default function RoomQuizScreen() {
     };
 
     const stopAllAudios = () => {
-        audioRefs.current.forEach(audio => {
-            if (audio) {
-                console.log("stop audio");
-                audio.stopAudio();
-            }
-        });
+        if (audioRefs.current) {
+            audioRefs.current.forEach((audioRef) => {
+                if (audioRef) {
+                    audioRef.stopAudio();
+                }
+            });
+        }
     };
 
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
@@ -284,12 +264,10 @@ export default function RoomQuizScreen() {
                 <View style={styles.quizScreenView}>
                     {currentQuestion ? (
                         <>
-                            <View style={styles.quizSubScreenView}>
-                                <TouchableOpacity onPress={handleCopyGameId} style={styles.roomId}>
-                                    <Copy size={24} color="black" />
-                                    <Text style={FONT.text}>ID : {roomId} </Text>
-                                </TouchableOpacity>
-                            </View>
+                            <TouchableOpacity onPress={handleCopyGameId} style={styles.roomId}>
+                                <Copy size={24} color="black" />
+                                <Text style={FONT.text}>ID : {roomId} </Text>
+                            </TouchableOpacity>
                             <View style={styles.mainView}>
 
                                 <View style={styles.questionView}>
@@ -317,7 +295,7 @@ export default function RoomQuizScreen() {
                                                 {gameMode === "team" ? (
                                                     <Text style={styles.questionNumber}>{remainingTime}</Text>
                                                 ) : (<Text style={styles.questionNumber}></Text>)}
-                                            
+
                                                 <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                             </>
                                         )}
@@ -328,7 +306,7 @@ export default function RoomQuizScreen() {
                                     {!isMobile && validateAnswerButton()}
                                 </View>
 
-                                <View style={[styles.answersView, {flexDirection: currentQuestion.type === 'image' ? 'row' : 'column', flexWrap: currentQuestion.type === 'image'? 'wrap' : (!isMobile? 'wrap' : 'nowrap'),}]}>
+                                <View style={[styles.answersView, { flexDirection: currentQuestion.type === 'image' ? 'row' : 'column', flexWrap: currentQuestion.type === 'image' ? 'wrap' : (!isMobile ? 'wrap' : 'nowrap'), }]}>
                                     {currentQuestion.answers.map((answer, index) => (
                                         answer === null ? null : (
                                             <AnswerButton
@@ -385,10 +363,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...!isMobile && { gap: 20, },
+        ...isMobile && { gap: '5%', },
     },
     roomId: {
         position: 'absolute',
-        top: -90,
+        top: 1,
         marginRight: 10,
         marginTop: 2,
         flexDirection: 'row',
@@ -403,9 +382,10 @@ const styles = StyleSheet.create({
     },
     questionView: {
         alignItems: 'center',
-        width: !isMobile ? '50%' : '100%',
-        ...!isMobile && { gap: 70, },
-
+        top: !isMobile ? 20 : 50,
+        width: !isMobile ? '45%' : '100%',
+        ...isMobile && { marginVertical: 10, },
+        ...!isMobile && { gap: 40, },
     },
     question: {
         fontSize: !isMobile ? 30 : 25,
@@ -414,21 +394,26 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: COLORS.text.blue.dark,
         ...!isMobile && { marginVertical: 100, },
+        ...isMobile && { marginVertical: 10, },
     },
     questionNumber: {
+        marginTop: !isMobile ? -20 : -15,
         fontSize: !isMobile ? 30 : 17,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
+        ...isMobile && { marginVertical: 10, },
+        ...!isMobile && { marginTop: 0, },
     },
     score: {
+        marginBottom: -15,
         fontSize: !isMobile ? 30 : 12,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
     },
     answersView: {
-        flexDirection: (!isMobile? 'row': 'column'),
+        flexDirection: (!isMobile ? 'row' : 'column'),
         justifyContent: 'center',
         width: !isMobile ? '50%' : '100%',
         alignItems: 'center',
@@ -445,6 +430,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...isMobile && { marginVertical: 10, },
     },
     disabledButtons: {
         display: 'flex',
@@ -457,23 +443,28 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...isMobile && { marginVertical: 10, },
     },
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',
+        ...isMobile && { marginVertical: 10, },
     },
     quizBarView: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        ...isMobile && { marginVertical: 10, },
     },
     quizBarTextView: {
         fontSize: 22,
+        ...isMobile && { marginVertical: 10, },
     },
     errorText: {
         fontSize: 18,
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
+        ...isMobile && { marginVertical: 10, },
     },
 });

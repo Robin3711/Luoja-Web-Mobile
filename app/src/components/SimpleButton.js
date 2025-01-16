@@ -18,6 +18,7 @@ export default function SimpleButton({
     marginBottom = 25,
     paddingVertical = 10,
     loading = false,
+    backgroundColor = COLORS.button.blue.basic,
 }) {
     const [scale, setScale] = useState(1);
     const [buttonColor, setButtonColor] = useState(color);
@@ -61,8 +62,8 @@ export default function SimpleButton({
                     marginVertical,
                     marginBottom,
                     paddingVertical,
-                    transform: [{ scale }],
-                    backgroundColor: disabled ? COLORS.button.disabled : COLORS.button.blue.basic
+                    transform: [{ scale: !isMobile ? scale : 1 }],
+                    backgroundColor: disabled ? COLORS.button.disabled : backgroundColor
                 },
             ]}
             disabled={disabled}

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet , Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 
 import { getUserInfos } from '../utils/api';
@@ -12,15 +12,15 @@ import GradientBackground from '../css/utils/linearGradient';
 
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 export default function Account() {
     const route = useRoute();
     const navigation = useNavigation();
     let roomId = null
 
-    if(route.params){
+    if (route.params) {
         roomId = route.params.roomId;
     }
 
@@ -73,7 +73,7 @@ export default function Account() {
     }
     else {
         return (
-            <GradientBackground>
+            <GradientBackground showLogo={true}>
                 {error ? (
                     <View style={styles.quizScreenView}>
                         <Text style={FONT.error}>{errorMessage}</Text>
@@ -89,14 +89,14 @@ export default function Account() {
                         <Text style={FONT.luoja}>Luoja</Text>
                         <View style={styles.childView}>
                             <Text style={FONT.text}>Cette fonctionnalité nécessite un compte</Text>
-                            <SimpleButton text="Se connecter" onPress={() => navigation.navigate('login', { roomId : roomId })} />
-                            <SimpleButton text="Créer un compte" onPress={() => navigation.navigate('register', { roomId : roomId })} />
+                            <SimpleButton text="Se connecter" onPress={() => navigation.navigate('login', { roomId: roomId })} />
+                            <SimpleButton text="Créer un compte" onPress={() => navigation.navigate('register', { roomId: roomId })} />
                         </View>
                     </View>
                 )}
             </GradientBackground>
         );
-        
+
     }
 }
 
@@ -107,7 +107,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 10,
     },
     appTitle: {
         height: !isMobile ? '10%' : '25%',

@@ -140,7 +140,7 @@ export const difficultyOptions = [
 export const publishSortOptions = [
     { label: 'Tout', value: null },
     { label: 'Publier', value: true },
-    { label: 'Incomplet', value: false },
+    { label: 'Inachever', value: false },
 ];
 
 export const historySortOptions = [

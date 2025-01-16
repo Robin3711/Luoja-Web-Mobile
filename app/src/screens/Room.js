@@ -230,7 +230,7 @@ export default function Room() {
                                 color={COLORS.button.blue.basic}
                                 marginBottom={isMobile ? 0 : 10}
                                 marginVertical={isMobile ? 0 : 1}
-                                width={isMobile ? "50%" : "100%"}
+                                width={isMobile ? "50%" : 300}
                             />
                         )}
                         {owner !== user && (
@@ -242,7 +242,7 @@ export default function Room() {
                             color={COLORS.button.blue.basic}
                             marginBottom={isMobile ? 0 : 1}
                             marginVertical={isMobile ? 0 : 1}
-                            width={isMobile ? "50%" : "100%"}
+                            width={isMobile ? "50%" : 300}
                         />
                     </View>
                 )}
@@ -252,6 +252,7 @@ export default function Room() {
                             text="Retourner au menu"
                             onPress={handleReturnHome}
                             color={COLORS.button.blue.basic}
+                            width={isMobile ? "50%" : 300}
                         />
                     </View>
                 )}
@@ -266,7 +267,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 20,
-        backgroundColor: COLORS.background.blue,
         gap: !isMobile ? 20 : 0,
     },
     title: {

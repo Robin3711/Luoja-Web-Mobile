@@ -279,28 +279,26 @@ export default function QuizCreation() {
     };
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             <View style={styles.quizCreationView}>
                 <Text style={styles.title}>Créez votre propre quiz !</Text>
                 <View style={styles.quizCreationChildVIew}>
                     <View style={styles.quizCreationLeftView}>
-                        <View>
-                            <Text style={styles.text}>Titre</Text>
-                            <View style={styles.quizTitleView}>
-                                <TextInput style={styles.quizTitleText} placeholder='Titre du quiz' value={title} onChangeText={setTitle} />
-                            </View>
-                            <Text style={styles.text}>Thème</Text>
-                            <ThemeSelector onValueChange={setCategory} />
-                            <Text style={styles.text}>Difficulté</Text>
-                            <ChoicePicker value={difficulty} onValueChange={setDifficulty} />
-                            <View style={styles.quizCreationTopButtonsView}>
-                                <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
-                                    <Text style={FONT.button}>Importer des questions</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttons} onPress={handleClickCreateQuestion}>
-                                    <Text style={FONT.button}>Créer une question</Text>
-                                </TouchableOpacity>
-                            </View>
+                        <Text style={styles.text}>Titre</Text>
+                        <View style={styles.quizTitleView}>
+                            <TextInput style={styles.quizTitleText} placeholder='Titre du quiz' value={title} onChangeText={setTitle} />
+                        </View>
+                        <Text style={styles.text}>Thème</Text>
+                        <ThemeSelector onValueChange={setCategory} />
+                        <Text style={styles.text}>Difficulté</Text>
+                        <ChoicePicker value={difficulty} onValueChange={setDifficulty} />
+                        <View style={styles.quizCreationTopButtonsView}>
+                            <TouchableOpacity style={styles.buttons} onPress={handleClickRetrieveQuestions}>
+                                <Text style={FONT.button}>Importer des questions</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttons} onPress={handleClickCreateQuestion}>
+                                <Text style={FONT.button}>Créer une question</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
 
@@ -342,6 +340,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         flexDirection: 'column',
+        position: 'relative',
+        top: -50
     },
     title: {
         marginTop: '3%',
@@ -379,16 +379,17 @@ const styles = StyleSheet.create({
         width: '40%',
         marginRight: '10%',
         marginLeft: '5%',
+        maxHeight: '62vh',
     },
     quizCreationTopButtonsView: {
-        marginTop: '3%',
+        marginTop: '3vh',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         gap: '10%',
     },
     quizCreationBottomButtonsView: {
-        marginTop: '5%',
+        marginTop: '2vh',
         flexDirection: 'row',
         justifyContent: 'center',
         gap: '10%',

@@ -60,7 +60,6 @@ export default function QuizScreen() {
     const [gameTime, setGameTime] = useState(0);
     const [timerInitialized, setTimerInitialized] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
-    const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
     const [animation, setAnimation] = useState('none');
 
     const confettiRef = useRef();
@@ -84,26 +83,6 @@ export default function QuizScreen() {
             setTimerInitialized(true);
         }
     }, [remainingTime]);
-
-    useEffect(() => {
-        let timer;
-        if (remainingTime === 1) {
-            timer = setTimeout(() => {
-                setTimeStuckAtOne(true);
-            }, 1000);
-        } else {
-            setTimeStuckAtOne(false);
-        }
-
-        return () => clearTimeout(timer);
-    }, [remainingTime]);
-
-    useEffect(() => {
-        if (timeStuckAtOne && remainingTime === 1) {
-            setRemainingTime(0);
-            setSelectedAnswer(true);
-        }
-    }, [timeStuckAtOne, remainingTime]);
 
     const refreshData = async (infos) => {
         try {
@@ -242,11 +221,13 @@ export default function QuizScreen() {
     }
 
     const stopAllAudios = () => {
-        audioRefs.current.forEach(audio => {
-            if (audio) {
-                audio.stopAudio();
-            }
-        });
+        if (audioRefs.current) {
+            audioRefs.current.forEach((audioRef) => {
+                if (audioRef) {
+                    audioRef.stopAudio();
+                }
+            });
+        }
     };
 
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
@@ -268,7 +249,7 @@ export default function QuizScreen() {
             }}
             disabled={buttonDisabled || selectedAnswer === null || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer)}
         >
-            <Text style={styles.buttonText}>
+            <Text style={FONT.button}>
                 {gameMode === 'timed' && remainingTime === 0 ? (
                     buttonDisabled ? 'Chargement de la question suivante...' : (loading ? ('Question suivante') : ('Chargement...'))
                 ) : isAnswered ? (
@@ -339,7 +320,7 @@ export default function QuizScreen() {
                                     {!isMobile && nextQuestionButton()}
                                 </View>
 
-                                <View style={[styles.answersView, {flexDirection: currentType === 'image' ? 'row' : 'column', flexWrap: currentType === 'image'? 'wrap' : (!isMobile? 'wrap' : 'nowrap'),}]}>
+                                <View style={[styles.answersView, { flexDirection: currentType === 'image' ? 'row' : 'column', flexWrap: currentType === 'image' ? 'wrap' : (!isMobile ? 'wrap' : 'nowrap'), }]}>
                                     {currentQuestion.answers.map((answer, index) => {
                                         return (
                                             answer === null ? null : (
@@ -405,14 +386,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...!isMobile && { gap: 20, },
-        ...isMobile && { marginVertical: 10, },
+        ...isMobile && { gap: '5%', },
     },
     questionView: {
         alignItems: 'center',
         top: !isMobile ? 20 : 50,
         width: !isMobile ? '45%' : '100%',
         ...isMobile && { marginVertical: 10, },
-        ...!isMobile && { gap: 70, },
+        ...!isMobile && { gap: 40, },
     },
     question: {
         fontSize: !isMobile ? 30 : 25,
@@ -440,7 +421,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     answersView: {
-        flexDirection: (!isMobile? 'row': 'column'),
+        flexDirection: (!isMobile ? 'row' : 'column'),
         justifyContent: 'center',
         width: !isMobile ? '50%' : '100%',
         alignItems: 'center',
