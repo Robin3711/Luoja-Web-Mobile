@@ -113,6 +113,13 @@ export default function RoomQuizScreen() {
         switch (data.eventType) {
             case "quizInfos":
                 setTotalQuestion(data.totalQuestion);
+
+                if  (data.currentQuestion)
+                {
+                console.log(data.currentQuestion );
+                setQuestionNumber(data.currentQuestion+1);
+                setScore(data.score);
+                }
                 break;
             case "nextQuestion":
                 handleNewQuestion();
@@ -134,12 +141,6 @@ export default function RoomQuizScreen() {
                 if (data.remainingTime === 0) {
                     setIsAnswered(true);
                 }
-                break;
-            case "currentQuestion":
-                setCurrentQuestion(data.currentQuestion);
-                break;
-            case "score":
-                setScore(data.score);
                 break;
             default:
                 break;
