@@ -35,7 +35,6 @@ const ChooseFile = ({ onValueChange }) => {
 
                 setIds(validFiles.map((file) => file.fileName));
                 const imagePromises = validFiles.map(async (file) => {
-                    console.log(file);
                     const { fileName } = file;
                     const imageBlob = await downloadImage(fileName);
 
@@ -97,7 +96,7 @@ const ChooseFile = ({ onValueChange }) => {
 
             }
         }).catch((error) => {
-            console.log(error);
+            toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
         }
         );
     };

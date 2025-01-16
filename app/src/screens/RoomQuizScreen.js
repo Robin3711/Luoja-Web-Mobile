@@ -233,7 +233,6 @@ export default function RoomQuizScreen() {
     const stopAllAudios = () => {
         audioRefs.current.forEach(audio => {
             if (audio) {
-                console.log("stop audio");
                 audio.stopAudio();
             }
         });
