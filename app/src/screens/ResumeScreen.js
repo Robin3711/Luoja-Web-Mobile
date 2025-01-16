@@ -62,7 +62,7 @@ export default function ResumeScreen() {
     };
 
     return (
-        <GradientBackground showLogo={true}>
+        <GradientBackground>
             <View style={styles.container}>
                 <Text style={styles.title}>Reprenez votre partie</Text>
                 <View style={styles.inputView}>

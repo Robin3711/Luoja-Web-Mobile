@@ -59,7 +59,7 @@ export default function EndScreen() {
     };
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             {error ? (
             <View style={styles.container}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
