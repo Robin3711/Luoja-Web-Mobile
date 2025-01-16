@@ -28,6 +28,7 @@ export default function Dashboard() {
     const [sortHistory, setSortHistory] = useState(null);
     const [showFastQuizOnly, setShowFastQuizOnly] = useState(false);
     const [showHistory, setShowHistory] = useState(true); // Nouvel état pour gérer l'affichage des sections
+    const [disableInformation, setDisableInformation] = useState(false);
 
     if (!hasToken()) {
         navigation.navigate('login');
@@ -103,47 +104,47 @@ export default function Dashboard() {
     return (
         <GradientBackground>
             {
-            error ? (
-                <View style={styles.quizScreenView}>
-                    <Text style={styles.errorText}>{errorMessage}</Text>
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate('initMenu', { screen: 'account' })
-                    }
-                    }>
-                        <Text style={styles.buttonText}>Retour au menu</Text>
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <View style={styles.dashboardView}>
-                    <Text style={FONT.title}>Tableau de bord</Text>
-                    <View style={styles.dashboardContainer}>
-                        {isMobile && (
-                            <TouchableOpacity
-                                style={styles.toggleButton}
-                                onPress={() => setShowHistory(!showHistory)}
-                            >
-                                <Text style={styles.toggleButtonText}>
-                                    {showHistory ? "Afficher vos quiz publiés" : "Afficher l'historique"}
-                                </Text>
-                            </TouchableOpacity>
-                        )}
-                        {(!isMobile || showHistory) && (
-                            <View style={styles.dashboardSection}>
-                                <Text style={styles.dashboardText}>Historique</Text>
-                                <View style={styles.buttonContainer}>
-                                    <ChoiseSelector value={sortHistory} onValueChange={setSortHistory} parameters={historySortOptions} defaultValue={true} />
-                                    <TouchableOpacity
-                                        style={[
-                                            styles.filterButton,
-                                            showFastQuizOnly && styles.activeFilterButton
-                                        ]}
-                                        onPress={() => setShowFastQuizOnly(!showFastQuizOnly)}
-                                    >
-                                        <Text style={styles.filterButtonText}>
-                                            {showFastQuizOnly ? "Afficher Tout" : "Enlever les quizs rapides"}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
+                error ? (
+                    <View style={styles.quizScreenView}>
+                        <Text style={styles.errorText}>{errorMessage}</Text>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('initMenu', { screen: 'account' })
+                        }
+                        }>
+                            <Text style={styles.buttonText}>Retour au menu</Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : (
+                    <View style={styles.dashboardView}>
+                        <Text style={FONT.title}>Tableau de bord</Text>
+                        <View style={styles.dashboardContainer}>
+                            {isMobile && (
+                                <TouchableOpacity
+                                    style={styles.toggleButton}
+                                    onPress={() => setShowHistory(!showHistory)}
+                                >
+                                    <Text style={styles.toggleButtonText}>
+                                        {showHistory ? "Afficher vos quiz publiés" : "Afficher l'historique"}
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                            {(!isMobile || showHistory) && (
+                                <View style={styles.dashboardSection}>
+                                    <Text style={styles.dashboardText}>Historique</Text>
+                                    <View style={styles.buttonContainer}>
+                                        <ChoiseSelector value={sortHistory} onValueChange={setSortHistory} parameters={historySortOptions} defaultValue={true} />
+                                        <TouchableOpacity
+                                            style={[
+                                                styles.filterButton,
+                                                showFastQuizOnly && styles.activeFilterButton
+                                            ]}
+                                            onPress={() => setShowFastQuizOnly(!showFastQuizOnly)}
+                                        >
+                                            <Text style={styles.filterButtonText}>
+                                                {showFastQuizOnly ? "Afficher Tout" : "Enlever les quizs rapides"}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
 
                                     <ScrollView>
                                         {handleSortHistoryItems([...history].reverse(), sortHistory).map((item, index) => (
@@ -171,6 +172,8 @@ export default function Dashboard() {
                                                     status={item.public}
                                                     title={item.title}
                                                     nbQuestions={item.numberOfQuestions}
+                                                    setDisable={setDisableInformation}
+                                                    disable={disableInformation}
                                                 />
                                             </View>
                                         ))}

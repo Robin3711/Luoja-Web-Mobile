@@ -1,26 +1,14 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Dimensions, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-
+import { COLORS } from '../css/utils/color';
+import { downloadImage, downloadAudio } from '../utils/api';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
-
-import Animated, { 
-    interpolate, 
-    useAnimatedStyle, 
-    useSharedValue, 
-    withRepeat, 
-    withTiming 
-} from 'react-native-reanimated';
-
-import { COLORS } from '../css/utils/color';
-import { downloadAudio, downloadImage } from '../utils/api';
 import { toast } from '../utils/utils';
 
-// ** Constantes **
-
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 const Star = ({ shapeColor, borderColor }) => (
     <Svg width={!isMobile ? "115" : "75"} height="115" viewBox="-2 -2 28 28" fill="none">
@@ -45,12 +33,8 @@ const Triangle = ({ shapeColor, borderColor }) => (
     </Svg>
 );
 
-// ** Fin Composants **
 
-const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation }, ref) => {
-
-    // ** Constantes **
-
+const AnswerButton = ({ shape, onClick, text, filter, type }) => {
     const backgroundColors = {
         SQUARE: '#58bdfe',
         CIRCLE: '#484a77',
@@ -58,28 +42,24 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
         STAR: '#323353',
     };
 
-    const shapeColors = {
+    const figureFilters = {
         GREEN: COLORS.button.response.correct.light,
         RED: COLORS.button.response.incorrect.light,
     };
 
-    const borderColors = {
+    const borderFilters = {
         GREEN: COLORS.button.response.correct.dark,
         RED: COLORS.button.response.incorrect.dark,
     };
 
-    const answerColors = {
+    const questionFilters = {
         GREEN: COLORS.button.response.correct.normal,
         RED: COLORS.button.response.incorrect.normal,
     }
 
-    // ** Fin Constantes **
-
-    // ** Rendu Formes **
-
     const renderShape = () => {
-        const shapeColor = shapeColors[color];
-        const borderColor = borderColors[color];
+        const shapeColor = figureFilters[filter];
+        const borderColor = borderFilters[filter];
         switch (shape) {
             case 'SQUARE':
                 return <View style={[styles.shapeStyles.square, { backgroundColor: shapeColor || "#c0e6ff", borderColor: borderColor || "#09649f" }]} />;
@@ -94,21 +74,10 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
         }
     };
 
-    // ** Fin Rendu Formes **
-
-    // ** Media **
-
     const [file, setFile] = useState(null);
     const fileRef = useRef(null);
-    const sound = useRef(new Audio.Sound());
+    const sound = new Audio.Sound();
 
-    useImperativeHandle(ref, () => ({
-        stopAudio: async () => {
-            if (sound.current) {
-                await sound.current.stopAsync();
-            }
-        }
-    }));
 
     async function blobToBase64(blob) {
         return new Promise((resolve, reject) => {
@@ -121,13 +90,14 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
 
     const playSound = async () => {
         try {
-            await sound.current.unloadAsync();
-            await sound.current.loadAsync({ uri: file });
-            await sound.current.playAsync();
+            await sound.unloadAsync();
+            await sound.loadAsync({ uri: file });
+            await sound.playAsync();
         } catch (error) {
             toast("error", 'Erreur lors de la lecture du son', '', 1500, COLORS.toast.text.red);
         }
-    };  
+    };
+
 
     useEffect(() => {
 
@@ -150,17 +120,27 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
                         setFile(url);
                     }
 
-                    await sound.current.loadAsync({ uri: url });
+
+                    await sound.loadAsync({ uri: url });
 
                 }
             }
             handleMedia();
 
             return () => {
-                sound.current.unloadAsync();
+                sound.unloadAsync();
             };
 
         } else {
+            async function requestPermission() {
+                const { status } = await Audio.requestPermissionsAsync();
+                if (status !== 'granted') {
+                    toast('warn', 'Permission audio non accordée', '', 1500, COLORS.toast.text.orange);
+                }
+            }
+            requestPermission();
+
+
             async function handleMedia() {
                 let fileUri = null;
                 try {
@@ -180,7 +160,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
                         await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
                         setFile(fileUri);
                         fileRef.current = fileUri;
-                        await sound.current.loadAsync({ uri: fileUri });
+                        await sound.loadAsync({ uri: fileUri });
                     }
                 } catch (error) {
                     toast('error', 'Erreur lors du traitement des fichiers média', '', 1500, COLORS.toast.text.red);
@@ -192,8 +172,8 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
             return () => {
                 async function cleanup() {
                     try {
-                        if (sound.current) {
-                            await sound.current.unloadAsync();
+                        if (sound) {
+                            await sound.unloadAsync();
                         }
                         if (fileRef.current) {
                             const exists = await FileSystem.getInfoAsync(fileRef.current);
@@ -211,97 +191,49 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
 
     }, [text, type]);
 
-    // ** Fin Media **
-
-    // ** Animation **
-
-    // 0.5 = rotation de base
-    const rotation = useSharedValue(0.5);
-
-    useEffect(() => {
-        if (animation === 'win' && color === 'GREEN') {
-
-            // Aller à 0 
-            rotation.value = withTiming(0, { duration: 250 }, () => {
-                // Commencer l'animation de rotation
-                rotation.value = withRepeat(
-                    withTiming(1, { duration: 250 }),
-                    5, // Répéter 5 fois
-                    true, // Alterner la direction
-                    () => {
-                        // Retour à 0.5
-                        rotation.value = withTiming(0.5, { duration: 250 });
-                        }
-                );
-            });
-        }
-    }, [animation]);
-
-    const animatedStyle = useAnimatedStyle(() => {
-        const rotate = interpolate(rotation.value, [0, 1], [-1, 1]);
-
-        return {
-            transform: [{ rotate: `${rotate}deg` }],
-        };
-    });
-
-    // ** Fin Animation **
-
-    // ** JSX **
 
     return (
-        <Animated.View style={[styles.animatedContainer, animatedStyle]}>
-            <TouchableOpacity
-                onPress={() => onClick(text)}
-                style={[
-                    styles.container,
-                    {
-                        backgroundColor: answerColors[color] || backgroundColors[shape],
-                        borderColor: 'black', borderWidth: color === 'BLUE' ? 7 : 0,
-                        height: !isMobile ? 160 : 80,
-                        width: color === 'BLUE' ? '90%' : '95%',
-                        marginVertical: color === 'BLUE' ? 10 : 5,
-                    },
-                ]}
-            >
-                {renderShape()}
-                {type === "text" && (
-                    <Text style={styles.text}>{text}</Text>
-                )}
-                {type === "image" && (
-                    <Image
-                        source={{ uri: file }}
-                        style={styles.Image}
-                    />
-                )}
-                {type === "audio" && (
-                    <>
-                        <TouchableOpacity onPress={playSound} style={styles.button}>
-                            <Text style={styles.text}>Play</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={async () => { sound.current.pauseAsync() }} style={styles.button}>
-                            <Text style={styles.text}>Pause</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={async () => { sound.current.stopAsync() }} style={styles.button}>
-                            <Text style={styles.text}>Stop</Text>
-                        </TouchableOpacity>
-                    </>
-                )}
-            </TouchableOpacity>
-        </Animated.View>
+        <TouchableOpacity
+            onPress={() => onClick(text)}
+            style={[
+                styles.container,
+                {
+                    backgroundColor: questionFilters[filter] || backgroundColors[shape],
+                    borderColor: 'black', borderWidth: filter === 'BLUE' ? 7 : 0,
+                    height: !isMobile ? 160 : 80,
+                    width: filter === 'BLUE' ? '90%' : '95%',
+                    marginVertical: filter === 'BLUE' ? 10 : 5,
+                },
+            ]}
+        >
+            {renderShape()}
+            {type === "text" && (
+                <Text style={styles.text}>{text}</Text>
+            )}
+            {type === "image" && (
+                <Image
+                    source={{ uri: file }}
+                    style={styles.Image}
+                />
+            )}
+            {type === "audio" && (
+                <>
+                    <TouchableOpacity onPress={playSound} style={styles.button}>
+                        <Text style={styles.text}>Play</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={async () => { sound.pauseAsync() }} style={styles.button}>
+                        <Text style={styles.text}>Pause</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={async () => { sound.stopAsync() }} style={styles.button}>
+                        <Text style={styles.text}>Stop</Text>
+                    </TouchableOpacity>
+                </>
+            )}
+        </TouchableOpacity>
     );
-
-    // ** End JSX **
-});
-
-// ** Style **
+};
 
 const styles = StyleSheet.create({
-    animatedContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-    },
     container: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -318,7 +250,7 @@ const styles = StyleSheet.create({
         width: '75%',
         textAlign: 'center',
         color: 'white',
-        fontSize: !isMobile ? 25 : 18,
+        fontSize: !isMobile ? 25 : 18, // Adjust font size for mobile
     },
     shapeStyles: {
         square: {
@@ -335,15 +267,15 @@ const styles = StyleSheet.create({
         },
     },
     Image: {
-        width: !isMobile ? 100 : 60,
-        height: !isMobile ? 100 : 60,
+        width: !isMobile ? 100 : 60, // Adjust size for mobile
+        height: !isMobile ? 100 : 60, // Adjust size for mobile
         resizeMode: 'cover',
     },
     button: {
         position: 'relative',
         backgroundColor: COLORS.button.blue.basic,
-        height: !isMobile ? 50 : 40,
-        width: !isMobile ? 100 : 80,
+        height: !isMobile ? 50 : 40, // Adjust size for mobile
+        width: !isMobile ? 100 : 80, // Adjust size for mobile
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
@@ -354,7 +286,5 @@ const styles = StyleSheet.create({
         } : { elevation: 2 },
     },
 });
-
-// ** Fin Style **
 
 export default AnswerButton;

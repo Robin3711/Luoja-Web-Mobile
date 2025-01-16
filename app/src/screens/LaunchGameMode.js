@@ -23,11 +23,14 @@ export default function LaunchGameMode() {
     const [scrumPlayerCount, setScrumPlayerCount] = useState("");
     const [teamCount, setTeamCount] = useState("");
     const [teams, setTeams] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [disable, setDisable] = useState(false);
+
 
     const handleStartQuiz = (gameMode) => {
+        setDisable(true);
         createGame(quizId, gameMode, gameMode === "timed" ? timerDifficulty : scrumDifficulty)
             .then((game) => {
+                setDisable(false);
                 navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
             })
             .catch((error) => {
@@ -35,15 +38,18 @@ export default function LaunchGameMode() {
                     ? `${error.status}: ${error.message}`
                     : error.toString();
                 toast('error', 'Erreur', errorMsg, 3000, COLORS.toast.text.red);
+                setDisable(false);
             });
     };
 
     const handleStartRoom = (gameMode) => {
+        setDisable(true);
         let roomTeams = teams.length > 1 ? teams : ["Team 1", "Team 2"];
         const playerCount = gameMode === "scrum" ? scrumPlayerCount : 99;
 
         if (gameMode === "scrum" && playerCount <= 1) {
             toast("error", 'Il faut au moins deux joueurs pour lancer une partie', '', 2000, COLORS.toast.text.red);
+            setDisable(false);
             return;
         }
 
@@ -56,8 +62,15 @@ export default function LaunchGameMode() {
         };
 
         createRoom(roomPayload)
-            .then((room) => navigation.navigate('room', { roomId: room.id }))
-            .catch((error) => console.error(error));
+            .then((room) => { setDisable(false); navigation.navigate('room', { roomId: room.id }) })
+            .catch((error) => {
+                if (error.status && error.message) {
+                    toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
+                } else {
+                    toast('error', 'Erreur', error, 3000, COLORS.toast.text.red);
+                }
+                setDisable(false);
+            });
     };
 
     const handleTeamNameChange = (index, name) => {
@@ -81,19 +94,16 @@ export default function LaunchGameMode() {
                         <Text style={FONT.title}>Choisissez un mode de jeu</Text>
                         <View style={styles.container}>
                             <View style={styles.item}>
-                                <SimpleButton text="Standard" onPress={() => handleStartQuiz()} />
+                                <SimpleButton text="Standard" onPress={() => handleStartQuiz()} disabled={disable} />
                                 <Text style={FONT.paragraphe}>Le joueur dispose d’un temps illimité pour répondre à chaque question.</Text>
                             </View>
                             <View style={styles.item}>
-                                <SimpleButton text="Compte à rebours" onPress={() => handleStartQuiz("timed")} />
+                                <SimpleButton text="Compte à rebours" onPress={() => handleStartQuiz("timed")} disabled={disable} />
                                 <Text style={FONT.paragraphe}>Le joueur dispose d’un temps limité pour répondre à chaque question : 30s (facile), 15s (moyen), ou 5s (difficile).</Text>
                                 <ChoiseSelector value={timerDifficulty} onValueChange={setTimerDifficulty} defaultValue={true} />
                             </View>
                             <View style={styles.item}>
-                                <SimpleButton text="SCRUM" onPress={() => {
-                                setIsLoading(true);
-                                handleStartRoom("scrum");
-                            }}  disabled={isLoading}/>
+                                <SimpleButton text="SCRUM" onPress={() => handleStartRoom("scrum")} disabled={disable} />
                                 <Text style={FONT.paragraphe}>Plusieurs joueurs jouent simultanément au même quiz. Le premier à répondre correctement gagne les points et déclenche la question suivante. Chaque joueur ne peut répondre qu'une fois par question.</Text>
                                 <View style={styles.inputRow}>
                                     <Text style={styles.label}>Nombre de joueurs</Text>
@@ -116,11 +126,10 @@ export default function LaunchGameMode() {
                                         keyboardType="numeric"
                                         onChangeText={(text) => {
                                             const number = parseInt(text, 10);
-                                        if(number > 6)
-                                        {
-                                            toast("error", "Le nombre de team est limité à 6", "", 2000, COLORS.toast.text.red);
-                                            return;
-                                        };
+                                            if (number > 6) {
+                                                toast("error", "Le nombre de team est limité à 6", "", 2000, COLORS.toast.text.red);
+                                                return;
+                                            };
                                             setTeamCount(isNaN(number) ? "" : number);
                                             setTeams(isNaN(number) ? [] : Array.from({ length: number }, (_, i) => `Team ${i + 1}`));
                                         }}

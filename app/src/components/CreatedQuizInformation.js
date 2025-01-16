@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet , Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { createGame, getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 import { toast } from '../utils/utils';
@@ -9,10 +9,10 @@ import { FONT } from '../css/utils/font';
 
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
-export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions }) {
+export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions, setDisable, disable }) {
     const [loading, setLoading] = useState(true);
     const [average, setAverage] = useState("aucune donnée");
     const [nbPlayed, setNbPlayed] = useState(0);
@@ -63,8 +63,19 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
 
     const handlePlayQuiz = async () => {
         if (status === true && !isMobile) {
-            const data = await createGame(quizId);
-            navigation.navigate('quizScreen', { gameId: data.id });
+            try {
+                setDisable(true);
+                const data = await createGame(quizId);
+                setDisable(false);
+                navigation.navigate('quizScreen', { gameId: data.id });
+            } catch (error) {
+                if (error.status && error.message) {
+                    toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                } else {
+                    toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                }
+                setDisable(false);
+            }
         }
     };
 
@@ -82,6 +93,7 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                         height={30}
                         width={100}
                         textStyle={{ fontSize: 20 }}
+                        disabled={disable}
                     />
                 </View>
                 <View style={styles.SecondaryInformationsView}>
@@ -105,6 +117,7 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                     height={30}
                     width={100}
                     textStyle={{ fontSize: 20 }}
+                    disabled={disable}
                 />
             </View>
             <View style={styles.SecondaryInformationsView}>
