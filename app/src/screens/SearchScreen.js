@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
         borderRadius: 20,
+        marginVertical: 5,
 
     },
     alternateBackground: {
