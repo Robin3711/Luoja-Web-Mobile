@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
@@ -22,6 +22,7 @@ const isMobile = width < height
 
 export default function RoomQuizScreen() {
 
+    const audioRefs = useRef([]);
 
     const sound = new Audio.Sound();
 
@@ -160,6 +161,7 @@ export default function RoomQuizScreen() {
     };
 
     const handleNewQuestion = async () => {
+        stopAllAudios();
         await sound.unloadAsync();
         try {
             setSelectedAnswer(null);
@@ -194,10 +196,12 @@ export default function RoomQuizScreen() {
                 confettiRef.current.startConfetti();
                 setAnimation('win');
                 updateScore();
+            } else if (gameMode === "scrum") {
+                setMessage("En attente des autres joueurs...");
             }
             else{
                 setAnimation('lose');
-            }
+            } 
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -233,9 +237,19 @@ export default function RoomQuizScreen() {
     };
 
     const handleEnd = () => {
+        stopAllAudios();
         navigation.navigate('roomEndScreen', {
             roomId: roomId,
             gameMode: gameMode,
+        });
+    };
+
+    const stopAllAudios = () => {
+        audioRefs.current.forEach(audio => {
+            if (audio) {
+                console.log("stop audio");
+                audio.stopAudio();
+            }
         });
     };
 
@@ -273,7 +287,7 @@ export default function RoomQuizScreen() {
 
                                 <View style={styles.questionView}>
 
-                                    <Text>{message}</Text>
+                                    <Text style={FONT.text}>{message}</Text>
 
                                     <CountdownCircleTimer
                                         key={timerKey}
@@ -296,7 +310,7 @@ export default function RoomQuizScreen() {
                                                 {gameMode === "team" ? (
                                                     <Text style={styles.questionNumber}>{remainingTime}</Text>
                                                 ) : (<Text style={styles.questionNumber}></Text>)}
-
+                                            
                                                 <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                             </>
                                         )}
@@ -312,6 +326,7 @@ export default function RoomQuizScreen() {
                                         answer === null ? null : (
                                             <AnswerButton
                                                 key={index}
+                                                ref={el => audioRefs.current[index] = el}
                                                 shape={shapes[index]}
                                                 text={answer}
                                                 onClick={() => handleAnswerSelection(answer)}

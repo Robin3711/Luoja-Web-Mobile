@@ -106,7 +106,11 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
 
     useImperativeHandle(ref, () => ({
         stopAudio: async () => {
+            console.log('stopAudio');
+
             if (sound.current) {
+                console.log('ref', ref);
+    
                 await sound.current.stopAsync();
             }
         }
