@@ -69,13 +69,17 @@ export default function EndScreen() {
                     </TouchableOpacity>
                 </View>
             ) : (
-                <View style={styles.container}>
+                <ScrollView>
                     <View style={styles.parentContainer}>
                         <Text style={[styles.title, { marginBottom: 100 }]}>Fin de partie !</Text>
                         {scores !== null ? (
-                            <ScrollView style={styles.scoreContainer}>
+                            <View>
+                                <SimpleButton
+                                    text="Retour au menu"
+                                    onPress={handleReturnHome}
+                                />
                                 <Text style={styles.scoreTitle}>Scores :</Text>
-                                <ScrollView style={styles.scoreContainer}>
+                                <View style={styles.scoreContainer}>
                                     {gameMode === "scrum" ? (
                                         <View style={styles.scrumContainer}>
                                             {scores.map((score, index) => (
@@ -85,7 +89,8 @@ export default function EndScreen() {
                                             ))}
                                         </View>
                                     ) : (
-                                        <ScrollView horizontal style={styles.teamsContainer}>
+                                        <View>
+
                                             {scores.map((score, index) => (
                                                 <View key={index} style={styles.team}>
                                                     <Text style={FONT.subTitle}>
@@ -100,20 +105,17 @@ export default function EndScreen() {
                                                     </ScrollView>
                                                 </View>
                                             ))}
-                                        </ScrollView>
+                                        </View>
                                     )}
-                                </ScrollView>
-                            </ScrollView>
+                                </View>
+                            </View>
                         ) : (
                             <Text>Chargement du score...</Text>
                         )}
                     </View>
 
-                    <SimpleButton
-                        text="Retourner au menu"
-                        onPress={handleReturnHome}
-                    />
-                </View>
+                    
+                </ScrollView>
             )}
         </GradientBackground>
     );
@@ -167,11 +169,10 @@ const styles = StyleSheet.create({
     },
     teamsContainer: {
         maxWidth: '90vw',
-        overflow: 'auto',
-        flexDirection: 'row',
+        flexDirection: 'column',
         marginVertical: 20,
         paddingBottom: 20,
-        height: '80%',
+        height: '100%',
     },
     team: {
         alignItems: 'center',
