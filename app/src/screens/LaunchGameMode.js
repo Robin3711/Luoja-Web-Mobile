@@ -19,7 +19,7 @@ export default function LaunchGameMode() {
 
     const quizId = route.params.quizId;
     const [timerDifficulty, setTimerDifficulty] = useState("easy");
-    const [scrumDifficulty, setScrumDifficulty] = useState("easy");
+    const [roomTimerDifficulty, setRoomTimerDifficulty] = useState("easy");
     const [scrumPlayerCount, setScrumPlayerCount] = useState("");
     const [teamCount, setTeamCount] = useState("");
     const [teams, setTeams] = useState([]);
@@ -58,7 +58,7 @@ export default function LaunchGameMode() {
             playerCount,
             gameMode,
             teams: roomTeams,
-            difficulty: scrumDifficulty
+            difficulty: roomTimerDifficulty,
         };
 
         createRoom(roomPayload)
@@ -115,6 +115,7 @@ export default function LaunchGameMode() {
                             <View style={styles.item}>
                                 <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} disabled={disable} />
                                 <Text style={FONT.paragraphe}>Les joueurs forment des équipes et répondent aux questions avec un temps limité, configurable par niveau de difficulté. Le score final de chaque équipe est la moyenne des scores de ses membres.</Text>
+                                <ChoiseSelector value={roomTimerDifficulty} onValueChange={setRoomTimerDifficulty} defaultValue={true} />
                                 <View style={styles.inputRow}>
                                     <Text style={styles.label}>Nombre d'équipes</Text>
                                     <TextInput
