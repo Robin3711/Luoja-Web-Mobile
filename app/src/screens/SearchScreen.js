@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Text, View, Platform, Dimensions, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { Text, View, Platform, Dimensions, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';
@@ -63,6 +63,12 @@ export default function SearchScreen() {
 
     return (
         <GradientBackground>
+            <View style={styles.imageContainer}>
+                <Image
+                    source={require('../../assets/LogoLuojaRepete.png')}
+                    style={styles.image}
+                />
+            </View>
             {error ? (
                 <View style={styles.screen}>
                     <Text style={styles.errorText}>{errorMessage}</Text>
@@ -204,5 +210,21 @@ const styles = StyleSheet.create({
     },
     alternateBackground: {
         backgroundColor: COLORS.palette.blue.lighter,
+    },
+    imageContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    image: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+        tintColor: COLORS.palette.blue.light,
+        opacity: 0.35,
     },
 });

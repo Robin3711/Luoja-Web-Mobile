@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Slider from '@react-native-assets/slider';
+import { FONT } from '../css/utils/font';
 
 
 const { width, height } = Dimensions.get('window');
@@ -17,7 +18,7 @@ const RangeCursor = ({ value, onValueChange }) => {
 
   return (
     <View style={styles.cursorContainer}>
-      <Text style={styles.cursorLabel}>Nombre de questions : {sliderValue}</Text>
+      <Text style={FONT.text}>Nombre de questions choisies : {sliderValue} / 50</Text>
       <Slider
         style={styles.slider}
         minimumValue={1}

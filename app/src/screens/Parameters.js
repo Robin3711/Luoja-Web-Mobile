@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { createQuiz } from '../utils/api';
@@ -46,6 +46,12 @@ export default function Parameters() {
 
   return (
     <GradientBackground>
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('../../assets/LogoLuojaRepete.png')}
+          style={styles.image}
+        />
+      </View>
       <View style={styles.screen}>
         <Text style={FONT.title}>Générer un nouveau quiz !</Text>
         <View style={styles.list}>
@@ -112,5 +118,21 @@ const styles = StyleSheet.create({
     fontFamily: 'LobsterTwo_700Bold_Italic',
     marginTop: 5,
     color: COLORS.text.blue.dark,
+  },
+  imageContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    tintColor: COLORS.palette.blue.light,
+    opacity: 0.35,
   },
 });

@@ -63,7 +63,7 @@ export default function Register() {
         <GradientBackground>
             <View style={styles.imageContainer}>
                 <Image
-                    source={require('../../assets/LogoLuojaRepete.png')} // Remplacez par le chemin de votre image
+                    source={require('../../assets/LogoLuojaRepete.png')}
                     style={styles.image}
                 />
             </View>
