@@ -306,7 +306,7 @@ export default function RoomQuizScreen() {
                                     {!isMobile && validateAnswerButton()}
                                 </View>
 
-                                <View style={styles.answersView}>
+                                <View style={[styles.answersView, {flexDirection: currentQuestion.type === 'image' ? 'row' : 'column', flexWrap: currentQuestion.type === 'image'? 'wrap' : (!isMobile? 'wrap' : 'nowrap'),}]}>
                                     {currentQuestion.answers.map((answer, index) => (
                                         answer === null ? null : (
                                             <AnswerButton
@@ -413,9 +413,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     answersView: {
+        flexDirection: (!isMobile? 'row': 'column'),
+        justifyContent: 'center',
         width: !isMobile ? '50%' : '100%',
         alignItems: 'center',
-        ...isMobile && { marginVertical: 10, },
+        ...isMobile && { marginVertical: '5%', },
     },
     buttons: {
         display: 'flex',

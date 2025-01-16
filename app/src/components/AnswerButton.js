@@ -24,8 +24,8 @@ const isMobile = width < height
 
 const platform = Platform.OS;
 
-const Star = ({ shapeColor, borderColor }) => (
-    <Svg width={!isMobile ? "115" : "75"} height="115" viewBox="-2 -2 28 28" fill="none">
+const Star = ({ shapeColor, borderColor, isImage }) => (
+    <Svg width={isImage ? (!isMobile ? 75 : 50) : (!isMobile ? "115" : "75")} height={isImage ? (!isMobile ? 75 : 50) : "115"} viewBox="-2 -2 28 28" fill="none">
         <Path
             d="M12 .587l3.668 7.429L24 9.433l-6 5.843 1.42 8.294L12 19.771l-7.42 3.799L6 15.276 0 9.433l8.332-1.417L12 .587z"
             stroke={borderColor || "#0c0d25"}
@@ -40,8 +40,8 @@ const Star = ({ shapeColor, borderColor }) => (
     </Svg>
 );
 
-const Triangle = ({ shapeColor, borderColor }) => (
-    <Svg width={!isMobile ? "115" : "75"} height="115" viewBox="0 0 24 24" fill="none">
+const Triangle = ({ shapeColor, borderColor, isImage }) => (
+    <Svg width={isImage ? (!isMobile ? 75 : 45) : (!isMobile ? "115" : "75")} height={isImage ? (!isMobile ? 75 : 45) : "115"} viewBox="0 0 24 24" fill="none">
         <Path d="M12 2L2 22h20L12 2z" stroke={borderColor || "#283971"} strokeWidth="1.5" />
         <Path d="M12 2L2 22h20L12 2z" stroke={borderColor || "#283971"} strokeWidth="1.5" fill={shapeColor || "#96a9e4"} />
     </Svg>
@@ -82,15 +82,16 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
     const renderShape = () => {
         const shapeColor = shapeColors[color];
         const borderColor = borderColors[color];
+        const isImage = type === 'image';
         switch (shape) {
             case 'SQUARE':
-                return <View style={[styles.shapeStyles.square, { backgroundColor: shapeColor || "#c0e6ff", borderColor: borderColor || "#09649f" }]} />;
+                return <View style={[styles.shapeStyles.square, { backgroundColor: shapeColor || "#c0e6ff", borderColor: borderColor || "#09649f", width: isImage ? (!isMobile ? 75 : 45) : (!isMobile ? 115 : 75), height: isImage ? (!isMobile ? 75 : 45)  : (!isMobile ? 115 : 75) }]} />;
             case 'CIRCLE':
-                return <View style={[styles.shapeStyles.circle, { backgroundColor: shapeColor || "#7577af", borderColor: borderColor || "#212248" }]} />;
+                return <View style={[styles.shapeStyles.circle, { backgroundColor: shapeColor || "#7577af", borderColor: borderColor || "#212248", width: isImage ? (!isMobile ? 75 : 45) : (!isMobile ? 115 : 75), height: isImage ? (!isMobile ? 75 : 45)  : (!isMobile ? 115 : 75) }]} />;
             case 'TRIANGLE':
-                return <Triangle shapeColor={shapeColor} borderColor={borderColor} />;
+                return <Triangle shapeColor={shapeColor} borderColor={borderColor} isImage={isImage} />;
             case 'STAR':
-                return <Star shapeColor={shapeColor} borderColor={borderColor} />;
+                return <Star shapeColor={shapeColor} borderColor={borderColor} isImage={isImage} />;
             default:
                 return null;
         }
@@ -273,7 +274,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
     // ** JSX **
 
     return (
-        <Animated.View style={[styles.animatedContainer, animatedStyle]}>
+        <Animated.View style={[styles.animatedContainer, animatedStyle, { flexDirection: type === 'image' ? 'row' : 'column', flexWrap: type === 'image'? 'wrap' : (!isMobile? 'wrap' : 'nowrap') , width: type === 'image' ? '45%' : '95%' }]}>
             <TouchableOpacity
                 onPress={() => onClick(text)}
                 style={[
@@ -281,13 +282,19 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
                     {
                         backgroundColor: answerColors[color] || backgroundColors[shape],
                         borderColor: 'black', borderWidth: color === 'BLUE' ? 7 : 0,
-                        height: !isMobile ? 160 : 80,
+                        height: type === 'image' ? (!isMobile ? 300 : 160) : (!isMobile ? 160 : 80),
                         width: color === 'BLUE' ? '90%' : '95%',
                         marginVertical: color === 'BLUE' ? 10 : 5,
+                        justifyContent: type === 'image' ? 'center' : 'start',
                     },
-                ]}
+        ]}
             >
-                {renderShape()}
+                {type === 'image' && (
+                    <View style={styles.shapeContainer}>
+                        {renderShape()}
+                    </View>
+                )}
+                {type !== 'image' && renderShape()}
                 {type === "text" && (
                     <Text style={styles.text}>{text}</Text>
                 )}
@@ -298,17 +305,15 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
                     />
                 )}
                 {type === "audio" && (
-                    <>
+                    <View style={{ flexDirection: 'row', gap:30, justifyContent: 'center', alignItems: 'center' }}>
+                        <Image source={require('../../assets/speaker.png')} style={{ width: 75, height: 75, display: !isMobile ? 'none' : 'none' }} />
                         <TouchableOpacity onPress={playSound} style={styles.button}>
-                            <Text style={styles.text}>Play</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={async () => { sound.current.pauseAsync() }} style={styles.button}>
-                            <Text style={styles.text}>Pause</Text>
+                            <Text style={[styles.text, {textAlign: 'center'}]}>Play</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={async () => { sound.current.stopAsync() }} style={styles.button}>
-                            <Text style={styles.text}>Stop</Text>
+                            <Text style={[styles.text, {textAlign: 'center'}]}>Stop</Text>
                         </TouchableOpacity>
-                    </>
+                    </View>
                 )}
             </TouchableOpacity>
         </Animated.View>
@@ -323,44 +328,48 @@ const styles = StyleSheet.create({
     animatedContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%',
     },
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'start',
         paddingHorizontal: 20,
         borderRadius: 25,
         position: 'relative',
         overflow: 'hidden',
+        gap: !isMobile ? 50 : 10,
         ...!isMobile ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },
     text: {
         width: '75%',
-        textAlign: 'center',
+        textAlign: 'left',
         color: 'white',
         fontSize: !isMobile ? 25 : 18,
     },
+    shapeContainer: {
+        position: 'absolute',
+        top:10,
+        left:10,
+        zIndex: 1,
+    },
     shapeStyles: {
         square: {
-            width: !isMobile ? 115 : 75,
-            height: !isMobile ? 115 : 75,
-            borderRadius: 10,
-            borderWidth: !isMobile ? 7 : 5,
+            borderRadius: 8,
+            borderWidth: !isMobile ? 7 : 4,
         },
         circle: {
-            width: !isMobile ? 115 : 75,
-            height: !isMobile ? 115 : 75,
-            borderRadius: !isMobile ? 70 : 45,
-            borderWidth: !isMobile ? 7 : 5,
+            borderRadius: !isMobile ? 70 : 50,
+            borderWidth: !isMobile ? 7 : 4,
         },
     },
     Image: {
-        width: !isMobile ? 100 : 60,
-        height: !isMobile ? 100 : 60,
-        resizeMode: 'cover',
+        width: '85%',
+        height: '85%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        resizeMode: 'contain',
     },
     button: {
         position: 'relative',
@@ -369,7 +378,6 @@ const styles = StyleSheet.create({
         width: !isMobile ? 100 : 80,
         borderRadius: 15,
         marginVertical: 10,
-        marginBottom: 25,
         alignItems: 'center',
         justifyContent: 'center',
         ...!isMobile ? {
@@ -378,6 +386,5 @@ const styles = StyleSheet.create({
     },
 });
 
-// ** Fin Style **
 
 export default AnswerButton;
