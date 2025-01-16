@@ -1,14 +1,20 @@
 import { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image , Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { userRegister } from '../utils/api';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import GradientBackground from '../css/utils/linearGradient';
 
 export default function Register() {
-
+    const route = useRoute();
     const navigation = useNavigation();
+
+    let roomId = null;
+    
+    if(route.params){
+        roomId = route.params.roomId;
+    }
 
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
@@ -29,7 +35,12 @@ export default function Register() {
             }
             await userRegister(name, password);
             toast('success', "Enregistrement réussie !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, COLORS.toast.green);
-            navigation.navigate('initMenu', { screen: 'account' });
+            if( route.params && roomId != null ){
+                navigation.navigate('room', { roomId: roomId });
+            }
+            else{
+                navigation.navigate('initMenu', { screen: 'account' });
+            }
         }
         catch (error) {
             if (error.status && error.message) {
