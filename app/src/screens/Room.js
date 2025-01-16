@@ -139,7 +139,7 @@ export default function Room() {
                             <View style={styles.modalContainer}>
                                 <View style={styles.modalContent}>
                                     <QRCode
-                                        value={`${apiUrl}/room/${roomId}/join`}
+                                        value={`https://luoja.fr/room?roomId=${roomId}`}
                                         size={200}
                                         color={COLORS.palette.blue.darker}
                                         backgroundColor="white"
