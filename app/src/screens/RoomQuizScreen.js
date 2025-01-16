@@ -262,12 +262,10 @@ export default function RoomQuizScreen() {
                 <View style={styles.quizScreenView}>
                     {currentQuestion ? (
                         <>
-                            <View style={styles.quizSubScreenView}>
-                                <TouchableOpacity onPress={handleCopyGameId} style={styles.roomId}>
-                                    <Copy size={24} color="black" />
-                                    <Text style={FONT.text}>ID : {roomId} </Text>
-                                </TouchableOpacity>
-                            </View>
+                            <TouchableOpacity onPress={handleCopyGameId} style={styles.roomId}>
+                                <Copy size={24} color="black" />
+                                <Text style={FONT.text}>ID : {roomId} </Text>
+                            </TouchableOpacity>
                             <View style={styles.mainView}>
 
                                 <View style={styles.questionView}>
@@ -367,7 +365,7 @@ const styles = StyleSheet.create({
     },
     roomId: {
         position: 'absolute',
-        top: -90,
+        top: 1,
         marginRight: 10,
         marginTop: 2,
         flexDirection: 'row',
