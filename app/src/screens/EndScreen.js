@@ -81,17 +81,17 @@ export default function EndScreen() {
                                 Votre score : {score} / {numberOfQuestions}
                             </Text>
                             <View style={styles.wheelContainer}>
-                            <AnimatedProgressWheel
-                                size={125}
-                                width={15} 
-                                duration={2000}
-                                rotation={'-90deg'}
-                                animateFromValue={0}
-                                showProgressLabel={true}
-                                showPercentageSymbol={true}
-                                color={COLORS.palette.blue.dark}
-                                progress={score / numberOfQuestions * 100}
-                            />
+                                <AnimatedProgressWheel
+                                    size={125}
+                                    width={15} 
+                                    duration={2000}
+                                    rotation={'-90deg'}
+                                    animateFromValue={0}
+                                    showProgressLabel={true}
+                                    showPercentageSymbol={true}
+                                    color={COLORS.palette.blue.dark}
+                                    progress={score / numberOfQuestions * 100}
+                                />
                             </View>
                         </View>
                     ) : (
