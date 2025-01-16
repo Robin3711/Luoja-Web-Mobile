@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Modal } from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import GradientBackground from '../css/utils/linearGradient';
 
 import { joinRoom, joinTeam, startRoom } from "../utils/api";
-import { getPlatformAPI } from "../utils/utils";
+import { getPlatformAPI, hasToken } from "../utils/utils";
 
 import QRCode from "react-native-qrcode-svg";
 import { COLORS } from "../css/utils/color";
@@ -68,25 +68,41 @@ export default function Room() {
         toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.text.blue);
     };
 
+    useFocusEffect(
+        useCallback(() => {
+            const checkToken = async () => {
+                
+            };
+
+            checkToken();
+        }, [])
+    );
+
     useEffect(() => {
         const connect = async () => {
             try {
 
-                const source = await joinRoom(roomId);
-                eventSource = source;
+                if(! await hasToken()){
+                    navigation.navigate('initMenu', { screen: 'account', params: {roomId: roomId} });
+                }
+                else{
+                    const source = await joinRoom(roomId);
+                    
+                    eventSource = source;
 
-                eventSource.addEventListener('message', handleEvent);
-
-
-                eventSource.addEventListener('error', (err) => {
-                    console.error("Erreur EventSource :", err);
-                    toast("error", "Vous ne pouvez pas rejoindre cette partie", '', 3000, COLORS.toast.text.red);
-                    navigation.navigate("initMenu");
-                });
+                    eventSource.addEventListener('message', handleEvent);
 
 
-                const url = await getPlatformAPI();
-                setApiUrl(url);
+                    eventSource.addEventListener('error', (err) => {
+                        console.error("Erreur EventSource :", err);
+                        toast("error", "Vous ne pouvez pas rejoindre cette partie", '', 3000, COLORS.toast.text.red);
+                        navigation.navigate("initMenu");
+                    });
+
+
+                    const url = await getPlatformAPI();
+                    setApiUrl(url);
+                }
             } catch (error) {
                 toast("error", error.status || 500, error.message || "Une erreur est survenue", 3000, COLORS.toast.text.red);
                 navigation.navigate("initMenu");
