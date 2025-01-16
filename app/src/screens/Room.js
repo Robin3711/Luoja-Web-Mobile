@@ -223,14 +223,16 @@ export default function Room() {
                             { flexDirection: isMobile ? 'row' : 'column', justifyContent: 'center', gap: isMobile ? 10 : 0 },
                         ]}
                     >
-                        <SimpleButton
-                            text="Commencer la partie"
-                            onPress={() => startRoom(roomId)}
-                            color={COLORS.button.blue.basic}
-                            marginBottom={isMobile ? 0 : 10}
-                            marginVertical={isMobile ? 0 : 1}
-                            width={isMobile ? "50%" : "100%"}
-                        />
+                        {owner === user && (
+                            <SimpleButton
+                                text="Commencer la partie"
+                                onPress={() => startRoom(roomId)}
+                                color={COLORS.button.blue.basic}
+                                marginBottom={isMobile ? 0 : 10}
+                                marginVertical={isMobile ? 0 : 1}
+                                width={isMobile ? "50%" : "100%"}
+                            />
+                        )}
                         <SimpleButton
                             text="Retourner au menu"
                             onPress={handleReturnHome}
