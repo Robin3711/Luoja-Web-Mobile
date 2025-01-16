@@ -231,12 +231,13 @@ export default function RoomQuizScreen() {
     };
 
     const stopAllAudios = () => {
-        audioRefs.current.forEach(audio => {
-            if (audio) {
-                console.log("stop audio");
-                audio.stopAudio();
-            }
-        });
+        if (audioRefs.current) {
+            audioRefs.current.forEach((audioRef) => {
+                if (audioRef) {
+                    audioRef.stopAudio();
+                }
+            });
+        }
     };
 
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
@@ -263,12 +264,10 @@ export default function RoomQuizScreen() {
                 <View style={styles.quizScreenView}>
                     {currentQuestion ? (
                         <>
-                            <View style={styles.quizSubScreenView}>
-                                <TouchableOpacity onPress={handleCopyGameId} style={styles.roomId}>
-                                    <Copy size={24} color="black" />
-                                    <Text style={FONT.text}>ID : {roomId} </Text>
-                                </TouchableOpacity>
-                            </View>
+                            <TouchableOpacity onPress={handleCopyGameId} style={styles.roomId}>
+                                <Copy size={24} color="black" />
+                                <Text style={FONT.text}>ID : {roomId} </Text>
+                            </TouchableOpacity>
                             <View style={styles.mainView}>
 
                                 <View style={styles.questionView}>
@@ -307,7 +306,7 @@ export default function RoomQuizScreen() {
                                     {!isMobile && validateAnswerButton()}
                                 </View>
 
-                                <View style={[styles.answersView, {flexDirection: currentQuestion.type === 'image' ? 'row' : 'column', flexWrap: currentQuestion.type === 'image'? 'wrap' : (!isMobile? 'wrap' : 'nowrap'),}]}>
+                                <View style={[styles.answersView, { flexDirection: currentQuestion.type === 'image' ? 'row' : 'column', flexWrap: currentQuestion.type === 'image' ? 'wrap' : (!isMobile ? 'wrap' : 'nowrap'), }]}>
                                     {currentQuestion.answers.map((answer, index) => (
                                         answer === null ? null : (
                                             <AnswerButton
@@ -364,10 +363,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...!isMobile && { gap: 20, },
+        ...isMobile && { gap: '5%', },
     },
     roomId: {
         position: 'absolute',
-        top: -90,
+        top: 1,
         marginRight: 10,
         marginTop: 2,
         flexDirection: 'row',
@@ -382,9 +382,10 @@ const styles = StyleSheet.create({
     },
     questionView: {
         alignItems: 'center',
-        width: !isMobile ? '50%' : '100%',
+        top: !isMobile ? 20 : 50,
+        width: !isMobile ? '45%' : '100%',
+        ...isMobile && { marginVertical: 10, },
         ...!isMobile && { gap: 70, },
-
     },
     question: {
         fontSize: !isMobile ? 30 : 25,
@@ -393,21 +394,26 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: COLORS.text.blue.dark,
         ...!isMobile && { marginVertical: 100, },
+        ...isMobile && { marginVertical: 10, },
     },
     questionNumber: {
+        marginTop: !isMobile ? -20 : -15,
         fontSize: !isMobile ? 30 : 17,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
+        ...isMobile && { marginVertical: 10, },
+        ...!isMobile && { marginTop: 0, },
     },
     score: {
+        marginBottom: -15,
         fontSize: !isMobile ? 30 : 12,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
     },
     answersView: {
-        flexDirection: (!isMobile? 'row': 'column'),
+        flexDirection: (!isMobile ? 'row' : 'column'),
         justifyContent: 'center',
         width: !isMobile ? '50%' : '100%',
         alignItems: 'center',
@@ -424,6 +430,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...isMobile && { marginVertical: 10, },
     },
     disabledButtons: {
         display: 'flex',
@@ -436,23 +443,28 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...isMobile && { marginVertical: 10, },
     },
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',
+        ...isMobile && { marginVertical: 10, },
     },
     quizBarView: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        ...isMobile && { marginVertical: 10, },
     },
     quizBarTextView: {
         fontSize: 22,
+        ...isMobile && { marginVertical: 10, },
     },
     errorText: {
         fontSize: 18,
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
+        ...isMobile && { marginVertical: 10, },
     },
 });

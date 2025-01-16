@@ -616,10 +616,6 @@ export async function joinRoom(roomId) {
             toast("info", 'Connected to room: ' + roomId, '', 2000, COLORS.toast.text.blue);
         });
 
-        eventSource.addEventListener('message', (event) => {
-            console.log('New message:', event.data);
-        });
-
         eventSource.addEventListener('error', (error) => {
             console.error('EventSource error:', error);
             eventSource.close();

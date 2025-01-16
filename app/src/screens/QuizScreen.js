@@ -221,11 +221,13 @@ export default function QuizScreen() {
     }
 
     const stopAllAudios = () => {
-        audioRefs.current.forEach(audio => {
-            if (audio) {
-                audio.stopAudio();
-            }
-        });
+        if (audioRefs.current) {
+            audioRefs.current.forEach((ref) => {
+                if (ref) {
+                    ref.stopAnimation();
+                }
+            });
+        }
     };
 
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
@@ -384,7 +386,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...!isMobile && { gap: 20, },
-        ...isMobile && { marginVertical: 10, },
+        ...isMobile && { gap: '5%', },
     },
     questionView: {
         alignItems: 'center',

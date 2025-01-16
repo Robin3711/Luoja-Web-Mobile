@@ -266,7 +266,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 20,
-        backgroundColor: COLORS.background.blue,
         gap: !isMobile ? 20 : 0,
     },
     title: {

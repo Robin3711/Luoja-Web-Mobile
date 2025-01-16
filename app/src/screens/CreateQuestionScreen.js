@@ -230,8 +230,6 @@ export default function CreateQuestionScreen() {
                     </View>
                     <SimpleButton text="Valider" onPress={handleSubmit} disabled={disable} />
                 </View>
-
-                {/* Right Panel */}
                 <View style={styles.createQuestionRightView}>
                     <View style={styles.createQuestionSubRightView}>
                         <View style={styles.generateAnswersButtonView}>
@@ -280,6 +278,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#8fd3ff',
         paddingVertical: '5%',
         borderRadius: 25,
+        paddingHorizontal: "5%",
         width: '100%',
         height: '70%',
     },
@@ -296,7 +295,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
     },
     createQuestionInput: {
-        width: '90%',
+        width: '100%',
         height: '75%',
         padding: 10,
         backgroundColor: 'white',
