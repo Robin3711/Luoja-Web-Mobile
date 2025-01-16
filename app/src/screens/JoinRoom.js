@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Text, View, Dimensions, StyleSheet, Alert,  TextInput, TouchableOpacity } from "react-native";
+import { Text, View, Dimensions, StyleSheet, Alert,  TextInput, TouchableOpacity, Platform } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import { getRoomId, requireToken, toast } from "../utils/utils";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -109,7 +109,7 @@ export default function JoinGame() {
             <SimpleButton text="Rejoindre" onPress={() => handleConnectWithCode(roomId)} />
         </>)}
 
-        {scanned === true && isMobile && (
+        {scanned === true && Platform.OS==="android" && (
           <>
             <SimpleButton text="Scanner le QR CODE" onPress={() => setScanned(false)} />
           </>
