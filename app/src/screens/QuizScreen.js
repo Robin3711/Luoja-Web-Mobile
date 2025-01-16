@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity,  StyleSheet , Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
@@ -8,18 +8,17 @@ import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { toast } from '../utils/utils';
 
+import ConfettiContainer from '../components/ConfettiSystem';
 import { Audio } from 'expo-av';
 
 import { SimpleButton } from '../components/SimpleButton';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
+import GradientBackground from '../css/utils/linearGradient';
 
-
-
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
-
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 export default function QuizScreen() {
@@ -75,6 +74,9 @@ useEffect(() => {
     const [timerInitialized, setTimerInitialized] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
     const [timeStuckAtOne, setTimeStuckAtOne] = useState(false);
+    const [animation, setAnimation] = useState('none');
+
+    const confettiRef = useRef();
 
     useEffect(() => {
         (async () => {
@@ -160,6 +162,7 @@ useEffect(() => {
             setTimerInitialized(false);
             setLoading(false);
             setTimerKey(prevKey => prevKey + 1);
+            setAnimation('none');
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -191,7 +194,11 @@ useEffect(() => {
 
                 setCorrect(correctAnswerFromApi);
                 setIsAnswered(true);
-                if (correctAnswerFromApi === selectedAnswer) updateScore();
+                if (correctAnswerFromApi === selectedAnswer){
+                    confettiRef.current.startConfetti();
+                    setAnimation('win');
+                    updateScore();
+                }
             }
             setTimerInitialized(false);
         } catch (err) {
@@ -203,7 +210,7 @@ useEffect(() => {
     };
     const updateScore = () => setScore(score + 1);
 
-    const getAnswerFilter = (answer) => {
+    const getAnswerColor = (answer) => {
 
         const playSound = async (soundFile) => {
             await sound.unloadAsync();
@@ -291,50 +298,55 @@ useEffect(() => {
         toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.text.blue);
     };
 
+    const getTopValue = () => {
+        if (!isMobile) return 20;
+        return currentQuestion?.question?.length > 60 ? 50 : 20;
+    };
+
     return (
-        !error ? (
-            <View style={styles.quizScreenView}>
-                {currentQuestion ? (
-                    <>
-                        <TouchableOpacity onPress={handleCopyGameId} style={styles.gameId}>
-                            <Copy size={24} color="black" />
-                            <Text style={FONT.text}>ID : {gameId} </Text>
-                        </TouchableOpacity>
-                        <View style={styles.mainView}>
-                            <View style={styles.questionView}>
-                                <CountdownCircleTimer
-                                    key={timerKey}
-                                    isPlaying={timerInitialized}
-                                    duration={gameTime}
-                                    size={!isMobile? 150 : 110}
-                                    strokeWidth={!isMobile ? 15 : 10}
-                                    colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
-                                    colorsTime={[
-                                        (gameTime * 4) / 5,
-                                        (gameTime * 3) / 5,
-                                        (gameTime * 2) / 5,
-                                        (gameTime * 1) / 5,
-                                        (gameTime * 0) / 5,
-                                    ]}
-                                    style={{ marginTop: 5 }}
-                                >
-                                    {() => (
-                                        <>
-                                            {gameMode === "timed" ? (
-                                                <Text style={styles.questionNumber}>{remainingTime}</Text>
-                                            ) : (<Text style={styles.questionNumber}></Text>)}
+        <GradientBackground>
+            {!error ? (
+                <View style={styles.quizScreenView}>
+                    {currentQuestion ? (
+                        <>
+                            <TouchableOpacity onPress={handleCopyGameId} style={styles.gameId}>
+                                <Copy size={24} color="black" />
+                                <Text style={FONT.text}>ID : {gameId} </Text>
+                            </TouchableOpacity>
+                            <View style={styles.mainView}>
+                                <View style={[styles.questionView, { top: getTopValue() }]}>
+                                    <CountdownCircleTimer
+                                        key={timerKey}
+                                        isPlaying={timerInitialized}
+                                        duration={gameTime}
+                                        size={!isMobile ? 150 : 95}
+                                        strokeWidth={!isMobile ? 15 : 9}
+                                        colors={[COLORS.timer.blue.darker, COLORS.timer.blue.dark, COLORS.timer.blue.normal, COLORS.timer.blue.light, COLORS.timer.blue.lighter]}
+                                        colorsTime={[
+                                            (gameTime * 4) / 5,
+                                            (gameTime * 3) / 5,
+                                            (gameTime * 2) / 5,
+                                            (gameTime * 1) / 5,
+                                            (gameTime * 0) / 5,
+                                        ]}
+                                    >
+                                        {() => (
+                                            <>
+                                                {gameMode === "timed" ? (
+                                                    <Text style={styles.questionNumber}>{remainingTime}</Text>
+                                                ) : (<Text style={styles.questionNumber}></Text>)}
 
-                                            <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
-                                        </>
-                                    )}
-                                </CountdownCircleTimer>
+                                                <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
+                                            </>
+                                        )}
+                                    </CountdownCircleTimer>
 
-                                <Text style={[styles.score, { marginTop: 5 }]}>Score: {score}</Text>
-                                <View style={styles.quizBarView}>
+                                    <Text style={[styles.score, { marginTop: 5 }]}>Score: {score}</Text>
+                                    <View style={styles.quizBarView}>
+                                    </View>
+                                    <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
+                                    {!isMobile && nextQuestionButton()}
                                 </View>
-                                <Text style={FONT.subTitle}>{currentQuestion.question}</Text>
-                                {!isMobile && nextQuestionButton()}
-                            </View>
 
                             <View style={styles.answersView}>
                                 {currentQuestion.answers.map((answer, index) => {
@@ -345,15 +357,17 @@ useEffect(() => {
                                                 shape={shapes[index]}
                                                 text={answer}
                                                 onClick={() => handleAnswerSelection(answer)}
-                                                filter={getAnswerFilter(answer)}
+                                                color={getAnswerColor(answer)}
                                                 type={currentType}
                                                 disabled={gameMode === 'timed' && remainingTime === 0}
+                                                animation={animation}
                                             />
                                         )
                                     );
                                 })}
                                 {isMobile && nextQuestionButton()}
                             </View>
+                            <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]}/>
                         </View>
                     </>
                 ) : (
@@ -364,10 +378,11 @@ useEffect(() => {
             <View style={styles.quizScreenView}>
                 <Text style={styles.errorText}>{errorMessage}</Text>
 
-                <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
+                    <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
 
-            </View>
-        )
+                </View>
+            )}
+        </GradientBackground>
 
     );
 }
@@ -379,7 +394,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     gameId: {
         position: 'absolute',
@@ -405,7 +419,7 @@ const styles = StyleSheet.create({
     },
     questionView: {
         alignItems: 'center',
-        top: 20,
+        top: !isMobile ? 20 : 50,
         width: !isMobile ? '45%' : '100%',
         ...isMobile && { marginVertical: 10, },
         ...!isMobile && { gap: 70, },
@@ -420,8 +434,8 @@ const styles = StyleSheet.create({
         ...isMobile && { marginVertical: 10, },
     },
     questionNumber: {
-        marginTop: -20,
-        fontSize: !isMobile ? 30 : 25,
+        marginTop: !isMobile ? -20 : -15,
+        fontSize: !isMobile ? 30 : 17,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
@@ -459,7 +473,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#d3d3d3',
-        height: 75,
+        height: !isMobile ? 75 : 70,
         width: !isMobile ? "35%" : "95%",
         borderRadius: 15,
         marginVertical: 10,

@@ -8,6 +8,7 @@ import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 import Dashboard from './Dashboard';
 import SimpleButton from '../components/SimpleButton';
+import GradientBackground from '../css/utils/linearGradient';
 
 
 
@@ -66,27 +67,30 @@ export default function Account() {
     }
     else {
         return (
-            error ? (
-                <View style={styles.quizScreenView}>
-                    <Text style={FONT.error}>{errorMessage}</Text>
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate('initMenu', { screen: 'account' })
-                    }
-                    }>
-                        <Text style={FONT.button}>Retour au menu</Text>
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <View style={styles.container}>
-                    <Text style={FONT.luoja}>Luoja</Text>
-                    <View style={styles.childView}>
-                        <Text style={FONT.text}>Cette fonctionnalité nécessite un compte</Text>
-                        <SimpleButton text="Se connecter" onPress={() => navigation.navigate('login')} />
-                        <SimpleButton text="Créer un compte" onPress={() => navigation.navigate('register')} />
+            <GradientBackground>
+                {error ? (
+                    <View style={styles.quizScreenView}>
+                        <Text style={FONT.error}>{errorMessage}</Text>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('initMenu', { screen: 'account' })
+                        }
+                        }>
+                            <Text style={FONT.button}>Retour au menu</Text>
+                        </TouchableOpacity>
                     </View>
-                </View>
-            )
+                ) : (
+                    <View style={styles.container}>
+                        <Text style={FONT.luoja}>Luoja</Text>
+                        <View style={styles.childView}>
+                            <Text style={FONT.text}>Cette fonctionnalité nécessite un compte</Text>
+                            <SimpleButton text="Se connecter" onPress={() => navigation.navigate('login')} />
+                            <SimpleButton text="Créer un compte" onPress={() => navigation.navigate('register')} />
+                        </View>
+                    </View>
+                )}
+            </GradientBackground>
         );
+        
     }
 }
 
@@ -98,7 +102,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     appTitle: {
         height: !isMobile ? '10%' : '25%',
