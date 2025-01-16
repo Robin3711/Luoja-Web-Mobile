@@ -80,7 +80,7 @@ export default function LaunchGameMode() {
     };
 
     useFocusEffect(() => {
-        setIsLoading(false);
+        setDisable(false);
     });
 
     return (
