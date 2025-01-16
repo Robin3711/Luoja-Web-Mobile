@@ -28,7 +28,7 @@ export default function LaunchGameMode() {
 
     const handleStartQuiz = (gameMode) => {
         setDisable(true);
-        createGame(quizId, gameMode, gameMode === "timed" ? timerDifficulty : scrumDifficulty)
+        createGame(quizId, gameMode, gameMode === "timed" ? timerDifficulty : timerDifficulty)
             .then((game) => {
                 setDisable(false);
                 navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
