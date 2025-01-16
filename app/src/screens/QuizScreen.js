@@ -21,10 +21,7 @@ const { width, height } = Dimensions.get('window');
 const isMobile = width < height;
 
 export default function QuizScreen() {
-
-
     const sound = new Audio.Sound();
-
     const badSound = require('../../assets/badAnswerSound.mp3');
     const goodSound = require('../../assets/goodAnswerSound.mp3');
 
@@ -73,7 +70,6 @@ export default function QuizScreen() {
             try {
                 setLoading(true);
                 const infos = await getGameInfos(gameId);
-
                 refreshData(infos);
             } catch (err) {
                 setError(true);
@@ -113,7 +109,6 @@ export default function QuizScreen() {
         try {
             const data = await getCurrentQuestion(gameId);
             setCurrentType(data.type);
-
             await handleListenTimer();
 
             if (infos.questionCursor === infos.numberOfQuestions) {
@@ -134,12 +129,12 @@ export default function QuizScreen() {
     }
 
     const handleNewQuestion = async () => {
+        stopAllAudios();
+        await sound.unloadAsync();
         try {
             setButtonDisabled(true);
             setSelectedAnswer(null);
             setCorrect(null);
-
-            stopAllAudios();
 
             const data = await getCurrentQuestion(gameId);
             setCurrentType(data.type);
@@ -197,10 +192,10 @@ export default function QuizScreen() {
             setButtonDisabled(false);
         }
     };
+
     const updateScore = () => setScore(score + 1);
 
     const getAnswerColor = (answer) => {
-
         const playSound = async (soundFile) => {
             await sound.unloadAsync();
             await sound.loadAsync({ uri: soundFile });
@@ -209,14 +204,12 @@ export default function QuizScreen() {
 
         if (answer === selectedAnswer && !isAnswered) return 'BLUE';
         if (answer === correct) {
-            // jouer le son
             if (answer === selectedAnswer) {
                 playSound(goodSound);
             }
             return 'GREEN';
         }
         if (answer === selectedAnswer) {
-            // jouer le son
             playSound(badSound);
             return 'RED';
         }
@@ -225,6 +218,7 @@ export default function QuizScreen() {
     };
 
     const handleEnd = () => {
+        stopAllAudios();
         navigation.navigate('endScreen', {
             score,
             numberOfQuestions: totalQuestion,
@@ -355,6 +349,7 @@ export default function QuizScreen() {
                                                     type={currentType}
                                                     disabled={gameMode === 'timed' && remainingTime === 0}
                                                     animation={animation}
+                                                    ref={el => audioRefs.current[index] = el}
                                                 />
                                             )
                                         );
@@ -377,7 +372,6 @@ export default function QuizScreen() {
                 </View>
             )}
         </GradientBackground>
-
     );
 }
 
