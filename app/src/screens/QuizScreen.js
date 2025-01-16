@@ -222,9 +222,9 @@ export default function QuizScreen() {
 
     const stopAllAudios = () => {
         if (audioRefs.current) {
-            audioRefs.current.forEach((ref) => {
-                if (ref) {
-                    ref.stopAnimation();
+            audioRefs.current.forEach((audioRef) => {
+                if (audioRef) {
+                    audioRef.stopAudio();
                 }
             });
         }
