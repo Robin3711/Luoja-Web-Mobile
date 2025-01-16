@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 5,
         borderStyle: 'solid',
+        height: "80%",
         borderColor: COLORS.button.blue.basic,
     },
     defaultThemeButton: {
