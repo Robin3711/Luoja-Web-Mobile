@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
-import { createGame, getQuizAverage } from '../utils/api';
+import { getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';

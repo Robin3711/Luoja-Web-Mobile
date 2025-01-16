@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Text, View, Platform, Dimensions, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
+import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 
 import { getQuizAutoComplete } from '../utils/api';
 import ThemeSelector from '../components/ThemeList';

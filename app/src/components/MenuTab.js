@@ -9,7 +9,7 @@ import Account from '../screens/Account';
 import joinGame from '../screens/JoinRoom';
 
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height
+const isMobile = width < height;
 
 const Tab = createBottomTabNavigator();
 

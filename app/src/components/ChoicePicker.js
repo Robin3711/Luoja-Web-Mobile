@@ -4,7 +4,7 @@ import { View, Text, Dimensions, StyleSheet, TouchableOpacity } from 'react-nati
 import { difficultyOptions } from '../utils/utils';
 
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height
+const isMobile = width < height;
 
 
 const ChoiseSelector = ({ value, onValueChange, parameters = difficultyOptions, defaultValue = false, style = null }) => {

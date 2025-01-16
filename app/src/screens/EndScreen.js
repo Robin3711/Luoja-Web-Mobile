@@ -61,42 +61,42 @@ export default function EndScreen() {
     return (
         <GradientBackground>
             {error ? (
-            <View style={styles.container}>
-                <Text style={styles.errorText}>{errorMessage}</Text>
-                <TouchableOpacity style={styles.button} onPress={() => {
-                    navigation.navigate('initMenu')
-                }
-                }>
-                    <Text style={styles.buttonText}>Retour au menu</Text>
-                </TouchableOpacity>
-            </View>
-        ) : (
-            <View style={styles.container}>
-                <View style={styles.parentContainer}>
-                    <Text style={FONT.title}>Fin de partie !</Text>
-                    {score !== null && numberOfQuestions !== null ? (
-                        <View style={styles.scoreContainer}>
-                            <Text style={styles.scoreTitle}>
-                                Votre score : {score} / {numberOfQuestions}
-                            </Text>
-                            <View style={styles.wheelContainer}>
-                                <AnimatedProgressWheel
-                                    size={125}
-                                    width={15} 
-                                    duration={2000}
-                                    rotation={'-90deg'}
-                                    animateFromValue={0}
-                                    showProgressLabel={true}
-                                    showPercentageSymbol={true}
-                                    color={COLORS.palette.blue.dark}
-                                    progress={score / numberOfQuestions * 100}
-                                />
-                            </View>
-                        </View>
-                    ) : (
-                        <Text>Chargement du score...</Text>
-                    )}
+                <View style={styles.container}>
+                    <Text style={styles.errorText}>{errorMessage}</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => {
+                        navigation.navigate('initMenu')
+                    }
+                    }>
+                        <Text style={styles.buttonText}>Retour au menu</Text>
+                    </TouchableOpacity>
                 </View>
+            ) : (
+                <View style={styles.container}>
+                    <View style={styles.parentContainer}>
+                        <Text style={FONT.title}>Fin de partie !</Text>
+                        {score !== null && numberOfQuestions !== null ? (
+                            <View style={styles.scoreContainer}>
+                                <Text style={styles.scoreTitle}>
+                                    Votre score : {score} / {numberOfQuestions}
+                                </Text>
+                                <View style={styles.wheelContainer}>
+                                    <AnimatedProgressWheel
+                                        size={125}
+                                        width={15}
+                                        duration={2000}
+                                        rotation={'-90deg'}
+                                        animateFromValue={0}
+                                        showProgressLabel={true}
+                                        showPercentageSymbol={true}
+                                        color={COLORS.palette.blue.dark}
+                                        progress={score / numberOfQuestions * 100}
+                                    />
+                                </View>
+                            </View>
+                        ) : (
+                            <Text>Chargement du score...</Text>
+                        )}
+                    </View>
 
                     <SimpleButton
                         text="Retourner au menu"
