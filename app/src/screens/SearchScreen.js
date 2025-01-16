@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         width: '90%',
-        height: '80%',
+        height: '80vh',
         marginTop: !isMobile ? 20 : 0,
     },
     filterView: {

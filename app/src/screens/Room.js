@@ -77,8 +77,8 @@ export default function Room() {
         const connect = async () => {
             try {
 
-                if  (! await hasToken())  {
-                    navigation.navigate('initMenu', { screen: 'account', params: {  roomId: roomId  } });
+                if (! await hasToken()) {
+                    navigation.navigate('initMenu', { screen: 'account', params: { roomId: roomId } });
                 }
                 else {
                     const userInfo = await getUserInfos();

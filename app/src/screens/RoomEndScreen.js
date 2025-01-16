@@ -84,7 +84,6 @@ export default function EndScreen() {
                                         </View>
                                     ) : (
                                         <View>
-
                                             {scores.map((score, index) => (
                                                 <View key={index} style={styles.team}>
                                                     <Text style={FONT.subTitle}>
@@ -108,7 +107,7 @@ export default function EndScreen() {
                         )}
                     </View>
 
-                    
+
                 </ScrollView>
             )}
         </GradientBackground>

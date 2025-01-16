@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        height: isMobile ? null : "100%"
     },
     view: {
         flex: 1,

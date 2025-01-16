@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: 125,
+        height: 115,
         paddingHorizontal: 20,
         borderRadius: 25,
         boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
