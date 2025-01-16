@@ -222,9 +222,12 @@ export default function QuizScreen() {
 
     const stopAllAudios = () => {
         if (audioRefs.current) {
-            audioRefs.current.forEach((audioRef) => {
+            audioRefs.current.forEach(async (audioRef) => {
                 if (audioRef) {
-                    audioRef.stopAudio();
+                    const status = await audioRef.getStatusAsync();
+                    if (status.isLoaded) {
+                        audioRef.stopAsync(); // Safely stops only if audio is loaded
+                    }
                 }
             });
         }
