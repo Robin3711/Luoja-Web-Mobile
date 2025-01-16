@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Modal } from "react-native";
-import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import GradientBackground from '../css/utils/linearGradient';
@@ -67,16 +67,6 @@ export default function Room() {
         await Clipboard.setStringAsync(roomId);
         toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.text.blue);
     };
-
-    useFocusEffect(
-        useCallback(() => {
-            const checkToken = async () => {
-                
-            };
-
-            checkToken();
-        }, [])
-    );
 
     useEffect(() => {
         const connect = async () => {
