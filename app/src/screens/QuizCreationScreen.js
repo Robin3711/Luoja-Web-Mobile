@@ -275,7 +275,7 @@ export default function QuizCreation() {
     };
 
     return (
-        <GradientBackground showLogo={true}>
+        <GradientBackground>
             <View style={styles.quizCreationView}>
                 <Text style={styles.title}>Créez votre propre quiz !</Text>
                 <View style={styles.quizCreationChildVIew}>

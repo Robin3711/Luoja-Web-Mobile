@@ -222,12 +222,19 @@ export default function QuizScreen() {
 
     const stopAllAudios = () => {
         if (audioRefs.current) {
-            audioRefs.current.forEach((audioRef) => {
-                if (audioRef) {
-                    audioRef.stopAudio();
+                    audioRefs.current.forEach(async (audioRef) => {
+                        if (audioRef && audioRef instanceof Audio.Sound) {
+                            try {
+                                const status = await audioRef.getStatusAsync();
+                                if (status.isLoaded) {
+                                    await audioRef.stopAsync();
+                                }
+                            } catch (error) {
+                                console.error("Error stopping audio:", error);
+                            }
+                        }
+                    });
                 }
-            });
-        }
     };
 
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];

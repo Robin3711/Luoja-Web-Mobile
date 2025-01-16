@@ -45,7 +45,7 @@ export default function Parameters() {
   };
 
   return (
-    <GradientBackground showLogo={true}>
+    <GradientBackground>
       <View style={styles.screen}>
         <Text style={FONT.title}>Générer un nouveau quiz !</Text>
         <View style={styles.list}>

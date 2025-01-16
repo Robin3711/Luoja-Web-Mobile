@@ -62,7 +62,7 @@ export default function SearchScreen() {
     }
 
     return (
-        <GradientBackground showLogo={true}>
+        <GradientBackground>
             {error ? (
                 <View style={styles.screen}>
                     <Text style={styles.errorText}>{errorMessage}</Text>
