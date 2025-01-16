@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TextInput, Dimensions, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, Dimensions, StyleSheet, Platform, Image, TouchableOpacity } from 'react-native';
 
 import { getGameInfos } from '../utils/api';
 import { toast } from '../utils/utils';
@@ -23,7 +23,7 @@ export default function ResumeScreen() {
         try {
             setSearch(true);
             if (!gameId) {
-                toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, COLORS.toast.red);
+                toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, COLORS.toast.text.red);
                 setSearch(false);
                 return;
             }
@@ -41,17 +41,17 @@ export default function ResumeScreen() {
             })
                 .catch(error => {
                     if (error.status && error.message) {
-                        toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                        toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
                     } else {
-                        toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                        toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
                     }
                 });
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -63,6 +63,12 @@ export default function ResumeScreen() {
 
     return (
         <GradientBackground>
+            <View style={styles.imageContainer}>
+                <Image
+                    source={require('../../assets/LogoLuojaRepete.png')} // Remplacez par le chemin de votre image
+                    style={styles.image}
+                />
+            </View>
             <View style={styles.container}>
                 <Text style={styles.title}>Reprenez votre partie</Text>
                 <View style={styles.inputView}>
@@ -79,6 +85,22 @@ export default function ResumeScreen() {
 }
 
 const styles = StyleSheet.create({
+    imageContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    image: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+        tintColor: COLORS.palette.blue.light,
+        opacity: 0.35,
+    },
     container: {
         flex: 1,
         display: 'flex',

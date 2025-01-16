@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Dimensions,Platform, StyleSheet, Button, Alert,  TextInput, TouchableOpacity } from "react-native";
+import { Text, View, Dimensions,Platform, StyleSheet, Button, Image, Alert,  TextInput, TouchableOpacity } from "react-native";
 import { CameraView, Camera } from "expo-camera";
-import { getRoomId, hasToken } from "../utils/utils";
+import { getRoomId, hasToken, toast } from "../utils/utils";
 import { useNavigation } from "@react-navigation/native";
 import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
@@ -39,6 +39,15 @@ export default function JoinGame() {
     navigation.navigate('room', { roomId: roomId });
   }
 
+  const handleConnectWithCode = async (roomId) => {
+    if(roomId === '')
+    {
+      toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, COLORS.toast.text.red);
+      return;
+    }
+    navigation.navigate('room', { roomId: roomId });
+  }
+
   const handlePasteGameId = async () => {
     const idOfGame = await Clipboard.getStringAsync();
     setRoomId(idOfGame);
@@ -69,6 +78,12 @@ export default function JoinGame() {
 
   return (
     <GradientBackground>
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('../../assets/LogoLuojaRepete.png')} // Remplacez par le chemin de votre image
+            style={styles.image}
+        />
+      </View>
       <View style={styles.container}>
         {isMobile && scanned === false && (
           <CameraView
@@ -94,7 +109,7 @@ export default function JoinGame() {
                 style={styles.input}
               />
             </View>
-            <SimpleButton text="Rejoindre" onPress={() => handleConnect(roomId)} />
+            <SimpleButton text="Rejoindre" onPress={() => handleConnectWithCode(roomId)} />
         </>)}
 
         {scanned === true && isMobile && (
@@ -109,6 +124,22 @@ export default function JoinGame() {
 }
 
 const styles = StyleSheet.create({
+  imageContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+      width: '100%',
+      height: '100%',
+      resizeMode: 'cover',
+      tintColor: COLORS.palette.blue.light,
+      opacity: 0.35,
+},
   container: {
     flex: 1,
     display: 'flex',

@@ -106,11 +106,16 @@ const ChooseFile = ({ onValueChange }) => {
                     const response = await downloadAllImages();
                     if (response.files && Array.isArray(response.files)) {
                         const files = response.files;
-                        const validFiles = files.filter(file => file.fileName.endsWith('.png' || '.jpg' || '.jpeg'));
+                        
+                        const validFiles = files.filter(file =>
+                            file.fileName.endsWith('.png') || 
+                            file.fileName.endsWith('.jpg') || 
+                            file.fileName.endsWith('.jpeg')
+                        );
+                        
                         setIds(validFiles.map((file) => file.fileName));
-
-                        // Traiter chaque `fileName` pour télécharger les images
                         const imagePromises = validFiles.map(async (file) => {
+                            console.log(file);
                             const { fileName } = file;
                             const imageBlob = await downloadImage(fileName);
 

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet , Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image , Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { userRegister } from '../utils/api';
 import { toast } from '../utils/utils';
@@ -17,6 +17,16 @@ export default function Register() {
 
     const handleRegister = async () => {
         try {
+            if( name.length > 20 )
+            {
+                toast('error', 'Erreur', 'Le nom d\'utilisateur ne doit pas dépasser 20 caractères', 3000, COLORS.toast.red);
+                return;
+            }
+            if( name.length < 3 )
+            {
+                toast('error', 'Erreur', 'Le nom d\'utilisateur doit contenir au moins 3 caractères', 3000, COLORS.toast.red);
+                return;
+            }
             await userRegister(name, password);
             toast('success', "Enregistrement réussie !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, COLORS.toast.green);
             navigation.navigate('initMenu', { screen: 'account' });
@@ -32,6 +42,12 @@ export default function Register() {
 
     return (
         <GradientBackground>
+            <View style={styles.imageContainer}>
+                <Image
+                    source={require('../../assets/LogoLuojaRepete.png')} // Remplacez par le chemin de votre image
+                    style={styles.image}
+                />
+            </View>
             <View style={styles.registerView}>
                 <Text style={styles.pageTitle}>Inscription</Text>
 
@@ -76,6 +92,22 @@ export default function Register() {
 }
 
 const styles = StyleSheet.create({
+    imageContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    image: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+        tintColor: COLORS.palette.blue.light,
+        opacity: 0.35,
+    },
     registerView: {
         flex: 1,
         display: 'flex',

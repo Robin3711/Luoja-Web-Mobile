@@ -94,7 +94,7 @@ export default function SearchScreen() {
                         </View>
 
                         <View style={styles.quizCreationRightView}>
-                            {!isMobile && <Text style={styles.quizCreationQuestionsTitle}>Liste des quizs :</Text>}
+                            {!isMobile && <Text style={styles.quizCreationQuestionsTitle}>Liste des quiz :</Text>}
                             <ScrollView style={styles.questionsView}>
                                 {data.length !== 0 ? (
                                     [...data].reverse().map((quiz, index) => (
