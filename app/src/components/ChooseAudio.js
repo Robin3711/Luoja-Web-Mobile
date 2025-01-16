@@ -18,7 +18,39 @@ const ChooseAudio = ({ onValueChange }) => {
     const [ids, setIds] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
 
+    const fetchAudios = async () => {
+        try {
+            const response = await downloadAllAudios();
+            if (response.files && Array.isArray(response.files)) {
+                const files = response.files;
+                const validFiles = files.filter(file => file.fileName.endsWith('.mp3' || '.mpeg'));
+                setIds(validFiles.map((file) => file.fileName));
+
+                const audioPromises = validFiles.map(async (file) => {
+                    const { fileName } = file;
+                    const audioBlob = await downloadAudio(fileName);
+                    return URL.createObjectURL(audioBlob);
+                });
+
+                const fetchedAudios = await Promise.all(audioPromises);
+                setAudios(fetchedAudios);
+            } else {
+                console.error("La réponse de `downloadAllAudios` n'est pas valide.");
+            }
+        } catch (error) {
+            if (error.message !== "Aucun fichier trouvé pour cet utilisateur") {
+                if (error.status && error.message) {
+                    toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                } else {
+                    toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                }
+            }
+        }
+    };
+
+
     const handleOpenModal = () => {
+        fetchAudios();
         setModalVisible(true);
     };
 
@@ -94,39 +126,11 @@ const ChooseAudio = ({ onValueChange }) => {
     const handleCloseModal = () => {
         setModalVisible(false);
     }
+    
 
     useFocusEffect(
         useCallback(() => {
-            const fetchAudios = async () => {
-                try {
-                    const response = await downloadAllAudios();
-                    if (response.files && Array.isArray(response.files)) {
-                        const files = response.files;
-                        const validFiles = files.filter(file => file.fileName.endsWith('.mp3' || '.mpeg'));
-                        setIds(validFiles.map((file) => file.fileName));
-
-                        const audioPromises = validFiles.map(async (file) => {
-                            const { fileName } = file;
-                            const audioBlob = await downloadAudio(fileName);
-                            return URL.createObjectURL(audioBlob);
-                        });
-
-                        const fetchedAudios = await Promise.all(audioPromises);
-                        setAudios((prevAudios) => [...prevAudios, ...fetchedAudios]);
-                    } else {
-                        console.error("La réponse de `downloadAllAudios` n'est pas valide.");
-                    }
-                } catch (error) {
-                    if (error.message !== "Aucun fichier trouvé pour cet utilisateur") {
-                        if (error.status && error.message) {
-                            toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
-                        } else {
-                            toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
-                        }
-                    }
-                }
-            };
-
+            
             fetchAudios();
         }, [])
     );
