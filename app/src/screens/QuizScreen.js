@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity,  StyleSheet , Dimensions } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos, listenTimer } from '../utils/api';
@@ -17,13 +17,14 @@ import { FONT } from '../css/utils/font';
 import GradientBackground from '../css/utils/linearGradient';
 
 const { width, height } = Dimensions.get('window');
-const isMobile = width < height
-
+const isMobile = width < height;
 
 export default function QuizScreen() {
     const route = useRoute();
     const navigation = useNavigation();
     const { gameId, gameMode } = route.params;
+
+    const audioRefs = useRef([]);
 
     if (!gameId) {
         return (
@@ -83,18 +84,15 @@ export default function QuizScreen() {
     useEffect(() => {
         let timer;
         if (remainingTime === 1) {
-
             timer = setTimeout(() => {
                 setTimeStuckAtOne(true);
             }, 1000);
         } else {
-
             setTimeStuckAtOne(false);
         }
 
         return () => clearTimeout(timer);
     }, [remainingTime]);
-
 
     useEffect(() => {
         if (timeStuckAtOne && remainingTime === 1) {
@@ -132,6 +130,8 @@ export default function QuizScreen() {
             setButtonDisabled(true);
             setSelectedAnswer(null);
             setCorrect(null);
+
+            stopAllAudios();
 
             const data = await getCurrentQuestion(gameId);
             setCurrentType(data.type);
@@ -218,18 +218,23 @@ export default function QuizScreen() {
         }
     }
 
+    const stopAllAudios = () => {
+        audioRefs.current.forEach(audio => {
+            if (audio) {
+                audio.stopAudio();
+            }
+        });
+    };
+
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
 
     const nextQuestionButton = () => (
-
         <TouchableOpacity
             style={buttonDisabled || selectedAnswer === null || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
             onPress={() => {
                 if (gameMode === 'timed' && remainingTime === 0) {
-                    // If game is timed and remaining time is 0, show the next question
                     totalQuestion === questionNumber ? handleEnd() : handleNewQuestion();
                 } else {
-                    // For other cases, handle the usual button actions
                     isAnswered
                         ? totalQuestion === questionNumber
                             ? handleEnd()

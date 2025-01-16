@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { View, Dimensions, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
@@ -47,7 +47,7 @@ const Triangle = ({ shapeColor, borderColor }) => (
 
 // ** Fin Composants **
 
-const AnswerButton = ({ shape, onClick, text, color, type, animation }) => {
+const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation }, ref) => {
 
     // ** Constantes **
 
@@ -100,8 +100,15 @@ const AnswerButton = ({ shape, onClick, text, color, type, animation }) => {
 
     const [file, setFile] = useState(null);
     const fileRef = useRef(null);
-    const sound = new Audio.Sound();
+    const sound = useRef(new Audio.Sound());
 
+    useImperativeHandle(ref, () => ({
+        stopAudio: async () => {
+            if (sound.current) {
+                await sound.current.stopAsync();
+            }
+        }
+    }));
 
     async function blobToBase64(blob) {
         return new Promise((resolve, reject) => {
@@ -114,9 +121,9 @@ const AnswerButton = ({ shape, onClick, text, color, type, animation }) => {
 
     const playSound = async () => {
         try {
-            await sound.unloadAsync();
-            await sound.loadAsync({ uri: file });
-            await sound.playAsync();
+            await sound.current.unloadAsync();
+            await sound.current.loadAsync({ uri: file });
+            await sound.current.playAsync();
         } catch (error) {
             toast("error", 'Erreur lors de la lecture du son', '', 1500, COLORS.toast.text.red);
         }
@@ -143,14 +150,14 @@ const AnswerButton = ({ shape, onClick, text, color, type, animation }) => {
                         setFile(url);
                     }
 
-                    await sound.loadAsync({ uri: url });
+                    await sound.current.loadAsync({ uri: url });
 
                 }
             }
             handleMedia();
 
             return () => {
-                sound.unloadAsync();
+                sound.current.unloadAsync();
             };
 
         } else {
@@ -182,7 +189,7 @@ const AnswerButton = ({ shape, onClick, text, color, type, animation }) => {
                         await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
                         setFile(fileUri);
                         fileRef.current = fileUri;
-                        await sound.loadAsync({ uri: fileUri });
+                        await sound.current.loadAsync({ uri: fileUri });
                     }
                 } catch (error) {
                     toast('error', 'Erreur lors du traitement des fichiers média', '', 1500, COLORS.toast.text.red);
@@ -194,8 +201,8 @@ const AnswerButton = ({ shape, onClick, text, color, type, animation }) => {
             return () => {
                 async function cleanup() {
                     try {
-                        if (sound) {
-                            await sound.unloadAsync();
+                        if (sound.current) {
+                            await sound.current.unloadAsync();
                         }
                         if (fileRef.current) {
                             const exists = await FileSystem.getInfoAsync(fileRef.current);
@@ -281,10 +288,10 @@ const AnswerButton = ({ shape, onClick, text, color, type, animation }) => {
                         <TouchableOpacity onPress={playSound} style={styles.button}>
                             <Text style={styles.text}>Play</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={async () => { sound.pauseAsync() }} style={styles.button}>
+                        <TouchableOpacity onPress={async () => { sound.current.pauseAsync() }} style={styles.button}>
                             <Text style={styles.text}>Pause</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={async () => { sound.stopAsync() }} style={styles.button}>
+                        <TouchableOpacity onPress={async () => { sound.current.stopAsync() }} style={styles.button}>
                             <Text style={styles.text}>Stop</Text>
                         </TouchableOpacity>
                     </>
@@ -294,7 +301,7 @@ const AnswerButton = ({ shape, onClick, text, color, type, animation }) => {
     );
 
     // ** End JSX **
-};
+});
 
 // ** Style **
 
