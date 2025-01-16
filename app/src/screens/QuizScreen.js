@@ -345,7 +345,7 @@ export default function QuizScreen() {
                                     {!isMobile && nextQuestionButton()}
                                 </View>
 
-                                <View style={styles.answersView}>
+                                <View style={[styles.answersView, {flexDirection: currentType === 'image' ? 'row' : 'column',}]}>
                                     {currentQuestion.answers.map((answer, index) => {
                                         return (
                                             answer === null ? null : (
@@ -448,6 +448,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     answersView: {
+        flexDirection: (!isMobile? 'row': 'column'),
+        flexWrap: 'wrap',
+        justifyContent: 'center',
         width: !isMobile ? '50%' : '100%',
         alignItems: 'center',
         ...isMobile && { marginVertical: 10, },
