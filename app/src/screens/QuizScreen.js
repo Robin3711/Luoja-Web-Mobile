@@ -29,17 +29,6 @@ const sound = new Audio.Sound();
 const badSound = require('../../assets/badAnswerSound.mp3');
 const goodSound = require('../../assets/goodAnswerSound.mp3');
 
-useEffect(() => {
-    
-        async function requestPermission() {
-            const { status } = await Audio.requestPermissionsAsync();
-            if (status !== 'granted') {
-                console.warn('Permission audio non accordée');
-            }
-        }
-        requestPermission();
-}, []);
-
     const route = useRoute();
     const navigation = useNavigation();
     const { gameId, gameMode } = route.params;
