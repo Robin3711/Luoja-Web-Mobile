@@ -23,10 +23,10 @@ const isMobile = width < height
 export default function RoomQuizScreen() {
 
 
-const sound = new Audio.Sound();
+    const sound = new Audio.Sound();
 
-const badSound = require('../../assets/badAnswerSound.mp3');
-const goodSound = require('../../assets/goodAnswerSound.mp3');
+    const badSound = require('../../assets/badAnswerSound.mp3');
+    const goodSound = require('../../assets/goodAnswerSound.mp3');
 
     const route = useRoute();
     const navigation = useNavigation();
@@ -203,15 +203,15 @@ const goodSound = require('../../assets/goodAnswerSound.mp3');
         }
 
         if (answer === selectedAnswer && !isAnswered) return 'BLUE';
-        if (answer === correct)  {
-              // jouer le son
-              if (answer === selectedAnswer){
+        if (answer === correct) {
+            // jouer le son
+            if (answer === selectedAnswer) {
                 playSound(goodSound);
-              }     
+            }
             return 'GREEN';
-           
+
         }
-        if (answer === selectedAnswer){
+        if (answer === selectedAnswer) {
             // jouer le son
             playSound(badSound);
             return 'RED';
@@ -240,13 +240,8 @@ const goodSound = require('../../assets/goodAnswerSound.mp3');
     );
 
     const handleCopyGameId = async () => {
-        await Clipboard.setStringAsync(gameId);
+        await Clipboard.setStringAsync(roomId);
         toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.text.blue);
-    };
-
-    const getTopValue = () => {
-        if (!isMobile) return 20;
-        return currentQuestion?.question?.length > 60 ? 50 : 20;
     };
 
     loadFont();
