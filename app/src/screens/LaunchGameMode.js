@@ -79,10 +79,6 @@ export default function LaunchGameMode() {
         setTeams(newTeams);
     };
 
-    useFocusEffect(() => {
-        setDisable(false);
-    });
-
     return (
         <GradientBackground>
             <KeyboardAvoidingView
@@ -117,7 +113,7 @@ export default function LaunchGameMode() {
                                 </View>
                             </View>
                             <View style={styles.item}>
-                                <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} />
+                                <SimpleButton text="TEAM" onPress={() => handleStartRoom("team")} disabled={disable} />
                                 <Text style={FONT.paragraphe}>Les joueurs forment des équipes et répondent aux questions avec un temps limité, configurable par niveau de difficulté. Le score final de chaque équipe est la moyenne des scores de ses membres.</Text>
                                 <View style={styles.inputRow}>
                                     <Text style={styles.label}>Nombre d'équipes</Text>
