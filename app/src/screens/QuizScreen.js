@@ -28,7 +28,7 @@ export default function QuizScreen() {
 const sound = new Audio.Sound();
 
 const badSound = require('../../assets/error_CDOxCYm.mp3');
-const goodSound = require('../../assets/yeah-boiii-i-i-i.mp3');
+const goodSound = require('../../assets/check-mark_oPG7Xo5.mp3');
 
 useEffect(() => {
     
