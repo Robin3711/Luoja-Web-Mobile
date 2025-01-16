@@ -86,9 +86,7 @@ Ensuite, installez les outils NPM avec la commande suivante (dans le dossier app
 
 
 ```bash
-
 npm install
-
 ```
 
 
@@ -100,9 +98,7 @@ Une fois les outils installés, il est possible de lancer le projet en mode dév
 
 
 ```bash
-
 npm start
-
 ```
 
 
@@ -170,9 +166,7 @@ Pour les modes multijoueurs, lorsque vous créez la partie, vous aurez un code e
 
 
 ```bash
-
 sudo docker run -it -p 4000:4000 --name baldur docker.luoja.fr/baldur
-
 ```
 
 
@@ -184,7 +178,6 @@ sudo docker run -it -p 4000:4000 --name baldur docker.luoja.fr/baldur
 
 
 ```bash
-
 sudo docker run -d --restart always --name baldur --network internal_network \
 
 -e PROTOCOL=HTTPS \
@@ -196,7 +189,6 @@ sudo docker run -d --restart always --name baldur --network internal_network \
 -v /etc/letsencrypt:/etc/letsencrypt:ro \
 
 docker.luoja.fr/baldur
-
 ```
 
 
