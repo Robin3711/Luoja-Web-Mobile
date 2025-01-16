@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
@@ -22,6 +22,7 @@ const isMobile = width < height
 
 export default function RoomQuizScreen() {
 
+    const audioRefs = useRef([]);
 
     const sound = new Audio.Sound();
 
@@ -160,6 +161,7 @@ export default function RoomQuizScreen() {
     };
 
     const handleNewQuestion = async () => {
+        stopAllAudios();
         await sound.unloadAsync();
         try {
             setSelectedAnswer(null);
@@ -235,9 +237,19 @@ export default function RoomQuizScreen() {
     };
 
     const handleEnd = () => {
+        stopAllAudios();
         navigation.navigate('roomEndScreen', {
             roomId: roomId,
             gameMode: gameMode,
+        });
+    };
+
+    const stopAllAudios = () => {
+        audioRefs.current.forEach(audio => {
+            if (audio) {
+                console.log("stop audio");
+                audio.stopAudio();
+            }
         });
     };
 
@@ -314,6 +326,7 @@ export default function RoomQuizScreen() {
                                         answer === null ? null : (
                                             <AnswerButton
                                                 key={index}
+                                                ref={el => audioRefs.current[index] = el}
                                                 shape={shapes[index]}
                                                 text={answer}
                                                 onClick={() => handleAnswerSelection(answer)}
