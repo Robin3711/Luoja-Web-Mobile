@@ -500,7 +500,7 @@ export async function downloadAllImages() {
 
         return await response.json();
     } catch (error) {
-        throw error;
+        console.error(error);
     }
 }
 
@@ -743,7 +743,7 @@ export async function downloadAllAudios() {
         return await response.json();
     }
     catch (error) {
-        throw error;
+        console.error(error);
     }
 }
 
