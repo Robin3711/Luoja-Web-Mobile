@@ -77,8 +77,8 @@ export default function Room() {
         const connect = async () => {
             try {
 
-                if (! await hasToken()) {
-                    navigation.navigate('initMenu', { screen: 'account', params: { roomId: roomId } });
+                if  (! await hasToken())  {
+                    navigation.navigate('initMenu', { screen: 'account', params: {  roomId: roomId  } });
                 }
                 else {
                     const userInfo = await getUserInfos();
@@ -119,7 +119,7 @@ export default function Room() {
         <GradientBackground>
             <View style={styles.container}>
                 <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
-                {platform === "android" ? (
+                {!isMobile ? (
                     <View style={styles.qrCodeContainer}>
                         <QRCode
                             value={`https://luoja.fr/room?roomId=${roomId}`}
@@ -172,16 +172,16 @@ export default function Room() {
                             player === owner ? (
                                 <Text key={player} style={FONT.text}>👑 {player} (Vous)</Text>
                             ) :
-                            (   
-                                <Text key={player} style={FONT.textAlternate}>{player} (Vous)</Text>
-                            )
+                                (
+                                    <Text key={player} style={FONT.textAlternate}>{player} (Vous)</Text>
+                                )
                         ) : (
                             player === owner ? (
                                 <Text key={player} style={FONT.text}> 👑 {player}</Text>
                             ) :
-                            (
-                                <Text key={player} style={FONT.textAlternate}>{player}</Text>
-                            )
+                                (
+                                    <Text key={player} style={FONT.textAlternate}>{player}</Text>
+                                )
                         )
                     ))}
                 </ScrollView>
@@ -200,16 +200,16 @@ export default function Room() {
                                         player === owner ? (
                                             <Text key={player} style={FONT.text}>👑 {player} (Vous)</Text>
                                         ) :
-                                        (   
-                                            <Text key={player} style={FONT.text}>{player} (Vous)</Text>
-                                        )
+                                            (
+                                                <Text key={player} style={FONT.text}>{player} (Vous)</Text>
+                                            )
                                     ) : (
                                         player === owner ? (
                                             <Text key={player} style={FONT.text}> 👑 {player}</Text>
                                         ) :
-                                        (
-                                            <Text key={player} style={FONT.text}>{player}</Text>
-                                        )
+                                            (
+                                                <Text key={player} style={FONT.text}>{player}</Text>
+                                            )
                                     )
                                 ))}
                             </View>
@@ -303,8 +303,8 @@ const styles = StyleSheet.create({
     teamPlayersContainer: {
         flexDirection: 'column',
         alignItems: 'center',
-        height: 150,
-        overflow: 'scroll',
+        height: !isMobile ? "25%" : null,
+        overflow: 'auto',
     },
     qrCodeButton: {
         position: 'absolute',

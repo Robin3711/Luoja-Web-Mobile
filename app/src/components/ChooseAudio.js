@@ -17,6 +17,7 @@ const ChooseAudio = ({ onValueChange }) => {
     const [selectedAudio, setSelectedAudio] = useState(null);
     const [ids, setIds] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
+    const [disable, setDisable] = useState(false);
 
     const fetchAudios = async () => {
         try {
@@ -91,13 +92,14 @@ const ChooseAudio = ({ onValueChange }) => {
 
     const handleRefreshAudios = async (id) => {
         try {
+            setDisable(true);
             await deleteFile(id);
             const response = await downloadAllAudios();
             if (response.files && Array.isArray(response.files)) {
                 const files = response.files;
 
                 const validFiles = files.filter(file =>
-                    file.fileName.endsWith('.mp3') || 
+                    file.fileName.endsWith('.mp3') ||
                     file.fileName.endsWith('.mpeg')
                 );
 
@@ -114,23 +116,25 @@ const ChooseAudio = ({ onValueChange }) => {
             } else {
                 console.error("La réponse de `downloadAllAudios` n'est pas valide.");
             }
+            setDisable(false);
         } catch (error) {
             if (error.status && error.message) {
                 toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
             } else {
                 toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
             }
+            setDisable(false);
         }
     }
 
     const handleCloseModal = () => {
         setModalVisible(false);
     }
-    
+
 
     useFocusEffect(
         useCallback(() => {
-            
+
             fetchAudios();
         }, [])
     );
@@ -180,7 +184,7 @@ const ChooseAudio = ({ onValueChange }) => {
                                 <audio controls src={item} style={styles.audioPlayer}>
                                     Votre navigateur ne supporte pas l'élément audio.
                                 </audio>
-                                <SimpleButton text="Supprimer" onPress={() => handleRefreshAudios(ids[index])} />
+                                <SimpleButton text="Supprimer" onPress={() => handleRefreshAudios(ids[index])} disabled={disable} />
 
                             </TouchableOpacity>
                         ))}

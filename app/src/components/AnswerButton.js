@@ -5,12 +5,12 @@ import Svg, { Path } from 'react-native-svg';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 
-import Animated, { 
-    interpolate, 
-    useAnimatedStyle, 
-    useSharedValue, 
-    withRepeat, 
-    withTiming 
+import Animated, {
+    interpolate,
+    useAnimatedStyle,
+    useSharedValue,
+    withRepeat,
+    withTiming
 } from 'react-native-reanimated';
 
 import { COLORS } from '../css/utils/color';
@@ -19,8 +19,8 @@ import { toast } from '../utils/utils';
 
 // ** Constantes **
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 const platform = Platform.OS;
 
@@ -133,7 +133,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
         } catch (error) {
             toast("error", 'Erreur lors de la lecture du son', '', 1500, COLORS.toast.text.red);
         }
-    };  
+    };
 
     useEffect(() => {
 
@@ -238,7 +238,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
                     () => {
                         // Retour à 0.5
                         rotation.value = withTiming(0.5, { duration: 100 });
-                        }
+                    }
                 );
             });
         }
@@ -256,7 +256,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
                     }
                 );
             });
-        }            
+        }
     }, [animation]);
 
     const animatedStyle = useAnimatedStyle(() => {
@@ -269,7 +269,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
             transform: [
                 { rotate: `${rotate}deg` },
                 { translateX: translate },
-            ],    
+            ],
         };
     });
 
