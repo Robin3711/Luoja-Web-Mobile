@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity,  StyleSheet , Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos, listenTimer } from '../utils/api';
@@ -175,7 +175,7 @@ export default function QuizScreen() {
 
                 setCorrect(correctAnswerFromApi);
                 setIsAnswered(true);
-                if (correctAnswerFromApi === selectedAnswer){
+                if (correctAnswerFromApi === selectedAnswer) {
                     confettiRef.current.startConfetti();
                     setAnimation('win');
                     updateScore();
@@ -310,35 +310,35 @@ export default function QuizScreen() {
                                     {!isMobile && nextQuestionButton()}
                                 </View>
 
-                            <View style={styles.answersView}>
-                                {currentQuestion.answers.map((answer, index) => {
-                                    return (
-                                        answer === null ? null : (
-                                            <AnswerButton
-                                                key={index}
-                                                shape={shapes[index]}
-                                                text={answer}
-                                                onClick={() => handleAnswerSelection(answer)}
-                                                color={getAnswerColor(answer)}
-                                                type={currentType}
-                                                disabled={gameMode === 'timed' && remainingTime === 0}
-                                                animation={animation}
-                                            />
-                                        )
-                                    );
-                                })}
-                                {isMobile && nextQuestionButton()}
+                                <View style={styles.answersView}>
+                                    {currentQuestion.answers.map((answer, index) => {
+                                        return (
+                                            answer === null ? null : (
+                                                <AnswerButton
+                                                    key={index}
+                                                    shape={shapes[index]}
+                                                    text={answer}
+                                                    onClick={() => handleAnswerSelection(answer)}
+                                                    color={getAnswerColor(answer)}
+                                                    type={currentType}
+                                                    disabled={gameMode === 'timed' && remainingTime === 0}
+                                                    animation={animation}
+                                                />
+                                            )
+                                        );
+                                    })}
+                                    {isMobile && nextQuestionButton()}
+                                </View>
+                                <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]} />
                             </View>
-                            <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]}/>
-                        </View>
-                    </>
-                ) : (
-                    <Text>Chargement...</Text>
-                )}
-            </View>
-        ) : (
-            <View style={styles.quizScreenView}>
-                <Text style={styles.errorText}>{errorMessage}</Text>
+                        </>
+                    ) : (
+                        <Text>Chargement...</Text>
+                    )}
+                </View>
+            ) : (
+                <View style={styles.quizScreenView}>
+                    <Text style={styles.errorText}>{errorMessage}</Text>
 
                     <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
 
@@ -365,6 +365,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        zIndex: 999,
     },
     gameIdText: {
         fontSize: 20,
