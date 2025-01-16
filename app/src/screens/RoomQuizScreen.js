@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...!isMobile && { gap: 20, },
-        ...isMobile && { gap: '5%', },
+        ...isMobile && { gap: '10%', },
     },
     roomId: {
         position: 'absolute',
