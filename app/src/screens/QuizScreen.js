@@ -221,11 +221,13 @@ export default function QuizScreen() {
     }
 
     const stopAllAudios = () => {
-        audioRefs.current.forEach(audio => {
-            if (audio) {
-                audio.stopAudio();
-            }
-        });
+        if (audioRefs.current) {
+            audioRefs.current.forEach((ref) => {
+                if (ref) {
+                    ref.stopAnimation();
+                }
+            });
+        }
     };
 
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];

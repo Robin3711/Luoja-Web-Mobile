@@ -231,11 +231,13 @@ export default function RoomQuizScreen() {
     };
 
     const stopAllAudios = () => {
-        audioRefs.current.forEach(audio => {
-            if (audio) {
-                audio.stopAudio();
-            }
-        });
+        if (audioRefs.current) {
+            audioRefs.current.forEach((audioRef) => {
+                if (audioRef) {
+                    audioRef.stopAudio();
+                }
+            });
+        }
     };
 
     const shapes = ['SQUARE', 'TRIANGLE', 'CIRCLE', 'STAR'];
