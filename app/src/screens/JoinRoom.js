@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Text, View, Dimensions,Platform, StyleSheet, Button, Alert,  TextInput, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { Text, View, Dimensions, StyleSheet, Alert,  TextInput, TouchableOpacity } from "react-native";
 import { CameraView, Camera } from "expo-camera";
-import { getRoomId, hasToken, toast } from "../utils/utils";
-import { useNavigation } from "@react-navigation/native";
+import { getRoomId, requireToken, toast } from "../utils/utils";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../css/utils/color';
@@ -20,10 +20,13 @@ export default function JoinGame() {
 
   const navigation = useNavigation();
 
+  useFocusEffect(
+    useCallback(() => {
+        requireToken(navigation);
+    })
+  );
+
   useEffect(() => {
-    if (!hasToken()) {
-      navigation.navigate('login');
-    };
     const getCameraPermissions = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
