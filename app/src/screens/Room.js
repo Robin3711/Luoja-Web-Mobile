@@ -17,6 +17,7 @@ import { toast } from "../utils/utils";
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height
 
+const platform = Platform.OS;
 
 
 export default function Room() {
@@ -112,7 +113,7 @@ export default function Room() {
         <GradientBackground>
             <View style={styles.container}>
                 <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
-                {!isMobile ? (
+                {platform==="android" ? (
                     <View style={styles.qrCodeContainer}>
                         <QRCode
                             value={`https://luoja.fr/room?roomId=${roomId}`}
