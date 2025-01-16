@@ -18,6 +18,7 @@ const ChooseFile = ({ onValueChange }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [ids, setIds] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
+    const [disable, setDisable] = useState(false);
 
 
     const fetchImages = async () => {
@@ -25,13 +26,13 @@ const ChooseFile = ({ onValueChange }) => {
             const response = await downloadAllImages();
             if (response.files && Array.isArray(response.files)) {
                 const files = response.files;
-                
+
                 const validFiles = files.filter(file =>
-                    file.fileName.endsWith('.png') || 
-                    file.fileName.endsWith('.jpg') || 
+                    file.fileName.endsWith('.png') ||
+                    file.fileName.endsWith('.jpg') ||
                     file.fileName.endsWith('.jpeg')
                 );
-                
+
                 setIds(validFiles.map((file) => file.fileName));
                 const imagePromises = validFiles.map(async (file) => {
                     console.log(file);
@@ -103,6 +104,7 @@ const ChooseFile = ({ onValueChange }) => {
 
     const handleRefreshImages = async (id) => {
         try {
+            setDisable(true);
             await deleteFile(id);
             const response = await downloadAllImages();
             if (response.files && Array.isArray(response.files)) {
@@ -128,6 +130,7 @@ const ChooseFile = ({ onValueChange }) => {
             } else {
                 console.error("La réponse de `downloadAllImages` n'est pas valide.");
             }
+            setDisable(false);
         } catch (error) {
             if (error.message !== "Aucun fichier trouvé pour cet utilisateur") {
                 if (error.status && error.message) {
@@ -136,6 +139,7 @@ const ChooseFile = ({ onValueChange }) => {
                     toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
                 }
             }
+            setDisable(false);
         }
     }
 
@@ -189,7 +193,7 @@ const ChooseFile = ({ onValueChange }) => {
                             renderItem={({ item, index }) => (
                                 <View style={styles.imageItem}>
                                     <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]} />
-                                    <SimpleButton text="Supprimer" onPress={() => handleRefreshImages(ids[index])} />
+                                    <SimpleButton text="Supprimer" onPress={() => handleRefreshImages(ids[index])} disabled={disable} />
                                 </View>
                             )}
                         />

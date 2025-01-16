@@ -77,10 +77,10 @@ export default function Room() {
         const connect = async () => {
             try {
 
-                if (! await hasToken()) {
-                    navigation.navigate('initMenu', { screen: 'account', params: { roomId: roomId } });
+                if  (! await hasToken())  {
+                    navigation.navigate('initMenu', { screen: 'account', params: {  roomId: roomId  } });
                 }
-                else {
+                else  {
                     const userInfo = await getUserInfos();
                     setUser(userInfo.userName);
                     const source = await joinRoom(roomId);
@@ -119,7 +119,7 @@ export default function Room() {
         <GradientBackground>
             <View style={styles.container}>
                 <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
-                {platform === "android" ? (
+                {!isMobile ? (
                     <View style={styles.qrCodeContainer}>
                         <QRCode
                             value={`https://luoja.fr/room?roomId=${roomId}`}
@@ -303,8 +303,8 @@ const styles = StyleSheet.create({
     teamPlayersContainer: {
         flexDirection: 'column',
         alignItems: 'center',
-        height: 150,
-        overflow: 'scroll',
+        height: !isMobile ? "25%" : null,
+        overflow: 'auto',
     },
     qrCodeButton: {
         position: 'absolute',

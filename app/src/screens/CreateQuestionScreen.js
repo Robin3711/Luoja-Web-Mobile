@@ -26,6 +26,7 @@ export default function CreateQuestionScreen() {
     const [generationTheme, setGenerationTheme] = useState('standard');
     const [loading, setLoading] = useState(false);
     const [fileName, setFileName] = useState(null);
+    const [disable, setDisable] = useState(false);
 
     // Answers state
     const [answers, setAnswers] = useState({
@@ -83,24 +84,29 @@ export default function CreateQuestionScreen() {
     }
 
     const handleSubmit = () => {
+        setDisable(true);
         if (!questionText) {
             toast('error', 'La question ne peut pas être vide', '', 3000, COLORS.toast.text.red);
+            setDisable(false);
             return;
         }
 
         if (!selectedShape) {
             toast('error', 'Veuillez sélectionner une bonne réponse en cliquant sur une forme', '', 3000, COLORS.toast.text.red);
+            setDisable(false);
             return;
         }
 
         const requiredAnswers = shapes.map((shape) => answers[shape]);
         if (requiredAnswers.some((answer) => !answer)) {
             toast('error', `Veuillez remplir toutes les ${numAnswers} réponses`, '', 3000, COLORS.toast.text.red);
+            setDisable(false);
             return;
         }
 
         const incorrectAnswers = shapes.filter((shape) => shape !== selectedShape).map((shape) => answers[shape]);
 
+        setDisable(false);
         handleQuestion([
             {
                 text: questionText,
@@ -216,7 +222,7 @@ export default function CreateQuestionScreen() {
                             </Picker>
                         </View>
                     </View>
-                    <SimpleButton text="Valider" onPress={handleSubmit} />
+                    <SimpleButton text="Valider" onPress={handleSubmit} disabled={disable} />
                 </View>
 
                 {/* Right Panel */}
