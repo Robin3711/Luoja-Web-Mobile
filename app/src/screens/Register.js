@@ -60,7 +60,7 @@ export default function Register() {
     }
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             <View style={styles.imageContainer}>
                 <Image
                     source={require('../../assets/LogoLuojaRepete.png')}

@@ -192,7 +192,7 @@ export default function CreateQuestionScreen() {
     );
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             <View style={styles.createQuestionView}>
                 {/* Left Panel */}
                 <View style={styles.createQuestionLeftView}>

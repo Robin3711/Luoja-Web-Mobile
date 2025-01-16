@@ -73,7 +73,7 @@ export default function Account() {
     }
     else {
         return (
-            <GradientBackground>
+            <GradientBackground showLogo={true}>
                 {error ? (
                     <View style={styles.quizScreenView}>
                         <Text style={FONT.error}>{errorMessage}</Text>

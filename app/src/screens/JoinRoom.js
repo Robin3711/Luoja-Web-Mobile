@@ -79,7 +79,7 @@ export default function JoinGame() {
   }
 
   return (
-    <GradientBackground>
+    <GradientBackground showLogo={true}>
       <View style={styles.container}>
         {platform === "android" && scanned === false && (
           <CameraView

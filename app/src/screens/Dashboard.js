@@ -102,7 +102,7 @@ export default function Dashboard() {
     };
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             {
                 error ? (
                     <View style={styles.dashboardView}>

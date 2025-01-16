@@ -62,13 +62,7 @@ export default function SearchScreen() {
     }
 
     return (
-        <GradientBackground>
-            <View style={styles.imageContainer}>
-                <Image
-                    source={require('../../assets/LogoLuojaRepete.png')}
-                    style={styles.image}
-                />
-            </View>
+        <GradientBackground showLogo={true}>
             {error ? (
                 <View style={styles.screen}>
                     <Text style={styles.errorText}>{errorMessage}</Text>
@@ -211,21 +205,5 @@ const styles = StyleSheet.create({
     },
     alternateBackground: {
         backgroundColor: COLORS.palette.blue.lighter,
-    },
-    imageContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
-        tintColor: COLORS.palette.blue.light,
-        opacity: 0.35,
     },
 });
