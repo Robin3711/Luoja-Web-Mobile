@@ -363,6 +363,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...!isMobile && { gap: 20, },
+        ...isMobile && { gap: '5%', },
     },
     roomId: {
         position: 'absolute',
@@ -381,9 +382,10 @@ const styles = StyleSheet.create({
     },
     questionView: {
         alignItems: 'center',
-        width: !isMobile ? '50%' : '100%',
+        top: !isMobile ? 20 : 50,
+        width: !isMobile ? '45%' : '100%',
+        ...isMobile && { marginVertical: 10, },
         ...!isMobile && { gap: 70, },
-
     },
     question: {
         fontSize: !isMobile ? 30 : 25,
@@ -392,14 +394,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: COLORS.text.blue.dark,
         ...!isMobile && { marginVertical: 100, },
+        ...isMobile && { marginVertical: 10, },
     },
     questionNumber: {
+        marginTop: !isMobile ? -20 : -15,
         fontSize: !isMobile ? 30 : 17,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
         fontWeight: 'bold',
+        ...isMobile && { marginVertical: 10, },
+        ...!isMobile && { marginTop: 0, },
     },
     score: {
+        marginBottom: -15,
         fontSize: !isMobile ? 30 : 12,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
@@ -408,7 +415,7 @@ const styles = StyleSheet.create({
     answersView: {
         width: !isMobile ? '50%' : '100%',
         alignItems: 'center',
-
+        ...isMobile && { marginVertical: 10, },
     },
     buttons: {
         display: 'flex',
@@ -421,6 +428,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...isMobile && { marginVertical: 10, },
     },
     disabledButtons: {
         display: 'flex',
@@ -433,23 +441,28 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginVertical: 10,
         elevation: 2,
+        ...isMobile && { marginVertical: 10, },
     },
     buttonText: {
         fontSize: 20,
         fontWeight: 'bold',
+        ...isMobile && { marginVertical: 10, },
     },
     quizBarView: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        ...isMobile && { marginVertical: 10, },
     },
     quizBarTextView: {
         fontSize: 22,
+        ...isMobile && { marginVertical: 10, },
     },
     errorText: {
         fontSize: 18,
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
+        ...isMobile && { marginVertical: 10, },
     },
 });
