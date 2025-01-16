@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList,  Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList, Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
 import { COLORS } from '../css/utils/color';
 import { uploadImage, downloadAllImages, downloadImage, deleteFile } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';
@@ -8,8 +8,8 @@ import SimpleButton from './SimpleButton';
 import { toast } from '../utils/utils';
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 const ChooseFile = ({ onValueChange }) => {
@@ -20,7 +20,49 @@ const ChooseFile = ({ onValueChange }) => {
     const [selectedId, setSelectedId] = useState(null);
 
 
+    const fetchImages = async () => {
+        try {
+            const response = await downloadAllImages();
+            if (response.files && Array.isArray(response.files)) {
+                const files = response.files;
+                
+                const validFiles = files.filter(file =>
+                    file.fileName.endsWith('.png') || 
+                    file.fileName.endsWith('.jpg') || 
+                    file.fileName.endsWith('.jpeg')
+                );
+                
+                setIds(validFiles.map((file) => file.fileName));
+                const imagePromises = validFiles.map(async (file) => {
+                    console.log(file);
+                    const { fileName } = file;
+                    const imageBlob = await downloadImage(fileName);
+
+                    // Convertir le blob en URL locale
+                    const imageURL = URL.createObjectURL(imageBlob);
+                    return imageURL;
+                });
+
+                // Résoudre toutes les promesses
+                const fetchedImages = await Promise.all(imagePromises);
+
+                // Mettre à jour l'état des images
+                setImages(fetchedImages);
+            } else {
+                console.error("La réponse de `downloadAllImages` n'est pas valide.");
+            }
+        } catch (error) {
+            if (error.status && error.message) {
+                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+            } else {
+                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+            }
+        }
+    };
+
+
     const handleOpenModal = () => {
+        fetchImages();
         setModalVisible(true);
     }
 
@@ -87,10 +129,12 @@ const ChooseFile = ({ onValueChange }) => {
                 console.error("La réponse de `downloadAllImages` n'est pas valide.");
             }
         } catch (error) {
-            if (error.status && error.message) {
-                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
-            } else {
-                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+            if (error.message !== "Aucun fichier trouvé pour cet utilisateur") {
+                if (error.status && error.message) {
+                    toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                } else {
+                    toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                }
             }
         }
     }
@@ -101,46 +145,6 @@ const ChooseFile = ({ onValueChange }) => {
 
     useFocusEffect(
         useCallback(() => {
-            const fetchImages = async () => {
-                try {
-                    const response = await downloadAllImages();
-                    if (response.files && Array.isArray(response.files)) {
-                        const files = response.files;
-                        
-                        const validFiles = files.filter(file =>
-                            file.fileName.endsWith('.png') || 
-                            file.fileName.endsWith('.jpg') || 
-                            file.fileName.endsWith('.jpeg')
-                        );
-                        
-                        setIds(validFiles.map((file) => file.fileName));
-                        const imagePromises = validFiles.map(async (file) => {
-                            console.log(file);
-                            const { fileName } = file;
-                            const imageBlob = await downloadImage(fileName);
-
-                            // Convertir le blob en URL locale
-                            const imageURL = URL.createObjectURL(imageBlob);
-                            return imageURL;
-                        });
-
-                        // Résoudre toutes les promesses
-                        const fetchedImages = await Promise.all(imagePromises);
-
-                        // Mettre à jour l'état des images
-                        setImages((prevImages) => [...prevImages, ...fetchedImages]);
-                    } else {
-                        console.error("La réponse de `downloadAllImages` n'est pas valide.");
-                    }
-                } catch (error) {
-                    if (error.status && error.message) {
-                        toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
-                    } else {
-                        toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
-                    }
-                }
-            };
-
             fetchImages();
         }, [])
     );
@@ -148,7 +152,7 @@ const ChooseFile = ({ onValueChange }) => {
 
     return (
         <View style={styles.themeListView}>
-            <TouchableOpacity style={styles.paramButton} onPress={() => setModalVisible(true)}>
+            <TouchableOpacity style={styles.paramButton} onPress={handleOpenModal}>
                 <Text style={styles.paramButtonText}>
                     {selectedImage ? "Modifier l'image" : "Ajouter une image"}
                 </Text>
@@ -185,7 +189,7 @@ const ChooseFile = ({ onValueChange }) => {
                             renderItem={({ item, index }) => (
                                 <View style={styles.imageItem}>
                                     <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]} />
-                                    <SimpleButton text="Supprimer" onPress={() => handleRefreshImages(ids[index])}/>
+                                    <SimpleButton text="Supprimer" onPress={() => handleRefreshImages(ids[index])} />
                                 </View>
                             )}
                         />

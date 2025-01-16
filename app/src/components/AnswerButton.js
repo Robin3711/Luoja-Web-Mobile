@@ -161,15 +161,6 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
             };
 
         } else {
-            async function requestPermission() {
-                const { status } = await Audio.requestPermissionsAsync();
-                if (status !== 'granted') {
-                    toast('warn', 'Permission audio non accordée', '', 1500, COLORS.toast.text.orange);
-                }
-            }
-            requestPermission();
-
-
             async function handleMedia() {
                 let fileUri = null;
                 try {

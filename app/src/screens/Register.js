@@ -1,44 +1,48 @@
 import { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { userRegister } from '../utils/api';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
+import { Eye, EyeClosed } from 'lucide-react-native';
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height;
 import GradientBackground from '../css/utils/linearGradient';
+import { FONT } from '../css/utils/font';
 
 export default function Register() {
     const route = useRoute();
     const navigation = useNavigation();
 
     let roomId = null;
-    
-    if(route.params){
+
+    if (route.params) {
         roomId = route.params.roomId;
     }
 
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
+    const [hidePassword, setHidePassword] = useState(true);
 
     const passwordInputRef = useRef(null);
 
     const handleRegister = async () => {
         try {
-            if( name.length > 20 )
-            {
+            if (name.length > 20) {
                 toast('error', 'Erreur', 'Le nom d\'utilisateur ne doit pas dépasser 20 caractères', 3000, COLORS.toast.red);
                 return;
             }
-            if( name.length < 3 )
-            {
+            if (name.length < 3) {
                 toast('error', 'Erreur', 'Le nom d\'utilisateur doit contenir au moins 3 caractères', 3000, COLORS.toast.red);
                 return;
             }
             await userRegister(name, password);
             toast('success', "Enregistrement réussie !", `Nous sommes heureux de vous rencontrer ${name}`, 3000, COLORS.toast.green);
-            if( route.params && roomId != null ){
+            if (route.params && roomId != null) {
                 navigation.navigate('room', { roomId: roomId });
             }
-            else{
+            else {
                 navigation.navigate('initMenu', { screen: 'account' });
             }
         }
@@ -51,6 +55,10 @@ export default function Register() {
         }
     };
 
+    const handleHidePassword = () => {
+        setHidePassword(!hidePassword);
+    }
+
     return (
         <GradientBackground>
             <View style={styles.imageContainer}>
@@ -60,9 +68,9 @@ export default function Register() {
                 />
             </View>
             <View style={styles.registerView}>
-                <Text style={styles.pageTitle}>Inscription</Text>
+                <Text style={[FONT.title, { marginBottom: !isMobile ? 70 : 15 }]}>Inscription</Text>
 
-                <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
+                <Text style={[FONT.subTitle, { marginBottom: 5, marginTop: !isMobile ? 30 : 15 }]}>Nom d'utilisateur</Text>
                 <View style={styles.nameInputView}>
                     <TextInput
                         style={styles.registerInput}
@@ -79,7 +87,7 @@ export default function Register() {
                     />
                 </View>
 
-                <Text style={styles.inputTitle}>Mot de passe</Text>
+                <Text style={[FONT.subTitle, { marginBottom: 5, marginTop: !isMobile ? 30 : 15 }]}>Mot de passe</Text>
                 <View style={styles.passwordInputView}>
                     <TextInput
                         ref={passwordInputRef}
@@ -87,18 +95,25 @@ export default function Register() {
                         onChangeText={setPassword}
                         value={password}
                         placeholder="Mot de passe"
-                        secureTextEntry={true}
+                        secureTextEntry={hidePassword}
                         returnKeyType="done"
                         onSubmitEditing={handleRegister}
                     />
-
+                    <TouchableOpacity onPress={handleHidePassword} style={styles.iconButton}>
+                        {hidePassword ? (
+                            <EyeClosed size={30} color="white" />
+                        ) : (
+                            <Eye size={30} color="white" />
+                        )}
+                    </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity style={styles.buttons} onPress={handleRegister}>
-                    <Text style={styles.buttonText}>S'inscrire</Text>
+                    <Text style={FONT.button}>S'inscrire</Text>
                 </TouchableOpacity>
             </View>
-        </GradientBackground>
+
+        </GradientBackground >
     );
 }
 
@@ -130,12 +145,14 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-        fontSize: 40,
+        fontSize: 50,
         fontWeight: 'bold',
+        fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     inputTitle: {
-        fontSize: 20,
+        fontSize: 30,
         fontWeight: 'bold',
+        fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     registerInput: {
         height: 40,
@@ -157,11 +174,15 @@ const styles = StyleSheet.create({
     passwordInputView: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 1,
         borderRadius: 20,
         backgroundColor: '#4d65b4',
+        width: !isMobile ? 300 : 320,
+    },
+    iconButton: {
+        paddingRight: 10,
     },
     buttons: {
         display: 'flex',
@@ -173,9 +194,5 @@ const styles = StyleSheet.create({
         width: 250,
         borderRadius: 15,
         marginVertical: 10,
-    },
-    buttonText: {
-        fontSize: 20,
-        fontWeight: 'bold',
     },
 });

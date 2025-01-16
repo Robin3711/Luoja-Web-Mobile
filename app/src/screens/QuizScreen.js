@@ -23,10 +23,10 @@ const isMobile = width < height;
 export default function QuizScreen() {
 
 
-const sound = new Audio.Sound();
+    const sound = new Audio.Sound();
 
-const badSound = require('../../assets/badAnswerSound.mp3');
-const goodSound = require('../../assets/goodAnswerSound.mp3');
+    const badSound = require('../../assets/badAnswerSound.mp3');
+    const goodSound = require('../../assets/goodAnswerSound.mp3');
 
     const route = useRoute();
     const navigation = useNavigation();
@@ -183,7 +183,7 @@ const goodSound = require('../../assets/goodAnswerSound.mp3');
 
                 setCorrect(correctAnswerFromApi);
                 setIsAnswered(true);
-                if (correctAnswerFromApi === selectedAnswer){
+                if (correctAnswerFromApi === selectedAnswer) {
                     confettiRef.current.startConfetti();
                     setAnimation('win');
                     updateScore();
@@ -210,17 +210,17 @@ const goodSound = require('../../assets/goodAnswerSound.mp3');
         if (answer === selectedAnswer && !isAnswered) return 'BLUE';
         if (answer === correct) {
             // jouer le son
-            if (answer === selectedAnswer){
+            if (answer === selectedAnswer) {
                 playSound(goodSound);
-            }            
+            }
             return 'GREEN';
         }
         if (answer === selectedAnswer) {
             // jouer le son
-            playSound(badSound);            
+            playSound(badSound);
             return 'RED';
-        } 
-        
+        }
+
         return 'NONE';
     };
 
@@ -257,7 +257,7 @@ const goodSound = require('../../assets/goodAnswerSound.mp3');
     const nextQuestionButton = () => (
         <TouchableOpacity
             style={buttonDisabled || selectedAnswer === null || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer) ? styles.disabledButtons : styles.buttons}
-            onPress={async () => {                
+            onPress={async () => {
                 await sound.unloadAsync();
                 if (gameMode === 'timed' && remainingTime === 0) {
                     totalQuestion === questionNumber ? handleEnd() : handleNewQuestion();
@@ -342,35 +342,35 @@ const goodSound = require('../../assets/goodAnswerSound.mp3');
                                     {!isMobile && nextQuestionButton()}
                                 </View>
 
-                            <View style={styles.answersView}>
-                                {currentQuestion.answers.map((answer, index) => {
-                                    return (
-                                        answer === null ? null : (
-                                            <AnswerButton
-                                                key={index}
-                                                shape={shapes[index]}
-                                                text={answer}
-                                                onClick={() => handleAnswerSelection(answer)}
-                                                color={getAnswerColor(answer)}
-                                                type={currentType}
-                                                disabled={gameMode === 'timed' && remainingTime === 0}
-                                                animation={animation}
-                                            />
-                                        )
-                                    );
-                                })}
-                                {isMobile && nextQuestionButton()}
+                                <View style={styles.answersView}>
+                                    {currentQuestion.answers.map((answer, index) => {
+                                        return (
+                                            answer === null ? null : (
+                                                <AnswerButton
+                                                    key={index}
+                                                    shape={shapes[index]}
+                                                    text={answer}
+                                                    onClick={() => handleAnswerSelection(answer)}
+                                                    color={getAnswerColor(answer)}
+                                                    type={currentType}
+                                                    disabled={gameMode === 'timed' && remainingTime === 0}
+                                                    animation={animation}
+                                                />
+                                            )
+                                        );
+                                    })}
+                                    {isMobile && nextQuestionButton()}
+                                </View>
+                                <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]} />
                             </View>
-                            <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]}/>
-                        </View>
-                    </>
-                ) : (
-                    <Text>Chargement...</Text>
-                )}
-            </View>
-        ) : (
-            <View style={styles.quizScreenView}>
-                <Text style={styles.errorText}>{errorMessage}</Text>
+                        </>
+                    ) : (
+                        <Text>Chargement...</Text>
+                    )}
+                </View>
+            ) : (
+                <View style={styles.quizScreenView}>
+                    <Text style={styles.errorText}>{errorMessage}</Text>
 
                     <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
 
@@ -397,6 +397,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        zIndex: 999,
     },
     gameIdText: {
         fontSize: 20,

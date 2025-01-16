@@ -24,7 +24,7 @@ export default function HomeScreen() {
                         <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
                     </View>
                     {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
-                </View> 
+                </View>
             </View>
         </GradientBackground>
     );
@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logo: {
-        marginHorizontal: 200,
-        width: 600,
-        height: 700,
+        marginHorizontal: 100,
+        width: 650,
+        height: 650,
     },
 });

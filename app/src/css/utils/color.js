@@ -106,7 +106,9 @@ export const COLORS = {
                 normal: '#452459',
                 dark: '#0C0D25',
             }
-        }
+        },
+
+        disabled: 'silver',
     },
 
     timer: {

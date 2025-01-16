@@ -6,6 +6,7 @@ import { formatReadableDate } from '../utils/utils';
 import { useNavigation } from '@react-navigation/native';
 
 import { COLORS } from '../css/utils/color';
+import { FONT } from '../css/utils/font';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height;
@@ -63,18 +64,9 @@ export default function HistoryQuizInformation({ partyId, quizId, onStatusChange
     const handleContinueGame = async () => {
         if (cursor === nbQuestions) {
             // on recrée une partie
-            createGame(quizId, gameMode, gameDifficulty).then((game) => {
-                navigation.navigate('quizScreen', { gameId: game.id, gameMode: gameMode });
-            }).catch((error) => {
-                if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
-                } else {
-                    toast('error', 'Erreur', error, 3000, COLORS.toast.text.red);
-                }
-            });
+            navigation.navigate('launchGameMode', { quizId: quizId });
         }
         else {
-            // on continue la partie
             navigation.navigate('quizScreen', { gameId: partyId, gameMode: gameMode });
         }
     }
@@ -91,7 +83,7 @@ export default function HistoryQuizInformation({ partyId, quizId, onStatusChange
                 <Text style={styles.titleText}>{nbQuestions}</Text>
                 <Text style={styles.titleText}>{gameMode !== null ? gameDifficulty + ' ' + gameMode : 'Default'}</Text>
                 <TouchableOpacity style={[styles.touchableOpacity, { backgroundColor: buttonText === 'Rejouer' ? COLORS.button.blue.darkBasic : COLORS.button.blue.basic }]} onPress={handleContinueGame}>
-                    <Text>{buttonText}</Text>
+                    <Text style={[FONT.button, { fontSize: 20 }]}>{buttonText}</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.historySecondaryInformationsView}>
@@ -144,7 +136,7 @@ const styles = StyleSheet.create({
     },
     touchableOpacity: {
         padding: !isMobile ? 8 : 0, // Espacement interne
-        borderRadius: 4, // Coins arrondis
+        borderRadius: 10, // Coins arrondis
         width: 100, // Largeur fixe
         justifyContent: 'center', // Centrer le texte
         alignItems: 'center', // Centrer le texte

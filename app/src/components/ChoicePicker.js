@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#4d65b4',
         borderColor: '#4d65b4',
         borderRadius: 20,
-        padding: isMobile ? 5 : 10,
+        padding: isMobile ? 3 : 10,
         marginVertical: 5,
     },
     button: {

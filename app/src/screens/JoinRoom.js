@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Text, View, Dimensions,Platform, StyleSheet, Button, Image, Alert,  TextInput, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { Text, View, Dimensions, Platform, StyleSheet, Image, Alert, TextInput, TouchableOpacity } from "react-native";
 import { CameraView, Camera } from "expo-camera";
-import { getRoomId, hasToken, toast } from "../utils/utils";
-import { useNavigation } from "@react-navigation/native";
+import { getRoomId, requireToken, toast } from "../utils/utils";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { ClipboardPaste } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from "../components/SimpleButton";
 import GradientBackground from '../css/utils/linearGradient';
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 export default function JoinGame() {
@@ -20,17 +20,19 @@ export default function JoinGame() {
 
   const navigation = useNavigation();
 
+  useFocusEffect(
+    useCallback(() => {
+      requireToken(navigation);
+    })
+  );
+
   useEffect(() => {
-    if (!hasToken()) {
-      navigation.navigate('login');
-    };
     const getCameraPermissions = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
     };
 
-    if(isMobile)
-    {
+    if (isMobile) {
       getCameraPermissions();
     }
   }, []);
@@ -40,8 +42,7 @@ export default function JoinGame() {
   }
 
   const handleConnectWithCode = async (roomId) => {
-    if(roomId === '')
-    {
+    if (roomId === '') {
       toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, COLORS.toast.text.red);
       return;
     }
@@ -81,7 +82,7 @@ export default function JoinGame() {
       <View style={styles.imageContainer}>
         <Image
           source={require('../../assets/LogoLuojaRepete.png')} // Remplacez par le chemin de votre image
-            style={styles.image}
+          style={styles.image}
         />
       </View>
       <View style={styles.container}>
@@ -110,9 +111,9 @@ export default function JoinGame() {
               />
             </View>
             <SimpleButton text="Rejoindre" onPress={() => handleConnectWithCode(roomId)} />
-        </>)}
+          </>)}
 
-        {scanned === true && isMobile && (
+        {scanned === true && Platform.OS === "android" && (
           <>
             <SimpleButton text="Scanner le QR CODE" onPress={() => setScanned(false)} />
           </>
@@ -134,12 +135,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-      width: '100%',
-      height: '100%',
-      resizeMode: 'cover',
-      tintColor: COLORS.palette.blue.light,
-      opacity: 0.35,
-},
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    tintColor: COLORS.palette.blue.light,
+    opacity: 0.35,
+  },
   container: {
     flex: 1,
     display: 'flex',

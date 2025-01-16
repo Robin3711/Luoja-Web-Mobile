@@ -49,7 +49,7 @@ export default function QuizInformation({ quiz }) {
     return (
         <View style={styles.QuizInformationView}>
             <Text style={[styles.QuizInformationText, { flex: 1.2 }]}>{truncateText(quiz.title, isMobile ? 15 : 20)}</Text>
-            <Text style={[styles.QuizInformationText, { flex: 0.8 }]}>{themeName ?? "General Knowledge"}</Text>
+            <Text style={[styles.QuizInformationText, { flex: isMobile ? 0.8 : 1.7 }]}>{themeName ?? "General Knowledge"}</Text>
             <Text style={[styles.QuizInformationText, { flex: 0.8 }]}>{quiz.difficulty}</Text>
             <TouchableOpacity style={styles.QuizInformationButton} onPress={handleSave}>
                 <Text style={[{ color: COLORS.text.blue.light }]}>Cloner</Text>

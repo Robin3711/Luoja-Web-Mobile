@@ -37,8 +37,10 @@ export default function Parameters() {
       .catch(error => {
         if (error.status && error.message) {
           toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
+          setlaunch(true);
         } else {
           toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
+          setlaunch(true);
         }
       });
   };

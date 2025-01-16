@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         backgroundColor: '#fff',
         textAlign: 'left',
+        fontSize: 20,
     },
     shapeStyles: {
         square: {

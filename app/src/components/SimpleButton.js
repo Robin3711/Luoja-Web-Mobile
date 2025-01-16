@@ -1,5 +1,5 @@
+import { Text, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator, View } from 'react-native';
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
@@ -17,6 +17,7 @@ export default function SimpleButton({
     marginVertical = 10,
     marginBottom = 25,
     paddingVertical = 10,
+    loading = false,
 }) {
     const [scale, setScale] = useState(1);
     const [buttonColor, setButtonColor] = useState(color);
@@ -61,13 +62,17 @@ export default function SimpleButton({
                     marginBottom,
                     paddingVertical,
                     transform: [{ scale }],
+                    backgroundColor: disabled ? COLORS.button.disabled : COLORS.button.blue.basic
                 },
             ]}
             disabled={disabled}
             onMouseEnter={handleMouseEnter}  // For web
             onMouseLeave={handleMouseLeave}  // For web
         >
-            <Text style={[FONT.button, styles.buttonText, textStyle]}>{text}</Text>
+            <View style={styles.elements} >
+                <Text style={[FONT.button, styles.buttonText, textStyle]}>{text}</Text>
+                {loading && <ActivityIndicator size="large" color={COLORS.primary} style={{ marginLeft: 10 }} />}
+            </View>
         </TouchableOpacity>
     );
 }
@@ -75,7 +80,6 @@ export default function SimpleButton({
 const styles = StyleSheet.create({
     button: {
         position: 'relative',
-        backgroundColor: COLORS.button.blue.basic,
         borderRadius: 15,
         justifyContent: 'center', // Centre the content vertically
         alignItems: 'center',    // Centre the content horizontally
@@ -95,4 +99,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         flexWrap: 'wrap', // Allows text to wrap if needed
     },
+    elements: {
+        display: 'flex',
+        flexDirection: 'row',
+
+    }
 });

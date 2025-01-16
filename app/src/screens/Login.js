@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 
@@ -7,6 +7,11 @@ import GradientBackground from '../css/utils/linearGradient';
 
 import { userLogin } from '../utils/api';
 import { toast } from '../utils/utils';
+import { Eye, EyeClosed } from 'lucide-react-native';
+import { FONT } from '../css/utils/font';
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height;
 
 export default function Login() {
     const route = useRoute();
@@ -22,6 +27,7 @@ export default function Login() {
 
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
+    const [hidePassword, setHidePassword] = useState(true);
 
     const handleLogin = async () => {
         try {
@@ -43,12 +49,16 @@ export default function Login() {
         }
     };
 
+    const handleHidePassword = () => {
+        setHidePassword(!hidePassword);
+    }
+
     return (
         <GradientBackground>
             <View style={styles.loginView}>
-                <Text style={styles.pageTitle}>Connexion</Text>
+                <Text style={[FONT.title, { marginBottom: !isMobile ? 70 : 15 }]}>Connexion</Text>
 
-                <Text style={styles.inputTitle}>Nom d'utilisateur</Text>
+                <Text style={[FONT.subTitle, { marginBottom: 5, marginTop: !isMobile ? 30 : 15 }]}>Nom d'utilisateur</Text>
                 <View style={styles.nameInputView}>
                     <TextInput
                         style={styles.loginInput}
@@ -65,7 +75,7 @@ export default function Login() {
                     />
                 </View>
 
-                <Text style={styles.inputTitle}>Mot de passe</Text>
+                <Text style={[FONT.subTitle, { marginBottom: 5, marginTop: !isMobile ? 30 : 15 }]}>Mot de passe</Text>
                 <View style={styles.passwordInputView}>
                     <TextInput
                         ref={passwordInputRef}
@@ -73,14 +83,22 @@ export default function Login() {
                         onChangeText={setPassword}
                         value={password}
                         placeholder="Mot de passe"
-                        secureTextEntry={true}
+                        secureTextEntry={hidePassword}
                         returnKeyType="done"
                         onSubmitEditing={handleLogin}
                     />
+
+                    <TouchableOpacity onPress={handleHidePassword} style={styles.iconButton}>
+                        {hidePassword ? (
+                            <EyeClosed size={30} color="white" />
+                        ) : (
+                            <Eye size={30} color="white" />
+                        )}
+                    </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity style={styles.buttons} onPress={handleLogin}>
-                    <Text style={styles.buttonText}>Se connecter</Text>
+                    <Text style={FONT.button}>Se connecter</Text>
                 </TouchableOpacity>
             </View>
         </GradientBackground>
@@ -99,12 +117,14 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-        fontSize: 40,
+        fontSize: 50,
         fontWeight: 'bold',
+        fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     inputTitle: {
-        fontSize: 20,
+        fontSize: 30,
         fontWeight: 'bold',
+        fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     loginInput: {
         height: 40,
@@ -126,11 +146,15 @@ const styles = StyleSheet.create({
     passwordInputView: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 1,
         borderRadius: 20,
         backgroundColor: '#4d65b4',
+        width: !isMobile ? 300 : 320,
+    },
+    iconButton: {
+        paddingRight: 10,
     },
     buttons: {
         display: 'flex',
@@ -142,9 +166,5 @@ const styles = StyleSheet.create({
         width: 250,
         borderRadius: 15,
         marginVertical: 10,
-    },
-    buttonText: {
-        fontSize: 20,
-        fontWeight: 'bold',
     },
 });
