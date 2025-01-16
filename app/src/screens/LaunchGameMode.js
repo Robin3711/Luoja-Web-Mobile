@@ -140,7 +140,13 @@ export default function LaunchGameMode() {
                                         <TextInput
                                             placeholder={`Nom de l'équipe ${index + 1}`}
                                             value={team}
-                                            onChangeText={(text) => handleTeamNameChange(index, text)}
+                                            onChangeText={(text) => {
+                                                if (text.length <= 30) {
+                                                    handleTeamNameChange(index, text);
+                                                } else {
+                                                    toast("error", "Le nom de l'équipe est limité à 30 caractères", "", 2000, COLORS.toast.text.red);
+                                                }
+                                            }}
                                             style={styles.input}
                                         />
                                     </View>
