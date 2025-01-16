@@ -7,6 +7,7 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 
+import { Audio } from 'expo-av';
 import ConfettiContainer from '../components/ConfettiSystem';
 
 import SimpleButton from '../components/SimpleButton';
@@ -20,6 +21,13 @@ const { width, height } = Dimensions.get('window');
 const isMobile = width < height
 
 export default function RoomQuizScreen() {
+
+
+const sound = new Audio.Sound();
+
+const badSound = require('../../assets/badAnswerSound.mp3');
+const goodSound = require('../../assets/goodAnswerSound.mp3');
+
     const route = useRoute();
     const navigation = useNavigation();
 
@@ -144,6 +152,7 @@ export default function RoomQuizScreen() {
     };
 
     const handleNewQuestion = async () => {
+        await sound.unloadAsync();
         try {
             setSelectedAnswer(null);
             setCorrect(null);
@@ -186,9 +195,28 @@ export default function RoomQuizScreen() {
     const updateScore = () => setScore(score + 1);
 
     const getAnswerColor = (answer) => {
+
+        const playSound = async (soundFile) => {
+            await sound.unloadAsync();
+            await sound.loadAsync({ uri: soundFile });
+            await sound.playAsync();
+        }
+
         if (answer === selectedAnswer && !isAnswered) return 'BLUE';
-        if (answer === correct) return 'GREEN';
-        if (answer === selectedAnswer) return 'RED';
+        if (answer === correct)  {
+              // jouer le son
+              if (answer === selectedAnswer){
+                playSound(goodSound);
+              }     
+            return 'GREEN';
+           
+        }
+        if (answer === selectedAnswer){
+            // jouer le son
+            playSound(badSound);
+            return 'RED';
+        }
+
         return 'NONE';
     };
 
