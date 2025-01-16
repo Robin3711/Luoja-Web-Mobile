@@ -63,7 +63,12 @@ const ChooseAudio = ({ onValueChange }) => {
             const response = await downloadAllAudios();
             if (response.files && Array.isArray(response.files)) {
                 const files = response.files;
-                const validFiles = files.filter(file => file.fileName.endsWith('.mp3' || '.mpeg'));
+
+                const validFiles = files.filter(file =>
+                    file.fileName.endsWith('.mp3') || 
+                    file.fileName.endsWith('.mpeg')
+                );
+
                 setIds(validFiles.map((file) => file.fileName));
 
                 const audioPromises = validFiles.map(async (file) => {
