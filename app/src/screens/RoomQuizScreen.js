@@ -242,8 +242,6 @@ export default function RoomQuizScreen() {
                     } catch (error) {
                         console.error("Error stopping audio:", error);
                     }
-                } else {
-                    console.warn("Skipping invalid audioRef:", audioRef);
                 }
             });
         }
