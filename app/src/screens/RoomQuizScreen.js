@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet  , Dimensions} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentRoomQuestion, getCurrentRoomAnswer } from '../utils/api';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { Clipboard as Copy } from 'lucide-react-native';
+import * as Clipboard from 'expo-clipboard';
 
 import ConfettiContainer from '../components/ConfettiSystem';
 
@@ -12,6 +14,7 @@ import { loadFont } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 import GradientBackground from '../css/utils/linearGradient';
+import { toast } from '../utils/utils';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height
@@ -170,7 +173,7 @@ export default function RoomQuizScreen() {
 
             setCorrect(correctAnswerFromApi);
             setIsAnswered(true);
-            if (correctAnswerFromApi === selectedAnswer){
+            if (correctAnswerFromApi === selectedAnswer) {
                 updateScore();
                 confettiRef.current.startConfetti();
             }
@@ -208,6 +211,11 @@ export default function RoomQuizScreen() {
         </TouchableOpacity>
     );
 
+    const handleCopyGameId = async () => {
+        await Clipboard.setStringAsync(gameId);
+        toast('info', 'L\'id à bien été copié !', "", 2000, COLORS.toast.text.blue);
+    };
+
     const getTopValue = () => {
         if (!isMobile) return 20;
         return currentQuestion?.question?.length > 60 ? 50 : 20;
@@ -220,8 +228,16 @@ export default function RoomQuizScreen() {
                 <View style={styles.quizScreenView}>
                     {currentQuestion ? (
                         <>
+                            <View style={styles.quizSubScreenView}>
+                                <TouchableOpacity onPress={handleCopyGameId} style={styles.roomId}>
+                                    <Copy size={24} color="black" />
+                                    <Text style={FONT.text}>ID : {roomId} </Text>
+                                </TouchableOpacity>
+                            </View>
                             <View style={styles.mainView}>
+
                                 <View style={styles.questionView}>
+
                                     <Text>{message}</Text>
 
                                     <CountdownCircleTimer
@@ -256,32 +272,32 @@ export default function RoomQuizScreen() {
                                     {!isMobile && validateAnswerButton()}
                                 </View>
 
-                            <View style={styles.answersView}>
-                                {currentQuestion.answers.map((answer, index) => (
-                                    answer === null ? null : (
-                                        <AnswerButton
-                                            key={index}
-                                            shape={shapes[index]}
-                                            text={answer}
-                                            onClick={() => handleAnswerSelection(answer)}
-                                            color={getAnswerColor(answer)}
-                                            type={currentQuestion.type}
-                                            disabled={isAnswered}
-                                        />
-                                    )
-                                ))}
-                                {isMobile && validateAnswerButton()}
+                                <View style={styles.answersView}>
+                                    {currentQuestion.answers.map((answer, index) => (
+                                        answer === null ? null : (
+                                            <AnswerButton
+                                                key={index}
+                                                shape={shapes[index]}
+                                                text={answer}
+                                                onClick={() => handleAnswerSelection(answer)}
+                                                color={getAnswerColor(answer)}
+                                                type={currentQuestion.type}
+                                                disabled={isAnswered}
+                                            />
+                                        )
+                                    ))}
+                                    {isMobile && validateAnswerButton()}
+                                </View>
+                                <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]} />
                             </View>
-                            <ConfettiContainer ref={confettiRef} count={100} colors={[COLORS.palette.blue.lighter, COLORS.palette.blue.normal, COLORS.palette.blue.normal]}/>
-                        </View>
-                    </>
-                ) : (
-                    <Text>Chargement...</Text>
-                )}
-            </View>
-        ) : (
-            <View style={styles.quizScreenView}>
-                <Text style={styles.errorText}>{errorMessage}</Text>
+                        </>
+                    ) : (
+                        <Text>Chargement...</Text>
+                    )}
+                </View>
+            ) : (
+                <View style={styles.quizScreenView}>
+                    <Text style={styles.errorText}>{errorMessage}</Text>
 
                     <SimpleButton text="Retour au menu" onPress={() => navigation.navigate('initMenu', { screen: 'newQuiz' })} />
 
@@ -292,6 +308,12 @@ export default function RoomQuizScreen() {
 }
 
 const styles = StyleSheet.create({
+    quizSubScreenView: {
+        width: "100%",
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center'
+    },
     quizScreenView: {
         flex: 1,
         justifyContent: 'center',
@@ -305,6 +327,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...!isMobile && { gap: 20, },
+    },
+    roomId: {
+        position: 'absolute',
+        top: -90,
+        marginRight: 10,
+        marginTop: 2,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 999,
+    },
+    roomIdText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
     questionView: {
         alignItems: 'center',
