@@ -245,7 +245,7 @@ export default function Room() {
                     </View>
                 )}
                 {gameMode === "scrum" && (
-                    <View style={styles.teamButtons} >
+                    <View style={styles.scrumButton} >
                         <SimpleButton
                             text="Retourner au menu"
                             onPress={handleReturnHome}
@@ -348,6 +348,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         gap: '10px',
         maxHeight: 200,
+    },
+    scrumButton: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
     },
     roomId: {
         marginTop: 5,
