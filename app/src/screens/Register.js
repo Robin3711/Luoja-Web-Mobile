@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { userRegister } from '../utils/api';
 import { toast } from '../utils/utils';
@@ -61,12 +61,6 @@ export default function Register() {
 
     return (
         <GradientBackground>
-            <View style={styles.imageContainer}>
-                <Image
-                    source={require('../../assets/LogoLuojaRepete.png')} // Remplacez par le chemin de votre image
-                    style={styles.image}
-                />
-            </View>
             <View style={styles.registerView}>
                 <Text style={[FONT.title, { marginBottom: !isMobile ? 70 : 15 }]}>Inscription</Text>
 
@@ -118,22 +112,6 @@ export default function Register() {
 }
 
 const styles = StyleSheet.create({
-    imageContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
-        tintColor: COLORS.palette.blue.light,
-        opacity: 0.35,
-    },
     registerView: {
         flex: 1,
         display: 'flex',
