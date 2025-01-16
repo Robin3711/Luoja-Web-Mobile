@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         padding: 10,
         marginBottom: 20,
+        gap: 5,
     },
     QuizInformationText: {
         flex: 1,
