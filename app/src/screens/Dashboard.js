@@ -262,6 +262,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginTop: 10,
         alignItems: 'center',
+        marginHorizontal: 10,
     },
     toggleButtonText: {
         color: 'white',
