@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList,  StyleSheet , Dimensions } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { Dices } from 'lucide-react-native';
 import { COLORS } from '../css/utils/color';
 
@@ -7,8 +7,8 @@ import { themeOptions, iconSize } from '../utils/utils';
 
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 const ThemeSelector = ({ onValueChange }) => {
@@ -37,10 +37,9 @@ const ThemeSelector = ({ onValueChange }) => {
 
                     <TouchableOpacity
                         style={styles.themeButton}
-                        onPress={() => handleThemeSelection(null)}>
-                        <Text style={[styles.themeLabel, { fontWeight: 'bold' }]}><Dices color="black" size={iconSize} /> Thème aléatoire</Text>
+                        onPress={() => { handleThemeSelection(null), setTheme('Thème aléatoire') }}>
+                        <Text style={[styles.themeLabel, { fontWeight: 'bold' }]}><Dices color="black" size={iconSize} />Thème aléatoire</Text>
                     </TouchableOpacity>
-
 
                     <FlatList
                         data={themeOptions}
