@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Modal } from "react-native";
+import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Modal, Platform } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
@@ -17,6 +17,7 @@ import { toast } from "../utils/utils";
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height
 
+const platform = Platform.OS;
 
 
 export default function Room() {
@@ -112,7 +113,7 @@ export default function Room() {
         <GradientBackground>
             <View style={styles.container}>
                 <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
-                {!isMobile ? (
+                {platform==="android" ? (
                     <View style={styles.qrCodeContainer}>
                         <QRCode
                             value={`https://luoja.fr/room?roomId=${roomId}`}

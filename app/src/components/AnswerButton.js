@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
-import { View, Dimensions, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Dimensions, StyleSheet, Text, TouchableOpacity, Image, Platform } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 import { Audio } from 'expo-av';
@@ -21,6 +21,8 @@ import { toast } from '../utils/utils';
 
 const { width  , height} = Dimensions.get('window');
 const isMobile = width< height
+
+const platform = Platform.OS;
 
 const Star = ({ shapeColor, borderColor }) => (
     <Svg width={!isMobile ? "115" : "75"} height="115" viewBox="-2 -2 28 28" fill="none">
@@ -131,7 +133,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
 
     useEffect(() => {
 
-        if (!isMobile) {
+        if (platform === 'web') {
             async function handleMedia() {
                 if (type === 'image' && text) {
                     const file = await downloadImage(text);
@@ -142,7 +144,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
                 if (type === 'audio' && text) {
                     const file = await downloadAudio(text);
                     let url;
-                    if (!isMobile) {
+                    if (platform === 'web') {
                         url = URL.createObjectURL(file);
                         setFile(url);
                     } else {
