@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         width: '100vw',
-        height: '100vh',
+        height: '95vh',
     },
     createQuestionLeftView: {
         flexDirection: 'column',
