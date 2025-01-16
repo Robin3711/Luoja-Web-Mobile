@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
         top: !isMobile ? 20 : 50,
         width: !isMobile ? '45%' : '100%',
         ...isMobile && { marginVertical: 10, },
-        ...!isMobile && { gap: 70, },
+        ...!isMobile && { gap: 40, },
     },
     question: {
         fontSize: !isMobile ? 30 : 25,

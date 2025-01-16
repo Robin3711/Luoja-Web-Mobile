@@ -224,7 +224,7 @@ export default function QuizScreen() {
         if (audioRefs.current) {
             audioRefs.current.forEach((ref) => {
                 if (ref) {
-                    ref.stopAnimation();
+                    ref.stopAudio();
                 }
             });
         }
@@ -249,7 +249,7 @@ export default function QuizScreen() {
             }}
             disabled={buttonDisabled || selectedAnswer === null || (gameMode === 'timed' && remainingTime >= 0 && !isAnswered && !selectedAnswer)}
         >
-            <Text style={styles.buttonText}>
+            <Text style={FONT.button}>
                 {gameMode === 'timed' && remainingTime === 0 ? (
                     buttonDisabled ? 'Chargement de la question suivante...' : (loading ? ('Question suivante') : ('Chargement...'))
                 ) : isAnswered ? (
@@ -320,7 +320,7 @@ export default function QuizScreen() {
                                     {!isMobile && nextQuestionButton()}
                                 </View>
 
-                                <View style={[styles.answersView, {flexDirection: currentType === 'image' ? 'row' : 'column', flexWrap: currentType === 'image'? 'wrap' : (!isMobile? 'wrap' : 'nowrap'),}]}>
+                                <View style={[styles.answersView, { flexDirection: currentType === 'image' ? 'row' : 'column', flexWrap: currentType === 'image' ? 'wrap' : (!isMobile ? 'wrap' : 'nowrap'), }]}>
                                     {currentQuestion.answers.map((answer, index) => {
                                         return (
                                             answer === null ? null : (
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
         top: !isMobile ? 20 : 50,
         width: !isMobile ? '45%' : '100%',
         ...isMobile && { marginVertical: 10, },
-        ...!isMobile && { gap: 70, },
+        ...!isMobile && { gap: 40, },
     },
     question: {
         fontSize: !isMobile ? 30 : 25,
@@ -421,7 +421,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     answersView: {
-        flexDirection: (!isMobile? 'row': 'column'),
+        flexDirection: (!isMobile ? 'row' : 'column'),
         justifyContent: 'center',
         width: !isMobile ? '50%' : '100%',
         alignItems: 'center',
