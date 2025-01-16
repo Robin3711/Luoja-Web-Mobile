@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
-        height: isMobile ? 70 : 50,
+        height: isMobile ? 70 : 70,
         borderRadius: 10,
         marginVertical: 10,
         padding: 10,
