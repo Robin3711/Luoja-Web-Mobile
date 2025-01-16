@@ -29,6 +29,8 @@ export default function RoomQuizScreen() {
     const badSound = require('../../assets/badAnswerSound.mp3');
     const goodSound = require('../../assets/goodAnswerSound.mp3');
 
+    const [isPlaying, setIsPlaying] = useState(false);
+
     const route = useRoute();
     const navigation = useNavigation();
 
@@ -166,6 +168,7 @@ export default function RoomQuizScreen() {
         try {
             setSelectedAnswer(null);
             setCorrect(null);
+            setIsPlaying(false);
 
             const data = await getCurrentRoomQuestion(roomId);
 
@@ -221,15 +224,19 @@ export default function RoomQuizScreen() {
         if (answer === selectedAnswer && !isAnswered) return 'BLUE';
         if (answer === correct) {
             // jouer le son
-            if (answer === selectedAnswer) {
+            if (answer === selectedAnswer && !isPlaying) {
                 playSound(goodSound);
+                setIsPlaying(true);
             }
             return 'GREEN';
 
         }
-        if (answer === selectedAnswer) {
+        if (answer === selectedAnswer ) {
             // jouer le son
-            playSound(badSound);
+            if(!isPlaying){
+                playSound(badSound);
+                setIsPlaying(true);
+            }
             return 'RED';
         }
 
