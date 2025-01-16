@@ -659,7 +659,7 @@ export async function startRoom(roomId) {
         return await response.json();
     }
     catch (error) {
-        throw error;
+        toast("error", 'Seul le créateur peut lancer la partie ! ', '', 2000, COLORS.toast.text.red);
     }
 }
 

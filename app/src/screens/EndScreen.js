@@ -4,11 +4,10 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import { FONT } from '../css/utils/font';
-import { themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
 import GradientBackground from '../css/utils/linearGradient';
 
-import * as Progress from 'react-native-progress';
+import AnimatedProgressWheel from 'react-native-progress-wheel';
 
 export default function EndScreen() {
     const route = useRoute();
@@ -16,9 +15,6 @@ export default function EndScreen() {
 
     const { score, numberOfQuestions, gameId } = route.params;
 
-    const [category, setCategory] = useState(null);
-    const [difficulty, setDifficulty] = useState(null);
-    const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
@@ -34,24 +30,11 @@ export default function EndScreen() {
 
                 const infos = await getGameInfos(gameId);
 
-                setCategory(infos.quizCategory !== 0 ? themeOptions.find(option => option.value === infos.quizCategory)?.label : "any");
-                setDifficulty(infos.quizDifficulty);
                 setLoading(false);
                 setGameMode(infos.gameMode);
                 if (infos.gameMode === null) {
                     setGameMode("standard");
                 }
-
-                let animationProgress = 0;
-                const targetProgress = score / numberOfQuestions;
-                const interval = setInterval(() => {
-                    animationProgress += 0.01;
-                    if (animationProgress >= targetProgress) {
-                        animationProgress = targetProgress;
-                        clearInterval(interval);
-                    }
-                    setProgress(animationProgress);
-                }, 20);
 
             } catch (err) {
                 setError(true);
@@ -92,24 +75,22 @@ export default function EndScreen() {
             <View style={styles.container}>
                 <View style={styles.parentContainer}>
                     <Text style={FONT.title}>Fin de partie !</Text>
-                    <Text style={FONT.text}>Récapitulatif de la partie :</Text>
-                    <Text style={FONT.text}>Catégorie : {category} | difficulté : {difficulty}</Text>
                     {score !== null && numberOfQuestions !== null ? (
                         <View style={styles.scoreContainer}>
                             <Text style={styles.scoreTitle}>
                                 Votre score : {score} / {numberOfQuestions}
                             </Text>
                             <View style={styles.wheelContainer}>
-                                <Progress.Circle
-                                    progress={!loading ? progress : 0}
-                                    size={120}
-                                    showsText={!loading}
-                                    color={COLORS.text.blue.dark}
-                                    borderWidth={!loading ? 0 : 10}
-                                    thickness={15}
-                                    unfilledColor={"#D8D8D8"}
-                                    indeterminate={loading}
-                                    indeterminateAnimationDuration={1000}
+                                <AnimatedProgressWheel
+                                    size={125}
+                                    width={15} 
+                                    duration={2000}
+                                    rotation={'-90deg'}
+                                    animateFromValue={0}
+                                    showProgressLabel={true}
+                                    showPercentageSymbol={true}
+                                    color={COLORS.palette.blue.dark}
+                                    progress={score / numberOfQuestions * 100}
                                 />
                             </View>
                         </View>
