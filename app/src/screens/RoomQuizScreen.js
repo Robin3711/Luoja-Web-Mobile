@@ -22,8 +22,8 @@ export default function RoomQuizScreen() {
 
 const sound = new Audio.Sound();
 
-const badSound = require('../../assets/error_CDOxCYm.mp3');
-const goodSound = require('../../assets/check-mark_oPG7Xo5.mp3');
+const badSound = require('../../assets/badAnswerSound.mp3');
+const goodSound = require('../../assets/goodAnswerSound.mp3');
 
 useEffect(() => {
     
