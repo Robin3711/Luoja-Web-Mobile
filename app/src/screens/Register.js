@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     },
     registerInput: {
         height: 40,
-        width: 250,
+        width: 280,
         margin: 12,
         borderWidth: 1,
         padding: 10,
