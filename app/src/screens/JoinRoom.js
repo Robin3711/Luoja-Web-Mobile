@@ -47,7 +47,7 @@ export default function JoinGame() {
       toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, COLORS.toast.text.red);
       return;
     }
-    navigation.navigate('room', { roomId: roomId });
+    navigation.navigate('room', { roomId: roomId.toLowerCase() });
   }
 
   const handlePasteGameId = async () => {
@@ -87,7 +87,7 @@ export default function JoinGame() {
         />
       </View>
       <View style={styles.container}>
-        {platform==="android" && scanned === false && (
+        {platform === "android" && scanned === false && (
           <CameraView
             onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
             barcodeScannerSettings={{

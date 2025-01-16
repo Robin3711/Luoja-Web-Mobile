@@ -61,7 +61,7 @@ export default function SimpleButton({
                     marginVertical,
                     marginBottom,
                     paddingVertical,
-                    transform: [{ scale }],
+                    transform: [{ scale: !isMobile ? scale : 1 }],
                     backgroundColor: disabled ? COLORS.button.disabled : COLORS.button.blue.basic
                 },
             ]}
