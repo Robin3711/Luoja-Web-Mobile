@@ -31,8 +31,8 @@ import '@expo/metro-runtime';
 
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 const linking = {
   prefixes: ['http://localhost:8081', 'https://luoja.fr'],
@@ -84,7 +84,7 @@ const MenuDrawer = () => {
       <drawer.Screen name="home" component={HomeScreen} options={{ title: "Luoja", drawerLabel: "Accueil" }} />
       <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Luoja", drawerLabel: "Partie rapide" }} />
       <drawer.Screen name="search" component={SearchScreen} options={{ title: "Luoja", drawerLabel: "Quiz de la communauté" }} />
-      <drawer.Screen name="join" component={JoinGame} options={{ title: "Luoja", drawerLabel: "Rejoindre une partie" }} />
+      <drawer.Screen name="join" component={JoinGame} options={{ title: "Luoja", drawerLabel: "Jouer en ligne" }} />
       <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Luoja", drawerLabel: "Reprendre une partie" }} />
       {!isMobile ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Luoja", drawerLabel: "Créer votre propre quiz" }} /> : null}
       <drawer.Screen name="account" component={Account} options={{ title: "Luoja", drawerLabel: "Votre compte" }} />
@@ -101,7 +101,7 @@ const MenuStack = () => {
         <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: !isMobile ? () => null : undefined }} />
         <stack.Screen name="login" component={Login} options={{ title: "Se connecter" }} />
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire" }} />
-        {!isMobile? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Importer des questions" }} /> : null}
+        {!isMobile ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Importer des questions" }} /> : null}
         {!isMobile ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
         <stack.Screen name="launchGameMode" component={LaunchGameMode} options={{ title: "Lancer un mode de jeu" }} />
         <stack.Screen name="room" component={Room} options={{ title: "Partie multijoueur" }} />
@@ -125,13 +125,13 @@ export default function App() {
 
   return (
     <>
-    <GradientBackground>
-      <NavigationContainer linking={linking}>
-        <MenuStack />
-      </NavigationContainer>
-    </GradientBackground>
+      <GradientBackground>
+        <NavigationContainer linking={linking}>
+          <MenuStack />
+        </NavigationContainer>
+      </GradientBackground>
       <Toast config={toastConfig} />
-    
+
     </>
   );
 }

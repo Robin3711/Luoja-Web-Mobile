@@ -8,8 +8,8 @@ import QuizCreation from '../screens/QuizCreationScreen';
 import Account from '../screens/Account';
 import joinGame from '../screens/JoinRoom';
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 const Tab = createBottomTabNavigator();
 
@@ -90,7 +90,7 @@ const MenuTab = () => {
                                 { color }
                             ]}
                         >
-                            Rejoindre une partie
+                            Jouer en ligne
                         </Text>
                     ),
                 }}
@@ -112,7 +112,7 @@ const MenuTab = () => {
                     ),
                 }}
             />
-            { !isMobile && (
+            {!isMobile && (
                 <Tab.Screen
                     name="quizCreation"
                     component={QuizCreation}
