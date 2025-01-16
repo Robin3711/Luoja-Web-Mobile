@@ -110,7 +110,8 @@ const styles = StyleSheet.create({
         padding: isMobile ? 5 : 10,
         marginBottom: 10,
         top: isMobile ? -5 : -10,
-        overflow: 'visible'
+        overflow: 'visible',
+        gap: 5,
     },
     QuizInformationText: {
         fontSize: isMobile ? 12 : 17,

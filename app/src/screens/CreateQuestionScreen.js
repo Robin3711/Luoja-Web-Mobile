@@ -136,6 +136,12 @@ export default function CreateQuestionScreen() {
 
                 setType('text');
 
+                //verfie si le question Text fait plus de 100 caractères si oui refuse la génération
+                if (questionText.length > 100) {
+                    toast("warn", "La question est trop longue", "La question doit faire moins de 100 caractères", 2000, COLORS.toast.text.orange);
+                    setLoading(false);
+                    return;
+                }
                 const data = await generateAnswers(questionText, generationTheme);
 
                 const answers = data.answers;
