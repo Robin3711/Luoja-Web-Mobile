@@ -196,10 +196,12 @@ export default function RoomQuizScreen() {
                 confettiRef.current.startConfetti();
                 setAnimation('win');
                 updateScore();
+            } else if (gameMode === "scrum") {
+                setMessage("En attente des autres joueurs...");
             }
             else{
                 setAnimation('lose');
-            }
+            } 
         } catch (err) {
             setError(true);
             setErrorMessage(err.status + " " + err.message);
@@ -285,7 +287,7 @@ export default function RoomQuizScreen() {
 
                                 <View style={styles.questionView}>
 
-                                    <Text>{message}</Text>
+                                    <Text style={FONT.text}>{message}</Text>
 
                                     <CountdownCircleTimer
                                         key={timerKey}
@@ -308,7 +310,7 @@ export default function RoomQuizScreen() {
                                                 {gameMode === "team" ? (
                                                     <Text style={styles.questionNumber}>{remainingTime}</Text>
                                                 ) : (<Text style={styles.questionNumber}></Text>)}
-
+                                            
                                                 <Text style={styles.questionNumber}>{questionNumber + " / " + totalQuestion}</Text>
                                             </>
                                         )}

@@ -5,7 +5,7 @@ import { Clipboard as Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import GradientBackground from '../css/utils/linearGradient';
 
-import { joinRoom, joinTeam, startRoom } from "../utils/api";
+import { joinRoom, joinTeam, startRoom, getUserInfos } from "../utils/api";
 import { getPlatformAPI, hasToken } from "../utils/utils";
 
 import QRCode from "react-native-qrcode-svg";
@@ -34,6 +34,9 @@ export default function Room() {
     const [gameMode, setGameMode] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
 
+    const [user, setUser] = useState(null);
+    const [owner, setOwner] = useState(null);
+
     let gameCopy = null;
 
     let eventSource = null;
@@ -47,6 +50,7 @@ export default function Room() {
                 setGameMode(data.gameMode);
                 break;
             case "playerJoined":
+                setOwner(data.players[0]);
                 setPlayers(data.players);
                 break;
             case "teams":
@@ -73,12 +77,14 @@ export default function Room() {
         const connect = async () => {
             try {
 
-                if(! await hasToken()){
-                    navigation.navigate('initMenu', { screen: 'account', params: {roomId: roomId} });
+                if (! await hasToken()) {
+                    navigation.navigate('initMenu', { screen: 'account', params: { roomId: roomId } });
                 }
-                else{
+                else {
+                    const userInfo = await getUserInfos();
+                    setUser(userInfo.userName);
                     const source = await joinRoom(roomId);
-                    
+
                     eventSource = source;
 
                     eventSource.addEventListener('message', handleEvent);
@@ -113,7 +119,7 @@ export default function Room() {
         <GradientBackground>
             <View style={styles.container}>
                 <Text style={[FONT.title, styles.gameMode]}>Mode de jeu : {gameMode}</Text>
-                {platform==="android" ? (
+                {platform === "android" ? (
                     <View style={styles.qrCodeContainer}>
                         <QRCode
                             value={`https://luoja.fr/room?roomId=${roomId}`}
@@ -162,7 +168,21 @@ export default function Room() {
                 <Text style={FONT.subTitle}>Joueurs :</Text>
                 <ScrollView horizontal style={styles.playersContainer}>
                     {players.map((player) => (
-                        <Text key={player} style={FONT.text}>  {player}  </Text>
+                        player === user ? (
+                            player === owner ? (
+                                <Text key={player} style={FONT.text}>👑 {player} (Vous)</Text>
+                            ) :
+                            (   
+                                <Text key={player} style={FONT.textAlternate}>{player} (Vous)</Text>
+                            )
+                        ) : (
+                            player === owner ? (
+                                <Text key={player} style={FONT.text}> 👑 {player}</Text>
+                            ) :
+                            (
+                                <Text key={player} style={FONT.textAlternate}>{player}</Text>
+                            )
+                        )
                     ))}
                 </ScrollView>
                 <ScrollView horizontal style={styles.teamsContainer}>
@@ -176,7 +196,21 @@ export default function Room() {
                             />
                             <View style={styles.teamPlayersContainer}>
                                 {team.players.map((player) => (
-                                    <Text key={player} style={FONT.text}>{player}</Text>
+                                    player === user ? (
+                                        player === owner ? (
+                                            <Text key={player} style={FONT.text}>👑 {player} (Vous)</Text>
+                                        ) :
+                                        (   
+                                            <Text key={player} style={FONT.text}>{player} (Vous)</Text>
+                                        )
+                                    ) : (
+                                        player === owner ? (
+                                            <Text key={player} style={FONT.text}> 👑 {player}</Text>
+                                        ) :
+                                        (
+                                            <Text key={player} style={FONT.text}>{player}</Text>
+                                        )
+                                    )
                                 ))}
                             </View>
                         </View>
@@ -189,14 +223,19 @@ export default function Room() {
                             { flexDirection: isMobile ? 'row' : 'column', justifyContent: 'center', gap: isMobile ? 10 : 0 },
                         ]}
                     >
-                        <SimpleButton
-                            text="Commencer la partie"
-                            onPress={() => startRoom(roomId)}
-                            color={COLORS.button.blue.basic}
-                            marginBottom={isMobile ? 0 : 10}
-                            marginVertical={isMobile ? 0 : 1}
-                            width={isMobile ? "50%" : "100%"}
-                        />
+                        {owner === user && (
+                            <SimpleButton
+                                text="Commencer la partie"
+                                onPress={() => startRoom(roomId)}
+                                color={COLORS.button.blue.basic}
+                                marginBottom={isMobile ? 0 : 10}
+                                marginVertical={isMobile ? 0 : 1}
+                                width={isMobile ? "50%" : "100%"}
+                            />
+                        )}
+                        {owner !== user && (
+                            <Text style={FONT.subTitle}>En attente du lancement de la partie</Text>
+                        )}
                         <SimpleButton
                             text="Retourner au menu"
                             onPress={handleReturnHome}
