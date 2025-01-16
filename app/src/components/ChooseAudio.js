@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity,  StyleSheet, ScrollView , Dimensions } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import { uploadAudio, downloadAllAudios, downloadAudio, deleteFile } from '../utils/api';
@@ -7,8 +7,8 @@ import SimpleButton from './SimpleButton';
 import { toast } from '../utils/utils';
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 const ChooseAudio = ({ onValueChange }) => {
@@ -112,10 +112,12 @@ const ChooseAudio = ({ onValueChange }) => {
                         console.error("La réponse de `downloadAllAudios` n'est pas valide.");
                     }
                 } catch (error) {
-                    if (error.status && error.message) {
-                        toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
-                    } else {
-                        toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                    if (error.message !== "Aucun fichier trouvé pour cet utilisateur") {
+                        if (error.status && error.message) {
+                            toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                        } else {
+                            toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                        }
                     }
                 }
             };
@@ -169,7 +171,7 @@ const ChooseAudio = ({ onValueChange }) => {
                                 <audio controls src={item} style={styles.audioPlayer}>
                                     Votre navigateur ne supporte pas l'élément audio.
                                 </audio>
-                                <SimpleButton text="Supprimer" onPress={() => handleRefreshAudios(ids[index])}/>
+                                <SimpleButton text="Supprimer" onPress={() => handleRefreshAudios(ids[index])} />
 
                             </TouchableOpacity>
                         ))}
@@ -207,19 +209,19 @@ const styles = StyleSheet.create({
         fontSize: 15,
     },
     themeListModal: {
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginVertical: !isMobile? '6%' : '20%',
-            marginHorizontal: '10%',
-            backgroundColor: COLORS.background.blue,
-            padding: 20,
-            borderRadius: 10,
-            borderWidth: 5,
-            borderStyle: 'solid',
-            borderColor: COLORS.button.blue.basic,
-        },
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: !isMobile ? '6%' : '20%',
+        marginHorizontal: '10%',
+        backgroundColor: COLORS.background.blue,
+        padding: 20,
+        borderRadius: 10,
+        borderWidth: 5,
+        borderStyle: 'solid',
+        borderColor: COLORS.button.blue.basic,
+    },
     audioItem: {
         margin: 10,
         padding: 10,
@@ -234,7 +236,7 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
-      },
+    },
     audioPlayer: {
         width: '100%',
         height: '100%',

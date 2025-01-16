@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList,  Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList, Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
 import { COLORS } from '../css/utils/color';
 import { uploadImage, downloadAllImages, downloadImage, deleteFile } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';
@@ -8,8 +8,8 @@ import SimpleButton from './SimpleButton';
 import { toast } from '../utils/utils';
 
 
-const { width  , height} = Dimensions.get('window');
-const isMobile = width< height
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 
 const ChooseFile = ({ onValueChange }) => {
@@ -87,10 +87,12 @@ const ChooseFile = ({ onValueChange }) => {
                 console.error("La réponse de `downloadAllImages` n'est pas valide.");
             }
         } catch (error) {
-            if (error.status && error.message) {
-                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
-            } else {
-                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+            if (error.message !== "Aucun fichier trouvé pour cet utilisateur") {
+                if (error.status && error.message) {
+                    toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                } else {
+                    toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                }
             }
         }
     }
@@ -180,7 +182,7 @@ const ChooseFile = ({ onValueChange }) => {
                             renderItem={({ item, index }) => (
                                 <View style={styles.imageItem}>
                                     <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]} />
-                                    <SimpleButton text="Supprimer" onPress={() => handleRefreshImages(ids[index])}/>
+                                    <SimpleButton text="Supprimer" onPress={() => handleRefreshImages(ids[index])} />
                                 </View>
                             )}
                         />
