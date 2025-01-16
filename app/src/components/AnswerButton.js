@@ -275,7 +275,7 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
     // ** JSX **
 
     return (
-        <Animated.View style={[styles.animatedContainer, animatedStyle, { flexDirection: type === 'image' ? 'row' : 'column', flexWrap: 'wrap', width: type === 'image' ? '45%' : '95%' }]}>
+        <Animated.View style={[styles.animatedContainer, animatedStyle, { flexDirection: type === 'image' ? 'row' : 'column', flexWrap: type === 'image'? 'wrap' : (!isMobile? 'wrap' : 'nowrap') , width: type === 'image' ? '45%' : '95%' }]}>
             <TouchableOpacity
                 onPress={() => onClick(text)}
                 style={[
@@ -309,10 +309,10 @@ const AnswerButton = forwardRef(({ shape, onClick, text, color, type, animation 
                     <View style={{ flexDirection: 'row', gap:30, justifyContent: 'center', alignItems: 'center' }}>
                         <Image source={require('../../assets/speaker.png')} style={{ width: 75, height: 75, display: !isMobile ? 'none' : 'none' }} />
                         <TouchableOpacity onPress={playSound} style={styles.button}>
-                            <Text style={styles.text}>Play</Text>
+                            <Text style={[styles.text, {textAlign: 'center'}]}>Play</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={async () => { sound.current.stopAsync() }} style={styles.button}>
-                            <Text style={styles.text}>Stop</Text>
+                            <Text style={[styles.text, {textAlign: 'center'}]}>Stop</Text>
                         </TouchableOpacity>
                     </View>
                 )}
@@ -338,14 +338,14 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         position: 'relative',
         overflow: 'hidden',
-        gap: 50,
+        gap: !isMobile ? 50 : 10,
         ...!isMobile ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },
     text: {
         width: '75%',
-        textAlign: 'center',
+        textAlign: 'left',
         color: 'white',
         fontSize: !isMobile ? 25 : 18,
     },
@@ -358,11 +358,11 @@ const styles = StyleSheet.create({
     shapeStyles: {
         square: {
             borderRadius: 8,
-            borderWidth: !isMobile ? 7 : 3,
+            borderWidth: !isMobile ? 7 : 4,
         },
         circle: {
-            borderRadius: !isMobile ? 70 : 30,
-            borderWidth: !isMobile ? 7 : 3,
+            borderRadius: !isMobile ? 70 : 50,
+            borderWidth: !isMobile ? 7 : 4,
         },
     },
     Image: {
