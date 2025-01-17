@@ -401,7 +401,6 @@ const styles = StyleSheet.create({
         width: !isMobile ? '45%' : '100%',
         ...isMobile && { marginVertical: 10, },
         ...!isMobile && { gap: 40, },
-        height: !isMobile ? null : 150
     },
     question: {
         fontSize: !isMobile ? 30 : 25,
@@ -413,7 +412,7 @@ const styles = StyleSheet.create({
         ...isMobile && { marginVertical: 10, },
     },
     questionNumber: {
-        marginTop: !isMobile ? -20 : -15,
+        marginTop: !isMobile ? -20 : 0,
         fontSize: !isMobile ? 30 : 17,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
