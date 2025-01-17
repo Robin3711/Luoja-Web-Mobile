@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AnswerButton from '../components/AnswerButton';
 import { getCurrentQuestion, getCurrentAnswer, getGameInfos, listenTimer } from '../utils/api';
@@ -417,13 +417,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         ...!isMobile && { gap: 20, },
-        ...isMobile && { gap: '10%', },
+        ...isMobile && { gap: '2%', },
     },
     questionView: {
         alignItems: 'center',
         top: !isMobile ? 20 : 50,
         width: !isMobile ? '45%' : '100%',
-        ...isMobile && { marginVertical: 10, },
         ...!isMobile && { gap: 40, },
     },
     question: {
@@ -436,7 +435,7 @@ const styles = StyleSheet.create({
         ...isMobile && { marginVertical: 10, },
     },
     questionNumber: {
-        marginTop: !isMobile ? -20 : 0,
+        marginTop: Platform.OS === "web" ? 0 : -10,
         fontSize: !isMobile ? 30 : 17,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
