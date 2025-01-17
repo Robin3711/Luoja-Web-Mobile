@@ -21,12 +21,6 @@ export default function JoinGame() {
 
   const navigation = useNavigation();
 
-  useFocusEffect(
-    useCallback(() => {
-      requireToken(navigation);
-    })
-  );
-
   useEffect(() => {
     const getCameraPermissions = async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -136,7 +130,7 @@ const styles = StyleSheet.create({
     color: COLORS.text.blue.dark,
   },
   inputView: {
-    width: !isMobile ? '20%' : '80%',
+    width: !isMobile ? '20%' : '90%',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

@@ -60,7 +60,7 @@ export default function Register() {
     }
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             <View style={styles.registerView}>
                 <Text style={[FONT.title, { marginBottom: !isMobile ? 70 : 15 }]}>Inscription</Text>
 
@@ -106,8 +106,7 @@ export default function Register() {
                     <Text style={FONT.button}>S'inscrire</Text>
                 </TouchableOpacity>
             </View>
-
-        </GradientBackground >
+        </GradientBackground>
     );
 }
 
