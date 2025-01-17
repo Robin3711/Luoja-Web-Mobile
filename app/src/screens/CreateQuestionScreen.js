@@ -213,7 +213,7 @@ export default function CreateQuestionScreen() {
                             style={styles.choiceSelector}
                         />
                         <View style={styles.toggleContainer}>
-                            <Text style={styles.toggleLabel}>Nombre de réponses :</Text>
+                            <Text style={FONT.text}>Nombre de réponses :</Text>
                             <Picker
                                 selectedValue={numAnswers}
                                 onValueChange={(value) => {

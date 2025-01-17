@@ -12,7 +12,7 @@ export default function HomeScreen() {
     const navigation = useNavigation();
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={isMobile ? true : false}>
             <View style={styles.homeView}>
                 <Text style={FONT.luoja}>Luoja</Text>
                 <View style={styles.childView}>

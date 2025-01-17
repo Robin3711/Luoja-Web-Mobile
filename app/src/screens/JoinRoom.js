@@ -8,6 +8,7 @@ import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from "../components/SimpleButton";
 import GradientBackground from '../css/utils/linearGradient';
+import { FONT } from "../css/utils/font";
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height
@@ -78,7 +79,7 @@ export default function JoinGame() {
   }
 
   return (
-    <GradientBackground>
+    <GradientBackground showLogo={true}>
       <View style={styles.container}>
         {platform === "android" && scanned === false && (
           <CameraView
@@ -92,7 +93,7 @@ export default function JoinGame() {
         )}
         {scanned === true && (
           <>
-            <Text style={styles.title}>Rejoindre une partie</Text>
+            <Text style={FONT.title}>Rejoindre une partie</Text>
             <View style={styles.inputView}>
               <TouchableOpacity onPress={handlePasteGameId}>
                 <ClipboardPaste size={30} color="black" />
@@ -102,6 +103,7 @@ export default function JoinGame() {
                 value={roomId}
                 onChangeText={setRoomId}
                 style={styles.input}
+                autoFocus
               />
             </View>
             <SimpleButton text="Rejoindre" onPress={() => handleConnectWithCode(roomId)} />
@@ -126,12 +128,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-  },
-  title: {
-    fontSize: 50,
-    textAlign: 'center',
-    fontFamily: 'LobsterTwo_700Bold_Italic',
-    color: COLORS.text.blue.dark,
   },
   input: {
     padding: 10,

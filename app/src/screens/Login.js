@@ -54,7 +54,7 @@ export default function Login() {
     }
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             <View style={styles.loginView}>
                 <Text style={[FONT.title, { marginBottom: !isMobile ? 70 : 15 }]}>Connexion</Text>
 

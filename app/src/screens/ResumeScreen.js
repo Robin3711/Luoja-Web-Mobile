@@ -10,6 +10,7 @@ import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import GradientBackground from '../css/utils/linearGradient';
+import { FONT } from '../css/utils/font';
 
 const { width, height } = Dimensions.get('window');
 const isMobile = width < height
@@ -62,9 +63,9 @@ export default function ResumeScreen() {
     };
 
     return (
-        <GradientBackground>
+        <GradientBackground showLogo={true}>
             <View style={styles.container}>
-                <Text style={styles.title}>Reprenez votre partie</Text>
+                <Text style={FONT.title}>Reprenez votre partie</Text>
                 <View style={styles.inputView}>
                     <TouchableOpacity onPress={handlePasteGameId}>
                         <ClipboardPaste size={30} color="black" />
@@ -86,12 +87,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-    },
-    title: {
-        fontSize: 50,
-        textAlign: 'center',
-        fontFamily: 'LobsterTwo_700Bold_Italic',
-        color: COLORS.text.blue.dark,
     },
     inputView: {
         width: !isMobile ? '20%' : '80%',

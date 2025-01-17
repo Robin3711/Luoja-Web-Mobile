@@ -63,7 +63,7 @@ export default function EndScreen() {
             ) : (
                 <ScrollView>
                     <View style={styles.parentContainer}>
-                        <Text style={[styles.title, { marginBottom: 100 }]}>Fin de partie !</Text>
+                        <Text style={FONT.title}>Fin de partie !</Text>
                         {scores !== null ? (
                             <View>
                                 <SimpleButton
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         overflow: 'auto',
     },
     scoreTitle: {
-        fontSize: !isMobile ? 50 : 30,
+        fontSize: !isMobile ? 50 : 25,
         fontFamily: 'LobsterTwo_700Bold_Italic',
         color: COLORS.text.blue.dark,
     },

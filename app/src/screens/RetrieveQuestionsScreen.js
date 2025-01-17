@@ -11,6 +11,7 @@ import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import GradientBackground from '../css/utils/linearGradient';
+import { FONT } from '../css/utils/font';
 
 export default function RetrieveQuestions() {
     const route = useRoute();
@@ -39,7 +40,7 @@ export default function RetrieveQuestions() {
     return (
         <GradientBackground>
             <View style={styles.screen}>
-                <Text style={styles.title}>Importer des questions</Text>
+                <Text style={FONT.title}>Importer des questions</Text>
                 <View style={styles.list}>
                     <View style={{ width: '100%' }}>
                         <Text style={styles.text}>Thème</Text>
@@ -67,13 +68,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    title: {
-        textAlign: 'center',
-        color: COLORS.text.blue.dark,
-        fontSize: 50,
-        fontFamily: 'LobsterTwo_700Bold_Italic',
-        marginBottom: 80,
     },
     list: {
         display: 'flex',

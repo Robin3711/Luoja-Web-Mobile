@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     },
     tooltip: {
         position: 'absolute',
-        top: !isMobile ? -40 : -50,
+        top: -40,
         left: isMobile ? '25%' : 45,
         backgroundColor: 'white',
         padding: 10,

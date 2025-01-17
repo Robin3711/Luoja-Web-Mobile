@@ -277,7 +277,7 @@ export default function QuizCreation() {
     return (
         <GradientBackground>
             <View style={styles.quizCreationView}>
-                <Text style={styles.title}>Créez votre propre quiz !</Text>
+                <Text style={[FONT.title, { marginTop: '2%', marginBottom: '4%' }]}>Créez votre propre quiz !</Text>
                 <View style={styles.quizCreationChildVIew}>
                     <View style={styles.quizCreationLeftView}>
                         <Text style={styles.text}>Titre</Text>
@@ -337,15 +337,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'column',
         position: 'relative',
-        top: -50
-    },
-    title: {
-        marginTop: '3%',
-        marginBottom: '5%',
-        textAlign: 'center',
-        color: COLORS.text.blue.dark,
-        fontSize: 50,
-        fontFamily: 'LobsterTwo_700Bold_Italic',
     },
     text: {
         fontSize: 20,
@@ -385,7 +376,7 @@ const styles = StyleSheet.create({
         gap: '10%',
     },
     quizCreationBottomButtonsView: {
-        marginTop: '2vh',
+        marginTop: '5vh',
         flexDirection: 'row',
         justifyContent: 'center',
         gap: '10%',
