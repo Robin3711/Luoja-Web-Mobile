@@ -3,6 +3,7 @@
     "name": "Luoja",
     "slug": "luoja",
     "version": "1.0.0",
+    "owner": "baldur-expo-account",
     "newArchEnabled": true,
     "orientation": "portrait",
     "icon": "./assets/icon.png",
