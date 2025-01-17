@@ -126,14 +126,14 @@ const styles = StyleSheet.create({
     },
     parentContainer: {
         alignItems: 'center',
-        margin: !isMobile ? 20 : 10,
+        padding: !isMobile ? 20 : 10,
         width: '100%',
     },
     scoreContainer: {
         maxHeight: '80%',
         maxWidth: '100%',
         overflow: 'auto',
-        margin: 20,
+        padding: 20,
 
     },
     scrumContainer: {
