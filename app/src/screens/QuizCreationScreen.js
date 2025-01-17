@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getQuizInfos } from '../utils/api';
@@ -14,8 +14,10 @@ import ThemeSelector from '../components/ThemeList';
 import { COLORS } from '../css/utils/color';
 import { FONT } from '../css/utils/font';
 
-const platform = Platform.OS;
+import GradientBackground from '../css/utils/linearGradient';
 
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height;
 
 export default function QuizCreation() {
 
@@ -39,9 +41,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -56,9 +58,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -74,9 +76,9 @@ export default function QuizCreation() {
 
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -87,9 +89,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     };
@@ -100,9 +102,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -113,9 +115,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -126,7 +128,7 @@ export default function QuizCreation() {
                 const data = await saveQuiz(title, category, difficulty, questions);
                 setQuizId(data.quizId);
 
-                if (Platform.OS === 'web') {
+                if (!isMobile) {
                     navigation.navigate('quizCreation', { quizId: data.quizId });
                 }
             }
@@ -136,13 +138,13 @@ export default function QuizCreation() {
             setPublishButton(false);
             setSaveButton(true);
             setResetForm(false);
-            toast('info', 'Le quiz à bien était sauvegardé !', "", 1000, COLORS.toast.blue);
+            toast('info', 'Le quiz à bien était sauvegardé !', "", 1000, COLORS.toast.text.blue);
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     };
@@ -167,9 +169,9 @@ export default function QuizCreation() {
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -186,11 +188,11 @@ export default function QuizCreation() {
         setResetForm(true);
 
         // Modification de l'URL pour supprimer les paramètres
-        if (Platform.OS === 'web') {
+        if (!isMobile) {
             navigation.navigate('quizCreation');
         }
 
-        toast('info', 'Le formulaire a été réinitialisé.', '', 1000, COLORS.toast.blue);
+        toast('info', 'Le formulaire a été réinitialisé.', '', 1000, COLORS.toast.text.blue);
     };
 
     // Vérification du token à chaque fois que l'écran est focus
@@ -273,11 +275,11 @@ export default function QuizCreation() {
     };
 
     return (
-        <View style={styles.quizCreationView}>
-            <Text style={styles.title}>Créez votre propre quiz !</Text>
-            <View style={styles.quizCreationChildVIew}>
-                <View style={styles.quizCreationLeftView}>
-                    <View>
+        <GradientBackground>
+            <View style={styles.quizCreationView}>
+                <Text style={[FONT.title, { marginTop: '2%', marginBottom: '4%' }]}>Créez votre propre quiz !</Text>
+                <View style={styles.quizCreationChildVIew}>
+                    <View style={styles.quizCreationLeftView}>
                         <Text style={styles.text}>Titre</Text>
                         <View style={styles.quizTitleView}>
                             <TextInput style={styles.quizTitleText} placeholder='Titre du quiz' value={title} onChangeText={setTitle} />
@@ -291,41 +293,40 @@ export default function QuizCreation() {
                                 <Text style={FONT.button}>Importer des questions</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.buttons} onPress={handleClickCreateQuestion}>
-                                <Text style={FONT.button}>Rédiger une question</Text>
+                                <Text style={FONT.button}>Créer une question</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
+
+                    <SafeAreaProvider style={{ marginRight: '5%', height: '100%' }}>
+                        <SafeAreaView>
+                            <View style={styles.quizCreationRightView}>
+                                <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
+                                <DragList
+                                    data={questions}
+                                    keyExtractor={keyExtractor}
+                                    onReordered={handleReordered}
+                                    renderItem={renderQuestionItem}
+                                    containerStyle={styles.dragListContainer}
+                                />
+                            </View>
+                        </SafeAreaView>
+                    </SafeAreaProvider>
                 </View>
 
-                <SafeAreaProvider style={{ marginRight: '5%', height: '100%' }}>
-                    <SafeAreaView>
-                        <View style={styles.quizCreationRightView}>
-                            <Text style={styles.quizCreationQuestionsTitle}>Liste des questions :</Text>
-                            <DragList
-                                data={questions}
-                                keyExtractor={keyExtractor}
-                                onReordered={handleReordered}
-                                renderItem={renderQuestionItem}
-                                containerStyle={styles.dragListContainer}
-                            />
-
-                        </View>
-                    </SafeAreaView>
-                </SafeAreaProvider>
+                <View style={styles.quizCreationBottomButtonsView}>
+                    <TouchableOpacity style={saveButton ? styles.disabledButton : styles.buttons} onPress={handleSave} disabled={saveButton}>
+                        <Text style={FONT.button}>Enregistrer</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={publishButton ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={publishButton}>
+                        <Text style={FONT.button}>Publier</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={resetForm ? styles.disabledButton : styles.buttons} onPress={handleReset} disabled={resetForm}>
+                        <Text style={FONT.button}>{!quizId ? "Réinitialiser" : "Nouveau quiz"}</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-
-            <View style={styles.quizCreationBottomButtonsView}>
-                <TouchableOpacity style={saveButton ? styles.disabledButton : styles.buttons} onPress={handleSave} disabled={saveButton}>
-                    <Text style={FONT.button}>Enregistrer</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={publishButton ? styles.disabledButton : styles.buttons} onPress={handlePublish} disabled={publishButton}>
-                    <Text style={FONT.button}>Publier</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={resetForm ? styles.disabledButton : styles.buttons} onPress={handleReset} disabled={resetForm}>
-                    <Text style={FONT.button}>{!quizId ? "Réinitialiser" : "Nouveau quiz"}</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+        </GradientBackground>
     );
 }
 
@@ -334,16 +335,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#EEF8FF',
         flexDirection: 'column',
-    },
-    title: {
-        marginTop: '3%',
-        marginBottom: '5%',
-        textAlign: 'center',
-        color: COLORS.text.blue.dark,
-        fontSize: 50,
-        fontFamily: 'LobsterTwo_700Bold_Italic',
+        position: 'relative',
     },
     text: {
         fontSize: 20,
@@ -373,16 +366,17 @@ const styles = StyleSheet.create({
         width: '40%',
         marginRight: '10%',
         marginLeft: '5%',
+        maxHeight: '62vh',
     },
     quizCreationTopButtonsView: {
-        marginTop: '3%',
+        marginTop: '3vh',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         gap: '10%',
     },
     quizCreationBottomButtonsView: {
-        marginTop: '5%',
+        marginTop: '5vh',
         flexDirection: 'row',
         justifyContent: 'center',
         gap: '10%',
@@ -431,25 +425,27 @@ const styles = StyleSheet.create({
     },
     buttons: {
         position: 'relative',
+        justifyContent: 'center',
         backgroundColor: COLORS.button.blue.basic,
         height: 75,
         width: 350,
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
-        ...platform === 'web' ? {
+        ...!isMobile ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },
     disabledButton: {
         position: 'relative',
+        justifyContent: 'center',
         backgroundColor: "#d3d3d3",
         height: 75,
         width: 350,
         borderRadius: 15,
         marginVertical: 10,
         marginBottom: 25,
-        ...platform === 'web' ? {
+        ...!isMobile ? {
             boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.25)',
         } : { elevation: 2 },
     },

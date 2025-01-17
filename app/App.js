@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -6,6 +5,8 @@ import { useFonts, LobsterTwo_400Regular, LobsterTwo_700Bold_Italic } from '@exp
 import Toast from 'react-native-toast-message';
 
 import { toastConfig } from './src/utils/utils';
+import { Dimensions } from 'react-native';
+import GradientBackground from './src/css/utils/linearGradient';
 
 import MenuTab from './src/components/MenuTab';
 
@@ -29,6 +30,10 @@ import JoinGame from './src/screens/JoinRoom';
 import '@expo/metro-runtime';
 
 
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
+
 const linking = {
   prefixes: ['http://localhost:8081', 'https://luoja.fr'],
   config: {
@@ -42,7 +47,7 @@ const linking = {
       userInfos: 'userInfos',
       login: 'login',
       register: 'register',
-      JoinGame: 'JoinGame',
+      join: 'join',
       retrieveQuestions: {
         path: 'retrieveQuestions/:handleAddQuestions',
         stringify: {
@@ -79,9 +84,9 @@ const MenuDrawer = () => {
       <drawer.Screen name="home" component={HomeScreen} options={{ title: "Luoja", drawerLabel: "Accueil" }} />
       <drawer.Screen name="newQuiz" component={Parameters} options={{ title: "Luoja", drawerLabel: "Partie rapide" }} />
       <drawer.Screen name="search" component={SearchScreen} options={{ title: "Luoja", drawerLabel: "Quiz de la communauté" }} />
-      <drawer.Screen name="JoinGame" component={JoinGame} options={{ title: "Luoja", drawerLabel: "Rejoindre une partie" }} />
+      <drawer.Screen name="join" component={JoinGame} options={{ title: "Luoja", drawerLabel: "Jouer en ligne" }} />
       <drawer.Screen name="resumeQuiz" component={ResumeScreen} options={{ title: "Luoja", drawerLabel: "Reprendre une partie" }} />
-      {Platform.OS === 'web' ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Luoja", drawerLabel: "Créer votre propre quiz" }} /> : null}
+      {!isMobile ? <drawer.Screen name="quizCreation" component={QuizCreation} options={{ title: "Luoja", drawerLabel: "Créer votre propre quiz" }} /> : null}
       <drawer.Screen name="account" component={Account} options={{ title: "Luoja", drawerLabel: "Votre compte" }} />
     </drawer.Navigator>
   );
@@ -90,14 +95,14 @@ const MenuDrawer = () => {
 const MenuStack = () => {
   return (
     <stack.Navigator initialRouteName='initMenu'>
-      {Platform.OS === 'web' ? <stack.Screen name="initMenu" component={MenuTab} options={{ headerShown: false }} /> : <stack.Screen name="initMenu" component={MenuDrawer} options={{ headerShown: false }} />}
+      {!isMobile ? <stack.Screen name="initMenu" component={MenuTab} options={{ headerShown: false }} /> : <stack.Screen name="initMenu" component={MenuDrawer} options={{ headerShown: false }} />}
       <stack.Group screenOptions={{ presentation: 'modal' }}>
         <stack.Screen name="quizScreen" component={QuizScreen} options={{ title: "Le quiz" }} />
-        <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: Platform.OS === 'web' ? () => null : undefined }} />
+        <stack.Screen name="endScreen" component={EndScreen} options={{ title: "Résultat", headerLeft: !isMobile ? () => null : undefined }} />
         <stack.Screen name="login" component={Login} options={{ title: "Se connecter" }} />
         <stack.Screen name="register" component={Register} options={{ title: "S'inscrire" }} />
-        {Platform.OS === 'web' ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Importer des questions" }} /> : null}
-        {Platform.OS === 'web' ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
+        {!isMobile ? <stack.Screen name="retrieveQuestions" component={RetrieveQuestions} options={{ title: "Importer des questions" }} /> : null}
+        {!isMobile ? <stack.Screen name="createQuestion" component={CreateQuestionScreen} options={{ title: "Créer une question" }} /> : null}
         <stack.Screen name="launchGameMode" component={LaunchGameMode} options={{ title: "Lancer un mode de jeu" }} />
         <stack.Screen name="room" component={Room} options={{ title: "Partie multijoueur" }} />
         <stack.Screen name="roomQuizScreen" component={RoomQuizScreen} options={{ title: "Quiz" }} />
@@ -120,10 +125,13 @@ export default function App() {
 
   return (
     <>
-      <NavigationContainer linking={linking}>
-        <MenuStack />
-      </NavigationContainer>
+      <GradientBackground>
+        <NavigationContainer linking={linking}>
+          <MenuStack />
+        </NavigationContainer>
+      </GradientBackground>
       <Toast config={toastConfig} />
+
     </>
   );
 }

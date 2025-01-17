@@ -2,14 +2,14 @@
   "expo": {
     "name": "Luoja",
     "slug": "luoja",
-    "owner": "baldur-expo-account",
     "version": "1.0.0",
+    "owner": "baldur-expo-account",
     "newArchEnabled": true,
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,12 +19,10 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "hardwareAcceleration": true
       },
-      "package": "com.baldurexpoaccount.luoja",
-      "permissions": [
-        "RECORD_AUDIO"
-      ]
+      "package": "com.baldurexpoaccount.luoja"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,14 +31,6 @@
       "eas": {
         "projectId": "004c9738-5b14-41f5-8806-ec53dcfbb4c6"
       }
-    },
-    "plugins": [
-      [
-        "expo-av",
-        {
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
-        }
-      ]
-    ]
+    }
   }
 }

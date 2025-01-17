@@ -1,11 +1,16 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList, Platform, StyleSheet, Image } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, FlatList, Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
 import { COLORS } from '../css/utils/color';
-import { uploadImage, downloadAllImages, downloadImage } from '../utils/api';
+import { uploadImage, downloadAllImages, downloadImage, deleteFile } from '../utils/api';
 import { useFocusEffect } from '@react-navigation/native';
 import ImageSelect from './ImageSelect';
+import SimpleButton from './SimpleButton';
+import { toast } from '../utils/utils';
 
-const platform = Platform.OS;
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
+
 
 const ChooseFile = ({ onValueChange }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -13,9 +18,47 @@ const ChooseFile = ({ onValueChange }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [ids, setIds] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
+    const [disable, setDisable] = useState(false);
+
+
+    const fetchImages = async () => {
+        try {
+            const response = await downloadAllImages();
+            if (response.files && Array.isArray(response.files)) {
+                const files = response.files;
+
+                const validFiles = files.filter(file =>
+                    file.fileName.endsWith('.png') ||
+                    file.fileName.endsWith('.jpg') ||
+                    file.fileName.endsWith('.jpeg')
+                );
+
+                setIds(validFiles.map((file) => file.fileName));
+                const imagePromises = validFiles.map(async (file) => {
+                    const { fileName } = file;
+                    const imageBlob = await downloadImage(fileName);
+
+                    // Convertir le blob en URL locale
+                    const imageURL = URL.createObjectURL(imageBlob);
+                    return imageURL;
+                });
+
+                // Résoudre toutes les promesses
+                const fetchedImages = await Promise.all(imagePromises);
+
+                // Mettre à jour l'état des images
+                setImages(fetchedImages);
+            } else {
+                console.error("La réponse de `downloadAllImages` n'est pas valide.");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
 
     const handleOpenModal = () => {
+        fetchImages();
         setModalVisible(true);
     }
 
@@ -33,57 +76,68 @@ const ChooseFile = ({ onValueChange }) => {
         const formData = new FormData();
         formData.append('file', file);
 
-        uploadImage(formData).then((response) => {
+        uploadImage(formData).then(async (response) => {
             if (response.status === 200) {
-                const addimage = async (response) => {
-                    console.log(response.filePath);
-                    const imageBlob = await downloadImage(response.filePath);
-                    const imageURL = URL.createObjectURL(imageBlob);
-                    setImages([...images, imageURL]);
-                    setIds([...ids, response.filePath]);
-                };
-                addimage(response);
+                const jsonResponse = await response.json();
+                setTimeout(() => {
+
+                    const responseId = jsonResponse.filePath;
+                    setIds([...ids, responseId]);
+                    downloadImage(responseId).then((response) => {
+                        const url = URL.createObjectURL(response);
+                        setImages([...images, url])
+                    })
+
+                }, 200);
+
             }
         }).catch((error) => {
-            console.log(error);
-
+            toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
         }
         );
     };
 
+    const handleRefreshImages = async (id) => {
+        try {
+            setDisable(true);
+            await deleteFile(id);
+            const response = await downloadAllImages();
+            if (response.files && Array.isArray(response.files)) {
+                const files = response.files;
+                const validFiles = files.filter(file => file.fileName.endsWith('.png' || '.jpg' || '.jpeg'));
+                setIds(validFiles.map((file) => file.fileName));
+
+                // Traiter chaque `fileName` pour télécharger les images
+                const imagePromises = validFiles.map(async (file) => {
+                    const { fileName } = file;
+                    const imageBlob = await downloadImage(fileName);
+
+                    // Convertir le blob en URL locale
+                    const imageURL = URL.createObjectURL(imageBlob);
+                    return imageURL;
+                });
+
+                // Résoudre toutes les promesses
+                const fetchedImages = await Promise.all(imagePromises);
+
+                // Mettre à jour l'état des images
+                setImages(fetchedImages);
+            } else {
+                console.error("La réponse de `downloadAllImages` n'est pas valide.");
+            }
+            setDisable(false);
+        } catch (error) {
+            console.error(error);
+            setDisable(false);
+        }
+    }
+
+    const handleCloseModal = () => {
+        setModalVisible(false);
+    }
 
     useFocusEffect(
         useCallback(() => {
-            const fetchImages = async () => {
-                try {
-                    const response = await downloadAllImages();
-                    if (response.files && Array.isArray(response.files)) {
-                        const files = response.files;
-                        setIds(files.map((file) => file.fileName));
-
-                        // Traiter chaque `fileName` pour télécharger les images
-                        const imagePromises = files.map(async (file) => {
-                            const { fileName } = file;
-                            const imageBlob = await downloadImage(fileName);
-
-                            // Convertir le blob en URL locale
-                            const imageURL = URL.createObjectURL(imageBlob);
-                            return imageURL;
-                        });
-
-                        // Résoudre toutes les promesses
-                        const fetchedImages = await Promise.all(imagePromises);
-
-                        // Mettre à jour l'état des images
-                        setImages((prevImages) => [...prevImages, ...fetchedImages]);
-                    } else {
-                        console.error("La réponse de `downloadAllImages` n'est pas valide.");
-                    }
-                } catch (error) {
-                    console.error("Erreur lors de la récupération des images :", error);
-                }
-            };
-
             fetchImages();
         }, [])
     );
@@ -91,7 +145,7 @@ const ChooseFile = ({ onValueChange }) => {
 
     return (
         <View style={styles.themeListView}>
-            <TouchableOpacity style={styles.paramButton} onPress={() => setModalVisible(true)}>
+            <TouchableOpacity style={styles.paramButton} onPress={handleOpenModal}>
                 <Text style={styles.paramButtonText}>
                     {selectedImage ? "Modifier l'image" : "Ajouter une image"}
                 </Text>
@@ -114,16 +168,26 @@ const ChooseFile = ({ onValueChange }) => {
                         name="file"
                         accept="image/*"
                         onChange={selectFile}
+                        style={styles.inputFile}
                     />
-
-                    <FlatList
+                    <ScrollView
                         horizontal={true}
-                        data={images}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item, index }) => (
-                            <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]} />
-                        )}
-                    />
+                        contentContainerStyle={styles.scrollViewContenair}
+                        style={{ maxWidth: 1000 }}
+                    >
+                        <FlatList
+                            horizontal={true}
+                            data={images}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item, index }) => (
+                                <View style={styles.imageItem}>
+                                    <ImageSelect uri={item} onImageSelect={handleImageSelect} id={ids[index]} />
+                                    <SimpleButton text="Supprimer" onPress={() => handleRefreshImages(ids[index])} disabled={disable} />
+                                </View>
+                            )}
+                        />
+                    </ScrollView>
+                    <SimpleButton text={"Fermer"} onPress={handleCloseModal} />
                 </View>
             </Modal>
         </View>
@@ -161,7 +225,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: platform === 'web' ? '6%' : '20%',
+        marginVertical: !isMobile ? '6%' : '20%',
         marginHorizontal: '10%',
         backgroundColor: COLORS.background.blue,
         padding: 20,
@@ -188,7 +252,7 @@ const styles = StyleSheet.create({
         margin: 5,
         borderRadius: 5,
         backgroundColor: COLORS.button.blue.basic,
-        width: platform === 'web' ? 350 : '100%',
+        width: !isMobile ? 350 : '100%',
         height: 70,
     },
     themeLabel: {
@@ -199,6 +263,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 10,
         gap: 10,
+    },
+    inputFile: {
+        margin: 10,
+        padding: 30,
+        backgroundColor: COLORS.palette.blue.lighter,
+        borderRadius: 10,
+        fontFamily: 'LobsterTwo_700Bold_Italic',
+        fontSize: 20,
+    },
+    imageItem: {
+        margin: 10,
+        padding: 10,
+        backgroundColor: COLORS.palette.blue.lighter,
+        borderRadius: 5,
+        width: "400px", // Fixe la largeur des éléments
+        height: "300px",
+        alignItems: 'center',
     },
 });
 

@@ -1,13 +1,13 @@
 export const COLORS = {
     palette: {
-        blue:{
+        blue: {
             lighter: '#C0E6FF',
             light: '#58BDFE',
             normal: '#4D65B4',
             dark: '#484A77',
             darker: '#323353',
         },
-        pink: 
+        pink:
         {
             lighter: '#FFA0B7',
             light: '#FE6C90',
@@ -19,6 +19,7 @@ export const COLORS = {
 
     background: {
         blue: "#EEF8FF",
+        dark_blue: "#DDF1FF",
         pink: "#FFEAEF",
     },
 
@@ -105,11 +106,13 @@ export const COLORS = {
                 normal: '#452459',
                 dark: '#0C0D25',
             }
-        }
+        },
+
+        disabled: 'silver',
     },
 
     timer: {
-        blue:{
+        blue: {
             lighter: '#C0E6FF',
             light: '#58BDFE',
             normal: '#4D65B4',
@@ -119,8 +122,17 @@ export const COLORS = {
     },
 
     toast: {
-        red: 'crimson',
-        green: 'limegreen',
-        blue: 'deepskyblue'
+        text: {
+            red: 'crimson',
+            green: 'seagreen',
+            blue: 'dodgerblue',
+            orange: 'darkorange',
+        },
+        background: {
+            red: 'firebrick',
+            green: 'limegreen',
+            blue: 'deepskyblue',
+            orange: 'orange',
+        }
     }
 }

@@ -4,10 +4,10 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
 import { FONT } from '../css/utils/font';
-import { themeOptions } from '../utils/utils';
 import { restartGame, getGameInfos } from '../utils/api';
+import GradientBackground from '../css/utils/linearGradient';
 
-import * as Progress from 'react-native-progress';
+import AnimatedProgressWheel from 'react-native-progress-wheel';
 
 export default function EndScreen() {
     const route = useRoute();
@@ -15,14 +15,10 @@ export default function EndScreen() {
 
     const { score, numberOfQuestions, gameId } = route.params;
 
-    const [category, setCategory] = useState(null);
-    const [difficulty, setDifficulty] = useState(null);
-    const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [error, setError] = useState(false);
     const [gameMode, setGameMode] = useState("any");
-
 
     useEffect(() => {
         const loadGameData = async () => {
@@ -33,21 +29,11 @@ export default function EndScreen() {
 
                 const infos = await getGameInfos(gameId);
 
-                setCategory(infos.quizCategory !== 0 ? themeOptions.find(option => option.value === infos.quizCategory)?.label : "any");
-                setDifficulty(infos.quizDifficulty);
                 setLoading(false);
                 setGameMode(infos.gameMode);
-
-                let animationProgress = 0;
-                const targetProgress = score / numberOfQuestions;
-                const interval = setInterval(() => {
-                    animationProgress += 0.01;
-                    if (animationProgress >= targetProgress) {
-                        animationProgress = targetProgress;
-                        clearInterval(interval);
-                    }
-                    setProgress(animationProgress);
-                }, 20);
+                if (infos.gameMode === null) {
+                    setGameMode("standard");
+                }
 
             } catch (err) {
                 setError(true);
@@ -72,57 +58,58 @@ export default function EndScreen() {
         }
     };
 
-    return (error ? (
-        <View style={styles.container}>
-            <Text style={styles.errorText}>{errorMessage}</Text>
-            <TouchableOpacity style={styles.button} onPress={() => {
-                navigation.navigate('initMenu')
-            }
-            }>
-                <Text style={styles.buttonText}>Retour au menu</Text>
-            </TouchableOpacity>
-        </View>
-    ) : (
-        <View style={styles.container}>
-            <View style={styles.parentContainer}>
-                <Text style={FONT.title}>Fin de partie !</Text>
-                <Text style={styles.text}>Récapitulatif de la partie :</Text>
-                <Text style={styles.text}>Catégorie : {category} | difficulté : {difficulty}</Text>
-                {score !== null && numberOfQuestions !== null ? (
-                    <View style={styles.scoreContainer}>
-                        <Text style={styles.scoreTitle}>
-                            Votre score : {score} / {numberOfQuestions}
-                        </Text>
-                        <View style={styles.wheelContainer}>
-                            <Progress.Circle
-                                progress={!loading ? progress : 0}
-                                size={120}
-                                showsText={!loading}
-                                color={COLORS.text.blue.dark}
-                                borderWidth={!loading ? 0 : 10}
-                                thickness={15}
-                                unfilledColor={"#D8D8D8"}
-                                indeterminate={loading}
-                                indeterminateAnimationDuration={1000}
-                            />
-                        </View>
+    return (
+        <GradientBackground showLogo={true}>
+            {error ? (
+                <View style={styles.container}>
+                    <Text style={styles.errorText}>{errorMessage}</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => {
+                        navigation.navigate('initMenu')
+                    }
+                    }>
+                        <Text style={styles.buttonText}>Retour au menu</Text>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                <View style={styles.container}>
+                    <View style={styles.parentContainer}>
+                        <Text style={FONT.title}>Fin de partie !</Text>
+                        {score !== null && numberOfQuestions !== null ? (
+                            <View style={styles.scoreContainer}>
+                                <Text style={styles.scoreTitle}>
+                                    Votre score : {score} / {numberOfQuestions}
+                                </Text>
+                                <View style={styles.wheelContainer}>
+                                    <AnimatedProgressWheel
+                                        size={125}
+                                        width={15}
+                                        duration={2000}
+                                        rotation={'-90deg'}
+                                        animateFromValue={0}
+                                        showProgressLabel={true}
+                                        showPercentageSymbol={true}
+                                        color={COLORS.palette.blue.dark}
+                                        progress={score / numberOfQuestions * 100}
+                                    />
+                                </View>
+                            </View>
+                        ) : (
+                            <Text>Chargement du score...</Text>
+                        )}
                     </View>
-                ) : (
-                    <Text>Chargement du score...</Text>
-                )}
-            </View>
 
-            <SimpleButton
-                text="Retourner au menu"
-                onPress={handleReturnHome}
-            />
+                    <SimpleButton
+                        text="Retourner au menu"
+                        onPress={handleReturnHome}
+                    />
 
-            <SimpleButton
-                text="Rejouer au Quiz"
-                onPress={handleReplay}
-            />
-        </View>
-    )
+                    <SimpleButton
+                        text="Rejouer au Quiz"
+                        onPress={handleReplay}
+                    />
+                </View>
+            )}
+        </GradientBackground>
     );
 }
 
@@ -132,14 +119,11 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         marginVertical: 20,
-
     },
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f0f0f0',
-        backgroundColor: COLORS.background.blue,
     },
     parentContainer: {
         alignItems: 'center',

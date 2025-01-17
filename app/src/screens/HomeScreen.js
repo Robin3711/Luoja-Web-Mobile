@@ -1,34 +1,31 @@
-import { View, Text, Platform, StyleSheet, Image } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SimpleButton from '../components/SimpleButton';
-import { COLORS } from '../css/utils/color';
-
 import { FONT } from '../css/utils/font';
+import GradientBackground from '../css/utils/linearGradient';
 
-const platform = Platform.OS;
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height;
 
 export default function HomeScreen() {
     const navigation = useNavigation();
 
     return (
-        <View style={styles.homeView}>
-
-            <Text style={FONT.luoja}>Luoja</Text>
-
-            <View style={styles.childView}>
-                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
-
-                <View style={styles.listButton}>
-                    <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')} />
-
-                    <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
-
-                    <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
+        <GradientBackground showLogo={isMobile ? true : false}>
+            <View style={styles.homeView}>
+                <Text style={FONT.luoja}>Luoja</Text>
+                <View style={styles.childView}>
+                    {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
+                    <View style={styles.listButton}>
+                        <SimpleButton text="Quiz rapide" onPress={() => navigation.navigate('newQuiz')} />
+                        <SimpleButton text="Quiz de la communauté" onPress={() => navigation.navigate('search')} />
+                        <SimpleButton text="Reprendre la partie" onPress={() => navigation.navigate('resumeQuiz')} />
+                    </View>
+                    {!isMobile && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
                 </View>
-
-                {platform === 'web' && <Image style={styles.logo} source={require('../../assets/icon.png')} />}
             </View>
-        </View>
+        </GradientBackground>
     );
 }
 
@@ -40,12 +37,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
     },
     childView: {
-        height: platform === 'web' ? '90%' : '75%',
-        flexDirection: platform === 'web' ? 'row' : 'column',
-        justifyContent: platform === 'web' ? 'flex-start' : 'center',
+        height: !isMobile ? '90%' : '75%',
+        flexDirection: !isMobile ? 'row' : 'column',
+        justifyContent: !isMobile ? 'flex-start' : 'center',
         alignItems: 'center',
     },
     listButton: {
@@ -54,8 +50,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logo: {
-        marginHorizontal: 200,
-        width: 500,
-        height: 700,
+        marginHorizontal: 100,
+        width: 650,
+        height: 650,
     },
 });

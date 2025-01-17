@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TextInput, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { getGameInfos } from '../utils/api';
 import { toast } from '../utils/utils';
@@ -9,8 +9,11 @@ import * as Clipboard from 'expo-clipboard';
 
 import { COLORS } from '../css/utils/color';
 import SimpleButton from '../components/SimpleButton';
+import GradientBackground from '../css/utils/linearGradient';
+import { FONT } from '../css/utils/font';
 
-const platform = Platform.OS;
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
 export default function ResumeScreen() {
     const [gameId, setGameId] = useState('');
@@ -21,7 +24,7 @@ export default function ResumeScreen() {
         try {
             setSearch(true);
             if (!gameId) {
-                toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, COLORS.toast.red);
+                toast('error', 'Erreur', 'Veuillez saisir un identifiant de partie', 3000, COLORS.toast.text.red);
                 setSearch(false);
                 return;
             }
@@ -39,17 +42,17 @@ export default function ResumeScreen() {
             })
                 .catch(error => {
                     if (error.status && error.message) {
-                        toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                        toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
                     } else {
-                        toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                        toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
                     }
                 });
         }
         catch (error) {
             if (error.status && error.message) {
-                toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
             } else {
-                toast('error', "Erreur", error, 3000, COLORS.toast.red);
+                toast('error', "Erreur", error, 3000, COLORS.toast.text.red);
             }
         }
     }
@@ -60,16 +63,18 @@ export default function ResumeScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Reprenez votre partie</Text>
-            <View style={styles.inputView}>
-                <TouchableOpacity onPress={handlePasteGameId}>
-                    <ClipboardPaste size={30} color="black" />
-                </TouchableOpacity>
-                <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
+        <GradientBackground showLogo={true}>
+            <View style={styles.container}>
+                <Text style={FONT.title}>Reprenez votre partie</Text>
+                <View style={styles.inputView}>
+                    <TouchableOpacity onPress={handlePasteGameId}>
+                        <ClipboardPaste size={30} color="black" />
+                    </TouchableOpacity>
+                    <TextInput placeholder="Identifiant de votre partie" onChangeText={setGameId} value={gameId} autoFocus style={styles.input} />
+                </View>
+                <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
             </View>
-            <SimpleButton text={!search ? "Reprendre" : "Chargement..."} onPress={handleResumeGame} />
-        </View>
+        </GradientBackground>
     );
 
 }
@@ -82,16 +87,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: COLORS.background.blue,
-    },
-    title: {
-        fontSize: 50,
-        textAlign: 'center',
-        fontFamily: 'LobsterTwo_700Bold_Italic',
-        color: COLORS.text.blue.dark,
     },
     inputView: {
-        width: platform === 'web' ? '20%' : '80%',
+        width: !isMobile ? '20%' : '90%',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',

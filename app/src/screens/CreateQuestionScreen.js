@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Picker } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, TextInput, Picker } from 'react-native';
 import AnswerInput from '../components/AnswerInput';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
@@ -7,6 +7,11 @@ import { FONT } from '../css/utils/font';
 import SimpleButton from '../components/SimpleButton';
 import { mediaType, toast } from '../utils/utils';
 import ChoiseSelector from '../components/ChoicePicker';
+import { generateAnswers } from '../utils/api';
+import GradientBackground from '../css/utils/linearGradient';
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height;
 
 export default function CreateQuestionScreen() {
     const route = useRoute();
@@ -18,7 +23,10 @@ export default function CreateQuestionScreen() {
     const [selectedShape, setSelectedShape] = useState('');
     const [numAnswers, setNumAnswers] = useState(4); // Par défaut à 4 réponses
     const [typeQuestion, setType] = useState('text');
+    const [generationTheme, setGenerationTheme] = useState('standard');
+    const [loading, setLoading] = useState(false);
     const [fileName, setFileName] = useState(null);
+    const [disable, setDisable] = useState(false);
 
     // Answers state
     const [answers, setAnswers] = useState({
@@ -57,7 +65,7 @@ export default function CreateQuestionScreen() {
         });
     }, [numAnswers]);
 
-    const shapes = ['SQUARE', 'TRIANGLE', ...(numAnswers >= 3 ? ['CIRCLE'] : []), ...(numAnswers === 4 ? ['STAR'] : [])];
+    const shapes = ['SQUARE', 'TRIANGLE', ...(numAnswers >= 3 ? ['CIRCLE'] : []), ...(numAnswers >= 4 ? ['STAR'] : [])];
 
     const handleShapeClick = (shape) => setSelectedShape(shape);
 
@@ -76,24 +84,29 @@ export default function CreateQuestionScreen() {
     }
 
     const handleSubmit = () => {
+        setDisable(true);
         if (!questionText) {
-            toast('error', 'La question ne peut pas être vide', '', 3000, COLORS.toast.red);
+            toast('error', 'La question ne peut pas être vide', '', 3000, COLORS.toast.text.red);
+            setDisable(false);
             return;
         }
 
         if (!selectedShape) {
-            toast('error', 'Veuillez sélectionner une bonne réponse en cliquant sur une forme', '', 3000, COLORS.toast.red);
+            toast('error', 'Veuillez sélectionner une bonne réponse en cliquant sur une forme', '', 3000, COLORS.toast.text.red);
+            setDisable(false);
             return;
         }
 
         const requiredAnswers = shapes.map((shape) => answers[shape]);
         if (requiredAnswers.some((answer) => !answer)) {
-            toast('error', `Veuillez remplir toutes les ${numAnswers} réponses`, '', 3000, COLORS.toast.red);
+            toast('error', `Veuillez remplir toutes les ${numAnswers} réponses`, '', 3000, COLORS.toast.text.red);
+            setDisable(false);
             return;
         }
 
         const incorrectAnswers = shapes.filter((shape) => shape !== selectedShape).map((shape) => answers[shape]);
 
+        setDisable(false);
         handleQuestion([
             {
                 text: questionText,
@@ -113,6 +126,57 @@ export default function CreateQuestionScreen() {
         setFileName(id);
     }
 
+    const handleGenerate = async () => {
+
+        if (questionText.length > 0) {
+
+
+            try {
+                setLoading(true);
+
+                setType('text');
+
+                //verfie si le question Text fait plus de 100 caractères si oui refuse la génération
+                if (questionText.length > 100) {
+                    toast("warn", "La question est trop longue", "La question doit faire moins de 100 caractères", 2000, COLORS.toast.text.orange);
+                    setLoading(false);
+                    return;
+                }
+                const data = await generateAnswers(questionText, generationTheme);
+
+                const answers = data.answers;
+
+                setAnswers({
+                    SQUARE: answers[0],
+                    TRIANGLE: answers[1],
+                    CIRCLE: answers[2],
+                    STAR: answers[3],
+                });
+
+                setSelectedShape('SQUARE');
+
+                setLoading(false);
+            }
+            catch (error) {
+                if (error.status && error.message) {
+                    toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+                } else {
+                    toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+                }
+
+                if (error.status === 400 || error.status === 500) {
+                    setLoading(false);
+                }
+
+                return;
+            }
+        }
+        else {
+            toast("warn", "Vous devez écrire une question", '', 2000, COLORS.toast.text.orange);
+        }
+    };
+
+
     const renderWithCheckmark = (shape) => (
         <View style={styles.answerInputContainer} key={shape}>
             <AnswerInput
@@ -128,49 +192,68 @@ export default function CreateQuestionScreen() {
     );
 
     return (
-        <View style={styles.createQuestionView}>
-            {/* Left Panel */}
-            <View style={styles.createQuestionLeftView}>
-                <View style={styles.createQuestionInputView}>
-                    <Text style={FONT.title}>Question :</Text>
-                    <TextInput
-                        style={styles.createQuestionInput}
-                        multiline={true}
-                        placeholder="Le texte de la question"
-                        value={questionText}
-                        onChangeText={setQuestionText}
-                    />
-                    <ChoiseSelector
-                        value={typeQuestion}
-                        onValueChange={setType}
-                        parameters={mediaType}
-                        defaultValue={true}
-                        style={styles.choiceSelector}
-                    />
-                    <View style={styles.toggleContainer}>
-                        <Text style={styles.toggleLabel}>Nombre de réponses :</Text>
-                        <Picker
-                            selectedValue={numAnswers}
-                            onValueChange={(value) => {
-                                setNumAnswers(value);
-                                setSelectedShape(''); // Réinitialise la sélection
-                            }}
-                            style={styles.picker}
-                        >
-                            <Picker.Item style={FONT.text} label="2 réponses" value={2} />
-                            <Picker.Item style={FONT.text} label="3 réponses" value={3} />
-                            <Picker.Item  style={FONT.text} label="4 réponses" value={4} />
-                        </Picker>
+        <GradientBackground>
+            <View style={styles.createQuestionView}>
+                {/* Left Panel */}
+                <View style={styles.createQuestionLeftView}>
+                    <View style={styles.createQuestionInputView}>
+                        <Text style={FONT.title}>Question :</Text>
+                        <TextInput
+                            style={styles.createQuestionInput}
+                            multiline={true}
+                            placeholder="Le texte de la question"
+                            value={questionText}
+                            onChangeText={setQuestionText}
+                        />
+                        <ChoiseSelector
+                            value={typeQuestion}
+                            onValueChange={setType}
+                            parameters={mediaType}
+                            defaultValue={true}
+                            style={styles.choiceSelector}
+                        />
+                        <View style={styles.toggleContainer}>
+                            <Text style={FONT.text}>Nombre de réponses :</Text>
+                            <Picker
+                                selectedValue={numAnswers}
+                                onValueChange={(value) => {
+                                    setNumAnswers(value);
+                                    setSelectedShape('');
+                                }}
+                                style={styles.picker}
+                            >
+                                <Picker.Item style={FONT.text} label="2 réponses" value={2} />
+                                <Picker.Item style={FONT.text} label="3 réponses" value={3} />
+                                <Picker.Item style={FONT.text} label="4 réponses" value={4} />
+                            </Picker>
+                        </View>
                     </View>
+                    <SimpleButton text="Valider" onPress={handleSubmit} disabled={disable} />
                 </View>
-                <SimpleButton text="Valider" onPress={handleSubmit} />
+                <View style={styles.createQuestionRightView}>
+                    <View style={styles.createQuestionSubRightView}>
+                        <View style={styles.generateAnswersButtonView}>
+                            <SimpleButton
+                                text="Générer des réponses"
+                                onPress={handleGenerate}
+                                disabled={loading}
+                                loading={loading}
+                            />
+                            <Picker
+                                selectedValue={generationTheme}
+                                onValueChange={(value) => setGenerationTheme(value)}
+                                style={[styles.picker, { marginTop: -30 }]}
+                            >
+                                <Picker.Item style={FONT.text} label="réaliste" value={"standard"} />
+                                <Picker.Item style={FONT.text} label="humoristique" value={"humor"} />
+                                <Picker.Item style={FONT.text} label="mixte" value={"mix"} />
+                            </Picker>
+                        </View>
+                    </View>
+                    {shapes.map((shape) => renderWithCheckmark(shape))}
+                </View>
             </View>
-
-            {/* Right Panel */}
-            <View style={styles.createQuestionRightView}>
-                {shapes.map((shape) => renderWithCheckmark(shape))}
-            </View>
-        </View>
+        </GradientBackground>
     );
 }
 
@@ -178,9 +261,8 @@ const styles = StyleSheet.create({
     createQuestionView: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        width: '100%',
-        height: '100%',
-        backgroundColor: COLORS.background.blue,
+        width: '100vw',
+        height: '95vh',
     },
     createQuestionLeftView: {
         flexDirection: 'column',
@@ -196,6 +278,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#8fd3ff',
         paddingVertical: '5%',
         borderRadius: 25,
+        paddingHorizontal: "5%",
         width: '100%',
         height: '70%',
     },
@@ -212,11 +295,12 @@ const styles = StyleSheet.create({
         marginBottom: 25,
     },
     createQuestionInput: {
-        width: '90%',
+        width: '100%',
         height: '75%',
         padding: 10,
         backgroundColor: 'white',
         borderRadius: 25,
+        fontSize: 26,
     },
     createQuestionSubmit: {
         justifyContent: 'center',
@@ -231,6 +315,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         width: '45%',
         height: '100%',
+        paddingTop: 10,
+        paddingBottom: 40,
+    },
+    createQuestionSubRightView: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center'
     },
     answerInputContainer: {
         position: 'relative',
@@ -254,5 +346,13 @@ const styles = StyleSheet.create({
     },
     choiceSelector: {
         marginTop: 20,
+    },
+    generateAnswersButtonView: {
+        flexDirection: 'column', // Aligner horizontalement
+        justifyContent: 'center', // Centrer horizontalement dans le parent
+        alignItems: 'center', // Centrer verticalement
+        gap: 10, // Espacement horizontal entre le bouton et le Picker (optionnel)
+        borderColor: COLORS.palette.blue.normal,
+        borderWidth: !isMobile ? 0 : 3,
     },
 });

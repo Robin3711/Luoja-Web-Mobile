@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { useFonts, LobsterTwo_400Regular, LobsterTwo_700Bold, LobsterTwo_700Bold_Italic } from '@expo-google-fonts/dev';
@@ -28,17 +27,20 @@ import {
     Volleyball,
     Vote,
 } from 'lucide-react-native';
-import Toast from 'react-native-toast-message';
+import { Dimensions } from 'react-native';
+import Toast, { BaseToast } from 'react-native-toast-message';
 import { ErrorToast, InfoToast, SuccessToast } from 'react-native-toast-message';
 import { COLORS } from '../css/utils/color';
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
 
-export const iconSize = Platform.OS === 'web' ? 30 : 18;
+export const iconSize = !isMobile ? 30 : 18;
 
 let apiUrl = null;
 
 export async function getPlatformAPI() {
     if (apiUrl == null) {
-        if (Platform.OS === 'web') {
+        if (!isMobile) {
             // Vérifie si l'application tourne sur Expo Metro Web
             if (Constants.debugMode) {
                 apiUrl = 'https://api.luoja.fr';
@@ -137,7 +139,7 @@ export const difficultyOptions = [
 export const publishSortOptions = [
     { label: 'Tout', value: null },
     { label: 'Publier', value: true },
-    { label: 'Incomplet', value: false },
+    { label: 'Inachever', value: false },
 ];
 
 export const historySortOptions = [
@@ -169,12 +171,12 @@ export const toast = (type, text1, text2, visibilityTime, color) => {
         type: type,
         position: 'top',
         text1: text1.toString(),
-        text1Style: { fontSize: 22, textAlign: 'center', fontWeight: 'bold', color },
+        text1Style: { fontSize: !isMobile ? 22 : 16, textAlign: 'center', fontWeight: 'bold', color },
         text2: text2.toString(),
-        text2Style: { fontSize: 18, textAlign: 'center', fontStyle: 'italic', color: 'black' },
+        text2Style: { fontSize: !isMobile ? 18 : 13, textAlign: 'center', fontStyle: 'italic', color: 'black' },
         visibilityTime: visibilityTime,
         autoHide: true,
-        topOffset: 64,
+        topOffset: !isMobile ? 15 : 60,
     });
 }
 
@@ -186,9 +188,9 @@ export const toastConfig = {
         <SuccessToast
             {...props}
             style={{
-                borderLeftColor: COLORS.toast.green,
-                width: 600,
-                height: 100,
+                borderLeftColor: COLORS.toast.background.green,
+                width: !isMobile ? 600 : 350,
+                height: !isMobile ? 100 : 70,
             }}
             contentContainerStyle={{
                 paddingHorizontal: 20,
@@ -205,9 +207,9 @@ export const toastConfig = {
         <ErrorToast
             {...props}
             style={{
-                borderLeftColor: COLORS.toast.red,
-                width: 600,
-                height: 100,
+                borderLeftColor: COLORS.toast.background.red,
+                width: !isMobile ? 600 : 350,
+                height: !isMobile ? 100 : 70,
             }}
             contentContainerStyle={{
                 paddingHorizontal: 20,
@@ -224,9 +226,28 @@ export const toastConfig = {
         <InfoToast
             {...props}
             style={{
-                borderLeftColor: COLORS.toast.blue,
-                width: 600,
-                height: 100,
+                borderLeftColor: COLORS.toast.background.blue,
+                width: !isMobile ? 600 : 350,
+                height: !isMobile ? 100 : 70,
+            }}
+            contentContainerStyle={{
+                paddingHorizontal: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        />
+    ),
+
+    /*
+      Personnaliser un toast de type 'warn'
+    */
+    warn: (props) => (
+        <BaseToast
+            {...props}
+            style={{
+                borderLeftColor: COLORS.toast.background.orange,
+                width: !isMobile ? 600 : 350,
+                height: !isMobile ? 100 : 70,
             }}
             contentContainerStyle={{
                 paddingHorizontal: 20,
@@ -238,9 +259,31 @@ export const toastConfig = {
 };
 
 export function getRoomId(url) {
-    const segments = url.split("/"); // Divise l'URL en segments
-    const id = segments[segments.length - 2]; // Récupère l'avant-dernier segment
-    id.trim(); // Supprime les espaces
-    return id;
+    const queryString = url.split('?')[1]; // Récupérer la partie après le "?"
+    const params = new URLSearchParams(queryString);
+    return params.get('roomId'); // Extraire le paramètre roomId
 
+}
+
+export function hasExtension(answer) {
+    return (
+        answer.endsWith('.mp3') ||
+        answer.endsWith('.jpeg') ||
+        answer.endsWith('.jpg') ||
+        answer.endsWith('.png')
+    );
+}
+
+export function hasValidAudioExtension(answer) {
+    return (
+        answer.endsWith('.mp3')
+    )
+}
+
+export function hasValidImageExtension(answer) {
+    return (
+        answer.endsWith('.jpeg') ||
+        answer.endsWith('.jpg') ||
+        answer.endsWith('.png')
+    );
 }

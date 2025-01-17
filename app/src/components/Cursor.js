@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Slider from '@react-native-assets/slider';
+import { FONT } from '../css/utils/font';
+
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height;
 
 const RangeCursor = ({ value, onValueChange }) => {
   const [sliderValue, setSliderValue] = useState(value);
@@ -12,7 +16,7 @@ const RangeCursor = ({ value, onValueChange }) => {
 
   return (
     <View style={styles.cursorContainer}>
-      <Text style={styles.cursorLabel}>Nombre de questions : {sliderValue}</Text>
+      <Text style={FONT.text}>Nombre de questions choisies : {sliderValue} / 50</Text>
       <Slider
         style={styles.slider}
         minimumValue={1}
@@ -36,12 +40,12 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   cursorLabel: {
-    fontSize: 20,
+    fontSize: !isMobile ? 20 : 18,
     fontWeight: 'bold',
     margin: 10,
   },
   slider: {
-    width: Platform.OS === "web" ? 700 : 300,
+    width: !isMobile ? 700 : 300,
     height: 40,
   },
 });

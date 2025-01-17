@@ -2,6 +2,8 @@ import { decode } from 'html-entities';
 import { getPlatformAPI, setToken, hasToken } from "./utils";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventSource from "react-native-sse";
+import { toast } from './utils';
+import { COLORS } from '../css/utils/color';
 
 const handleResponseError = async (response) => {
     let errorMessage = 'Une erreur est survenue';
@@ -498,7 +500,7 @@ export async function downloadAllImages() {
 
         return await response.json();
     } catch (error) {
-        throw error;
+        console.error(error);
     }
 }
 
@@ -563,7 +565,7 @@ export async function listenTimer(gameId, setRemainingTime, setSelectedAnswer, s
     }
 }
 
-export async function createRoom({quizId, playerCount, teams, gameMode, difficulty}) {
+export async function createRoom({ quizId, playerCount, teams, gameMode, difficulty }) {
     try {
         let response;
 
@@ -589,7 +591,7 @@ export async function createRoom({quizId, playerCount, teams, gameMode, difficul
                 break;
             default:
                 break;
-            }
+        }
 
         if (!response.ok) await handleResponseError(response);
 
@@ -611,11 +613,7 @@ export async function joinRoom(roomId) {
 
         // Event listeners
         eventSource.addEventListener('open', () => {
-            console.log('Connected to room:', roomId);
-        });
-
-        eventSource.addEventListener('message', (event) => {
-            console.log('New message:', event.data);
+            toast("info", 'Connected to room: ' + roomId, '', 2000, COLORS.toast.text.blue);
         });
 
         eventSource.addEventListener('error', (error) => {
@@ -625,7 +623,7 @@ export async function joinRoom(roomId) {
 
         return eventSource;
     } catch (error) {
-        console.error('Error joining room:', error);
+        toast("error", 'Error joining room:' + roomId, '', 2000, COLORS.toast.text.red);
         throw error;
     }
 }
@@ -657,7 +655,7 @@ export async function startRoom(roomId) {
         return await response.json();
     }
     catch (error) {
-        throw error;
+        toast("error", error, '', 2000, COLORS.toast.text.red);
     }
 }
 
@@ -745,7 +743,7 @@ export async function downloadAllAudios() {
         return await response.json();
     }
     catch (error) {
-        throw error;
+        console.error(error);
     }
 }
 
@@ -761,6 +759,43 @@ export async function downloadAudio(id) {
 
         return await response.blob();
     } catch (error) {
+        throw error;
+    }
+}
+
+export async function deleteFile(id) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/delete/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'token': await AsyncStorage.getItem('token'),
+            },
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function generateAnswers(question, theme) {
+    try {
+        const response = await fetch(`${await getPlatformAPI()}/ai/generate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': await AsyncStorage.getItem('token'),
+            },
+            body: JSON.stringify({ question, theme }),
+        });
+
+        if (!response.ok) await handleResponseError(response);
+
+        return await response.json();
+    }
+    catch (error) {
         throw error;
     }
 }

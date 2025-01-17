@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Platform } from 'react-native';
-import { createGame, getQuizAverage } from '../utils/api';
+import { Text, View, StyleSheet, Dimensions } from 'react-native';
+import { getQuizAverage } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 import { toast } from '../utils/utils';
 import { COLORS } from '../css/utils/color';
 import SimpleButton from './SimpleButton';
 import { FONT } from '../css/utils/font';
 
-export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions }) {
+const { width, height } = Dimensions.get('window');
+const isMobile = width < height
+
+export default function CreatedQuizInformation({ quizId, category, difficulty, date, status, title, nbQuestions, setDisable, disable }) {
     const [loading, setLoading] = useState(true);
     const [average, setAverage] = useState("aucune donnée");
     const [nbPlayed, setNbPlayed] = useState(0);
@@ -28,9 +31,9 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
                 setNbPlayed(data.nombreDePartie);
             }).catch((error) => {
                 if (error.status && error.message) {
-                    toast('error', error.status, error.message, 3000, COLORS.toast.red);
+                    toast('error', error.status, error.message, 3000, COLORS.toast.text.red);
                 } else {
-                    toast('error', 'Erreur', error, 3000, COLORS.toast.red);
+                    toast('error', 'Erreur', error, 3000, COLORS.toast.text.red);
                 }
             });
 
@@ -47,65 +50,60 @@ export default function CreatedQuizInformation({ quizId, category, difficulty, d
 
     const detailTextStyle = [
         styles.detailText,
-        isDraft && styles.draftText, // Ajouter un texte grisé pour les brouillons
+        isDraft && styles.draftText,
     ];
 
     const handleCreationQuiz = () => {
-        if (status === false && Platform.OS === 'web') {
+        if (status === false && !isMobile) {
             navigation.navigate('quizCreation', { quizId: quizId });
         }
     };
 
     const handlePlayQuiz = async () => {
-        if (status === true && Platform.OS === 'web') {
-            const data = await createGame(quizId);
-            navigation.navigate('quizScreen', { gameId: data.id });
+        try {
+            setDisable(true);
+            navigation.navigate('launchGameMode', { quizId: quizId });
+        } catch (error) {
+            if (error.status && error.message) {
+                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
+            } else {
+                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
+            }
+            setDisable(false);
+        } finally {
+            setDisable(false);
         }
     };
 
-    if (status === false && Platform.OS === 'web') {
-        return (
-            <View style={styles.QuizInformationView}>
-                <View style={styles.PrincipalInformationsView}>
-                    <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
-                    <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
-                    <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                    <SimpleButton 
-                        text="Modifier" 
-                        onPress={handleCreationQuiz} 
-                        color={COLORS.button.blue.basic} 
-                        height={30}
-                        width={100}
-                        textStyle={{ fontSize: 20 }}
-                    />
-                </View>
-                <View style={styles.SecondaryInformationsView}>
-                    <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
-                    <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
-                </View>
-            </View>
-        );
-    }
-
     return (
-        <View style={styles.QuizInformationView}>
-            <View style={styles.PrincipalInformationsView}>
-                <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
-                <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
-                <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
-                <SimpleButton 
-                    text="Jouer" 
-                    onPress={handlePlayQuiz} 
-                    color={COLORS.button.blue.darkBasic} 
-                    height={30}
-                    width={100}
-                    textStyle={{ fontSize: 20 }}
-                />
-            </View>
-            <View style={styles.SecondaryInformationsView}>
-                <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
-                <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
-            </View>
+        <View>
+            {!isMobile || (isMobile && status) ? (
+                <View style={styles.QuizInformationView}>
+                    <View style={styles.PrincipalInformationsView}>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{title}</Text>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{difficulty}</Text>
+                        <Text style={[styles.titleText, isDraft && styles.draftText]}>{nbQuestionsStr}</Text>
+                        <SimpleButton
+                            text={status ? "Jouer" : "Modifier"}
+                            onPress={status ? handlePlayQuiz : handleCreationQuiz}
+                            backgroundColor={status ? COLORS.button.blue.darkBasic : COLORS.button.blue.basic}
+                            height={30}
+                            width={100}
+                            textStyle={{ fontSize: 20 }}
+                            disabled={disable}
+                        />
+                    </View>
+                    <View style={styles.SecondaryInformationsView}>
+                        <Text style={detailTextStyle}>{isDraft ? "Brouillon" : `Joué ${nbPlayed} fois`}</Text>
+                        <Text style={detailTextStyle}>{isDraft ? "" : `Réussite moyenne : ${average}`}</Text>
+                    </View>
+                </View>
+            ) : (
+                <View>
+
+                </View>
+            )
+            }
         </View>
     );
 }
