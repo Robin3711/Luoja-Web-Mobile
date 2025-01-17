@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../css/utils/color';
 
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     },
     loginInput: {
         height: 40,
-        width: 280,
+        width: Platform.OS === 'web' ? "100%" : 250,
         margin: 12,
         borderWidth: 1,
         padding: 10,
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 20,
         backgroundColor: '#58bdfe',
+        width: !isMobile ? 300 : 320,
     },
     passwordInputView: {
         display: 'flex',

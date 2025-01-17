@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { userRegister } from '../utils/api';
 import { toast } from '../utils/utils';
@@ -60,7 +60,7 @@ export default function Register() {
     }
 
     return (
-        <GradientBackground showLogo={true}>
+        <GradientBackground>
             <View style={styles.registerView}>
                 <Text style={[FONT.title, { marginBottom: !isMobile ? 70 : 15 }]}>Inscription</Text>
 
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     },
     registerInput: {
         height: 40,
-        width: 280,
+        width: Platform.OS === 'web' ? "100%" : 250,
         margin: 12,
         borderWidth: 1,
         padding: 10,
@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 20,
         backgroundColor: '#58bdfe',
+        width: !isMobile ? 300 : 320,
     },
     passwordInputView: {
         display: 'flex',
