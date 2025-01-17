@@ -39,13 +39,7 @@ const ChooseAudio = ({ onValueChange }) => {
                 console.error("La réponse de `downloadAllAudios` n'est pas valide.");
             }
         } catch (error) {
-            if (error.message !== "Aucun fichier trouvé pour cet utilisateur") {
-                if (error.status && error.message) {
-                    toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
-                } else {
-                    toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
-                }
-            }
+            console.error(error);
         }
     };
 
@@ -118,11 +112,7 @@ const ChooseAudio = ({ onValueChange }) => {
             }
             setDisable(false);
         } catch (error) {
-            if (error.status && error.message) {
-                toast("error", error.status, error.message, 1500, COLORS.toast.text.red);
-            } else {
-                toast('error', 'Erreur', error, 1500, COLORS.toast.text.red);
-            }
+            console.error(error);
             setDisable(false);
         }
     }
