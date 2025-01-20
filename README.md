@@ -4,12 +4,12 @@
 
 Cette application à été développé par par notre équipe de projet constitué d'élèves de 3ème année de BUT informatique à l'IUT Robert-Schuman d'Ilkirch en 2024-2025 :
 
-    Guillaume Behr (https://github.com/guillaume-behr)
-    Saif Zouaoui-mahjoub
-    Samuel Marsault (https://github.com/SamuelMarsault)
-    Mattéo Gillig
-    Théo Willem
-    Miniotti Robin (https://github.com/Robin3711)
+- Guillaume Behr (https://github.com/guillaume-behr)
+- Saif Zouaoui-mahjoub
+- Samuel Marsault (https://github.com/SamuelMarsault)
+- Mattéo Gillig
+- Théo Willem
+- Miniotti Robin (https://github.com/Robin3711)
 
 
 
